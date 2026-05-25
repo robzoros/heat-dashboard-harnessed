@@ -1,0 +1,279 @@
+{
+  "project": "Heat: Pedal to the Metal — Dashboard",
+  "version": "1.0.0",
+  "last_updated": "2026-05-18",
+  "user": "Roberto Méndez",
+  "rules": {
+    "single_active_feature": true,
+    "not_started_requires_evidence": true,
+    "do_not_skip_verification": true
+  },
+  "status_legend": {
+    "not_started": "Work has not begun.",
+    "in_progress": "The feature is the current active task.",
+    "not_started": "Required verification has passed and evidence is recorded.",
+    "blocked": "Work cannot continue until a documented blocker is resolved."
+  },
+  "features": [
+    {
+      "id": "HDH-01",
+      "priority": 1,
+      "name": "Crear Esqueleto de la aplicación",
+      "description": [
+        "HTML/CSS/JS inicial sin datos."
+        "Crear src/index.html con estructura HTML, CSS base y JavaScript mock (sin datos reales)"
+        "Contiene 4 tabs: Resumen, Jugadores, Circuitos, Historial",
+        "Incluye Chart.js via CDN (cdn.jsdelivr.net/npm/chart.js@<version>)",
+        "Incluye Google Fonts: Bebas Neue, Barlow Condensed, Barlow",
+        "Incluye un panel de filtros con jugadores, circuitos y localización",
+        "En el head de la página hay una sección c on #filtrados/#totales para partidas, jugadores, circuitos y localizaciones",
+        "Habrá un botón para lanzar la petición de query a BGG donde habrá que poner usuario y contraseña."
+      ],
+      "status": "not_started",
+      "verification": {
+        "checks": [
+          "docker compose config --quiet no arroja errores",
+          "Ambos servicios definidos: heat-dashboard (nginx:alpine, puerto 8082), bgg-proxy (node:20-alpine, puerto 3001)",
+          "Dockerfile copia src/index.html y nginx.conf correctamente"
+          "proxy/server.js pasa node --check sin errores",
+          "package.json tiene 'start': 'node server.js' y engines: node>=20",
+          "El servidor escucha en puerto 3001 y responde a peticiones simples"
+          "index.html tiene etiquetas meta charset, viewport, title",
+          "Contiene placeholder canvas para charts",
+          "docker compose up -d --build acaba sin errores",
+          "http://localhost:8082 responde con código 200",
+          "La respuesta contiene '<!DOCTYPE html>'"
+        ],
+      }
+    },
+    {
+      "id": "HDH-02",
+      "priority": 2,
+      "name": "Conexión con BGG",
+      "description": [
+        "Implementar el flujo completo de carga de datos desde BoardGameGeek: login, paginación, parsing XML y normalización.",
+        "Documentación a tener en cuenta para login a BGG en 'documents.HDH-02.md'",
+        "Tras login exitoso, se cargan TODAS las páginas sin perder datos",
+        "Detecta fin de paginación cuando la respuesta tiene < 100 elementos",
+        "Parsea cada <play> del XML extrayendo: id, date, location, comments",
+        "Parsea cada <player> extrayendo: name, userid, score, win",
+        "Extrae el circuito del campo comments usando regex: /^([^#\\[]+?)(?:\\s*#|\\s*\\[)/",
+        "Construye objeto RAW con arrays: players, locations, plays"
+        "Cada partida tiene: id, playDate, board, locationRefId, playerScores",
+        "Cada playerScore tiene: playerRefId, score, scoreNum, winner",
+      ],
+      "verification": {
+        "checks": [
+          "Se han creado los arrays de players, locations, boards(circuitos) y plays",
+        ],
+        "evidence": "Listado de cada array"
+      }
+    },
+    {
+      "id": "HDH-H03",
+      "priority": 3,
+      "name": "Clasificación datos",
+      "description": [
+        "Clasificar jugadores en bots, main players, other players",
+        "userid='0' en XML → isNpc=1 → bot",
+        "Umbral: menos de tres partidas",
+        "Jugadores por debajo del umbral → other player",
+        "Resto → main player",
+        "Crea un juego tests para poder verificar clasificación"
+
+      ],
+      "status": "not_started",
+      "verification": {
+        "checks": [
+          "Tests pasados"
+        ],
+        "evidence": "Evidencia de Test pasado Lista de bots, main player y resto"
+      }
+    },
+    {
+      "id": "HDH-H04",
+      "priority": 4,
+      "name": "Poblamiento de filtros",
+      "description": [
+        "Implementar panel de filtros",
+        "El Dashboard mostrará datos solo las partidas que pasen el filtro definido.",
+        "El panel se despliega y se puede volver a plegar con una acción del usuario.",
+        "El filtro se puede activar o desactivar con una opción del usuario.",
+        "Aparece la lista de main players y pudiendo elegir varios.",
+        "El filtro por jugadores tiene 3 posibilidades:",
+        "- partidas en las que está alguno de los jugadores",
+        "- partidas en las que están todos los jugadores",
+        "- partidas en las que están todos los jugadores, y ningún otro jugador más.",
+        "Filtro por circuito (board), pudiendo elegir varios entre todos los de la lista.",
+        "Filtro por localizacion (location), pudiendo elegir varios entre todos los de la lista.",
+        "Crea un juego tests para poder verificar filtros"
+      ],
+      "status": "not_started",
+      "verification": {
+        "checks": [
+          "Pasa los tests",
+          "Ejecuta desde docker-compose hasta llamada a localhost conexión bgg y aplicación de filtros. ",
+          "Panel de filtros se pliega y se despliega.",
+          "El filtro se activa y desactiva",
+          "Actualiza header-stats con conteo de partidas/jugadores/circuitos/localizaciones"
+        ],
+        "evidence": "Si es posible pantallazo de la aplicación"
+      }
+    },
+    {
+      "id": "HDH-05a",
+      "priority": 5,
+      "name": "Resumen KPIs",
+      "description": [
+        "Crea Panel de KPIs. Debajo de las pestañas cuatro cajas con cada KPI",
+        "KPI Líder muestra el nombre del main player con más victorias",
+        "KPI Track muestra flag emoji + nombre del circuito más frecuente",
+        "KPI Streak muestra 'nombre (n)' donde n es la mejor racha de victorias de un main player)",
+        "KPI Last muestra la fecha de la partida más reciente en formato YYYY-MM-DD"
+        "Crea un juego tests para poder verificar KPIs"
+      ],
+      "status": "not_started",
+      "verification": {
+        "checks": [
+          "Pasa los tests",
+          "Ejecuta desde docker-compose hasta llamada a localhost conexión bgg, KPIs mostradas",
+          "Aplicación de filtros cambia resultado y al dejar de aplicar filtros se ve resultado inicial.",
+        ],
+        "evidence": "Si es posible pantallazos de la aplicación",
+      }
+    },
+    {
+      "id": "HDH-05b",
+      "name": "Panel podio",
+      "description": [
+        "Podio top 3 (oro centrado, 15% más grande que 2º plata y 3º bronce)",
+        "Solo jugadores principales",
+        "Orden visual: #2 | #1 | #3 ",
+      ],
+      "status": "not_started",
+      "verification": {
+        "checks": [
+          "Ejecuta desde docker-compose hasta llamada a localhost conexión bgg, Podio mostrado",
+          "Aplicación de filtros cambia resultado y al dejar de aplicar filtros se ve resultado inicial.",
+        ],
+        "evidence": "Si es posible pantallazos de la aplicación",
+      }
+    },
+    {
+      "id": "HDH-05c",
+      "name": "Panel victorias",
+      "description": [
+        "Gráfico de barras: victorias por jugador",
+      ],
+      "status": "not_started",
+      "verification": {
+        "checks": [
+          "Ejecuta desde docker-compose hasta llamada a localhost conexión bgg, gráfico mostrado",
+          "Aplicación de filtros cambia resultado y al dejar de aplicar filtros se ve resultado inicial.",
+        ],
+        "evidence": "Si es posible pantallazos de la aplicación",
+      }
+    },
+    {
+      "id": "HDH-05d",
+      "name": "Panel partidas por mes",
+      "description": [
+        "Gráfico de línea: partidas por mes",
+          "Chart tipo 'line'",
+          "Eje X: meses (YYYY-MM), ordenado cronológicamente",
+          "Eje Y: conteo de partidas por mes, stepSize=1"
+      ],
+      "status": "not_started",
+      "verification": {
+        "checks": [
+          "Ejecuta desde docker-compose hasta llamada a localhost conexión bgg, gráfico mostrado",
+          "Aplicación de filtros cambia resultado y al dejar de aplicar filtros se ve resultado inicial.",
+        ],
+        "evidence": "Si es posible pantallazos de la aplicación",
+      }
+    },
+    {
+      "id": "HDH-05e",
+      "name": "Panel partidas por mes",      
+      "description": [
+        "Gráfico de barras horizontal: puntos medios por jugador",
+        "Chart tipo 'bar' en canvas#chart-avgpts con indexAxis='y'",
+        "Media = suma scores / partidas jugadas",
+        "Cada barra muestra un decimal (toFixed(1))"
+      ],
+      "status": "not_started",
+      "verification": {
+        "checks": [
+          "Ejecuta desde docker-compose hasta llamada a localhost conexión bgg, gráfico mostrado",
+          "Aplicación de filtros cambia resultado y al dejar de aplicar filtros se ve resultado inicial.",
+        ],
+        "evidence": "Si es posible pantallazos de la aplicación",
+      }
+    },
+    {
+      "id": "HDH-06a",
+      "priority": 6,
+      "name": "Pestaña Jugadores",
+      "description": [
+        "Tabla de clasificación completa con estadísticas, win rate, media y últimas 10 partidas.",
+        "Columnas: #, Jugador, Partidas, Victorias, Win %, Media, Máx, Últimas 10",
+        "Solo mainPlayerIds (bots y otros excluidos)",
+        "Ordenados por victorias descendente",
+        "Win % con barra de porcentaje visual",
+        "Para Calcular racha de últimas 10 partidas",
+        "- Se muestran 10 puntos con las últimas diez partidas: verde=win, gris=loss",
+
+      ],
+      "status": "not_started",
+      "verification": {
+        "checks": [
+          "Ejecuta desde docker-compose hasta llamada a localhost conexión bgg, pestaña mostrada",
+          "Aplicación de filtros cambia resultado y al dejar de aplicar filtros se ve resultado inicial.",
+        ]
+      }
+    },
+    {
+      "id": "HDH-06b",
+      "priority": 6,
+      "name": "Pestaña Circuitos",
+      "description": [
+        "Donut chart de distribución, tarjetas con dominador y stats detalladas de cada circuito.",
+        "Chart doughnut en canvas#chart-tracks",
+        "Track Winners: nombre con flag emoji + mejor jugador",
+        "Track List: nombre, partidas, pts medio, campeon",
+        "Cada track muestra el jugador con más victorias en ese circuito",
+      ],
+      "status": "not_started",
+      "verification": {
+        "checks": [
+          "Ejecuta desde docker-compose hasta llamada a localhost conexión bgg, pestaña mostrada",
+          "Aplicación de filtros cambia resultado y al dejar de aplicar filtros se ve resultado inicial.",
+        ]
+      }
+    },
+    {
+      "id": "HDH-07",
+      "priority": 7,
+      "name": "Pestaña Historial",
+      "description": [
+        "Cronología de partidas y gráfico de evolución acumulada de victorias.",
+        "Partidas ordenadas de más reciente a más antigua.",
+        "Cada entrada muestra: fecha, circuito (con flag), ganador, puntos.",
+        "Al pulsar en cada entrada despliega un panel con detalles de partida."
+        "- Ganador destacado con borde verde",
+        "- Muestra puntuación de cada jugador",
+        "- Cierre de panel pulsando la entrada",
+        "Otro panel muestra chart line con evolución de victorias",
+        "- Un dataset por main player (máx 10 primeros)",
+        "- Data: victoria acumulada por fecha",
+      ],
+      "status": "not_started",
+      "verification": {
+        "checks": [
+          "Ejecuta desde docker-compose hasta llamada a localhost conexión bgg, pestaña mostrada",
+          "Aplicación de filtros cambia resultado y al dejar de aplicar filtros se ve resultado inicial.",
+        ]
+      }
+    }
+  ]
+}

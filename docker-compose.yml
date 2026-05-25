@@ -1,0 +1,24 @@
+version: '3.8'
+
+networks:
+  game-net:
+    driver: bridge
+
+services:
+  game-dashboard:
+    build: .
+    ports:
+      - "8082:80"
+    depends_on:
+      - bgg-proxy
+    networks:
+      - game-net
+
+  bgg-proxy:
+    image: node:20-alpine
+    working_dir: /app
+    volumes:
+      - ./proxy:/app
+    command: node server.js
+    networks:
+      - game-net
