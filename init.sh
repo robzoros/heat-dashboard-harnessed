@@ -64,6 +64,7 @@ else
   git commit -m "init: first commit"
   git branch -M main
   git remote add origin https://github.com/robzoros/heat-dashboard-harnessed.git
+  git remote set-url origin git@github.com:robzoros/heat-dashboard-harnessed.git
   git push -u origin main
   ok "Repositorio creado con README.md"
 fi
