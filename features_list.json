@@ -20,7 +20,7 @@
         "Crea un github action para automatizar el despliegue.",
         "Después de un push a una rama que no sea main se ejecuta un pull request, se hace un merge con main y se hace un checkout a main."
       ],
-      "status": "not_started",
+      "status": "in_progress",
       "verification": {
         "checks": [
           "Se ha creado la action y funciona correctamente"
