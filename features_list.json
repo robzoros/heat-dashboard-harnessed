@@ -42,7 +42,7 @@
         "En el head de la página hay una sección c on #filtrados/#totales para partidas, jugadores, circuitos y localizaciones",
         "Habrá un botón para lanzar la petición de query a BGG donde habrá que poner usuario y contraseña."
       ],
-      "status": "not_started",
+      "status": "completed",
       "verification": {
         "checks": [
           "docker compose config --quiet no arroja errores",
@@ -56,7 +56,8 @@
           "docker compose up -d --build acaba sin errores",
           "http://localhost:8082 responde con código 200",
           "La respuesta contiene '<!DOCTYPE html>'"
-        ]
+        ],
+        "evidence": "Build exitoso. HTTP 200 en localhost:8082. DOCTYPE html presente. Servicios game-dashboard y bgg-proxy corriendo."
       }
     },
     {
