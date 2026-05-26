@@ -15,33 +15,33 @@ step() { echo -e "\n${BOLD}$*${RESET}"; }
  
 #Existen los ficheros de infra
 if [ -f "features_list.json" ]; then
-    ok "features_list.json existe."
+  ok "features_list.json existe."
 else
-    fail "Error: El fichero features_list.json no existe."
+  fail "Error: El fichero features_list.json no existe."
 fi
 
 if [ -f "Dockerfile" ]; then
-    ok "Dockerfile existe."
+  ok "Dockerfile existe."
 else
-    fail "Error: El fichero Dockerfile no existe."
+  fail "Error: El fichero Dockerfile no existe."
 fi
 
 if [ -f "docker-compose.yml" ]; then
-    ok "docker-compose.yml existe."
+  ok "docker-compose.yml existe."
 else
-    fail "Error: El fichero docker-compose.yml no existe."
+  fail "Error: El fichero docker-compose.yml no existe."
 fi
 
 if [ -f "nginx.conf" ]; then
-    ok "nginx.conf existe."
+  ok "nginx.conf existe."
 else
-    fail "Error: El fichero nginx.conf no existe."
+  fail "Error: El fichero nginx.conf no existe."
 fi
 
 if [ -f "secrets.json" ]; then
-    ok "secrets.json existe."
+  ok "secrets.json existe."
 else
-    fail "Error: El fichero secrets.json no existe."
+  fail "Error: El fichero secrets.json no existe."
 fi
 
 # Docker daemon activo
@@ -55,7 +55,8 @@ fi
 DIR=$(pwd)
 
 if git rev-parse --git-dir > /dev/null 2>&1; then
-  ok "✔  Repositorio git encontrado en: $DIR"
+  git pull origin main
+  ok "Repositorio git encontrado en: $DIR"
 else
   warn "No hay repositorio git. Inicializando..."
   git init

@@ -1,6 +1,4 @@
 {
-  "project": "Heat: Pedal to the Metal — Dashboard",
-  "version": "1.0.0",
   "last_updated": "2026-05-18",
   "user": "Roberto Méndez",
   "rules": {
@@ -11,17 +9,32 @@
   "status_legend": {
     "not_started": "Work has not begun.",
     "in_progress": "The feature is the current active task.",
-    "not_started": "Required verification has passed and evidence is recorded.",
     "blocked": "Work cannot continue until a documented blocker is resolved."
   },
   "features": [
+    {
+      "id": "HDH-00",
+      "priority": 1,
+      "name": "Crear Github Action",
+      "description": [
+        "Crea un github action para automatizar el despliegue.",
+        "Después de un push a una rama que no sea main se ejecuta un pull request, se hace un merge con main y se hace un checkout a main."
+      ],
+      "status": "not_started",
+      "verification": {
+        "checks": [
+          "Se ha creado la action y funciona correctamente"
+        ],
+        "evidence": "Evidencia de la action funcionando correctamente"
+      }
+    },    
     {
       "id": "HDH-01",
       "priority": 1,
       "name": "Crear Esqueleto de la aplicación",
       "description": [
-        "HTML/CSS/JS inicial sin datos."
-        "Crear src/index.html con estructura HTML, CSS base y JavaScript mock (sin datos reales)"
+        "HTML/CSS/JS inicial sin datos.",
+        "Crear src/index.html con estructura HTML, CSS base y JavaScript mock (sin datos reales)",
         "Contiene 4 tabs: Resumen, Jugadores, Circuitos, Historial",
         "Incluye Chart.js via CDN (cdn.jsdelivr.net/npm/chart.js@<version>)",
         "Incluye Google Fonts: Bebas Neue, Barlow Condensed, Barlow",
@@ -34,16 +47,16 @@
         "checks": [
           "docker compose config --quiet no arroja errores",
           "Ambos servicios definidos: heat-dashboard (nginx:alpine, puerto 8082), bgg-proxy (node:20-alpine, puerto 3001)",
-          "Dockerfile copia src/index.html y nginx.conf correctamente"
+          "Dockerfile copia src/index.html y nginx.conf correctamente",
           "proxy/server.js pasa node --check sin errores",
           "package.json tiene 'start': 'node server.js' y engines: node>=20",
-          "El servidor escucha en puerto 3001 y responde a peticiones simples"
+          "El servidor escucha en puerto 3001 y responde a peticiones simples",
           "index.html tiene etiquetas meta charset, viewport, title",
           "Contiene placeholder canvas para charts",
           "docker compose up -d --build acaba sin errores",
           "http://localhost:8082 responde con código 200",
           "La respuesta contiene '<!DOCTYPE html>'"
-        ],
+        ]
       }
     },
     {
@@ -58,13 +71,13 @@
         "Parsea cada <play> del XML extrayendo: id, date, location, comments",
         "Parsea cada <player> extrayendo: name, userid, score, win",
         "Extrae el circuito del campo comments usando regex: /^([^#\\[]+?)(?:\\s*#|\\s*\\[)/",
-        "Construye objeto RAW con arrays: players, locations, plays"
+        "Construye objeto RAW con arrays: players, locations, plays",
         "Cada partida tiene: id, playDate, board, locationRefId, playerScores",
-        "Cada playerScore tiene: playerRefId, score, scoreNum, winner",
+        "Cada playerScore tiene: playerRefId, score, scoreNum, winner"
       ],
       "verification": {
         "checks": [
-          "Se han creado los arrays de players, locations, boards(circuitos) y plays",
+          "Se han creado los arrays de players, locations, boards(circuitos) y plays"
         ],
         "evidence": "Listado de cada array"
       }
@@ -80,7 +93,6 @@
         "Jugadores por debajo del umbral → other player",
         "Resto → main player",
         "Crea un juego tests para poder verificar clasificación"
-
       ],
       "status": "not_started",
       "verification": {
@@ -129,7 +141,7 @@
         "KPI Líder muestra el nombre del main player con más victorias",
         "KPI Track muestra flag emoji + nombre del circuito más frecuente",
         "KPI Streak muestra 'nombre (n)' donde n es la mejor racha de victorias de un main player)",
-        "KPI Last muestra la fecha de la partida más reciente en formato YYYY-MM-DD"
+        "KPI Last muestra la fecha de la partida más reciente en formato YYYY-MM-DD",
         "Crea un juego tests para poder verificar KPIs"
       ],
       "status": "not_started",
@@ -137,9 +149,9 @@
         "checks": [
           "Pasa los tests",
           "Ejecuta desde docker-compose hasta llamada a localhost conexión bgg, KPIs mostradas",
-          "Aplicación de filtros cambia resultado y al dejar de aplicar filtros se ve resultado inicial.",
+          "Aplicación de filtros cambia resultado y al dejar de aplicar filtros se ve resultado inicial."
         ],
-        "evidence": "Si es posible pantallazos de la aplicación",
+  "evidence": "Si es posible pantallazos de la aplicación"
       }
     },
     {
@@ -148,30 +160,30 @@
       "description": [
         "Podio top 3 (oro centrado, 15% más grande que 2º plata y 3º bronce)",
         "Solo jugadores principales",
-        "Orden visual: #2 | #1 | #3 ",
+        "Orden visual: #2 | #1 | #3 "
       ],
       "status": "not_started",
       "verification": {
         "checks": [
           "Ejecuta desde docker-compose hasta llamada a localhost conexión bgg, Podio mostrado",
-          "Aplicación de filtros cambia resultado y al dejar de aplicar filtros se ve resultado inicial.",
+          "Aplicación de filtros cambia resultado y al dejar de aplicar filtros se ve resultado inicial."
         ],
-        "evidence": "Si es posible pantallazos de la aplicación",
+  "evidence": "Si es posible pantallazos de la aplicación"
       }
     },
     {
       "id": "HDH-05c",
       "name": "Panel victorias",
       "description": [
-        "Gráfico de barras: victorias por jugador",
+  "Gráfico de barras: victorias por jugador"
       ],
       "status": "not_started",
       "verification": {
         "checks": [
           "Ejecuta desde docker-compose hasta llamada a localhost conexión bgg, gráfico mostrado",
-          "Aplicación de filtros cambia resultado y al dejar de aplicar filtros se ve resultado inicial.",
+          "Aplicación de filtros cambia resultado y al dejar de aplicar filtros se ve resultado inicial."
         ],
-        "evidence": "Si es posible pantallazos de la aplicación",
+  "evidence": "Si es posible pantallazos de la aplicación"
       }
     },
     {
@@ -187,9 +199,9 @@
       "verification": {
         "checks": [
           "Ejecuta desde docker-compose hasta llamada a localhost conexión bgg, gráfico mostrado",
-          "Aplicación de filtros cambia resultado y al dejar de aplicar filtros se ve resultado inicial.",
+          "Aplicación de filtros cambia resultado y al dejar de aplicar filtros se ve resultado inicial."
         ],
-        "evidence": "Si es posible pantallazos de la aplicación",
+  "evidence": "Si es posible pantallazos de la aplicación"
       }
     },
     {
@@ -205,9 +217,9 @@
       "verification": {
         "checks": [
           "Ejecuta desde docker-compose hasta llamada a localhost conexión bgg, gráfico mostrado",
-          "Aplicación de filtros cambia resultado y al dejar de aplicar filtros se ve resultado inicial.",
+          "Aplicación de filtros cambia resultado y al dejar de aplicar filtros se ve resultado inicial."
         ],
-        "evidence": "Si es posible pantallazos de la aplicación",
+  "evidence": "Si es posible pantallazos de la aplicación"
       }
     },
     {
@@ -221,14 +233,14 @@
         "Ordenados por victorias descendente",
         "Win % con barra de porcentaje visual",
         "Para Calcular racha de últimas 10 partidas",
-        "- Se muestran 10 puntos con las últimas diez partidas: verde=win, gris=loss",
+  "- Se muestran 10 puntos con las últimas diez partidas: verde=win, gris=loss"
 
       ],
       "status": "not_started",
       "verification": {
         "checks": [
           "Ejecuta desde docker-compose hasta llamada a localhost conexión bgg, pestaña mostrada",
-          "Aplicación de filtros cambia resultado y al dejar de aplicar filtros se ve resultado inicial.",
+          "Aplicación de filtros cambia resultado y al dejar de aplicar filtros se ve resultado inicial."
         ]
       }
     },
@@ -241,13 +253,13 @@
         "Chart doughnut en canvas#chart-tracks",
         "Track Winners: nombre con flag emoji + mejor jugador",
         "Track List: nombre, partidas, pts medio, campeon",
-        "Cada track muestra el jugador con más victorias en ese circuito",
+  "Cada track muestra el jugador con más victorias en ese circuito"
       ],
       "status": "not_started",
       "verification": {
         "checks": [
           "Ejecuta desde docker-compose hasta llamada a localhost conexión bgg, pestaña mostrada",
-          "Aplicación de filtros cambia resultado y al dejar de aplicar filtros se ve resultado inicial.",
+          "Aplicación de filtros cambia resultado y al dejar de aplicar filtros se ve resultado inicial."
         ]
       }
     },
@@ -259,19 +271,19 @@
         "Cronología de partidas y gráfico de evolución acumulada de victorias.",
         "Partidas ordenadas de más reciente a más antigua.",
         "Cada entrada muestra: fecha, circuito (con flag), ganador, puntos.",
-        "Al pulsar en cada entrada despliega un panel con detalles de partida."
+        "Al pulsar en cada entrada despliega un panel con detalles de partida.",
         "- Ganador destacado con borde verde",
         "- Muestra puntuación de cada jugador",
         "- Cierre de panel pulsando la entrada",
         "Otro panel muestra chart line con evolución de victorias",
         "- Un dataset por main player (máx 10 primeros)",
-        "- Data: victoria acumulada por fecha",
+  "- Data: victoria acumulada por fecha"
       ],
       "status": "not_started",
       "verification": {
         "checks": [
           "Ejecuta desde docker-compose hasta llamada a localhost conexión bgg, pestaña mostrada",
-          "Aplicación de filtros cambia resultado y al dejar de aplicar filtros se ve resultado inicial.",
+          "Aplicación de filtros cambia resultado y al dejar de aplicar filtros se ve resultado inicial."
         ]
       }
     }

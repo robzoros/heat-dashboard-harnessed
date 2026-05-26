@@ -11,8 +11,9 @@ Antes de escribir código:
 1. Ejecuta script bash `init.sh`. Si sale con error terminas.
 2. Lee `PROGRESS.md` para el estado verificado más reciente y el próximo paso.
 3. Lee `features_list.json` y elige la feature inacabada de mayor prioridad.
-4. Revisa los commits recientes con `git log --oneline -5`.
-5. Deja evidencia de que se ha resuelto la tarea.
+4. Crea nueva rama con el id de la feature como nombre.
+5. Crea plan de acción que se guardará en los comentarios del commit
+6. Deja evidencia de que se ha resuelto la tarea.
 
 Si la verificación de referencia ya está fallando, corrígela primero. No apiles trabajo de features nuevas sobre un estado inicial roto.
 Si trabajas con tasks actualiza la task y cuando se hayan completado todas actualiza el status de la feature.
@@ -23,6 +24,7 @@ Si trabajas con tasks actualiza la task y cuando se hayan completado todas actua
 - **Servidor**: nginx:alpine en Docker
 - **Proxy BGG**: Node.js 20 (servicio separado en Docker)
 - **Datos**: llamada a la API de BGG
+- **Repositorio**: Github
 - **Docker**: `docker compose up -d --build` → http://localhost:8082
 
 ## Reglas de Trabajo
@@ -67,6 +69,6 @@ Antes de terminar una sesión:
 1. Actualiza `PROGRESS.md`.
 2. Actualiza `features_list.json`, solo con las features con las features con las que se ha trabajado en la sesión.
 3. Registra cualquier riesgo o bloqueo sin resolver.
-4. Haz commit con un mensaje descriptivo una vez que el trabajo esté en un estado seguro.
+4. Haz un push de la rama creada.
 5. Deja el repositorio lo suficientemente limpio para que la próxima sesión pueda ejecutar `./init.sh` inmediatamente.
 
