@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heat Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600&family=Barlow:wght@400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>HEAT DASHBOARD</h1>
+        <div id="header-stats">
+            <div class="stat-group">
+                <span class="stat-label">Partidas:</span>
+                <span id="stat-plays-filtered">0</span>/<span id="stat-plays-total">0</span>
+            </div>
+            <div class="stat-group">
+                <span class="stat-label">Jugadores:</span>
+                <span id="stat-players-filtered">0</span>/<span id="stat-players-total">0</span>
+            </div>
+            <div class="stat-group">
+                <span class="stat-label">Circuitos:</span>
+                <span id="stat-tracks-filtered">0</span>/<span id="stat-tracks-total">0</span>
+            </div>
+            <div class="stat-group">
+                <span class="stat-label">Localizaciones:</span>
+                <span id="stat-locations-filtered">0</span>/<span id="stat-locations-total">0</span>
+            </div>
+        </div>
+        <button id="btn-load-data" class="btn-primary">Cargar Datos BGG</button>
+        <div id="login-modal" class="modal hidden">
+            <div class="modal-content">
+                <h2>Login BGG</h2>
+                <input type="text" id="bgg-username" placeholder="Usuario">
+                <input type="password" id="bgg-password" placeholder="Contraseña">
+                <button id="btn-login" class="btn-primary">Login</button>
+                <button id="btn-cancel-login" class="btn-secondary">Cancelar</button>
+            </div>
+        </div>
+    </header>
+
+    <nav id="tabs">
+        <button class="tab-btn active" data-tab="resumen">Resumen</button>
+        <button class="tab-btn" data-tab="jugadores">Jugadores</button>
+        <button class="tab-btn" data-tab="circuitos">Circuitos</button>
+        <button class="tab-btn" data-tab="historial">Historial</button>
+    </nav>
+
+    <aside id="filter-panel" class="collapsed">
+        <button id="btn-toggle-filters" class="btn-toggle">Filtros</button>
+        <div class="filter-content">
+            <label class="filter-toggle">
+                <input type="checkbox" id="filter-active" checked>
+                Filtro Activo
+            </label>
+            <div class="filter-section">
+                <h3>Jugadores</h3>
+                <div class="filter-mode">
+                    <select id="player-filter-mode">
+                        <option value="any">Alguno</option>
+                        <option value="all">Todos</option>
+                        <option value="exact">Solo estos</option>
+                    </select>
+                </div>
+                <div id="player-filters" class="filter-list"></div>
+            </div>
+            <div class="filter-section">
+                <h3>Circuitos</h3>
+                <div id="track-filters" class="filter-list"></div>
+            </div>
+            <div class="filter-section">
+                <h3>Localizaciones</h3>
+                <div id="location-filters" class="filter-list"></div>
+            </div>
+            <button id="btn-apply-filters" class="btn-primary">Aplicar Filtros</button>
+        </div>
+    </aside>
+
+    <main id="content">
+        <section id="tab-resumen" class="tab-content active">
+            <div class="kpi-panel">
+                <div class="kpi-card">
+                    <h3>Líder</h3>
+                    <p id="kpi-leader">-</p>
+                </div>
+                <div class="kpi-card">
+                    <h3>Track</h3>
+                    <p id="kpi-track">-</p>
+                </div>
+                <div class="kpi-card">
+                    <h3>Streak</h3>
+                    <p id="kpi-streak">-</p>
+                </div>
+                <div class="kpi-card">
+                    <h3>Last</h3>
+                    <p id="kpi-last">-</p>
+                </div>
+            </div>
+            <div class="podium-panel">
+                <h2>Podio</h2>
+                <div id="podium" class="podium"></div>
+            </div>
+            <div class="charts-grid">
+                <div class="chart-card">
+                    <h3>Victorias</h3>
+                    <canvas id="chart-wins"></canvas>
+                </div>
+                <div class="chart-card">
+                    <h3>Partidas por Mes</h3>
+                    <canvas id="chart-plays-month"></canvas>
+                </div>
+                <div class="chart-card">
+                    <h3>Puntos Medios</h3>
+                    <canvas id="chart-avgpts"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section id="tab-jugadores" class="tab-content">
+            <h2>Clasificación Jugadores</h2>
+            <table id="players-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Jugador</th>
+                        <th>Partidas</th>
+                        <th>Victorias</th>
+                        <th>Win %</th>
+                        <th>Media</th>
+                        <th>Máx</th>
+                        <th>Últimas 10</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </section>
+
+        <section id="tab-circuitos" class="tab-content">
+            <h2>Circuitos</h2>
+            <div class="charts-grid">
+                <div class="chart-card">
+                    <h3>Distribución</h3>
+                    <canvas id="chart-tracks"></canvas>
+                </div>
+            </div>
+            <div id="track-list" class="track-list"></div>
+        </section>
+
+        <section id="tab-historial" class="tab-content">
+            <h2>Historial de Partidas</h2>
+            <div id="plays-history" class="plays-list"></div>
+            <div class="chart-card">
+                <h3>Evolución Victorias</h3>
+                <canvas id="chart-wins-evolution"></canvas>
+            </div>
+        </section>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>
