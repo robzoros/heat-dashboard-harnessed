@@ -17,16 +17,19 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Create Pull Request and merge
+      - name: Create Pull Request
+        id: create
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GH_REPO: ${{ github.repository }}
         run: |
-          set -e
-          PR_URL=$(gh pr create --base main --head ${{ github.ref_name }} \
+          gh pr create --base main --head ${{ github.ref_name }} \
             --title "Auto-merge: ${{ github.ref_name }}" \
-            --body "Automated PR to merge ${{ github.ref_name }} into main" \
-            --json url --jq '.url')
-          echo "Created PR: $PR_URL"
-          sleep 2
-          gh pr merge $PR_URL --squash
+            --body "Automated PR to merge ${{ github.ref_name }} into main"
+
+      - name: Merge Pull Request
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          PR_NUMBER=$(gh pr list --base main --head ${{ github.ref_name }} --json number --jq '.[0].number')
+          echo "Merging PR #${PR_NUMBER}"
+          gh pr merge $PR_NUMBER --squash
