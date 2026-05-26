@@ -1,0 +1,48 @@
+name: CI automa
+
+on:
+  push:
+    branches:
+      - '**'
+      - '!main'
+
+jobs:
+  create-pr-and-merge:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Create Pull Request
+        id: create
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          echo "Creating PR from ${{ github.ref_name }} to main..."
+          gh pr create --base main --head ${{ github.ref_name }} \
+            --title "Auto-merge: ${{ github.ref_name }}" \
+            --body "Automated PR to merge ${{ github.ref_name }} into main"
+
+      - name: Merge Pull Request
+        if: success()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          echo "Waiting for PR to be available..."
+          sleep 5
+          PR_NUMBER=$(gh pr list --base main --head ${{ github.ref_name }} --json number --jq '.[0].number')
+          if [ -z "$PR_NUMBER" ] || [ "$PR_NUMBER" = "null" ]; then
+            echo "ERROR: No PR found for branch ${{ github.ref_name }}"
+            exit 1
+          fi
+          echo "Merging PR #${PR_NUMBER}..."
+          gh pr merge $PR_NUMBER --squash
+          echo "PR #${PR_NUMBER} merged successfully!"
