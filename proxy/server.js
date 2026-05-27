@@ -1,6 +1,7 @@
 const http = require('http');
 const https = require('https');
 const xml2js = require('xml2js');
+const { classifyPlayers } = require('./classify');
 
 const BGG_LOGIN_URL = 'boardgamegeek.com';
 const BGG_API_HOST = 'boardgamegeek.com';
@@ -150,9 +151,9 @@ function normalizeData(rawPlays) {
             const playerArray = Array.isArray(play.players.player) ? play.players.player : [play.players.player];
             for (const p of playerArray) {
                 const name = p.$.name;
-                const username = p.$.username || '';
-                const userid = p.$.userid || '';
-                const score = p.$.score || '';
+                const username = p.$.username ?? '';
+                const userid = p.$.userid ?? '';
+                const score = p.$.score ?? '';
                 const scoreNum = score !== '' ? parseFloat(score) : null;
                 const winner = p.$.win === '1';
 
@@ -170,7 +171,8 @@ function normalizeData(rawPlays) {
         });
     }
 
-    return { players, locations, boards, plays };
+    const classifiedPlayers = classifyPlayers(players, plays);
+    return { players: classifiedPlayers, locations, boards, plays };
 }
 
 const server = http.createServer((req, res) => {
