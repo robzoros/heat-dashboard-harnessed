@@ -122,7 +122,7 @@
         "Filtro por localizacion (location), pudiendo elegir varios entre todos los de la lista.",
         "Crea un juego tests para poder verificar filtros"
       ],
-      "status": "not_started",
+      "status": "completed",
       "verification": {
         "checks": [
           "Pasa los tests",
@@ -131,7 +131,7 @@
           "El filtro se activa y desactiva",
           "Actualiza header-stats con conteo de partidas/jugadores/circuitos/localizaciones"
         ],
-        "evidence": "Si es posible pantallazo de la aplicación"
+        "evidence": "Lógica de filtros implementada en app.js con 3 modos de jugadores (any/all/exact), filtros por circuito y localización. Mock data mejorado. Tests E2E: 9/9 pasados. Playwright total: 15/15. Screenshot generado."
       }
     },
     {

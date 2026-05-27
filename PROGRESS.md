@@ -148,3 +148,51 @@
 
 #### Próximo paso
 - Feature siguiente: HDH-H04 - Poblamiento de filtros
+
+---
+
+## Sesión 2026-05-27
+
+### Feature trabajada: HDH-H04 - Poblamiento de filtros
+
+**Estado**: Completada
+
+#### Evidencia
+- `src/app.js` actualizado con lógica completa de filtros:
+  - `populateFilters` muestra solo main players en el panel
+  - `getFilteredPlays` implementa filtrado por tracks, locations y jugadores
+  - Modos de filtro por jugadores: `any` (alguno), `all` (todos), `exact` (solo estos)
+  - `getFilteredPlayers` devuelve jugadores únicos presentes en partidas filtradas
+  - `loadMockData` mejorado con 4 partidas realistas y `playerScores` completos
+  - `window.App = App` expuesto para testabilidad desde e2e
+- Creado `e2e/tests/HDH-H04.spec.js` con 9 tests:
+  - Carga mock data y actualiza header-stats
+  - Despliegue y plegado del panel de filtros
+  - Activación/desactivación del filtro
+  - Filtro jugadores modo any/all/exact
+  - Filtro por circuitos y localizaciones
+  - Actualización de header-stats al aplicar filtros
+- Panel de filtros funcional: plegable, activable, con apply manual
+
+#### Tareas completadas
+1. Implementar lógica de filtros en frontend (tracks, locations, players con 3 modos)
+2. Poblar filtros solo con main players
+3. Actualizar header-stats con conteos filtrados/totales
+4. Crear mock data robusto para tests
+5. Crear tests E2E para verificar todos los escenarios de filtros
+6. Verificación local con docker compose y Playwright
+
+#### Verificación final
+- docker compose config --quiet: OK
+- node --check proxy/server.js: OK
+- docker compose up -d --build: OK
+- curl localhost:8082: HTTP 200 con DOCTYPE html
+- npx playwright test: 15/15 tests pasados (6 app base + 9 HDH-H04)
+- Screenshot generado en `evidence/screenshots/app-inicial-desktop.png`
+
+#### Notas / Riesgos
+- `npm run capture:evidence` falla al instalar Chromium en Ubuntu 26.04 (Playwright no soporta esta versión). Workaround: usar Chromium del sistema y ejecutar `npx playwright test` directamente.
+- En CI (GitHub Actions) Playwright instalará su propio Chromium sin problemas.
+
+#### Próximo paso
+- Feature siguiente: HDH-05a - Resumen KPIs

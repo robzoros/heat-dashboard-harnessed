@@ -40,6 +40,8 @@ const App = {
 
         document.getElementById('filter-active').addEventListener('change', (e) => {
             this.filters.active = e.target.checked;
+            this.updateHeaderStats();
+            this.renderAll();
         });
 
         document.getElementById('player-filter-mode').addEventListener('change', (e) => {
@@ -106,8 +108,36 @@ const App = {
                 { id: 2, name: 'Bar' }
             ],
             plays: [
-                { id: 1, date: '2024-01-15', board: 'Circuit A', locationRefId: 1, players: [] },
-                { id: 2, date: '2024-02-20', board: 'Circuit B', locationRefId: 2, players: [] }
+                {
+                    id: 1, playDate: '2024-01-15', board: 'Circuit A', locationRefId: 1,
+                    playerScores: [
+                        { playerRefId: 1, score: '25', scoreNum: 25, winner: true },
+                        { playerRefId: 2, score: '20', scoreNum: 20, winner: false },
+                        { playerRefId: 4, score: '18', scoreNum: 18, winner: false }
+                    ]
+                },
+                {
+                    id: 2, playDate: '2024-02-20', board: 'Circuit B', locationRefId: 2,
+                    playerScores: [
+                        { playerRefId: 2, score: '30', scoreNum: 30, winner: true },
+                        { playerRefId: 1, score: '22', scoreNum: 22, winner: false },
+                        { playerRefId: 3, score: '19', scoreNum: 19, winner: false }
+                    ]
+                },
+                {
+                    id: 3, playDate: '2024-03-10', board: 'Circuit A', locationRefId: 1,
+                    playerScores: [
+                        { playerRefId: 1, score: '28', scoreNum: 28, winner: true },
+                        { playerRefId: 2, score: '24', scoreNum: 24, winner: false }
+                    ]
+                },
+                {
+                    id: 4, playDate: '2024-04-05', board: 'Circuit B', locationRefId: 2,
+                    playerScores: [
+                        { playerRefId: 3, score: '35', scoreNum: 35, winner: true },
+                        { playerRefId: 4, score: '15', scoreNum: 15, winner: false }
+                    ]
+                }
             ],
             boards: [
                 { id: 1, name: 'Circuit A' },
@@ -125,6 +155,7 @@ const App = {
         const locationFilters = document.getElementById('location-filters');
 
         playerFilters.innerHTML = this.data.players
+            .filter(p => p.isMain)
             .map(p => `<label><input type="checkbox" value="${p.id}"> ${p.name}</label>`)
             .join('');
 
@@ -160,15 +191,44 @@ const App = {
 
     getFilteredPlays() {
         if (!this.filters.active) return this.data.plays;
+        const selectedPlayerIds = this.filters.players.map(id => String(id));
+        const selectedTrackNames = this.filters.tracks.map(t => String(t));
+        const selectedLocationIds = this.filters.locations.map(id => String(id));
+
         return this.data.plays.filter(play => {
-            if (this.filters.tracks.length && !this.filters.tracks.includes(play.board)) return false;
-            if (this.filters.locations.length && !this.filters.locations.includes(String(play.locationRefId))) return false;
+            if (selectedTrackNames.length > 0 && !selectedTrackNames.includes(String(play.board))) {
+                return false;
+            }
+            if (selectedLocationIds.length > 0 && !selectedLocationIds.includes(String(play.locationRefId))) {
+                return false;
+            }
+            if (selectedPlayerIds.length > 0) {
+                const playPlayerIds = play.playerScores.map(ps => String(ps.playerRefId));
+                if (this.filters.playerMode === 'any') {
+                    const hasAny = selectedPlayerIds.some(pid => playPlayerIds.includes(pid));
+                    if (!hasAny) return false;
+                } else if (this.filters.playerMode === 'all') {
+                    const hasAll = selectedPlayerIds.every(pid => playPlayerIds.includes(pid));
+                    if (!hasAll) return false;
+                } else if (this.filters.playerMode === 'exact') {
+                    const sameSize = playPlayerIds.length === selectedPlayerIds.length;
+                    const sameSet = sameSize && selectedPlayerIds.every(pid => playPlayerIds.includes(pid));
+                    if (!sameSet) return false;
+                }
+            }
             return true;
         });
     },
 
     getFilteredPlayers() {
-        return this.data.players;
+        const filteredPlays = this.getFilteredPlays();
+        const playerIds = new Set();
+        for (const play of filteredPlays) {
+            for (const ps of play.playerScores) {
+                playerIds.add(ps.playerRefId);
+            }
+        }
+        return this.data.players.filter(p => playerIds.has(p.id));
     },
 
     initCharts() {
@@ -241,3 +301,4 @@ const App = {
 };
 
 document.addEventListener('DOMContentLoaded', () => App.init());
+window.App = App;
