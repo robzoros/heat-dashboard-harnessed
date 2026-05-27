@@ -111,3 +111,40 @@
 
 #### Próximo paso
 - Feature siguiente: HDH-H04 - Poblamiento de filtros
+
+---
+
+## Sesión 2026-05-27
+
+### Tarea trabajada: Implementación del Plan de Evidencias
+
+**Estado**: Completada
+
+#### Evidencia
+- Creada estructura `e2e/` con `package.json`, `playwright.config.js`, `tests/app.spec.js`, `tests/fixtures/mock-data.json`, `scripts/capture-evidence.sh`
+- Creada estructura `evidence/` con `screenshots/`, `reports/`, `logs/` (solo `.gitkeep` versionados)
+- Modificado `.gitignore` para ignorar binarios generados pero permitir `.gitkeep`
+- Modificado `.github/workflows/auto-merge.yml` para ejecutar tests E2E antes del merge, subir artifacts y usar `secrets.json` seguro
+- Modificado `AGENTS.md` con nuevas reglas de trabajo sobre evidencias
+- Instaladas dependencias `@playwright/test` y generado `e2e/package-lock.json`
+- Configurado `playwright.config.js` con proyecto `chromium` y `executablePath` del sistema para entorno local
+
+#### Tareas completadas
+1. Crear archivos nuevos del plan de evidencias
+2. Modificar archivos existentes (.gitignore, auto-merge.yml, AGENTS.md)
+3. Instalar dependencias y generar package-lock.json
+4. Verificar funcionamiento local: 6/6 tests pasados, screenshot generado
+
+#### Verificación final
+- `npx playwright test` en local: 6/6 passed
+- Screenshot generado en `evidence/screenshots/app-inicial-desktop.png`
+- `docker compose up -d --build`: OK (servicios ya en ejecución)
+- `node --version`: v24.16.0 (>=20)
+
+#### Notas / Riesgos
+- Playwright no soporta oficialmente `chromium` en Ubuntu 26.04. Solución aplicada: usar Chromium del sistema (`/usr/bin/chromium-browser`) en local.
+- En CI (GitHub Actions, ubuntu-latest) Playwright podrá instalar su propio Chromium sin problemas.
+- Requiere instalar Chromium en WSL si no está presente (`sudo apt install chromium-browser`).
+
+#### Próximo paso
+- Feature siguiente: HDH-H04 - Poblamiento de filtros

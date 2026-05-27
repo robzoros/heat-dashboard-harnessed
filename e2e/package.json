@@ -1,0 +1,14 @@
+{
+  "name": "heat-dashboard-e2e",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=20" },
+  "devDependencies": {
+    "@playwright/test": "^1.52.0"
+  },
+  "scripts": {
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "capture:evidence": "bash scripts/capture-evidence.sh"
+  }
+}

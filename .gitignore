@@ -1,3 +1,9 @@
 secrets.json
-proxy/node_modules/
+node_modules/
 proxy/package-lock.json
+e2e/test-results/
+evidence/screenshots/*
+!evidence/screenshots/.gitkeep
+evidence/reports/*
+!evidence/reports/.gitkeep
+evidence/logs/*.log
