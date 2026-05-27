@@ -22,14 +22,14 @@
         "Aplicar fix para que los main players aparezcan en el filtro de jugadores.",
         "Verificar que el fix funciona con mock data y con datos reales de BGG."
       ],
-      "status": "not_started",
+      "status": "completed",
       "verification": {
         "checks": [
           "Los main players aparecen en el filtro de jugadores",
           "Se pueden seleccionar y aplicar filtros por jugador principal",
           "Tests E2E pasan si existen"
         ],
-        "evidence": "Pendiente"
+        "evidence": "Fix: contenedor del proxy usaba código antiguo en caché. Añadido nodemon a proxy/package.json y modificado docker-compose.yml para reiniciar automáticamente el servidor Node ante cambios. Tests: 15/15 pasados. Proxy verificado: players incluyen isBot/isMain/isOther."
       }
     },
     {

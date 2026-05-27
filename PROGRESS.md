@@ -196,3 +196,40 @@
 
 #### Próximo paso
 - Feature siguiente: HDH-05a - Resumen KPIs
+
+---
+
+## Sesión 2026-05-27
+
+### Feature trabajada: HDH-BUG01 - FIX: Filtros no muestran jugadores principales
+
+**Estado**: Completada
+
+#### Evidencia
+- Diagnóstico: El proxy BGG devolvía jugadores sin campos de clasificación (`isBot`, `isMain`, `isOther`) porque el contenedor llevaba horas corriendo con una versión antigua de `server.js` (antes de integrar `classifyPlayers`).
+- Fix aplicado:
+  - Añadida dependencia `nodemon` en `proxy/package.json` como devDependency
+  - Modificado `docker-compose.yml`: comando del proxy cambiado de `node server.js` a `npx nodemon server.js`
+  - Verificado que nodemon detecta cambios en archivos del proxy y reinicia automáticamente el servidor
+- `proxy/package-lock.json` actualizado tras `npm install`
+
+#### Tareas completadas
+1. Identificar la causa raíz: contenedor del proxy con código antiguo en caché
+2. Añadir `nodemon` para reinicio automático del proxy ante cambios
+3. Actualizar `docker-compose.yml` para usar nodemon
+4. Verificar que nodemon reinicia el servidor al modificar archivos
+5. Ejecutar tests E2E: 15/15 pasados
+
+#### Verificación final
+- docker compose config --quiet: OK
+- docker compose up -d --build: OK
+- curl localhost:8082: HTTP 200 con DOCTYPE html
+- POST /bgg-api/login con credenciales: success=true, players incluyen `isMain`
+- npx playwright test: 15/15 tests pasados
+- nodemon reinicia automáticamente al detectar cambios en proxy/
+
+#### Notas / Riesgos
+- Ninguno. El fix es puramente de infraestructura/despliegue.
+
+#### Próximo paso
+- Feature siguiente: HDH-05a - Resumen KPIs
