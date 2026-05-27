@@ -73,7 +73,11 @@ Antes de terminar una sesión:
 3. Registra cualquier riesgo o bloqueo sin resolver.
 4. **Haz commit de todos los cambios** (código + `PROGRESS.md` + `features_list.json`).
 5. **Haz push de la rama creada.**
-6. **Haz checkout a `main`.**
-   - El push y el checkout a `main` son siempre los **últimos** pasos.
    - Las modificaciones de `PROGRESS.md` y `features_list.json` SIEMPRE se hacen ANTES del push.
-
+6. **Espera a que el GitHub Action termine:**
+   - Al hacer push se dispara automáticamente un Action que crea un PR y lo mergea a `main`.
+   - Verifica cada **15 segundos** el estado del Action usando `gh run list --workflow=auto-merge.yml --branch=<rama> --limit=1`.
+   - Cuando el run aparezca como `completed` con `conclusion=success`, continúa al siguiente paso.
+   - Timeout máximo: 5 minutos. Si no termina, informa al usuario.
+7. **Haz checkout a `main` y luego `git pull`** para sincronizar con el merge del Action.
+   - El push, la espera del Action, el checkout y el pull son siempre los **últimos** pasos.

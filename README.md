@@ -1,1 +1,1 @@
--e   [0;36m→[0m  # heat-dashboard-harnessed
+# heat-dashboard-harnessed
