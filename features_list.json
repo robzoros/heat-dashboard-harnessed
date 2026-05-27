@@ -13,6 +13,26 @@
   },
   "features": [
     {
+      "id": "HDH-BUG01",
+      "priority": 1,
+      "name": "FIX: Filtros no muestran jugadores principales",
+      "description": [
+        "Bug detectado: En el panel de filtros no aparecen los jugadores principales (main players), por lo que no se puede filtrar por ellos.",
+        "Investigar si el problema está en populateFilters() de app.js o en classifyPlayers() del proxy.",
+        "Aplicar fix para que los main players aparezcan en el filtro de jugadores.",
+        "Verificar que el fix funciona con mock data y con datos reales de BGG."
+      ],
+      "status": "not_started",
+      "verification": {
+        "checks": [
+          "Los main players aparecen en el filtro de jugadores",
+          "Se pueden seleccionar y aplicar filtros por jugador principal",
+          "Tests E2E pasan si existen"
+        ],
+        "evidence": "Pendiente"
+      }
+    },
+    {
       "id": "HDH-00",
       "priority": 1,
       "name": "Crear Github Action",
@@ -153,7 +173,7 @@
           "Ejecuta desde docker-compose hasta llamada a localhost conexión bgg, KPIs mostradas",
           "Aplicación de filtros cambia resultado y al dejar de aplicar filtros se ve resultado inicial."
         ],
-  "evidence": "Si es posible pantallazos de la aplicación"
+        "evidence": "Pendiente"
       }
     },
     {
@@ -170,14 +190,14 @@
           "Ejecuta desde docker-compose hasta llamada a localhost conexión bgg, Podio mostrado",
           "Aplicación de filtros cambia resultado y al dejar de aplicar filtros se ve resultado inicial."
         ],
-  "evidence": "Si es posible pantallazos de la aplicación"
+        "evidence": "Pendiente"
       }
     },
     {
       "id": "HDH-05c",
       "name": "Panel victorias",
       "description": [
-  "Gráfico de barras: victorias por jugador"
+        "Gráfico de barras: victorias por jugador"
       ],
       "status": "not_started",
       "verification": {
@@ -185,7 +205,7 @@
           "Ejecuta desde docker-compose hasta llamada a localhost conexión bgg, gráfico mostrado",
           "Aplicación de filtros cambia resultado y al dejar de aplicar filtros se ve resultado inicial."
         ],
-  "evidence": "Si es posible pantallazos de la aplicación"
+        "evidence": "Pendiente"
       }
     },
     {
@@ -203,7 +223,7 @@
           "Ejecuta desde docker-compose hasta llamada a localhost conexión bgg, gráfico mostrado",
           "Aplicación de filtros cambia resultado y al dejar de aplicar filtros se ve resultado inicial."
         ],
-  "evidence": "Si es posible pantallazos de la aplicación"
+        "evidence": "Pendiente"
       }
     },
     {
@@ -221,7 +241,7 @@
           "Ejecuta desde docker-compose hasta llamada a localhost conexión bgg, gráfico mostrado",
           "Aplicación de filtros cambia resultado y al dejar de aplicar filtros se ve resultado inicial."
         ],
-  "evidence": "Si es posible pantallazos de la aplicación"
+        "evidence": "Pendiente"
       }
     },
     {
@@ -235,8 +255,7 @@
         "Ordenados por victorias descendente",
         "Win % con barra de porcentaje visual",
         "Para Calcular racha de últimas 10 partidas",
-  "- Se muestran 10 puntos con las últimas diez partidas: verde=win, gris=loss"
-
+        "- Se muestran 10 puntos con las últimas diez partidas: verde=win, gris=loss"
       ],
       "status": "not_started",
       "verification": {
@@ -255,7 +274,7 @@
         "Chart doughnut en canvas#chart-tracks",
         "Track Winners: nombre con flag emoji + mejor jugador",
         "Track List: nombre, partidas, pts medio, campeon",
-  "Cada track muestra el jugador con más victorias en ese circuito"
+        "Cada track muestra el jugador con más victorias en ese circuito"
       ],
       "status": "not_started",
       "verification": {
@@ -279,7 +298,7 @@
         "- Cierre de panel pulsando la entrada",
         "Otro panel muestra chart line con evolución de victorias",
         "- Un dataset por main player (máx 10 primeros)",
-  "- Data: victoria acumulada por fecha"
+        "- Data: victoria acumulada por fecha"
       ],
       "status": "not_started",
       "verification": {
