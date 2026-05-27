@@ -96,10 +96,10 @@ const App = {
     loadMockData() {
         this.data = {
             players: [
-                { id: 1, name: 'Player1', isBot: false, isMain: true },
-                { id: 2, name: 'Player2', isBot: false, isMain: true },
-                { id: 3, name: 'Player3', isBot: false, isMain: false },
-                { id: 4, name: 'Bot1', isBot: true, isMain: false }
+                { id: 1, name: 'Player1', isBot: false, isMain: true, isOther: false },
+                { id: 2, name: 'Player2', isBot: false, isMain: true, isOther: false },
+                { id: 3, name: 'Player3', isBot: false, isMain: false, isOther: true },
+                { id: 4, name: 'Bot1', isBot: true, isMain: false, isOther: false }
             ],
             locations: [
                 { id: 1, name: 'Casa' },

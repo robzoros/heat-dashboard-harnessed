@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-05-26",
+  "last_updated": "2026-05-27",
   "user": "Roberto Méndez",
   "rules": {
     "single_active_feature": true,
@@ -96,12 +96,12 @@
         "Resto → main player",
         "Crea un juego tests para poder verificar clasificación"
       ],
-      "status": "not_started",
+      "status": "completed",
       "verification": {
         "checks": [
           "Tests pasados"
         ],
-        "evidence": "Evidencia de Test pasado Lista de bots, main player y resto"
+        "evidence": "Creado proxy/classify.js con classifyPlayers. Reglas: userid='0'→bot, <3 partidas→other, resto→main. Bug fix: userid='0' ya no se pierde por || ''. Tests: 4/4 pasados (testBots, testMainPlayers, testOtherPlayers, testThresholdExactlyThree). Verificado en docker compose y local."
       }
     },
     {

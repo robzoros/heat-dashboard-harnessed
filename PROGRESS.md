@@ -77,3 +77,37 @@
 
 #### Próximo paso
 - Feature siguiente: HDH-H03 - Clasificación datos
+
+---
+
+## Sesión 2026-05-27
+
+### Feature trabajada: HDH-H03 - Clasificación datos
+
+**Estado**: Completada
+
+#### Evidencia
+- Creado proxy/classify.js con función classifyPlayers(players, plays)
+- Reglas implementadas:
+  - userid === '0' → isBot=true, isMain=false, isOther=false
+  - Partidas < 3 → isBot=false, isMain=false, isOther=true
+  - Resto → isBot=false, isMain=true, isOther=false
+- Corregido bug en proxy/server.js: `p.$.userid || ''` convertía '0' a '', ahora usa `??`
+- Creado proxy/test-classify.js con 4 tests:
+  - testBots: bots detectados correctamente
+  - testMainPlayers: jugadores con 3+ partidas son main
+  - testOtherPlayers: jugadores con <3 partidas son other
+  - testThresholdExactlyThree: umbral exacto en 3 partidas
+- proxy/package.json actualizado con script "test"
+- src/app.js mock data actualizado con isBot/isMain/isOther
+
+#### Verificación final
+- node --check proxy/server.js: OK
+- docker compose config --quiet: OK
+- docker compose up -d --build: OK
+- curl localhost:8082: HTTP 200 con DOCTYPE html
+- npm test (proxy): 4/4 tests pasados
+- docker compose exec bgg-proxy npm test: 4/4 tests pasados
+
+#### Próximo paso
+- Feature siguiente: HDH-H04 - Poblamiento de filtros
