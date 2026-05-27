@@ -1,0 +1,22 @@
+[
+  {
+    "id": "play_12345",
+    "playDate": "2024-01-15",
+    "board": "USA",
+    "locationRefId": 1,
+    "playerScores": [
+      { "playerRefId": 1, "score": "180", "scoreNum": 180, "winner": true },
+      { "playerRefId": 2, "score": "175", "scoreNum": 175, "winner": false }
+    ]
+  },
+  {
+    "id": "play_12346",
+    "playDate": "2024-02-10",
+    "board": "Italy",
+    "locationRefId": 2,
+    "playerScores": [
+      { "playerRefId": 2, "score": "190", "scoreNum": 190, "winner": true },
+      { "playerRefId": 1, "score": "185", "scoreNum": 185, "winner": false }
+    ]
+  }
+]

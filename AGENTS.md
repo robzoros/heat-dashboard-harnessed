@@ -39,6 +39,9 @@ Si trabajas con tasks actualiza la task y cuando se hayan completado todas actua
 - No cambies silenciosamente las reglas de verificación durante la implementación.
 - Si no pasa las pruebas haz los cambios necesarios y vuelve a intentarlo (5 veces como máximo)
 - Para las pruebas de conexión con BGG usar usuario/password de archivo secrets.
+- Después de implementar una feature, crear/actualizar su spec en `e2e/tests/<feature-id>.spec.js`
+- Tras pasar la verificación local, ejecutar `cd e2e && npm run capture:evidence` para generar pantallazos
+- Los screenshots generados en local no se versionan en git; la evidencia oficial se almacena como artifacts en GitHub Actions
 
 ## Sinónimos
 - Player = Jugador
