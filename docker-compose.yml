@@ -19,6 +19,6 @@ services:
     working_dir: /app
     volumes:
       - ./proxy:/app
-    command: node server.js
+    command: sh -c "npm install && node server.js"
     networks:
       - game-net

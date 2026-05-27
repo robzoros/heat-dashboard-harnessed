@@ -76,7 +76,14 @@ const App = {
             });
             const result = await response.json();
             document.getElementById('login-modal').classList.add('hidden');
-            this.data = result.data || this.data;
+            if (result.success && result.data) {
+                this.data = result.data;
+                console.log('BGG Data loaded:');
+                console.log('Players:', this.data.players);
+                console.log('Locations:', this.data.locations);
+                console.log('Boards:', this.data.boards);
+                console.log('Plays:', this.data.plays);
+            }
             this.populateFilters();
             this.updateHeaderStats();
             this.renderAll();
@@ -118,12 +125,11 @@ const App = {
         const locationFilters = document.getElementById('location-filters');
 
         playerFilters.innerHTML = this.data.players
-            .filter(p => p.isMain)
             .map(p => `<label><input type="checkbox" value="${p.id}"> ${p.name}</label>`)
             .join('');
 
         trackFilters.innerHTML = this.data.boards
-            .map(b => `<label><input type="checkbox" value="${b.id}"> ${b.name}</label>`)
+            .map(b => `<label><input type="checkbox" value="${b.name}"> ${b.name}</label>`)
             .join('');
 
         locationFilters.innerHTML = this.data.locations
@@ -162,8 +168,7 @@ const App = {
     },
 
     getFilteredPlayers() {
-        if (!this.filters.active) return this.data.players;
-        return this.data.players.filter(p => p.isMain);
+        return this.data.players;
     },
 
     initCharts() {

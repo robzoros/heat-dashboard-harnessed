@@ -76,11 +76,12 @@
         "Cada partida tiene: id, playDate, board, locationRefId, playerScores",
         "Cada playerScore tiene: playerRefId, score, scoreNum, winner"
       ],
+      "status": "completed",
       "verification": {
         "checks": [
           "Se han creado los arrays de players, locations, boards(circuitos) y plays"
         ],
-        "evidence": "Listado de cada array"
+        "evidence": "Proxy implementado con login BGG, paginación y parseo XML. Arrays verificados: Players=19, Locations=7, Boards=11, Plays=102. Game ID Heat: 366013."
       }
     },
     {
