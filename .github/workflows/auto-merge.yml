@@ -31,8 +31,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
-
+          node-version: 24
       - name: Install dependencies
         working-directory: e2e
         run: npm ci
@@ -47,6 +46,10 @@ jobs:
           BGG_USER: ${{ secrets.BGG_USER }}
           BGG_PASS: ${{ secrets.BGG_PASS }}
         run: |
+          if [ -z "$BGG_USER" ] || [ -z "$BGG_PASS" ]; then
+            echo "WARNING: BGG_USER o BGG_PASS no configurados. El proxy no podrá autenticarse con BGG."
+            echo "Configúralos en GitHub Settings > Secrets > Actions"
+          fi
           cat > secrets.json <<EOF
           {"user":"$BGG_USER","password":"$BGG_PASS"}
           EOF
@@ -56,9 +59,17 @@ jobs:
 
       - name: Wait for services
         run: |
-          curl --retry 30 --retry-delay 3 --retry-connrefused \
-            --max-time 90 http://localhost:8082 > /dev/null 2>&1
-
+          for i in $(seq 1 30); do
+            if curl -sf http://localhost:8082 > /dev/null 2>&1; then
+              echo "Servicios listos."
+              exit 0
+            fi
+            echo "Intento $i/30..."
+            sleep 3
+          done
+          echo "ERROR: Servicios no disponibles tras 90s"
+          docker compose logs
+          exit 1
       - name: Run E2E tests
         working-directory: e2e
         run: npx playwright test
