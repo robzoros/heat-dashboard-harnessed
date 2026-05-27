@@ -1,7 +1,6 @@
 secrets.json
 node_modules/
 proxy/package-lock.json
-e2e/package-lock.json
 e2e/test-results/
 evidence/screenshots/*
 !evidence/screenshots/.gitkeep
