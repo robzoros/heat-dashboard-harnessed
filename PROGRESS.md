@@ -276,3 +276,50 @@
 
 #### Próximo paso
 - Feature siguiente: HDH-05b - Panel podio
+
+---
+
+## Sesión 2026-05-28
+
+### Feature trabajada: HDH-TEST_ENV01 - FIX: Tests usando un xml de prueba
+
+**Estado**: Completada
+
+#### Evidencia
+- Script temporal `fetch-bgg-xml.js` ejecutado con credenciales de `secrets.json`
+- XML de 102 partidas guardado en `proxy/test-data/bgg-plays.xml`
+- Modificado `proxy/server.js` añadiendo ruta POST `/test-login` (entrada trasera) que lee el XML local y devuelve datos normalizados
+- Creado `e2e/tests/HDH-TEST_ENV01.spec.js` con 3 tests:
+  - Carga datos desde XML de prueba y captura screenshot (`HDH-TEST_ENV01-datos-cargados.png`)
+  - Aplica filtro por circuito y captura screenshot (`HDH-TEST_ENV01-filtro-aplicado.png`)
+  - Desactiva filtro y captura screenshot (`HDH-TEST_ENV01-filtro-desactivado.png`)
+- Instaladas dependencias del sistema necesarias para ejecutar Chromium snap en tests (libnspr4, libnss3, libasound2t64)
+- Downgrade de `@playwright/test` a 1.52.0 y uso de Node 20 (vía nvm) para compatibilidad con el entorno local
+- Modificado `AGENTS.md` para reforzar la generación de screenshots de evidencia en cada spec
+
+#### Tareas completadas
+1. Obtener XML real de BGG usando credenciales de secrets.json
+2. Guardar XML en proxy/test-data/bgg-plays.xml
+3. Implementar entrada trasera /test-login en proxy/server.js
+4. Crear spec E2E con screenshots de evidencia
+5. Resolver problema de entorno local para ejecutar Playwright (Node 20 + libs del sistema)
+6. Verificar que todos los tests existentes siguen pasando
+7. Actualizar AGENTS.md con regla de screenshots en specs
+
+#### Verificación final
+- docker compose config --quiet: OK
+- node --check proxy/server.js: OK
+- docker compose up -d --build: OK
+- curl localhost:8082/bgg-api/test-login: success=true, data con 102 plays
+- Playwright E2E: 22/22 tests pasados
+- Screenshots generados en evidence/screenshots/:
+  - HDH-TEST_ENV01-datos-cargados.png
+  - HDH-TEST_ENV01-filtro-aplicado.png
+  - HDH-TEST_ENV01-filtro-desactivado.png
+
+#### Notas / Riesgos
+- Playwright 1.60.0 no es compatible con Node 24 ni con Ubuntu 26.04 para instalación de browsers. Solución: usar Node 20 vía nvm y Chromium del sistema (snap).
+- El script `capture-evidence.sh` puede requerir ajustes para usar Node 20 en entornos con nvm.
+
+#### Próximo paso
+- Feature siguiente: HDH-05b - Panel podio

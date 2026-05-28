@@ -178,6 +178,25 @@
       }
     },
     {
+      "id": "HDH-TEST_ENV01",
+      "priority": 1,
+      "name": "FIX: Tests usando un xml de prueba",
+      "description": [
+        "Para generar evidencias de funcionalidad funcionando vamos a hacer lo siguiente.",
+        "Guardar un XML con resultado de llamada a API de BGG con credenciales de secrets.",
+        "Construir una entrada 'trasera' solo para tests y generación de evidencias que lea de este XML 'simulando' la llamada a BGG."
+      ],
+      "status": "completed",
+      "verification": {
+        "checks": [
+          "Generar evidencias, es decir, un pantallazo usando este artefacto",
+          "Evidencias son pantallazos: 1 después de lectura, 1 después de aplicar algún filtro, 1 después de desactivar filtro.",
+          "Tests E2E pasan"
+        ],
+        "evidence": "XML de 102 partidas guardado en proxy/test-data/bgg-plays.xml. Ruta POST /test-login añadida a proxy/server.js. Spec E2E creado en e2e/tests/HDH-TEST_ENV01.spec.js con 3 tests y 3 screenshots. Todos los tests E2E pasan (22/22)."
+      }
+    },
+    {
       "id": "HDH-05b",
       "name": "Panel podio",
       "description": [
