@@ -204,13 +204,13 @@
         "Solo jugadores principales",
         "Orden visual: #2 | #1 | #3 "
       ],
-      "status": "not_started",
+      "status": "completed",
       "verification": {
         "checks": [
           "Ejecuta desde docker-compose hasta llamada a localhost conexión bgg, Podio mostrado",
           "Aplicación de filtros cambia resultado y al dejar de aplicar filtros se ve resultado inicial."
         ],
-        "evidence": "Pendiente"
+        "evidence": "Implementado renderPodium() en app.js: top 3 main players por victorias, orden visual #2|#1|#3, oro centrado con scale(1.15). CSS actualizado con clases .first/.second/.third y estilos para .podium-medal, .podium-name, .podium-wins. Solo muestra jugadores con al menos 1 victoria. Tests E2E: 4/4 pasados. Total Playwright: 26/26."
       }
     },
     {
