@@ -14,12 +14,14 @@ export default defineConfig({
     viewport: { width: 1280, height: 900 },
     screenshot: 'only-on-failure',
     trace: 'on-first-retry',
-    ...(process.env.CI ? {} : { launchOptions: { executablePath: '/usr/bin/chromium-browser' } }),
   },
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      use: {
+        ...devices['Desktop Chrome'],
+        ...(process.env.CI ? {} : { launchOptions: { executablePath: '/snap/chromium/current/usr/lib/chromium-browser/chrome', args: ['--no-sandbox'] } }),
+      },
     },
   ],
 });

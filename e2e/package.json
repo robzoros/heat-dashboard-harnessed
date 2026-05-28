@@ -2,7 +2,9 @@
   "name": "heat-dashboard-e2e",
   "private": true,
   "type": "module",
-  "engines": { "node": ">=20" },
+  "engines": {
+    "node": ">=20"
+  },
   "devDependencies": {
     "@playwright/test": "^1.52.0"
   },

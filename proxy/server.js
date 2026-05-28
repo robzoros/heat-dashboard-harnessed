@@ -1,5 +1,7 @@
 const http = require('http');
 const https = require('https');
+const fs = require('fs');
+const path = require('path');
 const xml2js = require('xml2js');
 const { classifyPlayers } = require('./classify');
 
@@ -200,6 +202,31 @@ const server = http.createServer((req, res) => {
                 res.end(JSON.stringify({ success: true, data }));
             } catch (error) {
                 console.error('Login or fetch error:', error.message);
+                res.setHeader('Content-Type', 'application/json');
+                res.writeHead(500);
+                res.end(JSON.stringify({ success: false, error: error.message }));
+            }
+        });
+    } else if (req.method === 'POST' && req.url === '/test-login') {
+        // Entrada trasera para tests: lee XML local y simula respuesta de BGG
+        const xmlPath = path.join(__dirname, 'test-data', 'bgg-plays.xml');
+        fs.readFile(xmlPath, 'utf8', async (err, xml) => {
+            if (err) {
+                console.error('Test login error:', err.message);
+                res.setHeader('Content-Type', 'application/json');
+                res.writeHead(500);
+                res.end(JSON.stringify({ success: false, error: 'Test data not found' }));
+                return;
+            }
+            try {
+                const data = await parseXml(xml);
+                const rawPlays = Array.isArray(data.plays.play) ? data.plays.play : [data.plays.play];
+                const normalized = normalizeData(rawPlays);
+                res.setHeader('Content-Type', 'application/json');
+                res.writeHead(200);
+                res.end(JSON.stringify({ success: true, data: normalized }));
+            } catch (error) {
+                console.error('Test login parse error:', error.message);
                 res.setHeader('Content-Type', 'application/json');
                 res.writeHead(500);
                 res.end(JSON.stringify({ success: false, error: error.message }));
