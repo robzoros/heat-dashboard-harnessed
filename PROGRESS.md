@@ -541,3 +541,46 @@
 
 #### Próximo paso
 - Feature siguiente: HDH-06b - Pestaña Circuitos
+
+---
+
+## Sesión 2026-05-28
+
+### Feature trabajada: HDH-06b - Pestaña Circuitos
+
+**Estado**: Completada
+
+#### Evidencia
+- `src/app.js` actualizado con dos implementaciones:
+  1. **Doughnut chart** en `renderCharts()`: agrupa partidas filtradas por circuito, ordena alfabéticamente, actualiza chart `tracks`
+  2. **Track list** en `renderTrackList()`: genera tarjetas por circuito con:
+     - Nombre con flag emoji (`getTrackFlag`)
+     - Número de partidas
+     - Puntos medios (promedio de todos los scores)
+     - Campeón (main player con más victorias en ese circuito)
+- `src/styles.css` actualizado con estilos para `.track-card h4` y `.track-card p`
+- Creado `e2e/tests/HDH-06b.spec.js` con 4 tests:
+  - Doughnut chart con mock data (2 circuitos, 2 partidas cada uno)
+  - Track list con stats correctas (verifica plays, avg, champion)
+  - Actualización al aplicar/quitar filtros
+  - Vacío cuando no hay partidas
+
+#### Tareas completadas
+1. Implementar doughnut chart de distribución en `renderCharts()`
+2. Implementar track list con stats en `renderTrackList()`
+3. Añadir CSS para track cards
+4. Crear tests E2E con datos inyectados
+5. Verificar compatibilidad con tests existentes (47/47 pasados)
+
+#### Verificación final
+- docker compose config --quiet: OK
+- node --check proxy/server.js: OK
+- docker compose up -d --build: OK
+- curl localhost:8082: HTTP 200 con DOCTYPE html
+- npx playwright test: 47/47 tests pasados
+
+#### Notas / Riesgos
+- Ninguno. Implementación completa y compatible con tests existentes.
+
+#### Próximo paso
+- Feature siguiente: HDH-07 - Pestaña Historial

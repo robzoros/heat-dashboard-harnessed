@@ -452,6 +452,17 @@ const App = {
         this.charts.avgPts.data.labels = avgByPlayer.map(p => p.name);
         this.charts.avgPts.data.datasets[0].data = avgByPlayer.map(p => parseFloat(p.avg.toFixed(1)));
         this.charts.avgPts.update();
+
+        // Track distribution doughnut chart
+        const playsByTrack = {};
+        for (const play of filteredPlays) {
+            playsByTrack[play.board] = (playsByTrack[play.board] || 0) + 1;
+        }
+        const trackLabels = Object.keys(playsByTrack).sort();
+        const trackData = trackLabels.map(t => playsByTrack[t]);
+        this.charts.tracks.data.labels = trackLabels;
+        this.charts.tracks.data.datasets[0].data = trackData;
+        this.charts.tracks.update();
     },
 
     renderPlayersTable() {
@@ -518,7 +529,48 @@ const App = {
     },
 
     renderTrackList() {
-        document.getElementById('track-list').innerHTML = '';
+        const filteredPlays = this.getFilteredPlays();
+        const mainPlayers = this.data.players.filter(p => p.isMain);
+
+        const trackStats = {};
+        for (const play of filteredPlays) {
+            if (!trackStats[play.board]) {
+                trackStats[play.board] = { plays: 0, totalScore: 0, scoresCount: 0, winsByPlayer: {} };
+            }
+            trackStats[play.board].plays++;
+            for (const ps of play.playerScores) {
+                trackStats[play.board].totalScore += ps.scoreNum;
+                trackStats[play.board].scoresCount++;
+                if (ps.winner) {
+                    const pid = ps.playerRefId;
+                    trackStats[play.board].winsByPlayer[pid] = (trackStats[play.board].winsByPlayer[pid] || 0) + 1;
+                }
+            }
+        }
+
+        const trackList = Object.entries(trackStats).map(([name, stats]) => {
+            const avg = stats.scoresCount > 0 ? (stats.totalScore / stats.scoresCount).toFixed(1) : '0.0';
+            let championName = '-';
+            let maxWins = 0;
+            for (const [pid, wins] of Object.entries(stats.winsByPlayer)) {
+                if (wins > maxWins) {
+                    maxWins = wins;
+                    const player = this.data.players.find(p => p.id === parseInt(pid));
+                    championName = player ? player.name : '-';
+                }
+            }
+            return { name, plays: stats.plays, avg, champion: championName };
+        })
+        .sort((a, b) => b.plays - a.plays);
+
+        document.getElementById('track-list').innerHTML = trackList.map(t => `
+            <div class="track-card">
+                <h4>${this.getTrackFlag(t.name)} ${t.name}</h4>
+                <p>Partidas: ${t.plays}</p>
+                <p>Pts Medio: ${t.avg}</p>
+                <p>Campeón: ${t.champion}</p>
+            </div>
+        `).join('');
     },
 
     renderPlaysHistory() {

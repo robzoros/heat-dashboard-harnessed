@@ -297,12 +297,13 @@
         "Track List: nombre, partidas, pts medio, campeon",
         "Cada track muestra el jugador con más victorias en ese circuito"
       ],
-      "status": "not_started",
+      "status": "completed",
       "verification": {
         "checks": [
           "Ejecuta desde docker-compose hasta llamada a localhost conexión bgg, pestaña mostrada",
           "Aplicación de filtros cambia resultado y al dejar de aplicar filtros se ve resultado inicial."
-        ]
+        ],
+        "evidence": "Implementado doughnut chart en renderCharts() con distribución de partidas por circuito. Implementado renderTrackList() con tarjetas por track: nombre con flag emoji, partidas, pts medio, campeón (main player con más victorias). CSS para track-card. Tests E2E: 4/4 pasados. Total Playwright: 47/47."
       }
     },
     {
