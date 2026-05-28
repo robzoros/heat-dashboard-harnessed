@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-05-27",
+  "last_updated": "2026-05-28",
   "user": "Roberto Méndez",
   "rules": {
     "single_active_feature": true,
@@ -9,6 +9,7 @@
   "status_legend": {
     "not_started": "Work has not begun.",
     "in_progress": "The feature is the current active task.",
+    "completed": "Required verification has passed and evidence is recorded.",
     "blocked": "Work cannot continue until a documented blocker is resolved."
   },
   "features": [
@@ -159,21 +160,21 @@
       "priority": 5,
       "name": "Resumen KPIs",
       "description": [
-        "Crea Panel de KPIs. Debajo de las pestañas cuatro cajas con cada KPI",
+        "Crea Panel de KPIs. Debajo de las pestañas cuatro cajas cada una con un KPI",
         "KPI Líder muestra el nombre del main player con más victorias",
         "KPI Track muestra flag emoji + nombre del circuito más frecuente",
         "KPI Streak muestra 'nombre (n)' donde n es la mejor racha de victorias de un main player)",
-        "KPI Last muestra la fecha de la partida más reciente en formato YYYY-MM-DD",
+        "KPI Last muestra la fecha de la partida más reciente en formato YYYY-MM-DD con vencedor",
         "Crea un juego tests para poder verificar KPIs"
       ],
-      "status": "not_started",
+      "status": "completed",
       "verification": {
         "checks": [
           "Pasa los tests",
           "Ejecuta desde docker-compose hasta llamada a localhost conexión bgg, KPIs mostradas",
           "Aplicación de filtros cambia resultado y al dejar de aplicar filtros se ve resultado inicial."
         ],
-        "evidence": "Pendiente"
+        "evidence": "Implementados 4 KPIs en app.js: Leader (main player con más victorias), Track (circuito más frecuente + flag emoji), Streak (mejor racha consecutiva de victorias), Last (fecha + vencedor de partida más reciente). getTrackFlag soporta 13 países. Tests E2E: 4/4 pasados (mock data, custom data, filtros, sin datos). Total Playwright: 19/19 pasados."
       }
     },
     {

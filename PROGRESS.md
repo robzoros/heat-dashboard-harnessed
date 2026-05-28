@@ -233,3 +233,45 @@
 
 #### Próximo paso
 - Feature siguiente: HDH-05a - Resumen KPIs
+
+---
+
+## Sesión 2026-05-28
+
+### Feature trabajada: HDH-05a - Resumen KPIs
+
+**Estado**: Completada
+
+#### Evidencia
+- `src/app.js` actualizado con implementación completa de `renderKPIs`:
+  - KPI Líder: main player con más victorias en partidas filtradas
+  - KPI Track: circuito más frecuente con flag emoji (`getTrackFlag` soporta USA, Italy, France, UK, Germany, Poland, Mexico, Japan, Australia, Spain, Brazil, Canada, Netherlands)
+  - KPI Streak: mejor racha consecutiva de victorias de un main player
+  - KPI Last: fecha YYYY-MM-DD de la partida más reciente con nombre del vencedor
+  - Manejo de empates: circuito alfabéticamente primero; streak conserva el primero encontrado
+  - KPIs responden dinámicamente a filtros activos
+- Creado `e2e/tests/HDH-05a.spec.js` con 4 tests:
+  - KPIs con mock data por defecto
+  - KPIs con datos custom (valores unívocos verificables)
+  - Actualización de KPIs al aplicar/quitar filtros
+  - KPIs muestran '-' cuando no hay partidas filtradas
+
+#### Tareas completadas
+1. Implementar lógica de KPIs en `renderKPIs()`
+2. Implementar `getTrackFlag()` para emojis de circuitos
+3. Crear tests E2E con datos inyectados para verificar cada KPI
+4. Verificar que filtros actualizan KPIs correctamente
+5. Verificar compatibilidad con tests existentes (HDH-H04, app base)
+
+#### Verificación final
+- docker compose config --quiet: OK
+- node --check proxy/server.js: OK
+- docker compose up -d --build: OK
+- curl localhost:8082: HTTP 200 con DOCTYPE html
+- npx playwright test: 19/19 tests pasados (6 app base + 9 HDH-H04 + 4 HDH-05a)
+
+#### Notas / Riesgos
+- `npm run capture:evidence` sigue fallando en Ubuntu 26.04 por falta de soporte de Playwright. Workaround continúa siendo `npx playwright test` con Chromium del sistema.
+
+#### Próximo paso
+- Feature siguiente: HDH-05b - Panel podio
