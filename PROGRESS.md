@@ -371,3 +371,43 @@
 
 #### Próximo paso
 - Feature siguiente: HDH-05c - Panel victorias
+
+---
+
+## Sesión 2026-05-28
+
+### Feature trabajada: HDH-05c - Panel victorias
+
+**Estado**: Completada
+
+#### Evidencia
+- `src/app.js` actualizado con implementación completa de `renderCharts()`:
+  - Calcula victorias por main player en partidas filtradas
+  - Filtra jugadores con 0 victorias
+  - Ordena por victorias descendente
+  - Actualiza el chart `wins` con labels y datos correctos
+  - Responde dinámicamente a filtros activos
+- Creado `e2e/tests/HDH-05c.spec.js` con 4 tests:
+  - Gráfico con mock data por defecto
+  - Gráfico con datos custom (valores verificables)
+  - Actualización de gráfico al aplicar/quitar filtros
+  - Gráfico vacío cuando no hay victorias
+
+#### Tareas completadas
+1. Implementar lógica de gráfico de victorias en `renderCharts()`
+2. Crear tests E2E con datos inyectados
+3. Verificar que filtros actualizan gráfico correctamente
+4. Verificar compatibilidad con tests existentes (30/30 pasados)
+
+#### Verificación final
+- docker compose config --quiet: OK
+- node --check proxy/server.js: OK
+- docker compose up -d --build: OK
+- curl localhost:8082: HTTP 200 con DOCTYPE html
+- npx playwright test: 30/30 tests pasados (6 app base + 9 HDH-H04 + 4 HDH-05a + 4 HDH-05b + 4 HDH-05c + 3 HDH-TEST_ENV01)
+
+#### Notas / Riesgos
+- Ninguno. Implementación completa y compatible con tests existentes.
+
+#### Próximo paso
+- Feature siguiente: HDH-05d - Panel partidas por mes

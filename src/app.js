@@ -405,7 +405,22 @@ const App = {
     },
 
     renderCharts() {
-        Object.values(this.charts).forEach(chart => chart.update());
+        const filteredPlays = this.getFilteredPlays();
+        const mainPlayers = this.data.players.filter(p => p.isMain);
+
+        // Wins chart: victories per player
+        const winsByPlayer = mainPlayers.map(player => {
+            const wins = filteredPlays.filter(play =>
+                play.playerScores.some(ps => ps.playerRefId === player.id && ps.winner)
+            ).length;
+            return { name: player.name, wins };
+        })
+        .filter(p => p.wins > 0)
+        .sort((a, b) => b.wins - a.wins);
+
+        this.charts.wins.data.labels = winsByPlayer.map(p => p.name);
+        this.charts.wins.data.datasets[0].data = winsByPlayer.map(p => p.wins);
+        this.charts.wins.update();
     },
 
     renderPlayersTable() {
