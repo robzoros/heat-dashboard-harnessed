@@ -421,6 +421,17 @@ const App = {
         this.charts.wins.data.labels = winsByPlayer.map(p => p.name);
         this.charts.wins.data.datasets[0].data = winsByPlayer.map(p => p.wins);
         this.charts.wins.update();
+
+        // Plays by month chart
+        const playsByMonth = {};
+        for (const play of filteredPlays) {
+            const month = play.playDate.substring(0, 7);
+            playsByMonth[month] = (playsByMonth[month] || 0) + 1;
+        }
+        const sortedMonths = Object.keys(playsByMonth).sort();
+        this.charts.playsMonth.data.labels = sortedMonths;
+        this.charts.playsMonth.data.datasets[0].data = sortedMonths.map(m => playsByMonth[m]);
+        this.charts.playsMonth.update();
     },
 
     renderPlayersTable() {
