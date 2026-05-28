@@ -411,3 +411,43 @@
 
 #### Próximo paso
 - Feature siguiente: HDH-05d - Panel partidas por mes
+
+---
+
+## Sesión 2026-05-28
+
+### Feature trabajada: HDH-05d - Panel partidas por mes
+
+**Estado**: Completada
+
+#### Evidencia
+- `src/app.js` actualizado con implementación de `renderPlaysMonth` dentro de `renderCharts()`:
+  - Agrupa partidas filtradas por mes (YYYY-MM) usando `play.playDate.substring(0, 7)`
+  - Ordena meses cronológicamente con `Object.keys().sort()`
+  - Actualiza chart `playsMonth` con labels (meses) y datos (conteo por mes)
+  - Responde dinámicamente a filtros activos
+  - Chart ya inicializado como tipo 'line' con `stepSize: 1` en eje Y
+- Creado `e2e/tests/HDH-05d.spec.js` con 4 tests:
+  - Gráfico con mock data por defecto (4 meses, 1 partida cada uno)
+  - Gráfico con datos custom (valores verificables: 3 en enero, 2 en marzo)
+  - Actualización de gráfico al aplicar/quitar filtros
+  - Gráfico vacío cuando no hay partidas
+
+#### Tareas completadas
+1. Implementar lógica de partidas por mes en `renderCharts()`
+2. Crear tests E2E con datos inyectados
+3. Verificar que filtros actualizan gráfico correctamente
+4. Verificar compatibilidad con tests existentes (34/34 pasados)
+
+#### Verificación final
+- docker compose config --quiet: OK
+- node --check proxy/server.js: OK
+- docker compose up -d --build: OK
+- curl localhost:8082: HTTP 200 con DOCTYPE html
+- npx playwright test: 34/34 tests pasados (6 app base + 9 HDH-H04 + 4 HDH-05a + 4 HDH-05b + 4 HDH-05c + 4 HDH-05d + 3 HDH-TEST_ENV01)
+
+#### Notas / Riesgos
+- Ninguno. Implementación completa y compatible con tests existentes.
+
+#### Próximo paso
+- Feature siguiente: HDH-05e - Panel puntos medios por jugador

@@ -237,13 +237,13 @@
           "Eje X: meses (YYYY-MM), ordenado cronológicamente",
           "Eje Y: conteo de partidas por mes, stepSize=1"
       ],
-      "status": "not_started",
+      "status": "completed",
       "verification": {
         "checks": [
           "Ejecuta desde docker-compose hasta llamada a localhost conexión bgg, gráfico mostrado",
           "Aplicación de filtros cambia resultado y al dejar de aplicar filtros se ve resultado inicial."
         ],
-        "evidence": "Pendiente"
+        "evidence": "Implementado renderPlaysMonth en renderCharts() en app.js: agrupa partidas filtradas por mes (YYYY-MM), ordena cronológicamente, actualiza chart playsMonth. Tests E2E: 4/4 pasados (mock data, custom data, filtros, sin datos). Total Playwright: 34/34 pasados."
       }
     },
     {
