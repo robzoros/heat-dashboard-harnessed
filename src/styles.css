@@ -377,6 +377,18 @@ th {
     border-radius: 10px;
 }
 
+.track-card h4 {
+    color: #e94560;
+    margin-bottom: 10px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.2rem;
+}
+
+.track-card p {
+    margin: 5px 0;
+    font-size: 0.9rem;
+}
+
 .win-pct-bar {
     position: relative;
     width: 100%;
