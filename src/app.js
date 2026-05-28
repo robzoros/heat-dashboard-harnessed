@@ -272,11 +272,98 @@ const App = {
         this.renderPlaysHistory();
     },
 
+    getTrackFlag(boardName) {
+        const flags = {
+            'usa': '🇺🇸', 'united states': '🇺🇸', 'america': '🇺🇸',
+            'italy': '🇮🇹', 'italia': '🇮🇹',
+            'france': '🇫🇷',
+            'great britain': '🇬🇧', 'uk': '🇬🇧', 'england': '🇬🇧',
+            'germany': '🇩🇪', 'deutschland': '🇩🇪',
+            'poland': '🇵🇱', 'mexico': '🇲🇽', 'méxico': '🇲🇽',
+            'japan': '🇯🇵', 'nippon': '🇯🇵',
+            'australia': '🇦🇺',
+            'spain': '🇪🇸', 'españa': '🇪🇸',
+            'brazil': '🇧🇷', 'brasil': '🇧🇷',
+            'canada': '🇨🇦',
+            'netherlands': '🇳🇱', 'holland': '🇳🇱'
+        };
+        const key = (boardName || '').toLowerCase().trim();
+        if (flags[key]) return flags[key];
+        for (const [name, flag] of Object.entries(flags)) {
+            if (key.includes(name)) return flag;
+        }
+        return '🏁';
+    },
+
     renderKPIs() {
-        document.getElementById('kpi-leader').textContent = '-';
-        document.getElementById('kpi-track').textContent = '-';
-        document.getElementById('kpi-streak').textContent = '-';
-        document.getElementById('kpi-last').textContent = '-';
+        const filteredPlays = this.getFilteredPlays();
+        const mainPlayers = this.data.players.filter(p => p.isMain);
+
+        // KPI Leader: main player with most wins
+        let leaderName = '-';
+        let maxWins = -1;
+        for (const player of mainPlayers) {
+            const wins = filteredPlays.filter(play =>
+                play.playerScores.some(ps => ps.playerRefId === player.id && ps.winner)
+            ).length;
+            if (wins > maxWins) {
+                maxWins = wins;
+                leaderName = player.name;
+            }
+        }
+        if (maxWins <= 0) leaderName = '-';
+
+        // KPI Track: most frequent board
+        let trackName = '-';
+        let trackMax = 0;
+        const boardCounts = {};
+        for (const play of filteredPlays) {
+            boardCounts[play.board] = (boardCounts[play.board] || 0) + 1;
+            if (boardCounts[play.board] > trackMax) {
+                trackMax = boardCounts[play.board];
+                trackName = play.board;
+            } else if (boardCounts[play.board] === trackMax && play.board < trackName) {
+                trackName = play.board;
+            }
+        }
+        const trackDisplay = trackName !== '-' ? `${this.getTrackFlag(trackName)} ${trackName}` : '-';
+
+        // KPI Streak: best winning streak for a main player
+        let bestStreak = { name: '-', count: 0 };
+        for (const player of mainPlayers) {
+            const playerPlays = filteredPlays
+                .filter(p => p.playerScores.some(ps => ps.playerRefId === player.id))
+                .sort((a, b) => new Date(a.playDate) - new Date(b.playDate));
+            let currentStreak = 0;
+            let maxPlayerStreak = 0;
+            for (const play of playerPlays) {
+                const ps = play.playerScores.find(ps => ps.playerRefId === player.id);
+                if (ps && ps.winner) {
+                    currentStreak++;
+                    maxPlayerStreak = Math.max(maxPlayerStreak, currentStreak);
+                } else {
+                    currentStreak = 0;
+                }
+            }
+            if (maxPlayerStreak > bestStreak.count) {
+                bestStreak = { name: player.name, count: maxPlayerStreak };
+            }
+        }
+        const streakDisplay = bestStreak.count > 0 ? `${bestStreak.name} (${bestStreak.count})` : '-';
+
+        // KPI Last: most recent play date with winner
+        let lastDisplay = '-';
+        if (filteredPlays.length > 0) {
+            const lastPlay = filteredPlays.slice().sort((a, b) => new Date(b.playDate) - new Date(a.playDate))[0];
+            const winnerPs = lastPlay.playerScores.find(ps => ps.winner);
+            const winnerName = winnerPs ? (this.data.players.find(p => p.id === winnerPs.playerRefId)?.name || '-') : '-';
+            lastDisplay = `${lastPlay.playDate} ${winnerName}`;
+        }
+
+        document.getElementById('kpi-leader').textContent = leaderName;
+        document.getElementById('kpi-track').textContent = trackDisplay;
+        document.getElementById('kpi-streak').textContent = streakDisplay;
+        document.getElementById('kpi-last').textContent = lastDisplay;
     },
 
     renderPodium() {
