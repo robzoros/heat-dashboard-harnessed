@@ -491,3 +491,53 @@
 
 #### Próximo paso
 - Feature siguiente: HDH-06a - Pestaña Jugadores
+
+---
+
+## Sesión 2026-05-28
+
+### Feature trabajada: HDH-06a - Pestaña Jugadores
+
+**Estado**: Completada
+
+#### Evidencia
+- `src/app.js` actualizado con implementación completa de `renderPlayersTable()`:
+  - Calcula estadísticas por main player: plays, wins, win%, avg, max, last10
+  - Filtra solo main players (excluye bots y others)
+  - Ordena por wins descendente, luego win% como desempate
+  - Win% con barra de porcentaje visual (`.win-pct-bar` + `.win-pct-fill`)
+  - Last 10: array de 10 booleans (más reciente primero), dots verdes=win, grises=loss
+  - Media y max con 1 decimal
+  - Responde dinámicamente a filtros activos
+- `src/styles.css` actualizado con estilos:
+  - `.win-pct-bar`: barra de fondo con overflow hidden
+  - `.win-pct-fill`: relleno rojo (#e94560) con transición
+  - `.win-pct-text`: texto centrado absolutamente
+  - `.last10-dots`: flex container con gap
+  - `.dot-win` (verde #4caf50) y `.dot-loss` (gris #555)
+- Creado `e2e/tests/HDH-06a.spec.js` con 5 tests:
+  - Tabla con mock data (2 main players)
+  - Estadísticas correctas con datos custom (verifica plays, wins, win%, avg, max, dots)
+  - Actualización al aplicar/quitar filtros
+  - Exclusión de bots y otros jugadores
+  - Tabla vacía cuando no hay partidas
+
+#### Tareas completadas
+1. Implementar lógica de tabla de jugadores en `renderPlayersTable()`
+2. Añadir CSS para barra de win% y dots de last 10
+3. Crear tests E2E con datos inyectados
+4. Verificar que filtros actualizan tabla correctamente
+5. Verificar compatibilidad con tests existentes (43/43 pasados)
+
+#### Verificación final
+- docker compose config --quiet: OK
+- node --check proxy/server.js: OK
+- docker compose up -d --build: OK
+- curl localhost:8082: HTTP 200 con DOCTYPE html
+- npx playwright test: 43/43 tests pasados
+
+#### Notas / Riesgos
+- Ninguno. Implementación completa y compatible con tests existentes.
+
+#### Próximo paso
+- Feature siguiente: HDH-06b - Pestaña Circuitos

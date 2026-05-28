@@ -277,12 +277,13 @@
         "Para Calcular racha de últimas 10 partidas",
         "- Se muestran 10 puntos con las últimas diez partidas: verde=win, gris=loss"
       ],
-      "status": "not_started",
+      "status": "completed",
       "verification": {
         "checks": [
           "Ejecuta desde docker-compose hasta llamada a localhost conexión bgg, pestaña mostrada",
           "Aplicación de filtros cambia resultado y al dejar de aplicar filtros se ve resultado inicial."
-        ]
+        ],
+        "evidence": "Implementado renderPlayersTable() en app.js: calcula plays, wins, win%, avg, max, last10 por main player. Ordena por wins descendente. Excluye bots y others. Win% con barra visual. Last 10 con dots verdes(gris)=loss. Tests E2E: 5/5 pasados. Total Playwright: 43/43."
       }
     },
     {

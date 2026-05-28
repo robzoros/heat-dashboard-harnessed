@@ -376,3 +376,47 @@ th {
     padding: 15px;
     border-radius: 10px;
 }
+
+.win-pct-bar {
+    position: relative;
+    width: 100%;
+    height: 24px;
+    background: #0f3460;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.win-pct-fill {
+    height: 100%;
+    background: #e94560;
+    transition: width 0.3s;
+}
+
+.win-pct-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: white;
+}
+
+.last10-dots {
+    display: flex;
+    gap: 3px;
+}
+
+.dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+.dot-win {
+    background: #4caf50;
+}
+
+.dot-loss {
+    background: #555;
+}
