@@ -367,7 +367,41 @@ const App = {
     },
 
     renderPodium() {
-        document.getElementById('podium').innerHTML = '';
+        const podiumEl = document.getElementById('podium');
+        const filteredPlays = this.getFilteredPlays();
+        const mainPlayers = this.data.players.filter(p => p.isMain);
+
+        const winsByPlayer = mainPlayers.map(player => {
+            const wins = filteredPlays.filter(play =>
+                play.playerScores.some(ps => ps.playerRefId === player.id && ps.winner)
+            ).length;
+            return { id: player.id, name: player.name, wins };
+        })
+        .filter(p => p.wins > 0)
+        .sort((a, b) => b.wins - a.wins);
+
+        const top3 = winsByPlayer.slice(0, 3);
+
+        if (top3.length === 0) {
+            podiumEl.innerHTML = '';
+            return;
+        }
+
+        const places = [
+            { rank: 2, data: top3[1], cls: 'second', medal: '🥈' },
+            { rank: 1, data: top3[0], cls: 'first', medal: '🥇' },
+            { rank: 3, data: top3[2], cls: 'third', medal: '🥉' }
+        ];
+
+        podiumEl.innerHTML = places
+            .filter(p => p.data)
+            .map(p => `
+                <div class="podium-place ${p.cls}">
+                    <div class="podium-medal">${p.medal}</div>
+                    <div class="podium-name">${p.data.name}</div>
+                    <div class="podium-wins">${p.data.wins} victoria${p.data.wins !== 1 ? 's' : ''}</div>
+                </div>
+            `).join('');
     },
 
     renderCharts() {

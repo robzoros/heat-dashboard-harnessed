@@ -323,3 +323,51 @@
 
 #### Próximo paso
 - Feature siguiente: HDH-05b - Panel podio
+
+---
+
+## Sesión 2026-05-28
+
+### Feature trabajada: HDH-05b - Panel podio
+
+**Estado**: Completada
+
+#### Evidencia
+- `src/app.js` actualizado con implementación completa de `renderPodium()`:
+  - Calcula victorias por main player en partidas filtradas
+  - Filtra jugadores con 0 victorias
+  - Ordena por victorias descendente y toma top 3
+  - Renderiza en orden visual: #2 (plata) | #1 (oro) | #3 (bronce)
+  - Oro centrado con `transform: scale(1.15)` (15% más grande)
+  - Medals: 🥇🥈🥉
+  - Responde dinámicamente a filtros activos
+- `src/styles.css` actualizado con estilos del podio:
+  - `.podium-place.first` con borde dorado y scale(1.15)
+  - `.podium-place.second` con borde plateado
+  - `.podium-place.third` con bronce
+  - Clases `.podium-medal`, `.podium-name`, `.podium-wins`
+- Creado `e2e/tests/HDH-05b.spec.js` con 4 tests:
+  - Podio con mock data por defecto (2 main players)
+  - Podio con datos custom de 3 jugadores
+  - Actualización de podio al aplicar filtros
+  - Podio vacío cuando no hay partidas
+
+#### Tareas completadas
+1. Implementar lógica de podio en `renderPodium()`
+2. Actualizar CSS para layout visual del podio (#2 | #1 | #3)
+3. Crear tests E2E con datos inyectados
+4. Verificar que filtros actualizan podio correctamente
+5. Verificar compatibilidad con tests existentes (26/26 pasados)
+
+#### Verificación final
+- docker compose config --quiet: OK
+- node --check proxy/server.js: OK
+- docker compose up -d --build: OK
+- curl localhost:8082: HTTP 200 con DOCTYPE html
+- npx playwright test: 26/26 tests pasados (6 app base + 4 HDH-H04 + 4 HDH-05a + 4 HDH-05b + 3 HDH-TEST_ENV01 + 9 HDH-H04)
+
+#### Notas / Riesgos
+- Ninguno. Implementación completa y compatible con tests existentes.
+
+#### Próximo paso
+- Feature siguiente: HDH-05c - Panel victorias
