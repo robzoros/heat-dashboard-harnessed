@@ -455,7 +455,66 @@ const App = {
     },
 
     renderPlayersTable() {
-        document.querySelector('#players-table tbody').innerHTML = '';
+        const filteredPlays = this.getFilteredPlays();
+        const mainPlayers = this.data.players.filter(p => p.isMain);
+
+        const playerStats = mainPlayers.map(player => {
+            let plays = 0, wins = 0, totalScore = 0, maxScore = 0;
+            const recentPlays = [];
+
+            const sortedPlays = filteredPlays
+                .filter(p => p.playerScores.some(ps => ps.playerRefId === player.id))
+                .sort((a, b) => new Date(b.playDate) - new Date(a.playDate));
+
+            for (const play of sortedPlays) {
+                const ps = play.playerScores.find(ps => ps.playerRefId === player.id);
+                if (ps) {
+                    plays++;
+                    if (ps.winner) wins++;
+                    totalScore += ps.scoreNum;
+                    if (ps.scoreNum > maxScore) maxScore = ps.scoreNum;
+                    if (recentPlays.length < 10) {
+                        recentPlays.push(ps.winner);
+                    }
+                }
+            }
+
+            return {
+                id: player.id,
+                name: player.name,
+                plays,
+                wins,
+                winPct: plays > 0 ? Math.round((wins / plays) * 100) : 0,
+                avg: plays > 0 ? parseFloat((totalScore / plays).toFixed(1)) : 0,
+                max: maxScore,
+                recentPlays
+            };
+        })
+        .filter(p => p.plays > 0)
+        .sort((a, b) => b.wins - a.wins || b.winPct - a.winPct);
+
+        const tbody = document.querySelector('#players-table tbody');
+        tbody.innerHTML = playerStats.map((p, i) => `
+            <tr>
+                <td>${i + 1}</td>
+                <td>${p.name}</td>
+                <td>${p.plays}</td>
+                <td>${p.wins}</td>
+                <td>
+                    <div class="win-pct-bar">
+                        <div class="win-pct-fill" style="width: ${p.winPct}%"></div>
+                        <span class="win-pct-text">${p.winPct}%</span>
+                    </div>
+                </td>
+                <td>${p.avg}</td>
+                <td>${p.max}</td>
+                <td>
+                    <div class="last10-dots">
+                        ${p.recentPlays.map(w => `<span class="dot ${w ? 'dot-win' : 'dot-loss'}"></span>`).join('')}
+                    </div>
+                </td>
+            </tr>
+        `).join('');
     },
 
     renderTrackList() {
