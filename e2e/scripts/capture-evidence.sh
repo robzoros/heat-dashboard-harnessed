@@ -15,9 +15,9 @@ if [ ! -f "$PROJECT_ROOT/secrets.json" ]; then
   exit 1
 fi
 
-# 1. Instalar browsers (idempotente)
+# 1. Instalar browsers (idempotente) - ignorar errores en entornos no soportados
 cd "$PROJECT_ROOT/e2e"
-npx playwright install chromium
+npx playwright install chromium || echo "WARNING: No se pudo instalar Chromium via Playwright. Usando sistema si está disponible."
 
 # 2. Build + start servicios
 cd "$PROJECT_ROOT"
