@@ -584,3 +584,48 @@
 
 #### Próximo paso
 - Feature siguiente: HDH-07 - Pestaña Historial
+
+---
+
+## Sesión 2026-05-28
+
+### Feature trabajada: HDH-07 - Pestaña Historial
+
+**Estado**: Completada
+
+#### Evidencia
+- `src/app.js` actualizado con dos implementaciones:
+  1. **Play history list** en `renderPlaysHistory()`:
+     - Partidas ordenadas por fecha descendente (más reciente primero)
+     - Cada entrada muestra: fecha, circuito con flag emoji, ganador y puntos
+     - Click expande/contrae panel de detalles
+     - Winner destacado con clase `.player-winner` (borde verde)
+     - Muestra puntuación de cada jugador
+  2. **Wins evolution chart** en `renderCharts()`:
+     - Chart line con evolución acumulada de victorias
+     - Un dataset por main player (máx 10 primeros)
+     - Data: victoria acumulada por fecha
+     - Colores distintos por jugador
+- Creado `e2e/tests/HDH-07.spec.js` con 5 tests:
+  - Historial con mock data (4 entradas)
+  - Detalles expandibles al pulsar entrada
+  - Wins evolution chart con mock data
+  - Actualización al aplicar/quitar filtros
+  - Vacío cuando no hay partidas
+
+#### Tareas completadas
+1. Implementar lista de historial en `renderPlaysHistory()`
+2. Implementar wins evolution chart en `renderCharts()`
+3. Crear tests E2E con datos inyectados
+4. Verificar compatibilidad con tests existentes (52/52 pasados)
+
+#### Verificación final
+- docker compose config --quiet: OK
+- node --check proxy/server.js: OK
+- docker compose up -d --build: OK
+- curl localhost:8082: HTTP 200 con DOCTYPE html
+- npx playwright test: 52/52 tests pasados
+
+#### Notas / Riesgos
+- Ninguno. Implementación completa y compatible con tests existentes.
+- **¡TODAS LAS FEATURES COMPLETADAS!**

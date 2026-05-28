@@ -463,6 +463,35 @@ const App = {
         this.charts.tracks.data.labels = trackLabels;
         this.charts.tracks.data.datasets[0].data = trackData;
         this.charts.tracks.update();
+
+        // Wins evolution chart: cumulative wins by date per main player (max 10)
+        const top10Players = mainPlayers.slice(0, 10);
+        const allDates = [...new Set(filteredPlays.map(p => p.playDate))].sort();
+        const colors = ['#e94560', '#0f3460', '#4caf50', '#ff9800', '#9c27b0', '#00bcd4', '#ff5722', '#795548', '#607d8b', '#ffc107'];
+
+        const datasets = top10Players.map((player, idx) => {
+            let cumulative = 0;
+            const data = allDates.map(date => {
+                const playsOnDate = filteredPlays.filter(p => p.playDate === date);
+                for (const play of playsOnDate) {
+                    if (play.playerScores.some(ps => ps.playerRefId === player.id && ps.winner)) {
+                        cumulative++;
+                    }
+                }
+                return cumulative;
+            });
+            return {
+                label: player.name,
+                data,
+                borderColor: colors[idx % colors.length],
+                tension: 0.1,
+                fill: false
+            };
+        });
+
+        this.charts.winsEvolution.data.labels = allDates;
+        this.charts.winsEvolution.data.datasets = datasets;
+        this.charts.winsEvolution.update();
     },
 
     renderPlayersTable() {
@@ -574,7 +603,38 @@ const App = {
     },
 
     renderPlaysHistory() {
-        document.getElementById('plays-history').innerHTML = '';
+        const filteredPlays = this.getFilteredPlays();
+        const sortedPlays = filteredPlays.slice().sort((a, b) => new Date(b.playDate) - new Date(a.playDate));
+
+        document.getElementById('plays-history').innerHTML = sortedPlays.map(play => {
+            const winnerPs = play.playerScores.find(ps => ps.winner);
+            const winnerName = winnerPs ? (this.data.players.find(p => p.id === winnerPs.playerRefId)?.name || '-') : '-';
+            const winnerScore = winnerPs ? winnerPs.score : '-';
+            const flag = this.getTrackFlag(play.board);
+
+            const details = play.playerScores.map(ps => {
+                const playerName = this.data.players.find(p => p.id === ps.playerRefId)?.name || '-';
+                const cls = ps.winner ? 'player-winner' : '';
+                return `<div class="${cls}"><span>${playerName}</span>: ${ps.score}</div>`;
+            }).join('');
+
+            return `
+                <div class="play-entry" data-play-id="${play.id}">
+                    <span>${play.playDate}</span> | <span>${flag} ${play.board}</span> | <span>${winnerName} (${winnerScore})</span>
+                </div>
+                <div class="play-details" id="details-${play.id}">
+                    ${details}
+                </div>
+            `;
+        }).join('');
+
+        document.querySelectorAll('.play-entry').forEach(entry => {
+            entry.addEventListener('click', () => {
+                const playId = entry.dataset.playId;
+                const details = document.getElementById(`details-${playId}`);
+                details.classList.toggle('expanded');
+            });
+        });
     }
 };
 
