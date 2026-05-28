@@ -322,12 +322,13 @@
         "- Un dataset por main player (máx 10 primeros)",
         "- Data: victoria acumulada por fecha"
       ],
-      "status": "not_started",
+      "status": "completed",
       "verification": {
         "checks": [
           "Ejecuta desde docker-compose hasta llamada a localhost conexión bgg, pestaña mostrada",
           "Aplicación de filtros cambia resultado y al dejar de aplicar filtros se ve resultado inicial."
-        ]
+        ],
+        "evidence": "Implementado renderPlaysHistory() con lista de partidas ordenadas por fecha descendente, expandible con detalles y winner destacado. Implementado winsEvolution chart en renderCharts() con evolución acumulada de victorias por main player (máx 10). Tests E2E: 5/5 pasados. Total Playwright: 52/52."
       }
     }
   ]
