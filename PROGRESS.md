@@ -271,7 +271,8 @@
 - npx playwright test: 19/19 tests pasados (6 app base + 9 HDH-H04 + 4 HDH-05a)
 
 #### Notas / Riesgos
-- `npm run capture:evidence` sigue fallando en Ubuntu 26.04 por falta de soporte de Playwright. Workaround continúa siendo `npx playwright test` con Chromium del sistema.
+- `npm run capture:evidence` fallaba en Ubuntu 26.04 porque `npx playwright install chromium` no está soportado. **Fix aplicado**: modificado `e2e/scripts/capture-evidence.sh` para que la instalación de browsers no sea fatal (`|| echo "WARNING..."`).
+- Evidencia capturada exitosamente tras el fix: screenshot actualizado en `evidence/screenshots/app-inicial-desktop.png` y reporte HTML en `evidence/reports/index.html`.
 
 #### Próximo paso
 - Feature siguiente: HDH-05b - Panel podio
