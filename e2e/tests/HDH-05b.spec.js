@@ -25,6 +25,8 @@ test.describe('HDH-05b - Panel Podio', () => {
     // Medals
     await expect(places.nth(0).locator('.podium-medal')).toHaveText('🥈');
     await expect(places.nth(1).locator('.podium-medal')).toHaveText('🥇');
+
+    await page.screenshot({ path: '../evidence/screenshots/HDH-05b-podio-mock-data.png', fullPage: true });
   });
 
   test('debe mostrar podio correcto con datos custom de 3 jugadores', async ({ page }) => {
@@ -92,6 +94,8 @@ test.describe('HDH-05b - Panel Podio', () => {
     await expect(places.nth(0).locator('.podium-name')).toHaveText('Bob');
     await expect(places.nth(1).locator('.podium-name')).toHaveText('Alice');
     await expect(places.nth(2).locator('.podium-name')).toHaveText('Charlie');
+
+    await page.screenshot({ path: '../evidence/screenshots/HDH-05b-podio-3-players.png', fullPage: true });
   });
 
   test('debe actualizar podio al aplicar filtros', async ({ page }) => {
@@ -157,6 +161,8 @@ test.describe('HDH-05b - Panel Podio', () => {
     await expect(placesAfter.nth(0).locator('.podium-name')).toHaveText('Bob');
     await expect(placesAfter.nth(0)).toHaveClass(/first/);
 
+    await page.screenshot({ path: '../evidence/screenshots/HDH-05b-podio-filtro-aplicado.png', fullPage: true });
+
     // Clear filter
     await page.locator('#track-filters input[value="Italy"]').uncheck();
     await page.locator('#btn-apply-filters').click();
@@ -165,6 +171,8 @@ test.describe('HDH-05b - Panel Podio', () => {
     const placesReset = podium.locator('.podium-place');
     await expect(placesReset).toHaveCount(2);
     await expect(placesReset.nth(1).locator('.podium-name')).toHaveText('Alice');
+
+    await page.screenshot({ path: '../evidence/screenshots/HDH-05b-podio-filtro-desactivado.png', fullPage: true });
   });
 
   test('debe ocultar podio cuando no hay partidas', async ({ page }) => {

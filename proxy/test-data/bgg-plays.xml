@@ -1460,7 +1460,8 @@ Played with expansions:
         <subtype value="boardgame"/>
       </subtypes>
     </item>
-    <comments>#bgstats</comments>
+    <comments>Francia
+#bgstats</comments>
     <players>
       <player username="" userid="0" name="BGA Player" startposition="" color="" score="9" new="0" rating="0" win="1"/>
       <player username="" userid="0" name="Jugador anónimo" startposition="" color="" score="6" new="0" rating="0" win="0"/>
@@ -1476,7 +1477,7 @@ Played with expansions:
         <subtype value="boardgame"/>
       </subtypes>
     </item>
-    <comments>Francia
+    <comments>Japón
 #bgstats
 
 Played with expansions:
@@ -1518,7 +1519,8 @@ Played with expansions:
         <subtype value="boardgame"/>
       </subtypes>
     </item>
-    <comments>#bgstats</comments>
+    <comments>Great Britain
+#bgstats</comments>
     <players>
       <player username="" userid="0" name="BGA Player" startposition="" color="" score="9" new="0" rating="0" win="1"/>
       <player username="" userid="0" name="Jugador anónimo" startposition="" color="" score="6" new="0" rating="0" win="0"/>
@@ -1576,7 +1578,8 @@ Played with expansions:
         <subtype value="boardgame"/>
       </subtypes>
     </item>
-    <comments>#bgstats</comments>
+    <comments>Italia
+#bgstats</comments>
     <players>
       <player username="" userid="0" name="BGA Player" startposition="" color="" score="9" new="0" rating="0" win="1"/>
       <player username="" userid="0" name="Jugador anónimo" startposition="" color="" score="6" new="0" rating="0" win="0"/>
@@ -1896,7 +1899,8 @@ Played with expansions:
         <subtype value="boardgame"/>
       </subtypes>
     </item>
-    <comments>#bgstats</comments>
+    <comments>USA
+#bgstats</comments>
     <players>
       <player username="" userid="0" name="Automa" startposition="" color="" score="9" new="0" rating="0" win="1"/>
       <player username="" userid="0" name="Automa2" startposition="" color="" score="6" new="0" rating="0" win="0"/>
