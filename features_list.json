@@ -219,13 +219,13 @@
       "description": [
         "Gráfico de barras: victorias por jugador"
       ],
-      "status": "not_started",
+      "status": "completed",
       "verification": {
         "checks": [
           "Ejecuta desde docker-compose hasta llamada a localhost conexión bgg, gráfico mostrado",
           "Aplicación de filtros cambia resultado y al dejar de aplicar filtros se ve resultado inicial."
         ],
-        "evidence": "Pendiente"
+        "evidence": "Implementado renderCharts() en app.js con gráfico de barras de victorias por main player. Ordenado por victorias descendente. Responde dinámicamente a filtros activos. Tests E2E: 4/4 pasados (mock data, custom data, filtros, sin victorias). Total Playwright: 30/30 pasados."
       }
     },
     {
