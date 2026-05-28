@@ -248,20 +248,20 @@
     },
     {
       "id": "HDH-05e",
-      "name": "Panel partidas por mes",      
+      "name": "Panel puntos medios por jugador",      
       "description": [
         "Gráfico de barras horizontal: puntos medios por jugador",
         "Chart tipo 'bar' en canvas#chart-avgpts con indexAxis='y'",
         "Media = suma scores / partidas jugadas",
         "Cada barra muestra un decimal (toFixed(1))"
       ],
-      "status": "not_started",
+      "status": "completed",
       "verification": {
         "checks": [
           "Ejecuta desde docker-compose hasta llamada a localhost conexión bgg, gráfico mostrado",
           "Aplicación de filtros cambia resultado y al dejar de aplicar filtros se ve resultado inicial."
         ],
-        "evidence": "Pendiente"
+        "evidence": "Implementado avgPts en renderCharts() en app.js: calcula media de scores por main player (suma scores / partidas jugadas), ordena descendente, muestra 1 decimal con toFixed(1). Chart horizontal bar con indexAxis='y'. Tests E2E: 4/4 pasados (mock, custom, filtros, vacío). Total Playwright: 38/38 pasados."
       }
     },
     {

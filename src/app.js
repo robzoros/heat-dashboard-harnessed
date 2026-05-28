@@ -432,6 +432,26 @@ const App = {
         this.charts.playsMonth.data.labels = sortedMonths;
         this.charts.playsMonth.data.datasets[0].data = sortedMonths.map(m => playsByMonth[m]);
         this.charts.playsMonth.update();
+
+        // Avg points chart: average score per main player
+        const avgByPlayer = mainPlayers.map(player => {
+            let totalScore = 0;
+            let playCount = 0;
+            for (const play of filteredPlays) {
+                const ps = play.playerScores.find(ps => ps.playerRefId === player.id);
+                if (ps) {
+                    totalScore += ps.scoreNum;
+                    playCount++;
+                }
+            }
+            return { name: player.name, avg: playCount > 0 ? totalScore / playCount : 0 };
+        })
+        .filter(p => p.avg > 0)
+        .sort((a, b) => b.avg - a.avg);
+
+        this.charts.avgPts.data.labels = avgByPlayer.map(p => p.name);
+        this.charts.avgPts.data.datasets[0].data = avgByPlayer.map(p => parseFloat(p.avg.toFixed(1)));
+        this.charts.avgPts.update();
     },
 
     renderPlayersTable() {
