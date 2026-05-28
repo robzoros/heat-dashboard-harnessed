@@ -451,3 +451,43 @@
 
 #### Próximo paso
 - Feature siguiente: HDH-05e - Panel puntos medios por jugador
+
+---
+
+## Sesión 2026-05-28
+
+### Feature trabajada: HDH-05e - Panel puntos medios por jugador
+
+**Estado**: Completada
+
+#### Evidencia
+- `src/app.js` actualizado con implementación de avg points en `renderCharts()`:
+  - Calcula media de scores por main player: `totalScore / playCount`
+  - Filtra jugadores con avg > 0
+  - Ordena por media descendente
+  - Muestra valores con 1 decimal usando `toFixed(1)`
+  - Chart ya inicializado como horizontal bar con `indexAxis: 'y'`
+- Creado `e2e/tests/HDH-05e.spec.js` con 4 tests:
+  - Gráfico con mock data (Player1: 25.0, Player2: 24.7)
+  - Gráfico con datos custom (Bob: 23.3, Alice: 20.0, Charlie: 16.7)
+  - Actualización de gráfico al aplicar/quitar filtros
+  - Gráfico vacío cuando no hay partidas
+
+#### Tareas completadas
+1. Implementar lógica de puntos medios en `renderCharts()`
+2. Crear tests E2E con datos inyectados
+3. Verificar que filtros actualizan gráfico correctamente
+4. Verificar compatibilidad con tests existentes (38/38 pasados)
+
+#### Verificación final
+- docker compose config --quiet: OK
+- node --check proxy/server.js: OK
+- docker compose up -d --build: OK
+- curl localhost:8082: HTTP 200 con DOCTYPE html
+- npx playwright test: 38/38 tests pasados
+
+#### Notas / Riesgos
+- Ninguno. Implementación completa y compatible con tests existentes.
+
+#### Próximo paso
+- Feature siguiente: HDH-06a - Pestaña Jugadores
