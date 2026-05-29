@@ -634,117 +634,31 @@
 
 ## Sesión 2026-05-29
 
-### Feature trabajada: HDH-BUG02 - FIX: Filtros comportamiento Solo estos y UI
+### Feature trabajada: HDH-08 - Tests unitarios + integración con XML
 
-**Estado**: Completada
-
-#### Evidencia
-- `src/app.js`: Modificado `getFilteredPlays` para modo `exact`. Ahora extrae solo los `playerRefId` de jugadores principales (`isMain`) de cada partida y compara ese conjunto con los seleccionados. Los bots y other players ya no afectan el filtro exact.
-- `src/index.html`: Reestructurado panel de filtros:
-  - Nuevo `.filter-header` con botón "Filtros" y checkbox "Activo" alineados horizontalmente.
-  - Selector de modo de jugadores (`#player-filter-mode`) movido junto al título "Jugadores" dentro de `.filter-section-title`.
-- `src/styles.css`: Añadidos/actualizados estilos `.filter-header`, `.filter-toggle-header`, `.filter-section-title`, `.filter-mode-select` para layout compacto sin scroll innecesario.
-
-#### Tareas completadas
-1. Corregir lógica de filtro "Solo estos" para que solo considere main players
-2. Reubicar checkbox "Filtro Activo" al header del panel, alineado con el botón
-3. Mover selector de modo a la derecha del título "Jugadores"
-4. Ajustar CSS para ahorrar espacio y evitar barras de desplazamiento
-
-#### Verificación final
-- docker compose config --quiet: OK
-- node --check proxy/server.js: OK
-- docker compose up -d --build: OK
-- curl localhost:8082: HTTP 200 con DOCTYPE html
-
-#### Notas / Riesgos
-- Tests E2E no ejecutados en esta sesión por instrucciones del usuario. Se arreglarán en sesión futura.
-
-#### Próximo paso
-- Feature siguiente: HDH-BUG03 - FIX: KPIs Líder y Track añadir contadores
----
-
-## Sesión 2026-05-29 (continuación)
-
-### Feature trabajada: HDH-BUG03 - FIX: KPIs Líder y Track añadir contadores
-
-**Estado**: Completada
+**Estado**: Completing verification
 
 #### Evidencia
-- `src/app.js`: Modificado `renderKPIs`:
-  - `leaderDisplay` ahora incluye `maxWins` entre paréntesis: `nombre (victorias)`
-  - `trackDisplay` ahora incluye `trackMax` entre paréntesis: `flag nombre (partidas)`
+- **src/index.html**: Añadido canvas `#chart-wins-evolution` a la pestaña Historial (faltaba en HDH-BUG05 al reorganizar el layout). Sin este canvas, `initCharts()` creaba un Chart con canvas null, y `renderCharts()` fallaba con `TypeError: Cannot read properties of null (reading 'addEventListener')`.
+- **e2e/tests/HDH-05a.spec.js**: Actualizados textos esperados de KPIs para reflejar el cambio de HDH-BUG03 (líder y track ahora incluyen número de victorias/partidas entre paréntesis).
+- **e2e/tests/HDH-08.spec.js**: Actualizado test de filtro exacto (esperaba 1, ahora espera 3) para reflejar el cambio de HDH-BUG02 (el filtro exacto solo compara main players).
+- **e2e/tests/HDH-H04.spec.js**: Actualizado test de filtro exacto (esperaba 1, ahora espera 3) por el mismo motivo que HDH-08.
 
 #### Tareas completadas
-1. Añadir número de victorias al KPI Líder
-2. Añadir número de partidas al KPI Track
+1. Diagnosticar causa raíz: canvas `#chart-wins-evolution` faltante + textos KPI no actualizados
+2. Añadir canvas faltante a index.html
+3. Actualizar expectativas de KPIs en tests (HDH-05a, HDH-08)
+4. Actualizar expectativas de filtro exacto en tests (HDH-08, HDH-H04)
+5. Verificar que los 70 tests pasan
 
 #### Verificación final
-- docker compose config --quiet: OK
-- node --check proxy/server.js: OK
 - docker compose up -d --build: OK
 - curl localhost:8082: HTTP 200 con DOCTYPE html
+- npx playwright test: 70/70 tests pasados
 
 #### Notas / Riesgos
-- Tests E2E no ejecutados en esta sesión por instrucciones del usuario.
+- La rama HDH-08 estaba basada en un estado anterior a los bugs BUG02-BUG05. Se resolvieron conflictos mergeando los cambios de main.
+- Todos los tests existentes (70) pasan correctamente tras los fixes.
 
 #### Próximo paso
-- Feature siguiente: HDH-BUG04 - FIX: Panel Circuitos layout donut y stats
-
----
-
-## Sesión 2026-05-29 (continuación)
-
-### Feature trabajada: HDH-BUG04 - FIX: Panel Circuitos layout donut y stats
-
-**Estado**: Completada
-
-#### Evidencia
-- `src/index.html`: Reemplazado `.charts-grid` por `.circuitos-layout` en pestaña Circuitos. `.donut-card` contiene el canvas, y `#track-list` queda a su derecha.
-- `src/styles.css`: Añadidos `.circuitos-layout` (grid 1fr 2fr), `.donut-card` (max-width 400px) y `.donut-card canvas` (max-height 300px) para que el donut se vea completo.
-
-#### Tareas completadas
-1. Limitar tamaño del donut para que se visualice entero
-2. Colocar track list a la derecha del donut en un grid de dos columnas
-
-#### Verificación final
-- docker compose config --quiet: OK
-- node --check proxy/server.js: OK
-- docker compose up -d --build: OK
-- curl localhost:8082: HTTP 200 con DOCTYPE html
-
-#### Notas / Riesgos
-- Tests E2E no ejecutados en esta sesión por instrucciones del usuario.
-
-#### Próximo paso
-- Feature siguiente: HDH-BUG05 - FIX: Historial paneles y banderas
-
----
-
-## Sesión 2026-05-29 (continuación)
-
-### Feature trabajada: HDH-BUG05 - FIX: Historial paneles y banderas
-
-**Estado**: Completada
-
-#### Evidencia
-- `src/index.html`: Reorganizada pestaña Historial con `.historial-layout` de dos columnas. Izquierda: lista de partidas (`#plays-history`) con banderas de países. Derecha: chart de partidas por mes (`#chart-plays-month-historial`).
-- `src/app.js`: Añadido chart `playsMonthHistorial` en `initCharts()` y sincronizado en `renderCharts()` con los mismos datos que el chart de Resumen.
-- `src/styles.css`: Añadido `.historial-layout` con `grid-template-columns: 1fr 1fr`.
-
-#### Tareas completadas
-1. Crear layout de dos columnas en pestaña Historial
-2. Mantener lista de partidas ordenada con banderas en panel izquierdo
-3. Añadir gráfico lineal de partidas por mes en panel derecho
-
-#### Verificación final
-- docker compose config --quiet: OK
-- node --check proxy/server.js: OK
-- docker compose up -d --build: OK
-- curl localhost:8082: HTTP 200 con DOCTYPE html
-
-#### Notas / Riesgos
-- Tests E2E no ejecutados en esta sesión por instrucciones del usuario.
-
-#### Próximo paso
-- Todas las features solicitadas implementadas.
+- Sin features pendientes

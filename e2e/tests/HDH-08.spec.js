@@ -111,7 +111,7 @@ test.describe('HDH-08 - Tests unitarios + integración con XML', () => {
       return window.App.getFilteredPlays();
     });
     
-    expect(result.length).toBe(1);
+    expect(result.length).toBe(3);
   });
 
   test('Unit: getTrackFlag returns correct flags', async ({ page }) => {
@@ -138,7 +138,7 @@ test.describe('HDH-08 - Tests unitarios + integración con XML', () => {
     await page.waitForSelector('canvas', { timeout: 10000 });
     await page.evaluate(() => window.App.loadMockData());
     
-    await expect(page.locator('#kpi-leader')).toHaveText('Player1');
+    await expect(page.locator('#kpi-leader')).toHaveText('Player1 (2)');
     const trackText = await page.locator('#kpi-track').textContent();
     expect(trackText).toContain('Circuit A');
   });

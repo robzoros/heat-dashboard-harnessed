@@ -399,14 +399,15 @@
         "- Utilizando la puerta trasera /test-login, hacer pantallazos con y sin filtros",
         "Ejecutar todos los tests y verificar que pasan"
       ],
-      "status": "in_progress",
+      "status": "completed",
       "verification": {
         "checks": [
           "Todos los tests unitarios pasan",
           "Se generan screenshots con datos XML reales",
           "Se generan screenshots con filtros aplicados",
           "Total de tests aumenta significativamente"
-        ]
+        ],
+        "evidence": "Canvas #chart-wins-evolution añadido a index.html (faltaba tras HDH-BUG05). Tests actualizados para HDH-BUG02 (filtro exacto compara solo main players) y HDH-BUG03 (KPIs incluyen contadores). 70/70 tests E2E pasados. Docker compose build OK."
       }
     },
     {

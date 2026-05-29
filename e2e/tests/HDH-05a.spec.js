@@ -11,7 +11,7 @@ test.describe('HDH-05a - Resumen KPIs', () => {
     await page.evaluate(() => window.App.loadMockData());
 
     // Leader: Player1 has 2 wins, Player2 has 1 win
-    await expect(page.locator('#kpi-leader')).toHaveText('Player1');
+    await expect(page.locator('#kpi-leader')).toHaveText('Player1 (2)');
 
     // Track: Circuit A = 2, Circuit B = 2 → tie, alphabetically Circuit A wins
     const trackText = await page.locator('#kpi-track').textContent();
@@ -84,10 +84,12 @@ test.describe('HDH-05a - Resumen KPIs', () => {
       window.App.renderAll();
     }, customData);
 
-    await expect(page.locator('#kpi-leader')).toHaveText('Alice');
-    await expect(page.locator('#kpi-track')).toHaveText('🇺🇸 USA');
+    await expect(page.locator('#kpi-leader')).toHaveText('Alice (4)');
+    await expect(page.locator('#kpi-track')).toHaveText('🇺🇸 USA (4)');
     await expect(page.locator('#kpi-streak')).toHaveText('Alice (2)');
     await expect(page.locator('#kpi-last')).toHaveText('2024-01-05 Alice');
+
+    await page.screenshot({ path: '../evidence/screenshots/HDH-05a-kpis-custom.png', fullPage: true });
   });
 
   test('debe actualizar KPIs al aplicar filtros', async ({ page }) => {
@@ -150,8 +152,8 @@ test.describe('HDH-05a - Resumen KPIs', () => {
     }, customData);
 
     // Verify initial KPIs
-    await expect(page.locator('#kpi-leader')).toHaveText('Alice');
-    await expect(page.locator('#kpi-track')).toHaveText('🇺🇸 USA');
+    await expect(page.locator('#kpi-leader')).toHaveText('Alice (4)');
+    await expect(page.locator('#kpi-track')).toHaveText('🇺🇸 USA (4)');
     await expect(page.locator('#kpi-streak')).toHaveText('Alice (2)');
     await expect(page.locator('#kpi-last')).toHaveText('2024-01-05 Alice');
 
@@ -161,8 +163,8 @@ test.describe('HDH-05a - Resumen KPIs', () => {
     await page.locator('#btn-apply-filters').click();
 
     // With Italy filter: only play 3, Bob wins
-    await expect(page.locator('#kpi-leader')).toHaveText('Bob');
-    await expect(page.locator('#kpi-track')).toHaveText('🇮🇹 Italy');
+    await expect(page.locator('#kpi-leader')).toHaveText('Bob (1)');
+    await expect(page.locator('#kpi-track')).toHaveText('🇮🇹 Italy (1)');
     await expect(page.locator('#kpi-streak')).toHaveText('Bob (1)');
     await expect(page.locator('#kpi-last')).toHaveText('2024-01-03 Bob');
 
@@ -171,8 +173,8 @@ test.describe('HDH-05a - Resumen KPIs', () => {
     await page.locator('#btn-apply-filters').click();
 
     // Back to initial values
-    await expect(page.locator('#kpi-leader')).toHaveText('Alice');
-    await expect(page.locator('#kpi-track')).toHaveText('🇺🇸 USA');
+    await expect(page.locator('#kpi-leader')).toHaveText('Alice (4)');
+    await expect(page.locator('#kpi-track')).toHaveText('🇺🇸 USA (4)');
     await expect(page.locator('#kpi-streak')).toHaveText('Alice (2)');
     await expect(page.locator('#kpi-last')).toHaveText('2024-01-05 Alice');
   });
