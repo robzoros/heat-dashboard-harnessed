@@ -7,6 +7,7 @@ test.describe('HDH-05d - Panel Partidas por Mes', () => {
   });
 
   test('debe mostrar grafico de partidas por mes con mock data', async ({ page }) => {
+    await page.waitForSelector('canvas', { timeout: 10000 });
     await page.evaluate(() => window.App.loadMockData());
 
     const chart = page.locator('#chart-plays-month');

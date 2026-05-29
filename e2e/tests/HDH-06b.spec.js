@@ -7,6 +7,7 @@ test.describe('HDH-06b - Pestaña Circuitos', () => {
   });
 
   test('debe mostrar doughnut chart con mock data', async ({ page }) => {
+    await page.waitForSelector('canvas', { timeout: 10000 });
     await page.evaluate(() => window.App.loadMockData());
 
     await page.locator('.tab-btn[data-tab="circuitos"]').click();

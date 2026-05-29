@@ -35,7 +35,9 @@ const App = {
 
     setupFilters() {
         document.getElementById('btn-toggle-filters').addEventListener('click', () => {
-            document.getElementById('filter-panel').classList.toggle('collapsed');
+            const panel = document.getElementById('filter-panel');
+            panel.classList.toggle('collapsed');
+            document.body.classList.toggle('panel-open', !panel.classList.contains('collapsed'));
         });
 
         document.getElementById('filter-active').addEventListener('change', (e) => {

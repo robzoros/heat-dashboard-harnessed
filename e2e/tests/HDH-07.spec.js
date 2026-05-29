@@ -7,6 +7,7 @@ test.describe('HDH-07 - Pestaña Historial', () => {
   });
 
   test('debe mostrar historial con mock data', async ({ page }) => {
+    await page.waitForSelector('canvas', { timeout: 10000 });
     await page.evaluate(() => window.App.loadMockData());
 
     await page.locator('.tab-btn[data-tab="historial"]').click();
@@ -71,6 +72,7 @@ test.describe('HDH-07 - Pestaña Historial', () => {
   });
 
   test('debe mostrar wins evolution chart con mock data', async ({ page }) => {
+    await page.waitForSelector('canvas', { timeout: 10000 });
     await page.evaluate(() => window.App.loadMockData());
 
     await page.locator('.tab-btn[data-tab="historial"]').click();

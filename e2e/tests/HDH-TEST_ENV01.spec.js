@@ -14,6 +14,7 @@ test.describe('HDH-TEST_ENV01 - Tests usando XML de prueba', () => {
     test.beforeEach(async ({ page }) => {
         await page.goto('/');
         await page.waitForLoadState('networkidle');
+        await page.waitForSelector('canvas', { timeout: 10000 });
     });
 
     async function loadTestData(page) {

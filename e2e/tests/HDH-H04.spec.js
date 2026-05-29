@@ -4,6 +4,7 @@ test.describe('HDH-H04 - Poblamiento de filtros', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
     await page.waitForLoadState('networkidle');
+    await page.waitForSelector('canvas', { timeout: 10000 });
     await page.evaluate(() => window.App.loadMockData());
   });
 

@@ -39,6 +39,7 @@ test.describe('HDH-08 - Tests unitarios + integración con XML', () => {
   }
 
   test('Unit: getFilteredPlays returns all when filters inactive', async ({ page }) => {
+    await page.waitForSelector('canvas', { timeout: 10000 });
     await page.evaluate(() => window.App.loadMockData());
     
     const result = await page.evaluate(() => {
@@ -50,6 +51,7 @@ test.describe('HDH-08 - Tests unitarios + integración con XML', () => {
   });
 
   test('Unit: getFilteredPlays filters by track', async ({ page }) => {
+    await page.waitForSelector('canvas', { timeout: 10000 });
     await page.evaluate(() => window.App.loadMockData());
     
     const result = await page.evaluate(() => {
@@ -65,6 +67,7 @@ test.describe('HDH-08 - Tests unitarios + integración con XML', () => {
   });
 
   test('Unit: getFilteredPlays filters by player mode any', async ({ page }) => {
+    await page.waitForSelector('canvas', { timeout: 10000 });
     await page.evaluate(() => window.App.loadMockData());
     
     const result = await page.evaluate(() => {
@@ -80,6 +83,7 @@ test.describe('HDH-08 - Tests unitarios + integración con XML', () => {
   });
 
   test('Unit: getFilteredPlays filters by player mode all', async ({ page }) => {
+    await page.waitForSelector('canvas', { timeout: 10000 });
     await page.evaluate(() => window.App.loadMockData());
     
     const result = await page.evaluate(() => {
@@ -95,6 +99,7 @@ test.describe('HDH-08 - Tests unitarios + integración con XML', () => {
   });
 
   test('Unit: getFilteredPlays filters by player mode exact', async ({ page }) => {
+    await page.waitForSelector('canvas', { timeout: 10000 });
     await page.evaluate(() => window.App.loadMockData());
     
     const result = await page.evaluate(() => {
@@ -130,6 +135,7 @@ test.describe('HDH-08 - Tests unitarios + integración con XML', () => {
   });
 
   test('Unit: KPIs calculate correctly with mock data', async ({ page }) => {
+    await page.waitForSelector('canvas', { timeout: 10000 });
     await page.evaluate(() => window.App.loadMockData());
     
     await expect(page.locator('#kpi-leader')).toHaveText('Player1');

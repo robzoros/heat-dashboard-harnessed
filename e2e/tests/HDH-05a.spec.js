@@ -7,6 +7,7 @@ test.describe('HDH-05a - Resumen KPIs', () => {
   });
 
   test('debe mostrar KPIs con mock data por defecto', async ({ page }) => {
+    await page.waitForSelector('canvas', { timeout: 10000 });
     await page.evaluate(() => window.App.loadMockData());
 
     // Leader: Player1 has 2 wins, Player2 has 1 win

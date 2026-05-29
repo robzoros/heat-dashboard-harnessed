@@ -86,6 +86,26 @@ nav#tabs {
     display: block;
 }
 
+.btn-toggle {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    z-index: 200;
+    background: #e94560;
+    border: none;
+    color: white;
+    padding: 8px 14px;
+    cursor: pointer;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.2rem;
+    border-radius: 4px;
+    transition: left 0.3s;
+}
+
+body.panel-open .btn-toggle {
+    left: 310px;
+}
+
 #filter-panel {
     position: fixed;
     left: 0;
@@ -96,10 +116,11 @@ nav#tabs {
     transition: transform 0.3s;
     overflow-y: auto;
     width: 300px;
+    transform: translateX(-100%);
 }
 
-#filter-panel.collapsed {
-    transform: translateX(-270px);
+#filter-panel:not(.collapsed) {
+    transform: translateX(0);
 }
 
 .filter-header {
@@ -110,14 +131,13 @@ nav#tabs {
     min-height: 55px;
 }
 
-.btn-toggle {
-    background: #e94560;
-    border: none;
-    color: white;
-    padding: 8px 14px;
+.filter-toggle-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
     cursor: pointer;
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.2rem;
+    font-size: 0.95rem;
+    white-space: nowrap;
 }
 
 .filter-toggle-header {
