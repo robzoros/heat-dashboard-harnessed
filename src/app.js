@@ -35,7 +35,9 @@ const App = {
 
     setupFilters() {
         document.getElementById('btn-toggle-filters').addEventListener('click', () => {
-            document.getElementById('filter-panel').classList.toggle('collapsed');
+            const panel = document.getElementById('filter-panel');
+            panel.classList.toggle('collapsed');
+            document.body.classList.toggle('panel-open', !panel.classList.contains('collapsed'));
         });
 
         document.getElementById('filter-active').addEventListener('change', (e) => {
@@ -211,8 +213,14 @@ const App = {
                     const hasAll = selectedPlayerIds.every(pid => playPlayerIds.includes(pid));
                     if (!hasAll) return false;
                 } else if (this.filters.playerMode === 'exact') {
-                    const sameSize = playPlayerIds.length === selectedPlayerIds.length;
-                    const sameSet = sameSize && selectedPlayerIds.every(pid => playPlayerIds.includes(pid));
+                    const playMainPlayerIds = play.playerScores
+                        .map(ps => String(ps.playerRefId))
+                        .filter(pid => {
+                            const player = this.data.players.find(p => String(p.id) === pid);
+                            return player && player.isMain;
+                        });
+                    const sameSize = playMainPlayerIds.length === selectedPlayerIds.length;
+                    const sameSet = sameSize && selectedPlayerIds.every(pid => playMainPlayerIds.includes(pid));
                     if (!sameSet) return false;
                 }
             }
@@ -260,6 +268,12 @@ const App = {
             type: 'line',
             data: { labels: [], datasets: [] },
             options: { responsive: true }
+        });
+
+        this.charts.playsMonthHistorial = new Chart(document.getElementById('chart-plays-month-historial'), {
+            type: 'line',
+            data: { labels: [], datasets: [{ label: 'Partidas', data: [], borderColor: '#e94560', tension: 0.1 }] },
+            options: { responsive: true, scales: { y: { ticks: { stepSize: 1 } } } }
         });
     },
 
@@ -311,7 +325,7 @@ const App = {
                 leaderName = player.name;
             }
         }
-        if (maxWins <= 0) leaderName = '-';
+        const leaderDisplay = maxWins > 0 ? `${leaderName} (${maxWins})` : '-';
 
         // KPI Track: most frequent board
         let trackName = '-';
@@ -326,7 +340,7 @@ const App = {
                 trackName = play.board;
             }
         }
-        const trackDisplay = trackName !== '-' ? `${this.getTrackFlag(trackName)} ${trackName}` : '-';
+        const trackDisplay = trackName !== '-' ? `${this.getTrackFlag(trackName)} ${trackName} (${trackMax})` : '-';
 
         // KPI Streak: best winning streak for a main player
         let bestStreak = { name: '-', count: 0 };
@@ -360,7 +374,7 @@ const App = {
             lastDisplay = `${lastPlay.playDate} ${winnerName}`;
         }
 
-        document.getElementById('kpi-leader').textContent = leaderName;
+        document.getElementById('kpi-leader').textContent = leaderDisplay;
         document.getElementById('kpi-track').textContent = trackDisplay;
         document.getElementById('kpi-streak').textContent = streakDisplay;
         document.getElementById('kpi-last').textContent = lastDisplay;
@@ -432,6 +446,9 @@ const App = {
         this.charts.playsMonth.data.labels = sortedMonths;
         this.charts.playsMonth.data.datasets[0].data = sortedMonths.map(m => playsByMonth[m]);
         this.charts.playsMonth.update();
+        this.charts.playsMonthHistorial.data.labels = sortedMonths;
+        this.charts.playsMonthHistorial.data.datasets[0].data = sortedMonths.map(m => playsByMonth[m]);
+        this.charts.playsMonthHistorial.update();
 
         // Avg points chart: average score per main player
         const avgByPlayer = mainPlayers.map(player => {
