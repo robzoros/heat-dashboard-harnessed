@@ -662,7 +662,6 @@
 
 #### Próximo paso
 - Feature siguiente: HDH-BUG03 - FIX: KPIs Líder y Track añadir contadores
-
 ---
 
 ## Sesión 2026-05-29 (continuación)

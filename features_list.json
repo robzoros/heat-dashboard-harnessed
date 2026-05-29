@@ -408,6 +408,79 @@
           "Total de tests aumenta significativamente"
         ]
       }
+    },
+    {
+      "id": "HDH-BUG02",
+      "priority": 1,
+      "name": "FIX: Filtros comportamiento Solo estos y UI",
+      "description": [
+        "Filtro Solo estos debe filtrar partidas donde los jugadores seleccionados son los únicos jugadores PRINCIPALES (el resto pueden ser no principales).",
+        "UI: eliminar barra de desplazamiento en panel de filtros moviendo check Filtro Activo a la misma altura que el botón Filtros.",
+        "Explorar poner selector Algunos/Todos/Solo estos a la derecha de los nombres de jugadores."
+      ],
+      "status": "completed",
+      "verification": {
+        "checks": [
+          "Filtro Solo estos solo considera main players para la coincidencia exacta",
+          "UI no muestra barra de desplazamiento innecesaria en panel de filtros",
+          "Check Filtro Activo está alineado con el botón Filtros",
+          "Tests E2E pasan"
+        ],
+        "evidence": "Modificado app.js: getFilteredPlays filtra exact comparando solo mainPlayerIds. Modificado index.html: header del panel con botón Filtros y checkbox Activo en la misma línea. Selector de modo al lado del título Jugadores. Modificado styles.css: filter-header, filter-toggle-header, filter-section-title, filter-mode-select."
+      }
+    },
+    {
+      "id": "HDH-BUG03",
+      "priority": 1,
+      "name": "FIX: KPIs Líder y Track añadir contadores",
+      "description": [
+        "KPI Líder debe mostrar también el número de partidas ganadas (victorias).",
+        "KPI Track debe mostrar también el número de partidas jugadas en ese circuito."
+      ],
+      "status": "pending",
+      "verification": {
+        "checks": [
+          "KPI Líder muestra nombre y número de victorias",
+          "KPI Track muestra flag + nombre y número de partidas",
+          "Tests E2E pasan"
+        ]
+      }
+    },
+    {
+      "id": "HDH-BUG04",
+      "priority": 1,
+      "name": "FIX: Panel Circuitos layout donut y stats",
+      "description": [
+        "El panel de distribución con el gráfico donut es demasiado grande. Se debería ver el donut entero.",
+        "Los paneles con estadísticas de circuitos deben aparecer a la derecha del panel del donut."
+      ],
+      "status": "pending",
+      "verification": {
+        "checks": [
+          "Gráfico donut se ve completo sin cortarse",
+          "Track list aparece a la derecha del donut",
+          "Tests E2E pasan"
+        ]
+      }
+    },
+    {
+      "id": "HDH-BUG05",
+      "priority": 1,
+      "name": "FIX: Historial paneles y banderas",
+      "description": [
+        "Hacer dos paneles en la pestaña Historial.",
+        "Panel 1: partidas ordenadas de más reciente a menos reciente con banderas de países como flags.",
+        "Panel 2: gráfico lineal de partidas por mes."
+      ],
+      "status": "pending",
+      "verification": {
+        "checks": [
+          "Historial tiene dos paneles visibles",
+          "Panel de partidas muestra banderas de países",
+          "Panel de gráfico lineal de partidas por mes se ve correctamente",
+          "Tests E2E pasan"
+        ]
+      }
     }
   ]
 }
