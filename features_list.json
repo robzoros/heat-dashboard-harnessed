@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-05-28",
+  "last_updated": "2026-05-29",
   "user": "Roberto Méndez",
   "rules": {
     "single_active_feature": true,
@@ -34,6 +34,44 @@
       }
     },
     {
+      "id": "HDH-BUG02",
+      "priority": 1,
+      "name": "FIX: Filtros comportamiento Solo estos y UI",
+      "description": [
+        "Filtro Solo estos debe filtrar partidas donde los jugadores seleccionados son los únicos jugadores PRINCIPALES (el resto pueden ser no principales).",
+        "UI: eliminar barra de desplazamiento en panel de filtros moviendo check Filtro Activo a la misma altura que el botón Filtros.",
+        "Explorar poner selector Algunos/Todos/Solo estos a la derecha de los nombres de jugadores."
+      ],
+      "status": "completed",
+      "verification": {
+        "checks": [
+          "Filtro Solo estos solo considera main players para la coincidencia exacta",
+          "UI no muestra barra de desplazamiento innecesaria en panel de filtros",
+          "Check Filtro Activo está alineado con el botón Filtros",
+          "Tests E2E pasan"
+        ],
+        "evidence": "Modificado app.js: getFilteredPlays filtra exact comparando solo mainPlayerIds. Modificado index.html: header del panel con botón Filtros y checkbox Activo en la misma línea. Selector de modo al lado del título Jugadores. Modificado styles.css: filter-header, filter-toggle-header, filter-section-title, filter-mode-select."
+      }
+    },
+    {
+      "id": "HDH-BUG03",
+      "priority": 1,
+      "name": "FIX: KPIs Líder y Track añadir contadores",
+      "description": [
+        "KPI Líder debe mostrar también el número de partidas ganadas (victorias).",
+        "KPI Track debe mostrar también el número de partidas jugadas en ese circuito."
+      ],
+      "status": "completed",
+      "verification": {
+        "checks": [
+          "KPI Líder muestra nombre y número de victorias",
+          "KPI Track muestra flag + nombre y número de partidas",
+          "Tests E2E pasan"
+        ],
+        "evidence": "Modificado app.js: leaderDisplay incluye maxWins entre paréntesis. trackDisplay incluye trackMax entre paréntesis."
+      }
+    },
+    {
       "id": "HDH-BUG04",
       "priority": 1,
       "name": "FIX: Panel Circuitos layout donut y stats",
@@ -51,6 +89,43 @@
         "evidence": "Modificado index.html: layout .circuitos-layout con .donut-card a la izquierda y #track-list a la derecha. Modificado styles.css: grid 1fr 2fr, donut-card max-width 400px, canvas max-height 300px."
       }
     },
+    {
+      "id": "HDH-BUG05",
+      "priority": 1,
+      "name": "FIX: Historial paneles y banderas",
+      "description": [
+        "Hacer dos paneles en la pestaña Historial.",
+        "Panel 1: partidas ordenadas de más reciente a menos reciente con banderas de países como flags.",
+        "Panel 2: gráfico lineal de partidas por mes.",
+        "Los dos paneles deben estar uno al lado del otro."
+      ],
+      "status": "completed",
+      "verification": {
+        "checks": [
+          "Historial tiene dos paneles visibles uno al lado del otro",
+          "Panel de partidas muestra banderas de países",
+          "Panel de gráfico lineal de partidas por mes se ve correctamente",
+          "Tests E2E pasan"
+        ],
+        "evidence": "Modificado index.html: .historial-layout con dos columnas: lista de partidas y chart de partidas por mes. Modificado app.js: añadido chart playsMonthHistorial inicializado y actualizado en renderCharts. Modificado styles.css: .historial-layout grid 1fr 1fr."
+      }
+    },
+    {
+      "id": "HDH-00",
+      "priority": 1,
+      "name": "Crear Github Action",
+      "description": [
+        "Crea un github action para automatizar el despliegue.",
+        "Después de un push a una rama que no sea main se ejecuta un pull request, se hace un merge con main y se hace un checkout a main."
+      ],
+      "status": "completed",
+      "verification": {
+        "checks": [
+          "Se ha creado la action y funciona correctamente"
+        ],
+        "evidence": "Action creada en .github/workflows/auto-merge.yml. Funcionando: PR #1 creado y mergeado a main (commit e20739b). Configuración de permisos aplicada en Settings > Actions > General > Workflow permissions."
+      }
+    },    
     {
       "id": "HDH-01",
       "priority": 1,
@@ -178,28 +253,6 @@
         ],
         "evidence": "Implementados 4 KPIs en app.js: Leader (main player con más victorias), Track (circuito más frecuente + flag emoji), Streak (mejor racha consecutiva de victorias), Last (fecha + vencedor de partida más reciente). getTrackFlag soporta 13 países. Tests E2E: 4/4 pasados (mock data, custom data, filtros, sin datos). Total Playwright: 19/19 pasados."
       }
-    },
-    {
-      "id": "HDH-BUG05",
-      "priority": 1,
-      "name": "FIX: Historial paneles y banderas",
-      "description": [
-        "Hacer dos paneles en la pestaña Historial.",
-        "Panel 1: partidas ordenadas de más reciente a menos reciente con banderas de países como flags.",
-        "Panel 2: gráfico lineal de partidas por mes.",
-        "Los dos paneles deben estar uno al lado del otro."
-      ],
-      "status": "completed",
-      "verification": {
-        "checks": [
-          "Historial tiene dos paneles visibles uno al lado del otro",
-          "Panel de partidas muestra banderas de países",
-          "Panel de gráfico lineal de partidas por mes se ve correctamente",
-          "Tests E2E pasan"
-        ],
-        "evidence": "Modificado index.html: .historial-layout con dos columnas: lista de partidas y chart de partidas por mes. Modificado app.js: añadido chart playsMonthHistorial inicializado y actualizado en renderCharts. Modificado styles.css: .historial-layout grid 1fr 1fr."
-      }
-    }
     },
     {
       "id": "HDH-05b",
