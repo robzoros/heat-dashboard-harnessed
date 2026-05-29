@@ -7,6 +7,7 @@ test.describe('HDH-05b - Panel Podio', () => {
   });
 
   test('debe mostrar podio con mock data por defecto', async ({ page }) => {
+    await page.waitForSelector('canvas', { timeout: 10000 });
     await page.evaluate(() => window.App.loadMockData());
 
     const podium = page.locator('#podium');

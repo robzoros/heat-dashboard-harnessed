@@ -7,6 +7,7 @@ test.describe('HDH-06a - Pestaña Jugadores', () => {
   });
 
   test('debe mostrar tabla de jugadores con mock data', async ({ page }) => {
+    await page.waitForSelector('canvas', { timeout: 10000 });
     await page.evaluate(() => window.App.loadMockData());
 
     await page.locator('.tab-btn[data-tab="jugadores"]').click();

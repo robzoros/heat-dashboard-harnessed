@@ -7,6 +7,7 @@ test.describe('HDH-05c - Panel Victorias', () => {
   });
 
   test('debe mostrar grafico de victorias con mock data', async ({ page }) => {
+    await page.waitForSelector('canvas', { timeout: 10000 });
     await page.evaluate(() => window.App.loadMockData());
 
     const chart = page.locator('#chart-wins');

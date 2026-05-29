@@ -86,6 +86,26 @@ nav#tabs {
     display: block;
 }
 
+.btn-toggle {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    z-index: 200;
+    background: #e94560;
+    border: none;
+    color: white;
+    padding: 8px 14px;
+    cursor: pointer;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.2rem;
+    border-radius: 4px;
+    transition: left 0.3s;
+}
+
+body.panel-open .btn-toggle {
+    left: 310px;
+}
+
 #filter-panel {
     position: fixed;
     left: 0;
@@ -96,56 +116,82 @@ nav#tabs {
     transition: transform 0.3s;
     overflow-y: auto;
     width: 300px;
+    transform: translateX(-100%);
 }
 
-#filter-panel.collapsed {
-    transform: translateX(-270px);
+#filter-panel:not(.collapsed) {
+    transform: translateX(0);
 }
 
-.btn-toggle {
-    position: absolute;
-    right: 0;
-    top: 20px;
-    background: #e94560;
-    border: none;
-    color: white;
-    padding: 10px 15px;
+.filter-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 15px 0 20px;
+    min-height: 55px;
+}
+
+.filter-toggle-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
     cursor: pointer;
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.2rem;
+    font-size: 0.95rem;
+    white-space: nowrap;
+}
+
+.filter-toggle-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    white-space: nowrap;
 }
 
 .filter-content {
-    padding: 60px 20px 20px;
-}
-
-.filter-toggle {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 20px;
-    cursor: pointer;
+    padding: 10px 20px 20px;
 }
 
 .filter-section {
-    margin-bottom: 20px;
+    margin-bottom: 15px;
 }
 
 .filter-section h3 {
-    margin-bottom: 10px;
     color: #e94560;
 }
 
+.filter-section-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.filter-section-title h3 {
+    margin-bottom: 0;
+}
+
+.filter-mode-select {
+    padding: 4px 8px;
+    background: #0f3460;
+    border: 1px solid #e94560;
+    color: white;
+    font-size: 0.85rem;
+    border-radius: 4px;
+}
+
 .filter-list {
-    max-height: 200px;
+    max-height: 160px;
     overflow-y: auto;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
 }
 
 .filter-list label {
     display: block;
-    padding: 5px 0;
+    padding: 4px 0;
     cursor: pointer;
+    font-size: 0.95rem;
 }
 
 .filter-mode select {
@@ -330,6 +376,13 @@ th {
     font-family: 'Bebas Neue', sans-serif;
 }
 
+.historial-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    align-items: start;
+}
+
 .plays-list {
     margin-bottom: 30px;
 }
@@ -363,6 +416,21 @@ th {
     padding: 10px;
     margin: 5px 0;
     border-radius: 5px;
+}
+
+.circuitos-layout {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 20px;
+    align-items: start;
+}
+
+.donut-card {
+    max-width: 400px;
+}
+
+.donut-card canvas {
+    max-height: 300px;
 }
 
 .track-list {

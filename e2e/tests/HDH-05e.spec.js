@@ -7,6 +7,7 @@ test.describe('HDH-05e - Panel Puntos Medios', () => {
   });
 
   test('debe mostrar grafico de puntos medios con mock data', async ({ page }) => {
+    await page.waitForSelector('canvas', { timeout: 10000 });
     await page.evaluate(() => window.App.loadMockData());
 
     const chart = page.locator('#chart-avgpts');

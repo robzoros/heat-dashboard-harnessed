@@ -50,17 +50,20 @@
         <button class="tab-btn" data-tab="historial">Historial</button>
     </nav>
 
+    <button id="btn-toggle-filters" class="btn-toggle">☰ Filtros</button>
     <aside id="filter-panel" class="collapsed">
-        <button id="btn-toggle-filters" class="btn-toggle">Filtros</button>
-        <div class="filter-content">
-            <label class="filter-toggle">
+        <div class="filter-header">
+            <h3>Filtros</h3>
+            <label class="filter-toggle-header">
                 <input type="checkbox" id="filter-active" checked>
-                Filtro Activo
+                Activo
             </label>
+        </div>
+        <div class="filter-content">
             <div class="filter-section">
-                <h3>Jugadores</h3>
-                <div class="filter-mode">
-                    <select id="player-filter-mode">
+                <div class="filter-section-title">
+                    <h3>Jugadores</h3>
+                    <select id="player-filter-mode" class="filter-mode-select">
                         <option value="any">Alguno</option>
                         <option value="all">Todos</option>
                         <option value="exact">Solo estos</option>
@@ -141,13 +144,13 @@
 
         <section id="tab-circuitos" class="tab-content">
             <h2>Circuitos</h2>
-            <div class="charts-grid">
-                <div class="chart-card">
+            <div class="circuitos-layout">
+                <div class="chart-card donut-card">
                     <h3>Distribución</h3>
                     <canvas id="chart-tracks"></canvas>
                 </div>
+                <div id="track-list" class="track-list"></div>
             </div>
-            <div id="track-list" class="track-list"></div>
         </section>
 
         <section id="tab-historial" class="tab-content">
@@ -160,10 +163,6 @@
                     <div class="chart-card">
                         <h3>Partidas por Mes</h3>
                         <canvas id="chart-plays-month-historial"></canvas>
-                    </div>
-                    <div class="chart-card">
-                        <h3>Evolución Victorias</h3>
-                        <canvas id="chart-wins-evolution"></canvas>
                     </div>
                 </div>
             </div>

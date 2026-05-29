@@ -443,11 +443,12 @@ const App = {
             playsByMonth[month] = (playsByMonth[month] || 0) + 1;
         }
         const sortedMonths = Object.keys(playsByMonth).sort();
+        const monthData = sortedMonths.map(m => playsByMonth[m]);
         this.charts.playsMonth.data.labels = sortedMonths;
-        this.charts.playsMonth.data.datasets[0].data = sortedMonths.map(m => playsByMonth[m]);
+        this.charts.playsMonth.data.datasets[0].data = monthData;
         this.charts.playsMonth.update();
         this.charts.playsMonthHistorial.data.labels = sortedMonths;
-        this.charts.playsMonthHistorial.data.datasets[0].data = sortedMonths.map(m => playsByMonth[m]);
+        this.charts.playsMonthHistorial.data.datasets[0].data = monthData;
         this.charts.playsMonthHistorial.update();
 
         // Avg points chart: average score per main player
