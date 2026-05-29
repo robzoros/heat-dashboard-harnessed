@@ -330,6 +330,26 @@
         ],
         "evidence": "Implementado renderPlaysHistory() con lista de partidas ordenadas por fecha descendente, expandible con detalles y winner destacado. Implementado winsEvolution chart en renderCharts() con evolución acumulada de victorias por main player (máx 10). Tests E2E: 5/5 pasados. Total Playwright: 52/52."
       }
+    },
+    {
+      "id": "HDH-08",
+      "priority": 8,
+      "name": "Tests unitarios + integración con XML",
+      "description": [
+        "Modificar todos los juegos de pruebas para que:",
+        "- Hagan tests unitarios con la funcionalidad que hacen ahora",
+        "- Utilizando la puerta trasera /test-login, hacer pantallazos con y sin filtros",
+        "Ejecutar todos los tests y verificar que pasan"
+      ],
+      "status": "in_progress",
+      "verification": {
+        "checks": [
+          "Todos los tests unitarios pasan",
+          "Se generan screenshots con datos XML reales",
+          "Se generan screenshots con filtros aplicados",
+          "Total de tests aumenta significativamente"
+        ]
+      }
     }
   ]
 }
