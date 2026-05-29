@@ -629,3 +629,36 @@
 #### Notas / Riesgos
 - Ninguno. Implementación completa y compatible con tests existentes.
 - **¡TODAS LAS FEATURES COMPLETADAS!**
+
+---
+
+## Sesión 2026-05-29
+
+### Feature trabajada: HDH-08 - Tests unitarios + integración con XML
+
+**Estado**: Completing verification
+
+#### Evidencia
+- **src/index.html**: Añadido canvas `#chart-wins-evolution` a la pestaña Historial (faltaba en HDH-BUG05 al reorganizar el layout). Sin este canvas, `initCharts()` creaba un Chart con canvas null, y `renderCharts()` fallaba con `TypeError: Cannot read properties of null (reading 'addEventListener')`.
+- **e2e/tests/HDH-05a.spec.js**: Actualizados textos esperados de KPIs para reflejar el cambio de HDH-BUG03 (líder y track ahora incluyen número de victorias/partidas entre paréntesis).
+- **e2e/tests/HDH-08.spec.js**: Actualizado test de filtro exacto (esperaba 1, ahora espera 3) para reflejar el cambio de HDH-BUG02 (el filtro exacto solo compara main players).
+- **e2e/tests/HDH-H04.spec.js**: Actualizado test de filtro exacto (esperaba 1, ahora espera 3) por el mismo motivo que HDH-08.
+
+#### Tareas completadas
+1. Diagnosticar causa raíz: canvas `#chart-wins-evolution` faltante + textos KPI no actualizados
+2. Añadir canvas faltante a index.html
+3. Actualizar expectativas de KPIs en tests (HDH-05a, HDH-08)
+4. Actualizar expectativas de filtro exacto en tests (HDH-08, HDH-H04)
+5. Verificar que los 70 tests pasan
+
+#### Verificación final
+- docker compose up -d --build: OK
+- curl localhost:8082: HTTP 200 con DOCTYPE html
+- npx playwright test: 70/70 tests pasados
+
+#### Notas / Riesgos
+- La rama HDH-08 estaba basada en un estado anterior a los bugs BUG02-BUG05. Se resolvieron conflictos mergeando los cambios de main.
+- Todos los tests existentes (70) pasan correctamente tras los fixes.
+
+#### Próximo paso
+- Sin features pendientes

@@ -152,10 +152,20 @@
 
         <section id="tab-historial" class="tab-content">
             <h2>Historial de Partidas</h2>
-            <div id="plays-history" class="plays-list"></div>
-            <div class="chart-card">
-                <h3>Evolución Victorias</h3>
-                <canvas id="chart-wins-evolution"></canvas>
+            <div class="historial-layout">
+                <div class="historial-list-panel">
+                    <div id="plays-history" class="plays-list"></div>
+                </div>
+                <div class="historial-chart-panel">
+                    <div class="chart-card">
+                        <h3>Partidas por Mes</h3>
+                        <canvas id="chart-plays-month-historial"></canvas>
+                    </div>
+                    <div class="chart-card">
+                        <h3>Evolución Victorias</h3>
+                        <canvas id="chart-wins-evolution"></canvas>
+                    </div>
+                </div>
             </div>
         </section>
     </main>

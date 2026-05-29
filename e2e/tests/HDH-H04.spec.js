@@ -58,7 +58,7 @@ test.describe('HDH-H04 - Poblamiento de filtros', () => {
     await page.locator('#player-filters input[value="1"]').check();
     await page.locator('#player-filters input[value="2"]').check();
     await page.locator('#btn-apply-filters').click();
-    await expect(page.locator('#stat-plays-filtered')).toHaveText('1');
+    await expect(page.locator('#stat-plays-filtered')).toHaveText('3');
   });
 
   test('debe filtrar por circuitos', async ({ page }) => {
