@@ -311,7 +311,7 @@ const App = {
                 leaderName = player.name;
             }
         }
-        if (maxWins <= 0) leaderName = '-';
+        const leaderDisplay = maxWins > 0 ? `${leaderName} (${maxWins})` : '-';
 
         // KPI Track: most frequent board
         let trackName = '-';
@@ -326,7 +326,7 @@ const App = {
                 trackName = play.board;
             }
         }
-        const trackDisplay = trackName !== '-' ? `${this.getTrackFlag(trackName)} ${trackName}` : '-';
+        const trackDisplay = trackName !== '-' ? `${this.getTrackFlag(trackName)} ${trackName} (${trackMax})` : '-';
 
         // KPI Streak: best winning streak for a main player
         let bestStreak = { name: '-', count: 0 };
@@ -360,7 +360,7 @@ const App = {
             lastDisplay = `${lastPlay.playDate} ${winnerName}`;
         }
 
-        document.getElementById('kpi-leader').textContent = leaderName;
+        document.getElementById('kpi-leader').textContent = leaderDisplay;
         document.getElementById('kpi-track').textContent = trackDisplay;
         document.getElementById('kpi-streak').textContent = streakDisplay;
         document.getElementById('kpi-last').textContent = lastDisplay;

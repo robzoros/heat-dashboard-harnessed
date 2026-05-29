@@ -629,3 +629,65 @@
 #### Notas / Riesgos
 - Ninguno. Implementación completa y compatible con tests existentes.
 - **¡TODAS LAS FEATURES COMPLETADAS!**
+
+---
+
+## Sesión 2026-05-29
+
+### Feature trabajada: HDH-BUG02 - FIX: Filtros comportamiento Solo estos y UI
+
+**Estado**: Completada
+
+#### Evidencia
+- `src/app.js`: Modificado `getFilteredPlays` para modo `exact`. Ahora extrae solo los `playerRefId` de jugadores principales (`isMain`) de cada partida y compara ese conjunto con los seleccionados. Los bots y other players ya no afectan el filtro exact.
+- `src/index.html`: Reestructurado panel de filtros:
+  - Nuevo `.filter-header` con botón "Filtros" y checkbox "Activo" alineados horizontalmente.
+  - Selector de modo de jugadores (`#player-filter-mode`) movido junto al título "Jugadores" dentro de `.filter-section-title`.
+- `src/styles.css`: Añadidos/actualizados estilos `.filter-header`, `.filter-toggle-header`, `.filter-section-title`, `.filter-mode-select` para layout compacto sin scroll innecesario.
+
+#### Tareas completadas
+1. Corregir lógica de filtro "Solo estos" para que solo considere main players
+2. Reubicar checkbox "Filtro Activo" al header del panel, alineado con el botón
+3. Mover selector de modo a la derecha del título "Jugadores"
+4. Ajustar CSS para ahorrar espacio y evitar barras de desplazamiento
+
+#### Verificación final
+- docker compose config --quiet: OK
+- node --check proxy/server.js: OK
+- docker compose up -d --build: OK
+- curl localhost:8082: HTTP 200 con DOCTYPE html
+
+#### Notas / Riesgos
+- Tests E2E no ejecutados en esta sesión por instrucciones del usuario. Se arreglarán en sesión futura.
+
+#### Próximo paso
+- Feature siguiente: HDH-BUG03 - FIX: KPIs Líder y Track añadir contadores
+
+---
+
+## Sesión 2026-05-29 (continuación)
+
+### Feature trabajada: HDH-BUG03 - FIX: KPIs Líder y Track añadir contadores
+
+**Estado**: Completada
+
+#### Evidencia
+- `src/app.js`: Modificado `renderKPIs`:
+  - `leaderDisplay` ahora incluye `maxWins` entre paréntesis: `nombre (victorias)`
+  - `trackDisplay` ahora incluye `trackMax` entre paréntesis: `flag nombre (partidas)`
+
+#### Tareas completadas
+1. Añadir número de victorias al KPI Líder
+2. Añadir número de partidas al KPI Track
+
+#### Verificación final
+- docker compose config --quiet: OK
+- node --check proxy/server.js: OK
+- docker compose up -d --build: OK
+- curl localhost:8082: HTTP 200 con DOCTYPE html
+
+#### Notas / Riesgos
+- Tests E2E no ejecutados en esta sesión por instrucciones del usuario.
+
+#### Próximo paso
+- Feature siguiente: HDH-BUG04 - FIX: Panel Circuitos layout donut y stats

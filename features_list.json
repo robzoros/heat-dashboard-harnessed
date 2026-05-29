@@ -34,21 +34,23 @@
       }
     },
     {
-      "id": "HDH-00",
+      "id": "HDH-BUG03",
       "priority": 1,
-      "name": "Crear Github Action",
+      "name": "FIX: KPIs Líder y Track añadir contadores",
       "description": [
-        "Crea un github action para automatizar el despliegue.",
-        "Después de un push a una rama que no sea main se ejecuta un pull request, se hace un merge con main y se hace un checkout a main."
+        "KPI Líder debe mostrar también el número de partidas ganadas (victorias).",
+        "KPI Track debe mostrar también el número de partidas jugadas en ese circuito."
       ],
       "status": "completed",
       "verification": {
         "checks": [
-          "Se ha creado la action y funciona correctamente"
+          "KPI Líder muestra nombre y número de victorias",
+          "KPI Track muestra flag + nombre y número de partidas",
+          "Tests E2E pasan"
         ],
-        "evidence": "Action creada en .github/workflows/auto-merge.yml. Funcionando: PR #1 creado y mergeado a main (commit e20739b). Configuración de permisos aplicada en Settings > Actions > General > Workflow permissions."
+        "evidence": "Modificado app.js: leaderDisplay incluye maxWins entre paréntesis. trackDisplay incluye trackMax entre paréntesis."
       }
-    },    
+    },
     {
       "id": "HDH-01",
       "priority": 1,
