@@ -51,16 +51,18 @@
     </nav>
 
     <aside id="filter-panel" class="collapsed">
-        <button id="btn-toggle-filters" class="btn-toggle">Filtros</button>
-        <div class="filter-content">
-            <label class="filter-toggle">
+        <div class="filter-header">
+            <button id="btn-toggle-filters" class="btn-toggle">Filtros</button>
+            <label class="filter-toggle-header">
                 <input type="checkbox" id="filter-active" checked>
-                Filtro Activo
+                Activo
             </label>
+        </div>
+        <div class="filter-content">
             <div class="filter-section">
-                <h3>Jugadores</h3>
-                <div class="filter-mode">
-                    <select id="player-filter-mode">
+                <div class="filter-section-title">
+                    <h3>Jugadores</h3>
+                    <select id="player-filter-mode" class="filter-mode-select">
                         <option value="any">Alguno</option>
                         <option value="all">Todos</option>
                         <option value="exact">Solo estos</option>

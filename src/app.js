@@ -211,8 +211,14 @@ const App = {
                     const hasAll = selectedPlayerIds.every(pid => playPlayerIds.includes(pid));
                     if (!hasAll) return false;
                 } else if (this.filters.playerMode === 'exact') {
-                    const sameSize = playPlayerIds.length === selectedPlayerIds.length;
-                    const sameSet = sameSize && selectedPlayerIds.every(pid => playPlayerIds.includes(pid));
+                    const playMainPlayerIds = play.playerScores
+                        .map(ps => String(ps.playerRefId))
+                        .filter(pid => {
+                            const player = this.data.players.find(p => String(p.id) === pid);
+                            return player && player.isMain;
+                        });
+                    const sameSize = playMainPlayerIds.length === selectedPlayerIds.length;
+                    const sameSet = sameSize && selectedPlayerIds.every(pid => playMainPlayerIds.includes(pid));
                     if (!sameSet) return false;
                 }
             }
