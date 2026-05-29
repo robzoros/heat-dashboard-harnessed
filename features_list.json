@@ -34,21 +34,21 @@
       }
     },
     {
-      "id": "HDH-BUG03",
+      "id": "HDH-BUG04",
       "priority": 1,
-      "name": "FIX: KPIs Líder y Track añadir contadores",
+      "name": "FIX: Panel Circuitos layout donut y stats",
       "description": [
-        "KPI Líder debe mostrar también el número de partidas ganadas (victorias).",
-        "KPI Track debe mostrar también el número de partidas jugadas en ese circuito."
+        "El panel de distribución con el gráfico donut es demasiado grande. Se debería ver el donut entero.",
+        "Los paneles con estadísticas de circuitos deben aparecer a la derecha del panel del donut."
       ],
       "status": "completed",
       "verification": {
         "checks": [
-          "KPI Líder muestra nombre y número de victorias",
-          "KPI Track muestra flag + nombre y número de partidas",
+          "Gráfico donut se ve completo sin cortarse",
+          "Track list aparece a la derecha del donut",
           "Tests E2E pasan"
         ],
-        "evidence": "Modificado app.js: leaderDisplay incluye maxWins entre paréntesis. trackDisplay incluye trackMax entre paréntesis."
+        "evidence": "Modificado index.html: layout .circuitos-layout con .donut-card a la izquierda y #track-list a la derecha. Modificado styles.css: grid 1fr 2fr, donut-card max-width 400px, canvas max-height 300px."
       }
     },
     {
@@ -180,23 +180,26 @@
       }
     },
     {
-      "id": "HDH-TEST_ENV01",
+      "id": "HDH-BUG05",
       "priority": 1,
-      "name": "FIX: Tests usando un xml de prueba",
+      "name": "FIX: Historial paneles y banderas",
       "description": [
-        "Para generar evidencias de funcionalidad funcionando vamos a hacer lo siguiente.",
-        "Guardar un XML con resultado de llamada a API de BGG con credenciales de secrets.",
-        "Construir una entrada 'trasera' solo para tests y generación de evidencias que lea de este XML 'simulando' la llamada a BGG."
+        "Hacer dos paneles en la pestaña Historial.",
+        "Panel 1: partidas ordenadas de más reciente a menos reciente con banderas de países como flags.",
+        "Panel 2: gráfico lineal de partidas por mes.",
+        "Los dos paneles deben estar uno al lado del otro."
       ],
       "status": "completed",
       "verification": {
         "checks": [
-          "Generar evidencias, es decir, un pantallazo usando este artefacto",
-          "Evidencias son pantallazos: 1 después de lectura, 1 después de aplicar algún filtro, 1 después de desactivar filtro.",
+          "Historial tiene dos paneles visibles uno al lado del otro",
+          "Panel de partidas muestra banderas de países",
+          "Panel de gráfico lineal de partidas por mes se ve correctamente",
           "Tests E2E pasan"
         ],
-        "evidence": "XML de 102 partidas guardado en proxy/test-data/bgg-plays.xml. Ruta POST /test-login añadida a proxy/server.js. Spec E2E creado en e2e/tests/HDH-TEST_ENV01.spec.js con 3 tests y 3 screenshots. Todos los tests E2E pasan (22/22)."
+        "evidence": "Modificado index.html: .historial-layout con dos columnas: lista de partidas y chart de partidas por mes. Modificado app.js: añadido chart playsMonthHistorial inicializado y actualizado en renderCharts. Modificado styles.css: .historial-layout grid 1fr 1fr."
       }
+    }
     },
     {
       "id": "HDH-05b",

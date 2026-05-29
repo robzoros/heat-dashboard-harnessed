@@ -261,6 +261,12 @@ const App = {
             data: { labels: [], datasets: [] },
             options: { responsive: true }
         });
+
+        this.charts.playsMonthHistorial = new Chart(document.getElementById('chart-plays-month-historial'), {
+            type: 'line',
+            data: { labels: [], datasets: [{ label: 'Partidas', data: [], borderColor: '#e94560', tension: 0.1 }] },
+            options: { responsive: true, scales: { y: { ticks: { stepSize: 1 } } } }
+        });
     },
 
     renderAll() {
@@ -429,9 +435,13 @@ const App = {
             playsByMonth[month] = (playsByMonth[month] || 0) + 1;
         }
         const sortedMonths = Object.keys(playsByMonth).sort();
+        const monthData = sortedMonths.map(m => playsByMonth[m]);
         this.charts.playsMonth.data.labels = sortedMonths;
-        this.charts.playsMonth.data.datasets[0].data = sortedMonths.map(m => playsByMonth[m]);
+        this.charts.playsMonth.data.datasets[0].data = monthData;
         this.charts.playsMonth.update();
+        this.charts.playsMonthHistorial.data.labels = sortedMonths;
+        this.charts.playsMonthHistorial.data.datasets[0].data = monthData;
+        this.charts.playsMonthHistorial.update();
 
         // Avg points chart: average score per main player
         const avgByPlayer = mainPlayers.map(player => {
