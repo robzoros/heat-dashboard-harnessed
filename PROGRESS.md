@@ -662,3 +662,89 @@
 
 #### Próximo paso
 - Feature siguiente: HDH-BUG03 - FIX: KPIs Líder y Track añadir contadores
+---
+
+## Sesión 2026-05-29 (continuación)
+
+### Feature trabajada: HDH-BUG03 - FIX: KPIs Líder y Track añadir contadores
+
+**Estado**: Completada
+
+#### Evidencia
+- `src/app.js`: Modificado `renderKPIs`:
+  - `leaderDisplay` ahora incluye `maxWins` entre paréntesis: `nombre (victorias)`
+  - `trackDisplay` ahora incluye `trackMax` entre paréntesis: `flag nombre (partidas)`
+
+#### Tareas completadas
+1. Añadir número de victorias al KPI Líder
+2. Añadir número de partidas al KPI Track
+
+#### Verificación final
+- docker compose config --quiet: OK
+- node --check proxy/server.js: OK
+- docker compose up -d --build: OK
+- curl localhost:8082: HTTP 200 con DOCTYPE html
+
+#### Notas / Riesgos
+- Tests E2E no ejecutados en esta sesión por instrucciones del usuario.
+
+#### Próximo paso
+- Feature siguiente: HDH-BUG04 - FIX: Panel Circuitos layout donut y stats
+
+---
+
+## Sesión 2026-05-29 (continuación)
+
+### Feature trabajada: HDH-BUG04 - FIX: Panel Circuitos layout donut y stats
+
+**Estado**: Completada
+
+#### Evidencia
+- `src/index.html`: Reemplazado `.charts-grid` por `.circuitos-layout` en pestaña Circuitos. `.donut-card` contiene el canvas, y `#track-list` queda a su derecha.
+- `src/styles.css`: Añadidos `.circuitos-layout` (grid 1fr 2fr), `.donut-card` (max-width 400px) y `.donut-card canvas` (max-height 300px) para que el donut se vea completo.
+
+#### Tareas completadas
+1. Limitar tamaño del donut para que se visualice entero
+2. Colocar track list a la derecha del donut en un grid de dos columnas
+
+#### Verificación final
+- docker compose config --quiet: OK
+- node --check proxy/server.js: OK
+- docker compose up -d --build: OK
+- curl localhost:8082: HTTP 200 con DOCTYPE html
+
+#### Notas / Riesgos
+- Tests E2E no ejecutados en esta sesión por instrucciones del usuario.
+
+#### Próximo paso
+- Feature siguiente: HDH-BUG05 - FIX: Historial paneles y banderas
+
+---
+
+## Sesión 2026-05-29 (continuación)
+
+### Feature trabajada: HDH-BUG05 - FIX: Historial paneles y banderas
+
+**Estado**: Completada
+
+#### Evidencia
+- `src/index.html`: Reorganizada pestaña Historial con `.historial-layout` de dos columnas. Izquierda: lista de partidas (`#plays-history`) con banderas de países. Derecha: chart de partidas por mes (`#chart-plays-month-historial`).
+- `src/app.js`: Añadido chart `playsMonthHistorial` en `initCharts()` y sincronizado en `renderCharts()` con los mismos datos que el chart de Resumen.
+- `src/styles.css`: Añadido `.historial-layout` con `grid-template-columns: 1fr 1fr`.
+
+#### Tareas completadas
+1. Crear layout de dos columnas en pestaña Historial
+2. Mantener lista de partidas ordenada con banderas en panel izquierdo
+3. Añadir gráfico lineal de partidas por mes en panel derecho
+
+#### Verificación final
+- docker compose config --quiet: OK
+- node --check proxy/server.js: OK
+- docker compose up -d --build: OK
+- curl localhost:8082: HTTP 200 con DOCTYPE html
+
+#### Notas / Riesgos
+- Tests E2E no ejecutados en esta sesión por instrucciones del usuario.
+
+#### Próximo paso
+- Todas las features solicitadas implementadas.

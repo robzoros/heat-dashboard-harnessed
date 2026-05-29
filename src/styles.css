@@ -356,6 +356,13 @@ th {
     font-family: 'Bebas Neue', sans-serif;
 }
 
+.historial-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    align-items: start;
+}
+
 .plays-list {
     margin-bottom: 30px;
 }
@@ -389,6 +396,21 @@ th {
     padding: 10px;
     margin: 5px 0;
     border-radius: 5px;
+}
+
+.circuitos-layout {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 20px;
+    align-items: start;
+}
+
+.donut-card {
+    max-width: 400px;
+}
+
+.donut-card canvas {
+    max-height: 300px;
 }
 
 .track-list {
