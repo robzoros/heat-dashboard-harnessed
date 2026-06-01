@@ -2,9 +2,36 @@ import { test, expect } from '@playwright/test';
 
 test.describe('HDH-09 - Pestaña Campeonatos', () => {
   test.beforeEach(async ({ page }) => {
+    await cleanupChampionships();
     await page.goto('/');
     await page.waitForLoadState('networkidle');
   });
+
+  async function cleanupChampionships() {
+    const baseUrl = 'http://localhost:8082';
+    const http = await import('http');
+    const listData = await new Promise((resolve, reject) => {
+      http.get(`${baseUrl}/bgg-api/championships`, res => {
+        let d = '';
+        res.on('data', c => d += c);
+        res.on('end', () => resolve(JSON.parse(d)));
+      }).on('error', reject);
+    });
+    if (listData.success && Array.isArray(listData.data)) {
+      for (const champ of listData.data) {
+        await new Promise((resolve, reject) => {
+          const req = http.request(`${baseUrl}/bgg-api/championships/${champ.id}`, {
+            method: 'DELETE'
+          }, res => {
+            res.on('data', () => {});
+            res.on('end', () => resolve());
+          });
+          req.on('error', reject);
+          req.end();
+        });
+      }
+    }
+  }
 
   async function loadData(page) {
     await page.waitForSelector('canvas', { timeout: 10000 });

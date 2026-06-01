@@ -19,6 +19,6 @@ services:
     working_dir: /app
     volumes:
       - ./proxy:/app
-    command: sh -c "npm install && npx nodemon server.js"
+    command: sh -c "npm install && npx nodemon --watch server.js --watch classify.js --watch test-classify.js --ignore championships/ --ignore test-data/ --ignore node_modules/ --ext js,mjs,cjs server.js"
     networks:
       - game-net
