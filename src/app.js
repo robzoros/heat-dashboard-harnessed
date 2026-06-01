@@ -256,7 +256,6 @@ const App = {
             this.populateFilters();
             this.updateHeaderStats();
             this.renderAll();
-            this.loadChampionships();
         } catch (error) {
             console.error('Error loading data:', error);
             this.loadMockData();
@@ -315,7 +314,6 @@ const App = {
         this.populateFilters();
         this.updateHeaderStats();
         this.renderAll();
-        this.loadChampionships();
     },
 
     populateFilters() {
