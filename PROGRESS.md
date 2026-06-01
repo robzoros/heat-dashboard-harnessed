@@ -632,33 +632,65 @@
 
 ---
 
-## Sesión 2026-05-29
+## Sesión 2026-06-01
 
-### Feature trabajada: HDH-08 - Tests unitarios + integración con XML
+### Feature trabajada: HDH-09 - Pestaña Campeonatos
 
-**Estado**: Completing verification
+**Estado**: Completada
 
 #### Evidencia
-- **src/index.html**: Añadido canvas `#chart-wins-evolution` a la pestaña Historial (faltaba en HDH-BUG05 al reorganizar el layout). Sin este canvas, `initCharts()` creaba un Chart con canvas null, y `renderCharts()` fallaba con `TypeError: Cannot read properties of null (reading 'addEventListener')`.
-- **e2e/tests/HDH-05a.spec.js**: Actualizados textos esperados de KPIs para reflejar el cambio de HDH-BUG03 (líder y track ahora incluyen número de victorias/partidas entre paréntesis).
-- **e2e/tests/HDH-08.spec.js**: Actualizado test de filtro exacto (esperaba 1, ahora espera 3) para reflejar el cambio de HDH-BUG02 (el filtro exacto solo compara main players).
-- **e2e/tests/HDH-H04.spec.js**: Actualizado test de filtro exacto (esperaba 1, ahora espera 3) por el mismo motivo que HDH-08.
+- **proxy/server.js**: Añadidos endpoints CRUD para championships:
+  - `GET /championships` — listar campeonatos
+  - `POST /championships` — crear campeonato con nombre, descripción y participantes
+  - `GET /championships/:id` — obtener detalle del campeonato
+  - `POST /championships/:id/plays` — añadir partidas al campeonato
+  - `DELETE /championships/:id` — eliminar campeonato
+  - `DELETE /championships/:id/plays/:playId` — eliminar partida del campeonato
+  - Persistencia en JSON dentro de `proxy/championships/`
+- **src/index.html**: Añadido 5º tab "Campeonatos" con:
+  - Toolbar con botones "Nuevo Campeonato" y "Recargar"
+  - Grid de tarjetas de campeonatos
+  - Vista detalle con clasificación y partidas asociadas
+  - Modal para crear campeonato (nombre, descripción, selección de participantes)
+  - Modal para importar partidas
+- **src/app.js**: Añadidos métodos:
+  - `setupChampionships()` — binding de eventos
+  - `loadChampionships()` / `createChampionship()` / `selectChampionship()`
+  - `addPlaysToChampionship()` / `removePlayFromChampionship()`
+  - `renderChampionships()` / `renderChampionshipsList()` / `renderChampionshipDetail()`
+  - `getChampionshipStandings()` — cálculo de clasificación (partidas, victorias, puntos totales, media)
+  - `openImportPlaysModal()` / `importSelectedPlays()`
+- **src/styles.css**: Estilos para tarjetas, tabla de clasificación, items de partida, modales anchos
+- **e2e/tests/HDH-09.spec.js**: 6 tests:
+  - Pestaña visible con contenido
+  - Estado vacío sin campeonatos
+  - Creación desde UI con selección de participantes
+  - Detalle con clasificación y partidas
+  - Importar partidas al campeonato
+  - Eliminar partida del campeonato
+- **proxy/championships/**: Directorio de persistencia con `.gitkeep`
 
 #### Tareas completadas
-1. Diagnosticar causa raíz: canvas `#chart-wins-evolution` faltante + textos KPI no actualizados
-2. Añadir canvas faltante a index.html
-3. Actualizar expectativas de KPIs en tests (HDH-05a, HDH-08)
-4. Actualizar expectativas de filtro exacto en tests (HDH-08, HDH-H04)
-5. Verificar que los 70 tests pasan
+1. Implementar backend (proxy) con API CRUD de championships
+2. Persistencia en ficheros JSON en proxy/championships/
+3. Añadir 5º tab Campeonatos en HTML
+4. Implementar frontend: listado, detalle, creación, importación
+5. CSS para tarjetas, tabla de clasificación, items de partida
+6. 6 tests E2E con screenshots de evidencia
+7. Fix duplicate HDH-BUG03 entry en features_list.json
 
 #### Verificación final
+- docker compose config --quiet: OK
+- node --check proxy/server.js: OK
 - docker compose up -d --build: OK
 - curl localhost:8082: HTTP 200 con DOCTYPE html
-- npx playwright test: 70/70 tests pasados
+- API championships: GET/POST/DELETE funcionando
+- npx playwright test: 76/76 tests pasados (6 nuevos + 70 existentes)
 
 #### Notas / Riesgos
-- La rama HDH-08 estaba basada en un estado anterior a los bugs BUG02-BUG05. Se resolvieron conflictos mergeando los cambios de main.
-- Todos los tests existentes (70) pasan correctamente tras los fixes.
+- Las championships se almacenan como JSON en proxy/championships/ para persistencia entre reinicios del contenedor
+- Se añadió endpoint DELETE /championships/:id para limpieza en tests
+- Tests incluyen cleanup automático en beforeEach para aislamiento
 
 #### Próximo paso
 - Sin features pendientes

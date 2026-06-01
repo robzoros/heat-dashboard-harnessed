@@ -177,9 +177,55 @@ function normalizeData(rawPlays) {
     return { players: classifiedPlayers, locations, boards, plays };
 }
 
+const CHAMPIONSHIPS_DIR = path.join(__dirname, 'championships');
+
+function sendJson(res, statusCode, data) {
+    res.setHeader('Content-Type', 'application/json');
+    res.writeHead(statusCode);
+    res.end(JSON.stringify(data));
+}
+
+function parseUrl(url) {
+    const parts = url.split('?')[0].split('/').filter(Boolean);
+    return parts;
+}
+
+// Championship helpers
+function getChampionshipFilePath(id) {
+    return path.join(CHAMPIONSHIPS_DIR, `${id}.json`);
+}
+
+function readChampionship(id) {
+    const filePath = getChampionshipFilePath(id);
+    if (!fs.existsSync(filePath)) return null;
+    return JSON.parse(fs.readFileSync(filePath, 'utf8'));
+}
+
+function listChampionships() {
+    if (!fs.existsSync(CHAMPIONSHIPS_DIR)) return [];
+    const files = fs.readdirSync(CHAMPIONSHIPS_DIR).filter(f => f.endsWith('.json'));
+    return files.map(f => {
+        const data = JSON.parse(fs.readFileSync(path.join(CHAMPIONSHIPS_DIR, f), 'utf8'));
+        return { id: data.id, name: data.name, description: data.description, createdAt: data.createdAt, participantCount: (data.participants || []).length, playCount: (data.playIds || []).length };
+    }).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+}
+
+function writeChampionship(data) {
+    if (!fs.existsSync(CHAMPIONSHIPS_DIR)) {
+        fs.mkdirSync(CHAMPIONSHIPS_DIR, { recursive: true });
+    }
+    const filePath = getChampionshipFilePath(data.id);
+    fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf8');
+    return data;
+}
+
+function generateId() {
+    return `champ_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`;
+}
+
 const server = http.createServer((req, res) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
     if (req.method === 'OPTIONS') {
@@ -188,7 +234,11 @@ const server = http.createServer((req, res) => {
         return;
     }
 
-    if (req.method === 'POST' && req.url === '/login') {
+    const urlPath = req.url.split('?')[0];
+    const parts = parseUrl(req.url);
+
+    // POST /login — BGG login
+    if (req.method === 'POST' && urlPath === '/login') {
         let body = '';
         req.on('data', chunk => body += chunk);
         req.on('end', async () => {
@@ -197,45 +247,143 @@ const server = http.createServer((req, res) => {
                 const cookies = await bggLogin(username, password);
                 const rawPlays = await fetchAllPlays(cookies, username);
                 const data = normalizeData(rawPlays);
-                res.setHeader('Content-Type', 'application/json');
-                res.writeHead(200);
-                res.end(JSON.stringify({ success: true, data }));
+                sendJson(res, 200, { success: true, data });
             } catch (error) {
                 console.error('Login or fetch error:', error.message);
-                res.setHeader('Content-Type', 'application/json');
-                res.writeHead(500);
-                res.end(JSON.stringify({ success: false, error: error.message }));
+                sendJson(res, 500, { success: false, error: error.message });
             }
         });
-    } else if (req.method === 'POST' && req.url === '/test-login') {
-        // Entrada trasera para tests: lee XML local y simula respuesta de BGG
+    // POST /test-login — test entry with local XML
+    } else if (req.method === 'POST' && urlPath === '/test-login') {
         const xmlPath = path.join(__dirname, 'test-data', 'bgg-plays.xml');
         fs.readFile(xmlPath, 'utf8', async (err, xml) => {
             if (err) {
                 console.error('Test login error:', err.message);
-                res.setHeader('Content-Type', 'application/json');
-                res.writeHead(500);
-                res.end(JSON.stringify({ success: false, error: 'Test data not found' }));
+                sendJson(res, 500, { success: false, error: 'Test data not found' });
                 return;
             }
             try {
                 const data = await parseXml(xml);
                 const rawPlays = Array.isArray(data.plays.play) ? data.plays.play : [data.plays.play];
                 const normalized = normalizeData(rawPlays);
-                res.setHeader('Content-Type', 'application/json');
-                res.writeHead(200);
-                res.end(JSON.stringify({ success: true, data: normalized }));
+                sendJson(res, 200, { success: true, data: normalized });
             } catch (error) {
                 console.error('Test login parse error:', error.message);
-                res.setHeader('Content-Type', 'application/json');
-                res.writeHead(500);
-                res.end(JSON.stringify({ success: false, error: error.message }));
+                sendJson(res, 500, { success: false, error: error.message });
             }
         });
+    // GET /championships — list all championships
+    } else if (req.method === 'GET' && urlPath === '/championships') {
+        try {
+            const championships = listChampionships();
+            sendJson(res, 200, { success: true, data: championships });
+        } catch (error) {
+            console.error('List championships error:', error.message);
+            sendJson(res, 500, { success: false, error: error.message });
+        }
+    // POST /championships — create new championship
+    } else if (req.method === 'POST' && urlPath === '/championships') {
+        let body = '';
+        req.on('data', chunk => body += chunk);
+        req.on('end', () => {
+            try {
+                const { name, description, participants } = JSON.parse(body);
+                if (!name || !name.trim()) {
+                    sendJson(res, 400, { success: false, error: 'Name is required' });
+                    return;
+                }
+                const championship = {
+                    id: generateId(),
+                    name: name.trim(),
+                    description: (description || '').trim(),
+                    createdAt: new Date().toISOString(),
+                    participants: participants || [],
+                    playIds: []
+                };
+                writeChampionship(championship);
+                sendJson(res, 201, { success: true, data: championship });
+            } catch (error) {
+                console.error('Create championship error:', error.message);
+                sendJson(res, 500, { success: false, error: error.message });
+            }
+        });
+    // GET /championships/:id — get championship details
+    } else if (req.method === 'GET' && parts.length === 2 && parts[0] === 'championships') {
+        try {
+            const id = parts[1];
+            const championship = readChampionship(id);
+            if (!championship) {
+                sendJson(res, 404, { success: false, error: 'Championship not found' });
+                return;
+            }
+            sendJson(res, 200, { success: true, data: championship });
+        } catch (error) {
+            console.error('Get championship error:', error.message);
+            sendJson(res, 500, { success: false, error: error.message });
+        }
+    // POST /championships/:id/plays — add plays to championship
+    } else if (req.method === 'POST' && parts.length === 3 && parts[0] === 'championships' && parts[2] === 'plays') {
+        let body = '';
+        req.on('data', chunk => body += chunk);
+        req.on('end', () => {
+            try {
+                const id = parts[1];
+                const championship = readChampionship(id);
+                if (!championship) {
+                    sendJson(res, 404, { success: false, error: 'Championship not found' });
+                    return;
+                }
+                const { playIds } = JSON.parse(body);
+                if (!Array.isArray(playIds)) {
+                    sendJson(res, 400, { success: false, error: 'playIds must be an array' });
+                    return;
+                }
+                const existing = new Set(championship.playIds);
+                for (const playId of playIds) {
+                    existing.add(String(playId));
+                }
+                championship.playIds = [...existing];
+                writeChampionship(championship);
+                sendJson(res, 200, { success: true, data: championship });
+            } catch (error) {
+                console.error('Add plays error:', error.message);
+                sendJson(res, 500, { success: false, error: error.message });
+            }
+        });
+    // DELETE /championships/:id — delete a championship
+    } else if (req.method === 'DELETE' && parts.length === 2 && parts[0] === 'championships') {
+        try {
+            const id = parts[1];
+            const filePath = getChampionshipFilePath(id);
+            if (!fs.existsSync(filePath)) {
+                sendJson(res, 404, { success: false, error: 'Championship not found' });
+                return;
+            }
+            fs.unlinkSync(filePath);
+            sendJson(res, 200, { success: true });
+        } catch (error) {
+            console.error('Delete championship error:', error.message);
+            sendJson(res, 500, { success: false, error: error.message });
+        }
+    // DELETE /championships/:id/plays/:playId — remove play from championship
+    } else if (req.method === 'DELETE' && parts.length === 4 && parts[0] === 'championships' && parts[2] === 'plays') {
+        try {
+            const id = parts[1];
+            const playId = parts[3];
+            const championship = readChampionship(id);
+            if (!championship) {
+                sendJson(res, 404, { success: false, error: 'Championship not found' });
+                return;
+            }
+            championship.playIds = championship.playIds.filter(pid => String(pid) !== String(playId));
+            writeChampionship(championship);
+            sendJson(res, 200, { success: true, data: championship });
+        } catch (error) {
+            console.error('Remove play error:', error.message);
+            sendJson(res, 500, { success: false, error: error.message });
+        }
     } else {
-        res.setHeader('Content-Type', 'application/json');
-        res.writeHead(404);
-        res.end(JSON.stringify({ status: 'not found' }));
+        sendJson(res, 404, { status: 'not found' });
     }
 });
 

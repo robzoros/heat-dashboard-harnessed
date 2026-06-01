@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-05-29",
+  "last_updated": "2026-06-01",
   "user": "Roberto Méndez",
   "rules": {
     "single_active_feature": true,
@@ -431,23 +431,6 @@
       }
     },
     {
-      "id": "HDH-BUG03",
-      "priority": 1,
-      "name": "FIX: KPIs Líder y Track añadir contadores",
-      "description": [
-        "KPI Líder debe mostrar también el número de partidas ganadas (victorias).",
-        "KPI Track debe mostrar también el número de partidas jugadas en ese circuito."
-      ],
-      "status": "pending",
-      "verification": {
-        "checks": [
-          "KPI Líder muestra nombre y número de victorias",
-          "KPI Track muestra flag + nombre y número de partidas",
-          "Tests E2E pasan"
-        ]
-      }
-    },
-    {
       "id": "HDH-BUG04",
       "priority": 1,
       "name": "FIX: Panel Circuitos layout donut y stats",
@@ -455,7 +438,7 @@
         "El panel de distribución con el gráfico donut es demasiado grande. Se debería ver el donut entero.",
         "Los paneles con estadísticas de circuitos deben aparecer a la derecha del panel del donut."
       ],
-      "status": "pending",
+      "status": "completed",
       "verification": {
         "checks": [
           "Gráfico donut se ve completo sin cortarse",
@@ -473,7 +456,7 @@
         "Panel 1: partidas ordenadas de más reciente a menos reciente con banderas de países como flags.",
         "Panel 2: gráfico lineal de partidas por mes."
       ],
-      "status": "pending",
+      "status": "completed",
       "verification": {
         "checks": [
           "Historial tiene dos paneles visibles",
@@ -481,6 +464,32 @@
           "Panel de gráfico lineal de partidas por mes se ve correctamente",
           "Tests E2E pasan"
         ]
+      }
+    },
+    {
+      "id": "HDH-09",
+      "priority": 1,
+      "name": "Pestaña Campeonatos",
+      "description": [
+        "Nuevo panel para Gestionar Campeonatos.",
+        "Cada campeonato se creará en un fichero json dentro de proxy/championships/",
+        "Al crear un campeonato se eligen los jugadores participantes (main, bot u other)",
+        "Se pueden importar partidas desde los datos cargados de BGG",
+        "El panel muestra la clasificación con: partidas, victorias, puntos totales y media",
+        "Panel lista campeonatos disponibles leyendo los ficheros JSON de la carpeta championships/",
+        "Al seleccionar un campeonato se muestra: nombre, descripción, participantes, clasificación y partidas asociadas"
+      ],
+      "status": "completed",
+      "verification": {
+        "checks": [
+          "Se guardan los ficheros JSON y se leen correctamente para mostrar la lista de campeonatos",
+          "Al seleccionar un campeonato se muestran sus detalles correctamente",
+          "La clasificación (partidas, victorias, puntos, media) se calcula correctamente",
+          "Se pueden importar y eliminar partidas del campeonato",
+          "Creación desde UI con selección de participantes",
+          "76/76 tests E2E pasan (6 nuevos + 70 existentes)"
+        ],
+        "evidence": "Proxy: endpoints GET/POST/DELETE para championships con persistencia JSON. Frontend: 5o tab 'Campeonatos' con lista de tarjetas, detalle con clasificación y partidas. Modal creación con selección de participantes. Modal importación de partidas. CSS con estilos de tarjetas, tabla de clasificación, items de partida. 6 tests E2E creados con screenshots de evidencia. 76/76 tests pasan."
       }
     }
   ]

@@ -41,6 +41,26 @@
                 <button id="btn-cancel-login" class="btn-secondary">Cancelar</button>
             </div>
         </div>
+        <div id="create-campeonato-modal" class="modal hidden">
+            <div class="modal-content modal-wide">
+                <h2>Nuevo Campeonato</h2>
+                <input type="text" id="new-campeonato-name" placeholder="Nombre del campeonato">
+                <textarea id="new-campeonato-description" placeholder="Descripción (opcional)"></textarea>
+                <h3>Participantes</h3>
+                <div id="new-campeonato-players" class="filter-list"></div>
+                <button id="btn-save-campeonato" class="btn-primary">Crear Campeonato</button>
+                <button id="btn-cancel-create-campeonato" class="btn-secondary">Cancelar</button>
+            </div>
+        </div>
+        <div id="import-plays-modal" class="modal hidden">
+            <div class="modal-content modal-wide">
+                <h2>Importar Partidas</h2>
+                <p style="color:#a0a0a0;margin-bottom:15px;text-align:left;">Selecciona las partidas para añadir al campeonato:</p>
+                <div id="import-plays-list" class="filter-list"></div>
+                <button id="btn-import-plays" class="btn-primary">Importar Seleccionadas</button>
+                <button id="btn-cancel-import-plays" class="btn-secondary">Cancelar</button>
+            </div>
+        </div>
     </header>
 
     <nav id="tabs">
@@ -48,6 +68,7 @@
         <button class="tab-btn" data-tab="jugadores">Jugadores</button>
         <button class="tab-btn" data-tab="circuitos">Circuitos</button>
         <button class="tab-btn" data-tab="historial">Historial</button>
+        <button class="tab-btn" data-tab="campeonatos">Campeonatos</button>
     </nav>
 
     <button id="btn-toggle-filters" class="btn-toggle">☰ Filtros</button>
@@ -169,6 +190,19 @@
                         <canvas id="chart-wins-evolution"></canvas>
                     </div>
                 </div>
+            </div>
+        </section>
+
+        <section id="tab-campeonatos" class="tab-content">
+            <h2>Campeonatos</h2>
+            <div class="campeonatos-toolbar">
+                <button id="btn-create-campeonato" class="btn-primary btn-narrow">+ Nuevo Campeonato</button>
+                <button id="btn-refresh-campeonatos" class="btn-secondary btn-narrow">⟳ Recargar</button>
+            </div>
+            <div id="campeonatos-list" class="campeonatos-list"></div>
+            <div id="campeonato-detail" class="campeonato-detail hidden">
+                <button id="btn-back-campeonatos" class="btn-secondary btn-narrow">← Volver</button>
+                <div id="campeonato-detail-content"></div>
             </div>
         </section>
     </main>

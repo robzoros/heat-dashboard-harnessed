@@ -13,13 +13,14 @@ test.describe('App base', () => {
     expect(html).toContain('<!DOCTYPE html>');
   });
 
-  test('debe mostrar los 4 tabs', async ({ page }) => {
+  test('debe mostrar los 5 tabs', async ({ page }) => {
     const tabs = page.locator('#tabs .tab-btn');
-    await expect(tabs).toHaveCount(4);
+    await expect(tabs).toHaveCount(5);
     await expect(tabs.nth(0)).toContainText('Resumen');
     await expect(tabs.nth(1)).toContainText('Jugadores');
     await expect(tabs.nth(2)).toContainText('Circuitos');
     await expect(tabs.nth(3)).toContainText('Historial');
+    await expect(tabs.nth(4)).toContainText('Campeonatos');
   });
 
   test('debe tener Chart.js cargado', async ({ page }) => {

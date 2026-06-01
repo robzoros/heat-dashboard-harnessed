@@ -13,11 +13,16 @@ const App = {
         locations: []
     },
     charts: {},
+    championships: {
+        list: [],
+        selected: null
+    },
 
     init() {
         this.setupTabs();
         this.setupFilters();
         this.setupModal();
+        this.setupChampionships();
         this.initCharts();
         this.updateHeaderStats();
     },
@@ -71,6 +76,166 @@ const App = {
         });
     },
 
+    setupChampionships() {
+        document.getElementById('btn-create-campeonato').addEventListener('click', () => {
+            this.showCreateChampionshipModal();
+        });
+        document.getElementById('btn-refresh-campeonatos').addEventListener('click', () => {
+            this.loadChampionships();
+        });
+        document.getElementById('btn-save-campeonato').addEventListener('click', () => {
+            this.saveChampionship();
+        });
+        document.getElementById('btn-cancel-create-campeonato').addEventListener('click', () => {
+            document.getElementById('create-campeonato-modal').classList.add('hidden');
+        });
+        document.getElementById('btn-back-campeonatos').addEventListener('click', () => {
+            this.championships.selected = null;
+            this.renderChampionships();
+        });
+        document.getElementById('btn-import-plays').addEventListener('click', () => {
+            this.importSelectedPlays();
+        });
+        document.getElementById('btn-cancel-import-plays').addEventListener('click', () => {
+            document.getElementById('import-plays-modal').classList.add('hidden');
+        });
+    },
+
+    async loadChampionships() {
+        try {
+            const response = await fetch('/bgg-api/championships');
+            const result = await response.json();
+            if (result.success) {
+                this.championships.list = result.data;
+                this.renderChampionships();
+            }
+        } catch (error) {
+            console.error('Error loading championships:', error);
+        }
+    },
+
+    async createChampionship(name, description, participants) {
+        try {
+            const response = await fetch('/bgg-api/championships', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, description, participants })
+            });
+            const result = await response.json();
+            return result;
+        } catch (error) {
+            console.error('Error creating championship:', error);
+            return { success: false, error: error.message };
+        }
+    },
+
+    async selectChampionship(id) {
+        try {
+            const response = await fetch(`/bgg-api/championships/${id}`);
+            const result = await response.json();
+            if (result.success) {
+                this.championships.selected = result.data;
+                this.renderChampionships();
+            }
+        } catch (error) {
+            console.error('Error loading championship:', error);
+        }
+    },
+
+    async addPlaysToChampionship(championshipId, playIds) {
+        try {
+            const response = await fetch(`/bgg-api/championships/${championshipId}/plays`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ playIds })
+            });
+            const result = await response.json();
+            if (result.success) {
+                this.championships.selected = result.data;
+                this.renderChampionships();
+            }
+        } catch (error) {
+            console.error('Error adding plays:', error);
+        }
+    },
+
+    async removePlayFromChampionship(championshipId, playId) {
+        try {
+            const response = await fetch(`/bgg-api/championships/${championshipId}/plays/${playId}`, {
+                method: 'DELETE'
+            });
+            const result = await response.json();
+            if (result.success) {
+                this.championships.selected = result.data;
+                this.renderChampionships();
+            }
+        } catch (error) {
+            console.error('Error removing play:', error);
+        }
+    },
+
+    showCreateChampionshipModal() {
+        const playerList = document.getElementById('new-campeonato-players');
+        playerList.innerHTML = this.data.players.map(p =>
+            `<label><input type="checkbox" value="${p.id}"> ${p.name}${p.isBot ? ' (Bot)' : ''}${p.isMain ? ' (Principal)' : ''}${p.isOther ? ' (Otro)' : ''}</label>`
+        ).join('');
+        document.getElementById('new-campeonato-name').value = '';
+        document.getElementById('new-campeonato-description').value = '';
+        document.getElementById('create-campeonato-modal').classList.remove('hidden');
+    },
+
+    saveChampionship() {
+        const name = document.getElementById('new-campeonato-name').value.trim();
+        const description = document.getElementById('new-campeonato-description').value.trim();
+        const selectedPlayers = Array.from(
+            document.querySelectorAll('#new-campeonato-players input:checked')
+        ).map(i => i.value);
+        if (!name) {
+            alert('El nombre es obligatorio');
+            return;
+        }
+        if (selectedPlayers.length === 0) {
+            alert('Selecciona al menos un participante');
+            return;
+        }
+        this.createChampionship(name, description, selectedPlayers).then(result => {
+            if (result.success) {
+                document.getElementById('create-campeonato-modal').classList.add('hidden');
+                this.loadChampionships();
+            } else {
+                alert('Error: ' + (result.error || 'No se pudo crear el campeonato'));
+            }
+        });
+    },
+
+    openImportPlaysModal() {
+        const champ = this.championships.selected;
+        if (!champ) return;
+        const existingIds = new Set(champ.playIds.map(id => String(id)));
+        const availablePlays = this.data.plays.filter(p => !existingIds.has(String(p.id)));
+        const list = document.getElementById('import-plays-list');
+        list.innerHTML = availablePlays.map(p => {
+            const winnerPs = p.playerScores.find(ps => ps.winner);
+            const winnerName = winnerPs ? (this.data.players.find(pl => pl.id === winnerPs.playerRefId)?.name || '-') : '-';
+            return `<label><input type="checkbox" value="${p.id}"> ${p.playDate} | ${p.board} | Ganador: ${winnerName}</label>`;
+        }).join('');
+        if (availablePlays.length === 0) {
+            list.innerHTML = '<p style="color:#a0a0a0;text-align:center;">No hay partidas disponibles para importar</p>';
+        }
+        document.getElementById('import-plays-modal').classList.remove('hidden');
+    },
+
+    importSelectedPlays() {
+        const champ = this.championships.selected;
+        if (!champ) return;
+        const selected = Array.from(
+            document.querySelectorAll('#import-plays-list input:checked')
+        ).map(i => i.value);
+        if (selected.length === 0) return;
+        this.addPlaysToChampionship(champ.id, selected);
+        document.getElementById('import-plays-modal').classList.add('hidden');
+    },
+
     async loadData(username, password) {
         try {
             const response = await fetch('/bgg-api/login', {
@@ -91,6 +256,7 @@ const App = {
             this.populateFilters();
             this.updateHeaderStats();
             this.renderAll();
+            this.loadChampionships();
         } catch (error) {
             console.error('Error loading data:', error);
             this.loadMockData();
@@ -149,6 +315,7 @@ const App = {
         this.populateFilters();
         this.updateHeaderStats();
         this.renderAll();
+        this.loadChampionships();
     },
 
     populateFilters() {
@@ -653,6 +820,152 @@ const App = {
                 details.classList.toggle('expanded');
             });
         });
+    },
+
+    renderChampionships() {
+        const listEl = document.getElementById('campeonatos-list');
+        const detailEl = document.getElementById('campeonato-detail');
+        if (this.championships.selected) {
+            listEl.classList.add('hidden');
+            detailEl.classList.remove('hidden');
+            this.renderChampionshipDetail();
+        } else {
+            listEl.classList.remove('hidden');
+            detailEl.classList.add('hidden');
+            this.renderChampionshipsList();
+        }
+    },
+
+    renderChampionshipsList() {
+        const listEl = document.getElementById('campeonatos-list');
+        if (this.championships.list.length === 0) {
+            listEl.innerHTML = '<div class="campeonato-empty">No hay campeonatos. Crea uno nuevo.</div>';
+            return;
+        }
+        listEl.innerHTML = this.championships.list.map(champ => {
+            const date = new Date(champ.createdAt).toLocaleDateString('es-ES');
+            return `
+                <div class="campeonato-card" data-champ-id="${champ.id}">
+                    <h3>${this.escapeHtml(champ.name)}</h3>
+                    <p>${champ.description ? this.escapeHtml(champ.description) : 'Sin descripción'}</p>
+                    <div class="campeonato-meta">
+                        <span>👥 ${champ.participantCount} jugs</span>
+                        <span>🎲 ${champ.playCount} partidas</span>
+                        <span>📅 ${date}</span>
+                    </div>
+                </div>
+            `;
+        }).join('');
+        listEl.querySelectorAll('.campeonato-card').forEach(card => {
+            card.addEventListener('click', () => {
+                this.selectChampionship(card.dataset.champId);
+            });
+        });
+    },
+
+    renderChampionshipDetail() {
+        const champ = this.championships.selected;
+        if (!champ) return;
+        const content = document.getElementById('campeonato-detail-content');
+        const date = new Date(champ.createdAt).toLocaleDateString('es-ES');
+
+        const standings = this.getChampionshipStandings(champ);
+        const champPlays = this.data.plays.filter(p =>
+            champ.playIds.some(pid => String(pid) === String(p.id))
+        ).sort((a, b) => new Date(b.playDate) - new Date(a.playDate));
+
+        content.innerHTML = `
+            <div class="campeonato-detail-header">
+                <h2>${this.escapeHtml(champ.name)}</h2>
+                <p>${champ.description ? this.escapeHtml(champ.description) : 'Sin descripción'}</p>
+                <p style="color:#a0a0a0;margin-top:8px;">Creado: ${date} | Participantes: ${(champ.participants || []).length} | Partidas: ${(champ.playIds || []).length}</p>
+            </div>
+            <div class="campeonato-section">
+                <h3>Clasificación</h3>
+                ${standings.length > 0 ? `
+                <table class="standings-table">
+                    <thead>
+                        <tr><th></th><th>Jugador</th><th>Partidas</th><th>Victorias</th><th>Puntos</th><th>Media</th></tr>
+                    </thead>
+                    <tbody>
+                        ${standings.map((s, i) => `
+                            <tr>
+                                <td class="pos">${i === 0 ? '<span class="medal">🥇</span>' : i === 1 ? '<span class="medal">🥈</span>' : i === 2 ? '<span class="medal">🥉</span>' : i + 1}</td>
+                                <td>${s.name}</td>
+                                <td>${s.plays}</td>
+                                <td>${s.wins}</td>
+                                <td>${s.totalScore}</td>
+                                <td>${s.avg}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>` : '<div class="campeonato-empty">No hay partidas en este campeonato. Importa partidas para ver la clasificación.</div>'}
+            </div>
+            <div class="campeonato-section">
+                <h3>Partidas (${champPlays.length})</h3>
+                <button id="btn-import-plays-campeonato" class="btn-primary btn-narrow">+ Importar Partidas</button>
+                <div style="margin-top:15px;" class="campeonato-plays-list">
+                    ${champPlays.map(p => {
+                        const winnerPs = p.playerScores.find(ps => ps.winner);
+                        const winnerName = winnerPs ? (this.data.players.find(pl => pl.id === winnerPs.playerRefId)?.name || '-') : '-';
+                        const flag = this.getTrackFlag(p.board);
+                        return `
+                            <div class="campeonato-play-item">
+                                <span>${p.playDate} | ${flag} ${p.board} | Ganador: ${winnerName}</span>
+                                <button class="remove-play" data-play-id="${p.id}">✕</button>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            </div>
+        `;
+        document.getElementById('btn-import-plays-campeonato').addEventListener('click', () => {
+            this.openImportPlaysModal();
+        });
+        content.querySelectorAll('.remove-play').forEach(btn => {
+            btn.addEventListener('click', () => {
+                if (confirm('¿Eliminar esta partida del campeonato?')) {
+                    this.removePlayFromChampionship(champ.id, btn.dataset.playId);
+                }
+            });
+        });
+    },
+
+    getChampionshipStandings(champ) {
+        if (!champ || !champ.playIds || !champ.participants) return [];
+        const champPlayIds = new Set(champ.playIds.map(id => String(id)));
+        const champPlays = this.data.plays.filter(p => champPlayIds.has(String(p.id)));
+        const participantIds = new Set(champ.participants.map(id => String(id)));
+
+        const stats = {};
+        for (const pid of champ.participants) {
+            const player = this.data.players.find(p => String(p.id) === String(pid));
+            if (player) {
+                stats[pid] = { id: player.id, name: player.name, plays: 0, wins: 0, totalScore: 0 };
+            }
+        }
+
+        for (const play of champPlays) {
+            for (const ps of play.playerScores) {
+                const pid = String(ps.playerRefId);
+                if (participantIds.has(pid) && stats[pid]) {
+                    stats[pid].plays++;
+                    if (ps.winner) stats[pid].wins++;
+                    stats[pid].totalScore += ps.scoreNum || 0;
+                }
+            }
+        }
+
+        return Object.values(stats)
+            .filter(s => s.plays > 0)
+            .sort((a, b) => b.totalScore - a.totalScore || b.wins - a.wins)
+            .map(s => ({ ...s, avg: s.plays > 0 ? (s.totalScore / s.plays).toFixed(1) : '0.0' }));
+    },
+
+    escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
     }
 };
 
