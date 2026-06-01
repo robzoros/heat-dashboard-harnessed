@@ -2,16 +2,6 @@ import { test, expect } from '@playwright/test';
 
 test.describe('HDH-09 - Pestaña Campeonatos', () => {
   test.beforeEach(async ({ page, request }) => {
-    // Clean up all existing championships via direct HTTP (not from browser)
-    const listRes = await request.get('/bgg-api/championships');
-    if (listRes.ok()) {
-      const body = await listRes.json();
-      if (body.success && body.data.length > 0) {
-        for (const champ of body.data) {
-          await request.delete(`/bgg-api/championships/${champ.id}`);
-        }
-      }
-    }
     await page.goto('/');
     await page.waitForLoadState('networkidle');
   });
@@ -19,7 +9,7 @@ test.describe('HDH-09 - Pestaña Campeonatos', () => {
   async function loadData(page) {
     await page.waitForSelector('canvas', { timeout: 10000 });
     await page.evaluate(() => window.App.loadMockData());
-    await page.evaluate(async () => { await window.App.loadChampionships(); });
+    await page.waitForTimeout(200);
   }
 
   test('debe mostrar la pestaña Campeonatos y su contenido', async ({ page }) => {
@@ -48,6 +38,9 @@ test.describe('HDH-09 - Pestaña Campeonatos', () => {
     await page.locator('#new-campeonato-players input[value="2"]').check();
     await page.locator('#btn-save-campeonato').click();
     await expect(page.locator('#create-campeonato-modal')).not.toBeVisible();
+
+    // Explicitly reload championships
+    await page.evaluate(async () => { await window.App.loadChampionships(); });
     await expect(page.locator('.campeonato-card')).toHaveCount(1);
     await expect(page.locator('.campeonato-card h3')).toHaveText('Liga Test');
     await page.screenshot({ path: '../evidence/screenshots/HDH-09-campeonato-creado.png', fullPage: true });
@@ -57,7 +50,6 @@ test.describe('HDH-09 - Pestaña Campeonatos', () => {
     await loadData(page);
     await page.locator('#tabs .tab-btn').nth(4).click();
 
-    // Crear campeonato via UI
     await page.locator('#btn-create-campeonato').click();
     await page.locator('#new-campeonato-name').fill('Detalle UI');
     await page.locator('#new-campeonato-players input[value="1"]').check();
@@ -65,13 +57,12 @@ test.describe('HDH-09 - Pestaña Campeonatos', () => {
     await page.locator('#new-campeonato-players input[value="3"]').check();
     await page.locator('#btn-save-campeonato').click();
     await expect(page.locator('#create-campeonato-modal')).not.toBeVisible();
-    await expect(page.locator('.campeonato-card')).toHaveCount(1);
 
-    // Abrir detalle
+    await page.evaluate(async () => { await window.App.loadChampionships(); });
+    await expect(page.locator('.campeonato-card')).toHaveCount(1);
     await page.locator('.campeonato-card').click();
     await expect(page.locator('#campeonato-detail-content')).toBeVisible();
 
-    // Importar partidas
     await page.locator('#btn-import-plays-campeonato').click();
     await expect(page.locator('#import-plays-modal')).toBeVisible();
     await page.locator('#import-plays-list input[value="1"]').check();
@@ -80,10 +71,8 @@ test.describe('HDH-09 - Pestaña Campeonatos', () => {
     await page.locator('#btn-import-plays').click();
     await page.waitForTimeout(500);
 
-    // Verificar clasificación y partidas
     await expect(page.locator('.standings-table tbody tr')).toHaveCount(3);
     await expect(page.locator('.campeonato-play-item')).toHaveCount(3);
-
     await page.screenshot({ path: '../evidence/screenshots/HDH-09-detalle-campeonato.png', fullPage: true });
   });
 
@@ -91,7 +80,6 @@ test.describe('HDH-09 - Pestaña Campeonatos', () => {
     await loadData(page);
     await page.locator('#tabs .tab-btn').nth(4).click();
 
-    // Crear campeonato via UI
     await page.locator('#btn-create-campeonato').click();
     await page.locator('#new-campeonato-name').fill('Import UI');
     await page.locator('#new-campeonato-players input[value="1"]').check();
@@ -99,28 +87,23 @@ test.describe('HDH-09 - Pestaña Campeonatos', () => {
     await page.locator('#btn-save-campeonato').click();
     await expect(page.locator('#create-campeonato-modal')).not.toBeVisible();
 
-    // Wait for card to appear after loadChampionships completes
+    await page.evaluate(async () => { await window.App.loadChampionships(); });
     await expect(page.locator('.campeonato-card')).toHaveCount(1);
-
-    // Abrir detalle
     await page.locator('.campeonato-card').click();
     await expect(page.locator('#campeonato-detail-content')).toBeVisible();
 
-    // Importar primera partida
     await page.locator('#btn-import-plays-campeonato').click();
     await page.locator('#import-plays-list input[value="1"]').check();
     await page.locator('#btn-import-plays').click();
     await page.waitForTimeout(500);
     await expect(page.locator('.campeonato-play-item')).toHaveCount(1);
 
-    // Importar dos más
     await page.locator('#btn-import-plays-campeonato').click();
     await page.locator('#import-plays-list input[value="2"]').check();
     await page.locator('#import-plays-list input[value="3"]').check();
     await page.locator('#btn-import-plays').click();
     await page.waitForTimeout(500);
     await expect(page.locator('.campeonato-play-item')).toHaveCount(3);
-
     await page.screenshot({ path: '../evidence/screenshots/HDH-09-importar-partidas.png', fullPage: true });
   });
 
@@ -128,7 +111,6 @@ test.describe('HDH-09 - Pestaña Campeonatos', () => {
     await loadData(page);
     await page.locator('#tabs .tab-btn').nth(4).click();
 
-    // Crear campeonato via UI
     await page.locator('#btn-create-campeonato').click();
     await page.locator('#new-campeonato-name').fill('Delete UI');
     await page.locator('#new-campeonato-players input[value="1"]').check();
@@ -136,14 +118,11 @@ test.describe('HDH-09 - Pestaña Campeonatos', () => {
     await page.locator('#btn-save-campeonato').click();
     await expect(page.locator('#create-campeonato-modal')).not.toBeVisible();
 
-    // Wait for card to appear after loadChampionships completes
+    await page.evaluate(async () => { await window.App.loadChampionships(); });
     await expect(page.locator('.campeonato-card')).toHaveCount(1);
-
-    // Abrir detalle
     await page.locator('.campeonato-card').click();
     await expect(page.locator('#campeonato-detail-content')).toBeVisible();
 
-    // Importar dos partidas
     await page.locator('#btn-import-plays-campeonato').click();
     await page.locator('#import-plays-list input[value="1"]').check();
     await page.locator('#import-plays-list input[value="2"]').check();
@@ -151,7 +130,6 @@ test.describe('HDH-09 - Pestaña Campeonatos', () => {
     await page.waitForTimeout(500);
     await expect(page.locator('.campeonato-play-item')).toHaveCount(2);
 
-    // Eliminar una partida
     page.on('dialog', dialog => dialog.accept());
     await page.locator('.remove-play').first().click();
     await page.waitForTimeout(500);
