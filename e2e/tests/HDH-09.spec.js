@@ -47,10 +47,8 @@ test.describe('HDH-09 - Pestaña Campeonatos', () => {
     await page.locator('#new-campeonato-players input[value="2"]').check();
     await page.locator('#btn-save-campeonato').click();
     await expect(page.locator('#create-campeonato-modal')).not.toBeVisible();
-    await page.waitForTimeout(500);
-    const card = page.locator('.campeonato-card');
-    await expect(card).toHaveCount(1);
-    await expect(card.locator('h3')).toHaveText('Liga Test');
+    await expect(page.locator('.campeonato-card')).toHaveCount(1);
+    await expect(page.locator('.campeonato-card h3')).toHaveText('Liga Test');
     await page.screenshot({ path: '../evidence/screenshots/HDH-09-campeonato-creado.png', fullPage: true });
   });
 
@@ -66,7 +64,7 @@ test.describe('HDH-09 - Pestaña Campeonatos', () => {
     await page.locator('#new-campeonato-players input[value="3"]').check();
     await page.locator('#btn-save-campeonato').click();
     await expect(page.locator('#create-campeonato-modal')).not.toBeVisible();
-    await page.waitForTimeout(500);
+    await expect(page.locator('.campeonato-card')).toHaveCount(1);
 
     // Abrir detalle
     await page.locator('.campeonato-card').click();
@@ -99,7 +97,9 @@ test.describe('HDH-09 - Pestaña Campeonatos', () => {
     await page.locator('#new-campeonato-players input[value="2"]').check();
     await page.locator('#btn-save-campeonato').click();
     await expect(page.locator('#create-campeonato-modal')).not.toBeVisible();
-    await page.waitForTimeout(500);
+
+    // Wait for card to appear after loadChampionships completes
+    await expect(page.locator('.campeonato-card')).toHaveCount(1);
 
     // Abrir detalle
     await page.locator('.campeonato-card').click();
@@ -134,7 +134,9 @@ test.describe('HDH-09 - Pestaña Campeonatos', () => {
     await page.locator('#new-campeonato-players input[value="2"]').check();
     await page.locator('#btn-save-campeonato').click();
     await expect(page.locator('#create-campeonato-modal')).not.toBeVisible();
-    await page.waitForTimeout(500);
+
+    // Wait for card to appear after loadChampionships completes
+    await expect(page.locator('.campeonato-card')).toHaveCount(1);
 
     // Abrir detalle
     await page.locator('.campeonato-card').click();
