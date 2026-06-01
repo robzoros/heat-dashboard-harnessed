@@ -704,29 +704,35 @@
 **Estado**: Completada
 
 #### Evidencia
-- **Causa raíz**: el commit `2622abf` (HDH-09: HTTP calls from Node http module instead of browser fetch) refactorizó el spec HDH-09 para usar Node `http` nativo en lugar de `page.request`, pero al hacerlo eliminó por error el bloque de cleanup en `beforeEach` que listaba y borraba todos los campeonatos antes de cada test. Cada run del Action acumulaba campeonatos en `proxy/championships/` (volumen montado), y los tests fallaban con `Received: N` cuando esperaban `1`. La falta de cleanup también provocaba fallos en cascada (`SyntaxError: Unexpected token '<', '<html>'`) cuando el proxy quedaba inaccesible tras un fallo previo.
+- **Causa raíz** (doble):
+  1. El commit `2622abf` (HDH-09: HTTP calls from Node http module instead of browser fetch) refactorizó el spec HDH-09 para usar Node `http` nativo en lugar de `page.request`, pero al hacerlo eliminó por error el bloque de cleanup en `beforeEach` que listaba y borraba todos los campeonatos antes de cada test. Cada run del Action acumulaba campeonatos en `proxy/championships/` (volumen montado), y los tests fallaban con `Received: N` cuando esperaban `1`.
+  2. `nodemon` reiniciaba el proxy cada vez que el propio proxy escribía un JSON de campeonato en `/app/championships/` (default watch: `*.*` con extensión `json` incluida). Esto provocaba que las requests HTTP en vuelo del test se perdieran durante un reinicio y la siguiente request (`loadChampsIntoApp`) recibiera HTML del 502/404 de nginx en lugar de JSON (`SyntaxError: Unexpected token '<', '<html>'`).
 - **Fix aplicado**:
   - `e2e/tests/HDH-09.spec.js`: añadido helper `cleanupChampionships()` que lista y borra todos los campeonatos vía HTTP nativo antes de cada test (mismo patrón que el resto de helpers del spec, sin reintroducir `page.request`).
+  - `docker-compose.yml`: cambiada la invocación de `npx nodemon` para usar flags explícitos `--watch server.js classify.js test-classify.js --ignore championships/ --ignore test-data/ --ignore node_modules/ --ext js,mjs,cjs` en vez de la config por defecto. Esto evita que nodemon se reinicie al escribir JSONs de campeonatos.
   - `.gitignore`: añadidos `proxy/championships/*.json` (con excepción para `.gitkeep`) para evitar que los JSON generados durante tests contaminen el repositorio.
   - `features_list.json`: añadida feature `HDH-BUG06` con descripción del bug y de la solución.
 - **Validación local**:
-  - 5 ejecuciones consecutivas de `npx playwright test tests/HDH-09.spec.js`: 6/6 tests pasan en cada una, 0 championships quedan en disco después de cada run.
-  - `npx playwright test` (suite completa): 76/76 tests pasan.
+  - 3 ejecuciones consecutivas de `npx playwright test tests/HDH-09.spec.js`: 6/6 tests pasan en cada una, 0 reinicios del proxy en los logs de docker tras cada suite.
+  - `npx playwright test` (suite completa): 76/76 tests pasan, 0 reinicios del proxy.
 
 #### Tareas completadas
 1. Diagnosticar el fallo comparando git log (encontrado commit 2622abf como origen de la regresión)
 2. Restaurar el cleanup en `beforeEach` usando el patrón `http` nativo consistente con el resto del spec
-3. Añadir `proxy/championships/*.json` a `.gitignore`
-4. Verificar localmente con 5 ejecuciones consecutivas + suite completa (76/76)
-5. Documentar la feature en `features_list.json` y la sesión en `PROGRESS.md`
+3. Diagnosticar segunda causa: nodemon reinicia al escribir JSONs de campeonatos (correlacionar timestamps de log de nodemon con los tests que fallan)
+4. Cambiar flags de `npx nodemon` en docker-compose.yml para ignorar `championships/`, `test-data/`, `node_modules/` y extensión `json`
+5. Añadir `proxy/championships/*.json` a `.gitignore`
+6. Verificar localmente con 3 ejecuciones consecutivas + suite completa (76/76) + comprobar 0 reinicios del proxy
+7. Documentar la feature en `features_list.json` y la sesión en `PROGRESS.md`
 
 #### Verificación final
 - docker compose config --quiet: OK
 - node --check proxy/server.js: OK
 - docker compose up -d --build: OK
 - curl localhost:8082: HTTP 200 con DOCTYPE html
-- npx playwright test tests/HDH-09.spec.js: 6/6 (5 runs consecutivas, 0 championships en disco tras cada una)
+- npx playwright test tests/HDH-09.spec.js: 6/6 (3 runs consecutivas, 0 reinicios del proxy)
 - npx playwright test (suite completa): 76/76
+- docker logs bgg-proxy: confirma 0 reinicios tras suite completa
 
 #### Notas / Riesgos
 - El cleanup actual solo borra championships antes de cada test (beforeEach), no después del último test. En CI esto no afecta porque el runner es efímero, pero en local queda 1 championship del último test. Es aceptable para evitar regresiones futuras.
