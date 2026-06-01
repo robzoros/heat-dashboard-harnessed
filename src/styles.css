@@ -500,3 +500,206 @@ th {
 .dot-loss {
     background: #555;
 }
+
+/* Campeonatos */
+.btn-narrow {
+    width: auto;
+    padding: 8px 18px;
+    display: inline-block;
+    margin-top: 0;
+}
+
+.campeonatos-toolbar {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.campeonatos-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.campeonato-card {
+    background: #16213e;
+    padding: 20px;
+    border-radius: 10px;
+    border: 2px solid #0f3460;
+    cursor: pointer;
+    transition: border-color 0.3s;
+}
+
+.campeonato-card:hover {
+    border-color: #e94560;
+}
+
+.campeonato-card h3 {
+    color: #e94560;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.4rem;
+    margin-bottom: 8px;
+}
+
+.campeonato-card p {
+    color: #a0a0a0;
+    font-size: 0.9rem;
+    margin-bottom: 6px;
+}
+
+.campeonato-card .campeonato-meta {
+    display: flex;
+    gap: 16px;
+    margin-top: 12px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1rem;
+}
+
+.campeonato-card .campeonato-meta span {
+    color: #e94560;
+}
+
+.campeonato-detail {
+    margin-top: 20px;
+}
+
+.campeonato-detail-header {
+    background: #16213e;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.campeonato-detail-header h2 {
+    color: #e94560;
+    margin-bottom: 8px;
+}
+
+.campeonato-detail-header p {
+    color: #a0a0a0;
+}
+
+.campeonato-section {
+    background: #16213e;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.campeonato-section h3 {
+    color: #e94560;
+    margin-bottom: 15px;
+}
+
+.standings-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.standings-table th,
+.standings-table td {
+    padding: 10px 12px;
+    text-align: left;
+    border-bottom: 1px solid #0f3460;
+}
+
+.standings-table th {
+    background: #0f3460;
+    color: #e94560;
+    font-family: 'Bebas Neue', sans-serif;
+}
+
+.standings-table .pos {
+    width: 40px;
+    text-align: center;
+    color: #e94560;
+    font-weight: 600;
+}
+
+.standings-table .medal {
+    font-size: 1.2rem;
+}
+
+.campeonato-plays-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.campeonato-play-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #0f3460;
+    padding: 10px 14px;
+    border-radius: 5px;
+    font-size: 0.9rem;
+}
+
+.campeonato-play-item .remove-play {
+    background: none;
+    border: 1px solid #e94560;
+    color: #e94560;
+    padding: 4px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.8rem;
+}
+
+.campeonato-play-item .remove-play:hover {
+    background: #e94560;
+    color: white;
+}
+
+.campeonato-empty {
+    color: #a0a0a0;
+    text-align: center;
+    padding: 40px 20px;
+    font-style: italic;
+}
+
+.modal-wide {
+    min-width: 400px;
+    max-width: 500px;
+}
+
+.modal-content textarea {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    background: #0f3460;
+    border: 1px solid #e94560;
+    color: white;
+    font-family: 'Barlow', sans-serif;
+    resize: vertical;
+    min-height: 60px;
+}
+
+.modal-content h3 {
+    color: #e94560;
+    margin-bottom: 10px;
+    text-align: left;
+}
+
+#new-campeonato-players {
+    max-height: 200px;
+    overflow-y: auto;
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+#new-campeonato-players label {
+    display: block;
+    padding: 4px 0;
+    cursor: pointer;
+    font-size: 0.95rem;
+}
+
+#new-campeonato-players input {
+    margin-right: 8px;
+}
+
+#import-plays-modal .filter-list {
+    max-height: 300px;
+}
