@@ -70,6 +70,7 @@ test.describe('HDH-09 - Pestaña Campeonatos', () => {
       if (result.success) {
         await window.App.addPlaysToChampionship(result.data.id, ['1', '2', '3']);
       }
+      window.App.championships.selected = null;
       await window.App.loadChampionships();
     });
 
@@ -96,6 +97,7 @@ test.describe('HDH-09 - Pestaña Campeonatos', () => {
       if (result.success) {
         await window.App.addPlaysToChampionship(result.data.id, ['1']);
       }
+      window.App.championships.selected = null;
       await window.App.loadChampionships();
     });
 
@@ -126,6 +128,7 @@ test.describe('HDH-09 - Pestaña Campeonatos', () => {
       if (result.success) {
         await window.App.addPlaysToChampionship(result.data.id, ['1', '2']);
       }
+      window.App.championships.selected = null;
       await window.App.loadChampionships();
     });
 
