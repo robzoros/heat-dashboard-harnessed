@@ -1,18 +1,19 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('HDH-09 - Pestaña Campeonatos', () => {
-  test.beforeEach(async ({ page }) => {
-    await page.goto('/');
-    await page.waitForLoadState('networkidle');
-    await page.evaluate(async () => {
-      const res = await fetch('/bgg-api/championships');
-      const data = await res.json();
-      if (data.success && data.data.length > 0) {
-        for (const champ of data.data) {
-          await fetch(`/bgg-api/championships/${champ.id}`, { method: 'DELETE' });
+  test.beforeEach(async ({ page, request }) => {
+    // Clean up all existing championships via direct HTTP (not from browser)
+    const listRes = await request.get('/bgg-api/championships');
+    if (listRes.ok()) {
+      const body = await listRes.json();
+      if (body.success && body.data.length > 0) {
+        for (const champ of body.data) {
+          await request.delete(`/bgg-api/championships/${champ.id}`);
         }
       }
-    });
+    }
+    await page.goto('/');
+    await page.waitForLoadState('networkidle');
   });
 
   async function loadData(page) {
