@@ -1,5 +1,6 @@
 {
   "last_updated": "2026-06-01",
+  "active_feature": null,
   "user": "Roberto Méndez",
   "rules": {
     "single_active_feature": true,
@@ -464,6 +465,27 @@
           "Panel de gráfico lineal de partidas por mes se ve correctamente",
           "Tests E2E pasan"
         ]
+      }
+    },
+    {
+      "id": "HDH-BUG06",
+      "priority": 1,
+      "name": "FIX: Tests HDH-09 fallan en CI por estado compartido",
+      "description": [
+        "Tests HDH-09 fallan en CI porque los campeonatos creados en cada run se persisten en proxy/championships/ y se acumulan entre ejecuciones del Action.",
+        "Síntomas: 'Received: 3' en toHaveCount(1) tras varios runs, y 'SyntaxError: Unexpected token <' en addPlaysViaAPI cuando el proxy queda inaccesible tras fallos en cascada.",
+        "Causa raíz: el refactor de HDH-09 (commit 2622abf) reemplazó el cleanup en beforeEach (que usaba page.request) por llamadas http nativas en loadData/loadChampsIntoApp, pero NO incluyó lógica de limpieza antes de cada test.",
+        "Fix: añadir helper cleanupChampionships() en el spec que lista y borra todos los campeonatos vía API antes de cada test, y añadir proxy/championships/*.json a .gitignore para que los archivos JSON generados durante tests no se versionen."
+      ],
+      "status": "completed",
+      "verification": {
+        "checks": [
+          "Tests HDH-09 (6/6) pasan en local con la rama actual",
+          "Tests HDH-09 (6/6) pasan en CI tras aplicar el fix",
+          "Cleanup deja el disco en 0 championships antes de cada test",
+          "proxy/championships/*.json ignorados por git"
+        ],
+        "evidence": "Helper cleanupChampionships() añadido en beforeEach (usa http nativo, mismo patrón que loadData/createChampViaAPI). .gitignore actualizado con proxy/championships/*.json (+ excepción .gitkeep). Verificado localmente: 5 ejecuciones consecutivas de tests/HDH-09.spec.js pasan 6/6 y dejan 0 championships en disco. Suite completa: 76/76 pasan."
       }
     },
     {

@@ -1,6 +1,8 @@
 secrets.json
 node_modules/
 proxy/package-lock.json
+proxy/championships/*.json
+!proxy/championships/.gitkeep
 e2e/test-results/
 evidence/screenshots/*
 !evidence/screenshots/.gitkeep
