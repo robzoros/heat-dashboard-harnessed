@@ -64,20 +64,12 @@ test.describe('HDH-09 - Pestaña Campeonatos', () => {
     await page.waitForSelector('canvas', { timeout: 10000 });
     await page.evaluate(() => window.App.loadMockData());
 
-    // Create + load in one evaluate to avoid routing issues
+    // Use App.createChampionship (which uses App's fetch internally) instead of raw fetch
     await page.evaluate(async () => {
-      const res = await fetch('/bgg-api/championships', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: 'Detalle Test', description: 'Ver detalle', participants: ['1', '2', '3'] })
-      });
-      const r = await res.json();
-      await fetch(`/bgg-api/championships/${r.data.id}/plays`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ playIds: ['1', '2', '3'] })
-      });
-      // Reload into App
+      const result = await window.App.createChampionship('Detalle Test', 'Ver detalle', ['1', '2', '3']);
+      if (result.success) {
+        await window.App.addPlaysToChampionship(result.data.id, ['1', '2', '3']);
+      }
       await window.App.loadChampionships();
     });
 
@@ -100,17 +92,10 @@ test.describe('HDH-09 - Pestaña Campeonatos', () => {
     await page.evaluate(() => window.App.loadMockData());
 
     await page.evaluate(async () => {
-      const res = await fetch('/bgg-api/championships', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: 'Import Test', description: '', participants: ['1', '2'] })
-      });
-      const r = await res.json();
-      await fetch(`/bgg-api/championships/${r.data.id}/plays`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ playIds: ['1'] })
-      });
+      const result = await window.App.createChampionship('Import Test', '', ['1', '2']);
+      if (result.success) {
+        await window.App.addPlaysToChampionship(result.data.id, ['1']);
+      }
       await window.App.loadChampionships();
     });
 
@@ -137,17 +122,10 @@ test.describe('HDH-09 - Pestaña Campeonatos', () => {
     await page.evaluate(() => window.App.loadMockData());
 
     await page.evaluate(async () => {
-      const res = await fetch('/bgg-api/championships', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: 'Delete Test', description: '', participants: ['1', '2'] })
-      });
-      const r = await res.json();
-      await fetch(`/bgg-api/championships/${r.data.id}/plays`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ playIds: ['1', '2'] })
-      });
+      const result = await window.App.createChampionship('Delete Test', '', ['1', '2']);
+      if (result.success) {
+        await window.App.addPlaysToChampionship(result.data.id, ['1', '2']);
+      }
       await window.App.loadChampionships();
     });
 
