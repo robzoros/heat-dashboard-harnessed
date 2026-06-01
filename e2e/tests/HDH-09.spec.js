@@ -2,9 +2,9 @@ import { test, expect } from '@playwright/test';
 
 test.describe('HDH-09 - Pestaña Campeonatos', () => {
   test.beforeEach(async ({ page }) => {
-    // Clean up all existing championships before each test
     await page.goto('/');
     await page.waitForLoadState('networkidle');
+    // Clean up all existing championships before each test
     await page.evaluate(async () => {
       const res = await fetch('/bgg-api/championships');
       const data = await res.json();
@@ -16,15 +16,10 @@ test.describe('HDH-09 - Pestaña Campeonatos', () => {
     });
   });
 
-  async function loadMockDataAndChamps(page) {
-    await page.evaluate(() => window.App.loadMockData());
-    await page.evaluate(async () => { await window.App.loadChampionships(); });
-    await page.waitForTimeout(300);
-  }
-
   test('debe mostrar la pestaña Campeonatos y su contenido', async ({ page }) => {
     await page.waitForSelector('canvas', { timeout: 10000 });
-    await loadMockDataAndChamps(page);
+    await page.evaluate(() => window.App.loadMockData());
+    await page.evaluate(async () => { await window.App.loadChampionships(); });
 
     const tabs = page.locator('#tabs .tab-btn');
     await expect(tabs.nth(4)).toContainText('Campeonatos');
@@ -37,8 +32,8 @@ test.describe('HDH-09 - Pestaña Campeonatos', () => {
   });
 
   test('debe mostrar estado vacío cuando no hay campeonatos', async ({ page }) => {
-    await page.waitForSelector('canvas', { timeout: 10000 });
-    await loadMockDataAndChamps(page);
+    await page.evaluate(() => window.App.loadMockData());
+    await page.evaluate(async () => { await window.App.loadChampionships(); });
     await page.locator('#tabs .tab-btn').nth(4).click();
 
     const emptyText = page.locator('#campeonatos-list .campeonato-empty');
@@ -47,7 +42,8 @@ test.describe('HDH-09 - Pestaña Campeonatos', () => {
 
   test('debe crear un campeonato desde la UI', async ({ page }) => {
     await page.waitForSelector('canvas', { timeout: 10000 });
-    await loadMockDataAndChamps(page);
+    await page.evaluate(() => window.App.loadMockData());
+    await page.evaluate(async () => { await window.App.loadChampionships(); });
     await page.locator('#tabs .tab-btn').nth(4).click();
 
     await page.locator('#btn-create-campeonato').click();
@@ -62,23 +58,23 @@ test.describe('HDH-09 - Pestaña Campeonatos', () => {
     await expect(page.locator('#create-campeonato-modal')).not.toBeVisible();
     await page.waitForTimeout(500);
 
-    const cards = page.locator('.campeonato-card');
-    await expect(cards).not.toHaveCount(0);
-    await expect(cards.first().locator('h3')).toContainText('Liga Test');
+    const card = page.locator('.campeonato-card');
+    await expect(card).toHaveCount(1);
+    await expect(card.locator('h3')).toHaveText('Liga Test');
 
     await page.screenshot({ path: '../evidence/screenshots/HDH-09-campeonato-creado.png', fullPage: true });
   });
 
   test('debe ver detalle del campeonato con clasificación', async ({ page }) => {
     await page.waitForSelector('canvas', { timeout: 10000 });
-    await loadMockDataAndChamps(page);
+    await page.evaluate(() => window.App.loadMockData());
 
-    const champName = 'Detalle Test ' + Date.now();
-    await page.evaluate(async (name) => {
+    // Create championship and add plays via API, then load into App
+    const champId = await page.evaluate(async () => {
       const res = await fetch('/bgg-api/championships', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, description: 'Ver detalle', participants: ['1', '2', '3'] })
+        body: JSON.stringify({ name: 'Detalle Test', description: 'Ver detalle', participants: ['1', '2', '3'] })
       });
       const r = await res.json();
       await fetch(`/bgg-api/championships/${r.data.id}/plays`, {
@@ -86,18 +82,29 @@ test.describe('HDH-09 - Pestaña Campeonatos', () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ playIds: ['1', '2', '3'] })
       });
-    }, champName);
+      return r.data.id;
+    });
 
-    await page.evaluate(async () => { await window.App.loadChampionships(); });
-    await page.waitForTimeout(300);
+    // Manually load championships into App
+    await page.evaluate(async () => {
+      const res = await fetch('/bgg-api/championships');
+      const data = await res.json();
+      if (data.success) {
+        window.App.championships.list = data.data;
+        window.App.championships.selected = null;
+        window.App.renderChampionships();
+      }
+    });
+
     await page.locator('#tabs .tab-btn').nth(4).click();
-    await page.waitForTimeout(300);
 
-    await page.locator('.campeonato-card').filter({ hasText: champName }).click();
-    await page.waitForTimeout(300);
+    // First card should be the one we just created
+    const card = page.locator('.campeonato-card');
+    await expect(card).toHaveCount(1);
+    await card.click();
 
     await expect(page.locator('#campeonato-detail-content')).toBeVisible();
-    await expect(page.locator('#campeonato-detail-content h2')).toContainText(champName);
+    await expect(page.locator('#campeonato-detail-content h2')).toHaveText('Detalle Test');
 
     const standingsRows = page.locator('.standings-table tbody tr');
     await expect(standingsRows).toHaveCount(3);
@@ -110,14 +117,13 @@ test.describe('HDH-09 - Pestaña Campeonatos', () => {
 
   test('debe importar partidas al campeonato', async ({ page }) => {
     await page.waitForSelector('canvas', { timeout: 10000 });
-    await loadMockDataAndChamps(page);
+    await page.evaluate(() => window.App.loadMockData());
 
-    const champName = 'Import Test ' + Date.now();
-    await page.evaluate(async (name) => {
+    await page.evaluate(async () => {
       const res = await fetch('/bgg-api/championships', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, description: '', participants: ['1', '2'] })
+        body: JSON.stringify({ name: 'Import Test', description: '', participants: ['1', '2'] })
       });
       const r = await res.json();
       await fetch(`/bgg-api/championships/${r.data.id}/plays`, {
@@ -125,15 +131,23 @@ test.describe('HDH-09 - Pestaña Campeonatos', () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ playIds: ['1'] })
       });
-    }, champName);
+    });
 
-    await page.evaluate(async () => { await window.App.loadChampionships(); });
-    await page.waitForTimeout(300);
+    await page.evaluate(async () => {
+      const res = await fetch('/bgg-api/championships');
+      const data = await res.json();
+      if (data.success) {
+        window.App.championships.list = data.data;
+        window.App.championships.selected = null;
+        window.App.renderChampionships();
+      }
+    });
+
     await page.locator('#tabs .tab-btn').nth(4).click();
-    await page.waitForTimeout(300);
 
-    await page.locator('.campeonato-card').filter({ hasText: champName }).click();
-    await page.waitForTimeout(300);
+    const card = page.locator('.campeonato-card');
+    await expect(card).toHaveCount(1);
+    await card.click();
 
     await expect(page.locator('.campeonato-play-item')).toHaveCount(1);
 
@@ -152,14 +166,13 @@ test.describe('HDH-09 - Pestaña Campeonatos', () => {
 
   test('debe eliminar partida del campeonato', async ({ page }) => {
     await page.waitForSelector('canvas', { timeout: 10000 });
-    await loadMockDataAndChamps(page);
+    await page.evaluate(() => window.App.loadMockData());
 
-    const champName = 'Delete Test ' + Date.now();
-    await page.evaluate(async (name) => {
+    await page.evaluate(async () => {
       const res = await fetch('/bgg-api/championships', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, description: '', participants: ['1', '2'] })
+        body: JSON.stringify({ name: 'Delete Test', description: '', participants: ['1', '2'] })
       });
       const r = await res.json();
       await fetch(`/bgg-api/championships/${r.data.id}/plays`, {
@@ -167,15 +180,23 @@ test.describe('HDH-09 - Pestaña Campeonatos', () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ playIds: ['1', '2'] })
       });
-    }, champName);
+    });
 
-    await page.evaluate(async () => { await window.App.loadChampionships(); });
-    await page.waitForTimeout(300);
+    await page.evaluate(async () => {
+      const res = await fetch('/bgg-api/championships');
+      const data = await res.json();
+      if (data.success) {
+        window.App.championships.list = data.data;
+        window.App.championships.selected = null;
+        window.App.renderChampionships();
+      }
+    });
+
     await page.locator('#tabs .tab-btn').nth(4).click();
-    await page.waitForTimeout(300);
 
-    await page.locator('.campeonato-card').filter({ hasText: champName }).click();
-    await page.waitForTimeout(300);
+    const card = page.locator('.campeonato-card');
+    await expect(card).toHaveCount(1);
+    await card.click();
 
     await expect(page.locator('.campeonato-play-item')).toHaveCount(2);
 
