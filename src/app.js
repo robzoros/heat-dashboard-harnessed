@@ -1000,13 +1000,13 @@ const App = {
         }
         const overrides = this.getPlayerOverrides();
         for (const player of this.data.players) {
-            const override = overrides[player.id];
+            const override = overrides[player.name];
             if (override !== undefined) {
                 player.isBot = override === 'bot';
                 player.isMain = override === 'main';
                 player.isOther = override === 'other';
             } else {
-                const orig = this.originalPlayers.find(op => op.id === player.id);
+                const orig = this.originalPlayers.find(op => op.name === player.name);
                 if (orig) {
                     player.isBot = orig.isBot;
                     player.isMain = orig.isMain;
@@ -1016,14 +1016,14 @@ const App = {
         }
     },
 
-    togglePlayerClassification(playerId, newType) {
-        const player = this.data.players.find(p => p.id === playerId);
+    togglePlayerClassification(playerName, newType) {
+        const player = this.data.players.find(p => p.name === playerName);
         if (!player) return;
         const overrides = this.getPlayerOverrides();
         if (newType === 'auto') {
-            delete overrides[playerId];
+            delete overrides[playerName];
         } else {
-            overrides[playerId] = newType;
+            overrides[playerName] = newType;
         }
         this.savePlayerOverrides(overrides);
         this.applyPlayerOverrides();
@@ -1047,13 +1047,13 @@ const App = {
         const list = document.getElementById('player-manager-list');
         const overrides = this.getPlayerOverrides();
         list.innerHTML = this.data.players.map(p => {
-            const override = overrides[p.id];
+            const override = overrides[p.name];
             const currentType = override || (p.isBot ? 'bot' : p.isMain ? 'main' : 'other');
             const isAuto = override === undefined;
             return `
-                <div class="player-manager-row" data-player-id="${p.id}">
+                <div class="player-manager-row">
                     <span class="player-manager-name">${p.name}</span>
-                    <select class="player-manager-select" data-player-id="${p.id}" ${isAuto ? 'data-auto="true"' : ''}>
+                    <select class="player-manager-select" data-player-name="${p.name}" ${isAuto ? 'data-auto="true"' : ''}>
                         <option value="main" ${currentType === 'main' ? 'selected' : ''}>Principal</option>
                         <option value="bot" ${currentType === 'bot' ? 'selected' : ''}>Bot</option>
                         <option value="other" ${currentType === 'other' ? 'selected' : ''}>Otro</option>
@@ -1064,8 +1064,8 @@ const App = {
         }).join('');
         list.querySelectorAll('.player-manager-select').forEach(sel => {
             sel.addEventListener('change', (e) => {
-                const playerId = parseInt(e.target.dataset.playerId);
-                this.togglePlayerClassification(playerId, e.target.value);
+                const playerName = e.target.dataset.playerName;
+                this.togglePlayerClassification(playerName, e.target.value);
             });
         });
     }

@@ -36,7 +36,7 @@ test.describe('HDH-10 - Jugadores no registrados en bgg', () => {
     expect(mainPlayersBefore).not.toContain('Bot1');
 
     await page.evaluate(() => {
-      window.App.togglePlayerClassification(4, 'main');
+      window.App.togglePlayerClassification('Bot1', 'main');
     });
 
     const mainPlayersAfter = await page.evaluate(() =>
@@ -56,7 +56,7 @@ test.describe('HDH-10 - Jugadores no registrados en bgg', () => {
     await page.evaluate(() => window.App.loadMockData());
 
     await page.evaluate(() => {
-      window.App.togglePlayerClassification(4, 'main');
+      window.App.togglePlayerClassification('Bot1', 'main');
     });
 
     const cookieValue = await page.evaluate(() => {
@@ -64,7 +64,7 @@ test.describe('HDH-10 - Jugadores no registrados en bgg', () => {
       return raw ? decodeURIComponent(raw.split('=').slice(1).join('=')) : null;
     });
     expect(cookieValue).toBeTruthy();
-    expect(cookieValue).toContain('"4":"main"');
+    expect(cookieValue).toContain('"Bot1":"main"');
 
     await page.reload();
     await page.waitForLoadState('networkidle');
@@ -82,7 +82,7 @@ test.describe('HDH-10 - Jugadores no registrados en bgg', () => {
     await page.evaluate(() => window.App.loadMockData());
 
     await page.evaluate(() => {
-      window.App.togglePlayerClassification(4, 'main');
+      window.App.togglePlayerClassification('Bot1', 'main');
     });
 
     let mainPlayers = await page.evaluate(() =>
@@ -91,7 +91,7 @@ test.describe('HDH-10 - Jugadores no registrados en bgg', () => {
     expect(mainPlayers).toContain('Bot1');
 
     await page.evaluate(() => {
-      window.App.togglePlayerClassification(4, 'auto');
+      window.App.togglePlayerClassification('Bot1', 'auto');
     });
 
     mainPlayers = await page.evaluate(() =>
@@ -114,7 +114,7 @@ test.describe('HDH-10 - Jugadores no registrados en bgg', () => {
     expect(parseInt(playersFiltered)).toBeGreaterThanOrEqual(2);
 
     await page.evaluate(() => {
-      window.App.togglePlayerClassification(4, 'main');
+      window.App.togglePlayerClassification('Bot1', 'main');
     });
 
     playersFiltered = await page.textContent('#stat-players-filtered');
