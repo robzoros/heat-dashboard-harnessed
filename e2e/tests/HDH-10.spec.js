@@ -6,6 +6,7 @@ test.describe('HDH-10 - Jugadores no registrados en bgg', () => {
     await page.waitForLoadState('networkidle');
     await page.evaluate(() => {
       document.cookie = 'hdh-player-overrides=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+      document.cookie = 'hdh-cookie-consent=%22accepted%22; path=/; max-age=31536000';
     });
     await page.waitForSelector('canvas', { timeout: 10000 });
   });
