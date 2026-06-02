@@ -14,6 +14,10 @@ test.describe('HDH-08 - Tests unitarios + integración con XML', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
     await page.waitForLoadState('networkidle');
+    const banner = page.locator('#cookie-consent-banner:not(.hidden)');
+    if (await banner.isVisible({ timeout: 2000 }).catch(() => false)) {
+      await page.click('#btn-accept-cookies');
+    }
     await page.waitForFunction(() => window.App && window.App.charts && window.App.charts.wins);
   });
 

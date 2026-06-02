@@ -4,6 +4,10 @@ test.describe('HDH-07 - Pestaña Historial', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
     await page.waitForLoadState('networkidle');
+    const banner = page.locator('#cookie-consent-banner:not(.hidden)');
+    if (await banner.isVisible({ timeout: 2000 }).catch(() => false)) {
+      await page.click('#btn-accept-cookies');
+    }
   });
 
   test('debe mostrar historial con mock data', async ({ page }) => {

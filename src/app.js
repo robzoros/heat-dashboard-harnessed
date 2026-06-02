@@ -24,6 +24,7 @@ const App = {
         this.setupModal();
         this.setupChampionships();
         this.setupPlayerManager();
+        this.setupCookieConsent();
         this.initCharts();
         this.updateHeaderStats();
     },
@@ -991,7 +992,32 @@ const App = {
     },
 
     savePlayerOverrides(overrides) {
+        if (!this.hasCookieConsent()) return;
         this.setCookie('hdh-player-overrides', overrides);
+    },
+
+    hasCookieConsent() {
+        const val = this.getCookie('hdh-cookie-consent');
+        return val === 'accepted';
+    },
+
+    setCookieConsent(accepted) {
+        this.setCookie('hdh-cookie-consent', accepted ? 'accepted' : 'rejected');
+    },
+
+    setupCookieConsent() {
+        document.getElementById('btn-accept-cookies').addEventListener('click', () => {
+            this.setCookieConsent(true);
+            document.getElementById('cookie-consent-banner').classList.add('hidden');
+        });
+        document.getElementById('btn-reject-cookies').addEventListener('click', () => {
+            this.setCookieConsent(false);
+            document.getElementById('cookie-consent-banner').classList.add('hidden');
+            document.cookie = 'hdh-player-overrides=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+        });
+        if (!this.hasCookieConsent()) {
+            document.getElementById('cookie-consent-banner').classList.remove('hidden');
+        }
     },
 
     applyPlayerOverrides() {

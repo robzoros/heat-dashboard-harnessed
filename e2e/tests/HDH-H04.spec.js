@@ -4,6 +4,10 @@ test.describe('HDH-H04 - Poblamiento de filtros', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
     await page.waitForLoadState('networkidle');
+    const banner = page.locator('#cookie-consent-banner:not(.hidden)');
+    if (await banner.isVisible({ timeout: 2000 }).catch(() => false)) {
+      await page.click('#btn-accept-cookies');
+    }
     await page.waitForSelector('canvas', { timeout: 10000 });
     await page.evaluate(() => window.App.loadMockData());
   });

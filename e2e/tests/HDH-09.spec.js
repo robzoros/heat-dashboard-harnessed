@@ -5,6 +5,10 @@ test.describe('HDH-09 - Pestaña Campeonatos', () => {
     await cleanupChampionships();
     await page.goto('/');
     await page.waitForLoadState('networkidle');
+    const banner = page.locator('#cookie-consent-banner:not(.hidden)');
+    if (await banner.isVisible({ timeout: 2000 }).catch(() => false)) {
+      await page.click('#btn-accept-cookies');
+    }
   });
 
   async function cleanupChampionships() {

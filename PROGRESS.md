@@ -786,4 +786,53 @@
 - Ninguno. Implementación completa y compatible con tests existentes.
 
 #### Próximo paso
-- Sin features pendientes
+- Feature HDH-11
+
+---
+
+## Sesión 2026-06-02
+
+### Feature trabajada: HDH-11 - Aceptar Cookies
+
+**Estado**: Completada
+
+#### Evidencia
+- **src/app.js**: Añadidos métodos de consentimiento de cookies:
+  - `hasCookieConsent()`: verifica si hay consentimiento (cookie `hdh-cookie-consent` con valor `"accepted"`)
+  - `setCookieConsent(accepted)`: guarda la elección del usuario
+  - `setupCookieConsent()`: configura event listeners para botones Aceptar/Rechazar
+  - `savePlayerOverrides()`: ahora verifica consentimiento antes de guardar
+  - Al rechazar cookies: se borran los overrides existentes
+  - Banner se muestra solo si no hay consentimiento previo
+- **src/index.html**: Añadido banner `#cookie-consent-banner` con botones Aceptar y Rechazar
+- **src/styles.css**: Estilos para `.cookie-consent-banner`, `.cookie-consent-content`, `.cookie-consent-actions`
+- **e2e/tests/HDH-11.spec.js**: 6 tests:
+  - Banner visible en primera visita
+  - Ocultar al aceptar
+  - Ocultar al rechazar
+  - Persistencia entre recargas
+  - No guardar overrides si se rechaza
+  - Guardar overrides si se acepta
+- **Todos los specs E2E actualizados**: beforeEach ahora descarta el banner de cookies
+
+#### Tareas completadas
+1. Crear banner HTML de consentimiento de cookies
+2. Implementar lógica de consentimiento en app.js
+3. Gating de player overrides detrás del consentimiento
+4. CSS para el banner
+5. Crear 6 tests E2E
+6. Actualizar todos los specs existentes para manejar el banner
+7. Verificar compatibilidad con tests existentes
+
+#### Verificación final
+- docker compose config --quiet: OK
+- node --check proxy/server.js: OK
+- docker compose up -d --build: OK
+- curl localhost:8082: HTTP 200 con DOCTYPE html
+- npx playwright test tests/HDH-11.spec.js: 6/6 tests pasados
+
+#### Notas / Riesgos
+- Algunos tests existentes son lentos (timeoutflaky) por Docker, pero pasan cuando se ejecutan individualmente
+
+#### Próximo paso
+- Feature FIX-HDH-01 - Mejoras UI
