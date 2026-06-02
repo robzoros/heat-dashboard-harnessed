@@ -61,6 +61,14 @@
                 <button id="btn-cancel-import-plays" class="btn-secondary">Cancelar</button>
             </div>
         </div>
+        <div id="player-manager-modal" class="modal hidden">
+            <div class="modal-content modal-wide">
+                <h2>Gestionar Jugadores</h2>
+                <p style="color:#a0a0a0;margin-bottom:15px;text-align:left;">Marca a los jugadores como Principal, Bot o Otro. Los cambios se guardan en cookies y se aplican al cargar datos.</p>
+                <div id="player-manager-list" class="player-manager-list"></div>
+                <button id="btn-close-player-manager" class="btn-secondary">Cerrar</button>
+            </div>
+        </div>
     </header>
 
     <nav id="tabs">
@@ -145,7 +153,10 @@
         </section>
 
         <section id="tab-jugadores" class="tab-content">
-            <h2>Clasificación Jugadores</h2>
+            <div class="jugadores-header">
+                <h2>Clasificación Jugadores</h2>
+                <button id="btn-manage-players" class="btn-primary btn-narrow">⚙ Gestionar</button>
+            </div>
             <table id="players-table">
                 <thead>
                     <tr>

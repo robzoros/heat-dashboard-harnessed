@@ -23,6 +23,7 @@ const App = {
         this.setupFilters();
         this.setupModal();
         this.setupChampionships();
+        this.setupPlayerManager();
         this.initCharts();
         this.updateHeaderStats();
     },
@@ -247,6 +248,8 @@ const App = {
             document.getElementById('login-modal').classList.add('hidden');
             if (result.success && result.data) {
                 this.data = result.data;
+                this.originalPlayers = this.data.players.map(p => ({ ...p }));
+                this.applyPlayerOverrides();
                 console.log('BGG Data loaded:');
                 console.log('Players:', this.data.players);
                 console.log('Locations:', this.data.locations);
@@ -311,6 +314,8 @@ const App = {
                 { id: 2, name: 'Circuit B' }
             ]
         };
+        this.originalPlayers = this.data.players.map(p => ({ ...p }));
+        this.applyPlayerOverrides();
         this.populateFilters();
         this.updateHeaderStats();
         this.renderAll();
@@ -964,6 +969,105 @@ const App = {
         const div = document.createElement('div');
         div.textContent = text;
         return div.innerHTML;
+    },
+
+    setCookie(name, value, days = 365) {
+        const expires = new Date(Date.now() + days * 864e5).toUTCString();
+        document.cookie = name + '=' + encodeURIComponent(JSON.stringify(value)) + '; expires=' + expires + '; path=/';
+    },
+
+    getCookie(name) {
+        const match = document.cookie.split('; ').find(c => c.startsWith(name + '='));
+        if (!match) return null;
+        try {
+            return JSON.parse(decodeURIComponent(match.split('=').slice(1).join('=')));
+        } catch {
+            return null;
+        }
+    },
+
+    getPlayerOverrides() {
+        return this.getCookie('hdh-player-overrides') || {};
+    },
+
+    savePlayerOverrides(overrides) {
+        this.setCookie('hdh-player-overrides', overrides);
+    },
+
+    applyPlayerOverrides() {
+        if (!this.originalPlayers) {
+            this.originalPlayers = this.data.players.map(p => ({ ...p }));
+        }
+        const overrides = this.getPlayerOverrides();
+        for (const player of this.data.players) {
+            const override = overrides[player.id];
+            if (override !== undefined) {
+                player.isBot = override === 'bot';
+                player.isMain = override === 'main';
+                player.isOther = override === 'other';
+            } else {
+                const orig = this.originalPlayers.find(op => op.id === player.id);
+                if (orig) {
+                    player.isBot = orig.isBot;
+                    player.isMain = orig.isMain;
+                    player.isOther = orig.isOther;
+                }
+            }
+        }
+    },
+
+    togglePlayerClassification(playerId, newType) {
+        const player = this.data.players.find(p => p.id === playerId);
+        if (!player) return;
+        const overrides = this.getPlayerOverrides();
+        if (newType === 'auto') {
+            delete overrides[playerId];
+        } else {
+            overrides[playerId] = newType;
+        }
+        this.savePlayerOverrides(overrides);
+        this.applyPlayerOverrides();
+        this.populateFilters();
+        this.updateHeaderStats();
+        this.renderAll();
+        this.renderPlayerManager();
+    },
+
+    setupPlayerManager() {
+        document.getElementById('btn-manage-players').addEventListener('click', () => {
+            this.renderPlayerManager();
+            document.getElementById('player-manager-modal').classList.remove('hidden');
+        });
+        document.getElementById('btn-close-player-manager').addEventListener('click', () => {
+            document.getElementById('player-manager-modal').classList.add('hidden');
+        });
+    },
+
+    renderPlayerManager() {
+        const list = document.getElementById('player-manager-list');
+        const overrides = this.getPlayerOverrides();
+        list.innerHTML = this.data.players.map(p => {
+            const override = overrides[p.id];
+            const currentType = override || (p.isBot ? 'bot' : p.isMain ? 'main' : 'other');
+            const isAuto = override === undefined;
+            return `
+                <div class="player-manager-row" data-player-id="${p.id}">
+                    <span class="player-manager-name">${p.name}</span>
+                    <select class="player-manager-select" data-player-id="${p.id}" ${isAuto ? 'data-auto="true"' : ''}>
+                        <option value="main" ${currentType === 'main' ? 'selected' : ''}>Principal</option>
+                        <option value="bot" ${currentType === 'bot' ? 'selected' : ''}>Bot</option>
+                        <option value="other" ${currentType === 'other' ? 'selected' : ''}>Otro</option>
+                        <option value="auto" ${isAuto ? 'selected' : ''}>Auto (BGG)</option>
+                    </select>
+                </div>
+            `;
+        }).join('');
+        list.querySelectorAll('.player-manager-select').forEach(sel => {
+            sel.addEventListener('change', (e) => {
+                const playerId = parseInt(e.target.dataset.playerId);
+                this.togglePlayerClassification(playerId, e.target.value);
+            });
+        });
     }
 };
 

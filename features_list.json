@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-06-01",
+  "last_updated": "2026-06-02",
   "active_feature": null,
   "user": "Roberto Méndez",
   "rules": {
@@ -512,6 +512,29 @@
           "76/76 tests E2E pasan (6 nuevos + 70 existentes)"
         ],
         "evidence": "Proxy: endpoints GET/POST/DELETE para championships con persistencia JSON. Frontend: 5o tab 'Campeonatos' con lista de tarjetas, detalle con clasificación y partidas. Modal creación con selección de participantes. Modal importación de partidas. CSS con estilos de tarjetas, tabla de clasificación, items de partida. 6 tests E2E creados con screenshots de evidencia. 76/76 tests pasan."
+      }
+    },
+    {
+      "id": "HDH-10",
+      "priority": 1,
+      "name": "Jugadores no registrados en bgg",
+      "description": [
+        "En los datos que bajamos de BGG no se pueden distinguir los bots de jugadores no registrados en BGG.",
+        "La solución es dar al usuario la posibilidad de marcar jugadores como no bots y guardar ese dato en una cookie para futuras cargas de datos.",
+        "Después de un login se leerán las cookies y se marcarán los jugadores que según las cookies son jugadorees principales y a partir de ahí se generarán los filtros etc.",
+        "Debe existir algún sitio donde podamos marcar que un bot no es bot si no jugador principal y viceversa, que esa marca se guarde en una cookie y que después de marcarlo se vuelvan a a aplicar los filtros",
+      ],
+      "status": "completed",
+      "verification": {
+        "checks": [
+          "Se guardan los datos en cookies y se recuperan correctamente",
+          "El usuario puede marcar jugadores como bot, principal u otro",
+          "Los cambios se persisten en cookies entre recargas",
+          "La opción 'Auto (BGG)' restaura la clasificación original",
+          "Los filtros se actualizan al cambiar clasificación",
+          "Tests E2E pasan"
+        ],
+        "evidence": "Implementado en src/app.js: cookie helpers (setCookie/getCookie), getPlayerOverrides, applyPlayerOverrides, togglePlayerClassification, setupPlayerManager, renderPlayerManager. Modal con selectors por jugador (Principal/Bot/Otro/Auto). originalPlayers almacena clasificación BGG para restaurar en modo auto. CSS en styles.css. 5 tests E2E en e2e/tests/HDH-10.spec.js. Total Playwright: 81/81 pasados."
       }
     }
   ]
