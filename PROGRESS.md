@@ -740,3 +740,50 @@
 
 #### Próximo paso
 - Sin features pendientes
+
+---
+
+## Sesión 2026-06-02
+
+### Feature trabajada: HDH-10 - Jugadores no registrados en bgg
+
+**Estado**: Completada
+
+#### Evidencia
+- **src/app.js**: Añadidos helpers de cookies (`setCookie`, `getCookie`), gestión de overrides de jugadores (`getPlayerOverrides`, `savePlayerOverrides`, `applyPlayerOverrides`, `togglePlayerClassification`), y UI de gestión (`setupPlayerManager`, `renderPlayerManager`).
+  - Cookie key: `hdh-player-overrides` con valor JSON tipo `{"4":"main","5":"bot"}`
+  - `originalPlayers` almacena la clasificación BGG original para poder restaurar en modo "Auto"
+  - `applyPlayerOverrides()` aplicada en `loadData()` y `loadMockData()` tras cargar datos
+  - Modal de gestión con selector por jugador: Principal / Bot / Otro / Auto (BGG)
+  - Al cambiar clasificación: guarda cookie → reclasifica → actualiza filtros → re-renderiza todo
+- **src/index.html**: Añadido modal `#player-manager-modal` con lista de jugadores y selects. Botón "⚙ Gestionar" en pestaña Jugadores.
+- **src/styles.css**: Estilos para `.jugadores-header`, `.player-manager-list`, `.player-manager-row`, `.player-manager-name`, `.player-manager-select`
+- **e2e/tests/HDH-10.spec.js**: 5 tests:
+  - Abrir/cerrar modal de gestión
+  - Cambiar clasificación de bot a principal
+  - Persistencia de cookie al recargar
+  - Volver a auto (restaura clasificación BGG original)
+  - Actualización de header-stats al cambiar clasificación
+
+#### Tareas completadas
+1. Implementar cookie helpers en app.js
+2. Implementar sistema de overrides con persistencia en cookie
+3. Guardar clasificación original BGG para restaurar en modo auto
+4. Crear UI modal de gestión de jugadores con selects
+5. Añadir botón "Gestionar" en pestaña Jugadores
+6. Añadir CSS para nuevos elementos
+7. Crear 5 tests E2E con verificación de cookies y persistencia
+8. Verificar compatibilidad con tests existentes (81/81 pasados)
+
+#### Verificación final
+- docker compose config --quiet: OK
+- node --check proxy/server.js: OK
+- docker compose up -d --build: OK
+- curl localhost:8082: HTTP 200 con DOCTYPE html
+- npx playwright test: 81/81 tests pasados (5 HDH-10 nuevos + 76 existentes)
+
+#### Notas / Riesgos
+- Ninguno. Implementación completa y compatible con tests existentes.
+
+#### Próximo paso
+- Sin features pendientes

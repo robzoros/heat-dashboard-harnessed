@@ -703,3 +703,44 @@ th {
 #import-plays-modal .filter-list {
     max-height: 300px;
 }
+
+/* Player Manager */
+.jugadores-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.jugadores-header h2 {
+    margin-bottom: 0;
+}
+
+.player-manager-list {
+    max-height: 400px;
+    overflow-y: auto;
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.player-manager-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #0f3460;
+}
+
+.player-manager-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.1rem;
+}
+
+.player-manager-select {
+    padding: 4px 8px;
+    background: #0f3460;
+    border: 1px solid #e94560;
+    color: white;
+    font-size: 0.85rem;
+    border-radius: 4px;
+}
