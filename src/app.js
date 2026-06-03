@@ -126,6 +126,7 @@ const App = {
             const result = await response.json();
             if (result.success) {
                 this.championships.list = result.data;
+                this.renderChampionshipsSelect();
                 this.renderChampionships();
             }
         } catch (error) {
@@ -974,12 +975,12 @@ const App = {
 
     renderChampionships() {
         const detailEl = document.getElementById('campeonato-detail');
-        const selectEl = document.getElementById('campeonatos-select');
         if (this.championships.selected) {
             detailEl.classList.remove('hidden');
             this.renderChampionshipDetail();
         } else {
             detailEl.classList.add('hidden');
+            document.getElementById('campeonato-detail-content').innerHTML = '';
         }
         this.renderChampionshipsSelect();
     },
@@ -1099,15 +1100,24 @@ const App = {
     },
 
     getChampionshipStandings(champ) {
-        if (!champ || !champ.participants) return [];
+        if (!champ) return [];
         const champPlayIds = new Set((champ.playIds || []).map(id => String(id)));
         const bggPlays = this.data.plays.filter(p => champPlayIds.has(String(p.id)));
         const manualPlays = (champ.plays || []).filter(p => champPlayIds.has(String(p.id)));
         const allPlays = [...bggPlays, ...manualPlays];
-        const participantIds = new Set(champ.participants.map(id => String(id)));
+
+        const allPlayerIds = new Set();
+        for (const play of allPlays) {
+            for (const ps of play.playerScores) {
+                allPlayerIds.add(String(ps.playerRefId));
+            }
+        }
+
+        const declaredParticipantIds = new Set((champ.participants || []).map(id => String(id)));
+        const effectiveParticipantIds = declaredParticipantIds.size > 0 ? declaredParticipantIds : allPlayerIds;
 
         const stats = {};
-        for (const pid of champ.participants) {
+        for (const pid of effectiveParticipantIds) {
             const player = this.data.players.find(p => String(p.id) === String(pid));
             if (player) {
                 stats[pid] = { id: player.id, name: player.name, plays: 0, wins: 0, totalScore: 0 };
@@ -1117,7 +1127,7 @@ const App = {
         for (const play of allPlays) {
             for (const ps of play.playerScores) {
                 const pid = String(ps.playerRefId);
-                if (participantIds.has(pid) && stats[pid]) {
+                if (effectiveParticipantIds.has(pid) && stats[pid]) {
                     stats[pid].plays++;
                     if (ps.winner) stats[pid].wins++;
                     stats[pid].totalScore += ps.scoreNum || 0;
