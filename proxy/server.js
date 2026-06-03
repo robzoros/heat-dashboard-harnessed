@@ -334,7 +334,7 @@ const server = http.createServer((req, res) => {
                     sendJson(res, 404, { success: false, error: 'Championship not found' });
                     return;
                 }
-                const { playIds } = JSON.parse(body);
+                const { playIds, participants } = JSON.parse(body);
                 if (!Array.isArray(playIds)) {
                     sendJson(res, 400, { success: false, error: 'playIds must be an array' });
                     return;
@@ -344,6 +344,9 @@ const server = http.createServer((req, res) => {
                     existing.add(String(playId));
                 }
                 championship.playIds = [...existing];
+                if (Array.isArray(participants)) {
+                    championship.participants = participants;
+                }
                 writeChampionship(championship);
                 sendJson(res, 200, { success: true, data: championship });
             } catch (error) {

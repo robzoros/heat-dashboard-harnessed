@@ -230,6 +230,15 @@ body.panel-open .btn-toggle {
     color: white;
 }
 
+.btn-danger {
+    background: #8b0000;
+    color: white;
+}
+
+.btn-danger:hover {
+    background: #a52a2a;
+}
+
 .modal {
     position: fixed;
     top: 0;
