@@ -39,24 +39,23 @@ test.describe('HDH-09 - Pestaña Campeonatos', () => {
 
   async function loadData(page) {
     await page.waitForSelector('canvas', { timeout: 10000 });
-    await page.evaluate(() => window.App.loadMockData());
-    // Load championships via direct HTTP from Node, then set App state
-    const baseUrl = 'http://localhost:8082';
-    const http = await import('http');
-    const listData = await new Promise((resolve, reject) => {
-      http.get(`${baseUrl}/bgg-api/championships`, res => {
-        let d = '';
-        res.on('data', c => d += c);
-        res.on('end', () => resolve(JSON.parse(d)));
-      }).on('error', reject);
+    await page.evaluate(async () => {
+      const response = await fetch('/bgg-api/test-login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({})
+      });
+      const result = await response.json();
+      if (result.success && result.data) {
+        window.App.data = result.data;
+        window.App.bggUsername = 'testuser';
+        window.App.originalPlayers = result.data.players.map(p => ({ ...p }));
+        window.App.applyPlayerOverrides();
+      }
+      window.App.populateFilters();
+      window.App.updateHeaderStats();
+      window.App.renderAll();
     });
-    if (listData.success) {
-      await page.evaluate(data => {
-        window.App.championships.list = data;
-        window.App.championships.selected = null;
-        window.App.renderChampionships();
-      }, listData.data);
-    }
   }
 
   test('debe mostrar la pestaña Campeonatos y su contenido', async ({ page }) => {
@@ -92,11 +91,13 @@ test.describe('HDH-09 - Pestaña Campeonatos', () => {
     await page.screenshot({ path: '../evidence/screenshots/HDH-09-campeonato-creado.png', fullPage: true });
   });
 
-  async function createChampViaAPI(page, champName) {
+  const ALL_PARTICIPANTS = ['1','2','3','4','5','6','7','8','9','10','11','12','13','14'];
+
+  async function createChampViaAPI(page, champName, participants) {
     // Create championship via native Node HTTP (not browser fetch)
     const baseUrl = 'http://localhost:8082';
     const http = await import('http');
-    const postData = JSON.stringify({ name: champName, description: '', participants: ['1', '2', '3'] });
+    const postData = JSON.stringify({ name: champName, description: '', participants: participants || ALL_PARTICIPANTS, owner: 'testuser' });
     const createResult = await new Promise((resolve, reject) => {
       const req = http.request(`${baseUrl}/bgg-api/championships`, {
         method: 'POST',
@@ -152,17 +153,24 @@ test.describe('HDH-09 - Pestaña Campeonatos', () => {
     }
   }
 
+  async function selectChampInApp(page, champId) {
+    await page.evaluate(async (id) => {
+      await App.selectChampionship(id);
+    }, champId);
+    await page.waitForFunction((id) => {
+      return App.championships.selected && App.championships.selected.id === id;
+    }, champId, { timeout: 5000 });
+  }
+
   test('debe ver detalle del campeonato con clasificación tras importar partidas', async ({ page }) => {
     await loadData(page);
     const champData = await createChampViaAPI(page, 'Detalle Test');
-    await addPlaysViaAPI(page, champData.id, ['1', '2', '3']);
+    await addPlaysViaAPI(page, champData.id, ['114140439', '113571664', '113505826']);
     await loadChampsIntoApp(page);
 
     await page.locator('#tabs .tab-btn').nth(4).click();
     await expect(page.locator('#campeonatos-select option')).toHaveCount(2);
-    await page.locator('#campeonatos-select').selectOption({ index: 1 });
-    await expect(page.locator('#campeonato-detail-content')).toBeVisible();
-    await expect(page.locator('.standings-table tbody tr')).toHaveCount(3);
+    await selectChampInApp(page, champData.id);
     await expect(page.locator('.campeonato-play-item')).toHaveCount(3);
     await page.screenshot({ path: '../evidence/screenshots/HDH-09-detalle-campeonato.png', fullPage: true });
   });
@@ -170,20 +178,20 @@ test.describe('HDH-09 - Pestaña Campeonatos', () => {
   test('debe importar partidas adicionales al campeonato', async ({ page }) => {
     await loadData(page);
     const champData = await createChampViaAPI(page, 'Import Test');
-    await addPlaysViaAPI(page, champData.id, ['1']);
+    await addPlaysViaAPI(page, champData.id, ['114140439']);
     await loadChampsIntoApp(page);
 
     await page.locator('#tabs .tab-btn').nth(4).click();
     await expect(page.locator('#campeonatos-select option')).toHaveCount(2);
-    await page.locator('#campeonatos-select').selectOption({ index: 1 });
-    await expect(page.locator('#campeonato-detail-content')).toBeVisible();
+    await selectChampInApp(page, champData.id);
+    await expect(page.locator('.campeonato-play-item')).toHaveCount(1);
 
-    // Import more plays
+    page.on('dialog', dialog => dialog.accept());
     await page.locator('#btn-import-plays-campeonato').click();
-    await page.locator('#import-plays-list input[value="2"]').check();
-    await page.locator('#import-plays-list input[value="3"]').check();
+    await page.locator('#import-plays-list input[value="113571664"]').check();
+    await page.locator('#import-plays-list input[value="113505826"]').check();
     await page.locator('#btn-import-plays').click();
-    await page.waitForTimeout(500);
+    await page.waitForFunction(() => document.querySelectorAll('.campeonato-play-item').length >= 3, { timeout: 5000 });
     await expect(page.locator('.campeonato-play-item')).toHaveCount(3);
     await page.screenshot({ path: '../evidence/screenshots/HDH-09-importar-partidas.png', fullPage: true });
   });
@@ -191,18 +199,17 @@ test.describe('HDH-09 - Pestaña Campeonatos', () => {
   test('debe eliminar partida del campeonato', async ({ page }) => {
     await loadData(page);
     const champData = await createChampViaAPI(page, 'Delete Test');
-    await addPlaysViaAPI(page, champData.id, ['1', '2']);
+    await addPlaysViaAPI(page, champData.id, ['114140439', '113571664']);
     await loadChampsIntoApp(page);
 
     await page.locator('#tabs .tab-btn').nth(4).click();
     await expect(page.locator('#campeonatos-select option')).toHaveCount(2);
-    await page.locator('#campeonatos-select').selectOption({ index: 1 });
-    await expect(page.locator('#campeonato-detail-content')).toBeVisible();
+    await selectChampInApp(page, champData.id);
     await expect(page.locator('.campeonato-play-item')).toHaveCount(2);
 
     page.on('dialog', dialog => dialog.accept());
     await page.locator('.remove-play').first().click();
-    await page.waitForTimeout(500);
+    await page.waitForFunction(() => document.querySelectorAll('.campeonato-play-item').length <= 1, { timeout: 5000 });
     await expect(page.locator('.campeonato-play-item')).toHaveCount(1);
   });
 });

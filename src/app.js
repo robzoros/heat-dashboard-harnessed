@@ -113,6 +113,11 @@ const App = {
         document.getElementById('btn-cancel-manual-play').addEventListener('click', () => {
             document.getElementById('add-manual-play-modal').classList.add('hidden');
         });
+        document.getElementById('btn-exit-campeonato').addEventListener('click', () => {
+            this.championships.selected = null;
+            document.getElementById('campeonatos-select').value = '';
+            this.renderChampionships();
+        });
     },
 
     async loadChampionships() {
@@ -174,10 +179,22 @@ const App = {
 
     async addPlaysToChampionship(championshipId, playIds) {
         try {
+            const champ = this.championships.selected;
+            const existingParticipantIds = new Set((champ.participants || []).map(id => String(id)));
+
+            for (const playId of playIds) {
+                const play = this.data.plays.find(p => String(p.id) === String(playId));
+                if (play) {
+                    for (const ps of play.playerScores) {
+                        existingParticipantIds.add(String(ps.playerRefId));
+                    }
+                }
+            }
+            const updatedParticipants = [...existingParticipantIds];
             const response = await fetch(`/bgg-api/championships/${championshipId}/plays`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ playIds })
+                body: JSON.stringify({ playIds, participants: updatedParticipants })
             });
             const result = await response.json();
             if (result.success) {
@@ -186,6 +203,24 @@ const App = {
             }
         } catch (error) {
             console.error('Error adding plays:', error);
+        }
+    },
+
+    async deleteChampionship(championshipId) {
+        try {
+            const response = await fetch(`/bgg-api/championships/${championshipId}`, {
+                method: 'DELETE'
+            });
+            const result = await response.json();
+            if (result.success) {
+                this.championships.selected = null;
+                this.championships.list = this.championships.list.filter(c => c.id !== championshipId);
+                document.getElementById('campeonatos-select').value = '';
+                document.getElementById('campeonato-detail').classList.add('hidden');
+                this.renderChampionshipsSelect();
+            }
+        } catch (error) {
+            console.error('Error deleting championship:', error);
         }
     },
 
@@ -260,6 +295,30 @@ const App = {
             document.querySelectorAll('#import-plays-list input:checked')
         ).map(i => i.value);
         if (selected.length === 0) return;
+
+        const participantIds = new Set((champ.participants || []).map(id => String(id)));
+        const hasParticipants = participantIds.size > 0;
+
+        if (hasParticipants) {
+            const invalidPlays = [];
+            for (const playId of selected) {
+                const play = this.data.plays.find(p => String(p.id) === String(playId));
+                if (play) {
+                    for (const ps of play.playerScores) {
+                        if (!participantIds.has(String(ps.playerRefId))) {
+                            const playerName = this.data.players.find(pl => pl.id === ps.playerRefId)?.name || ps.playerRefId;
+                            invalidPlays.push({ playId, playerName });
+                        }
+                    }
+                }
+            }
+            if (invalidPlays.length > 0) {
+                const names = [...new Set(invalidPlays.map(i => i.playerName))];
+                alert(`No se pueden añadir estas partidas.\n\nEstos jugadores no son participantes del campeonato:\n${names.join(', ')}\n\nAñádelos al campeonato primero.`);
+                return;
+            }
+        }
+
         this.addPlaysToChampionship(champ.id, selected);
         document.getElementById('import-plays-modal').classList.add('hidden');
     },
@@ -949,9 +1008,13 @@ const App = {
         const ownerDisplay = champ.owner ? `👤 Propietario: ${champ.owner}` : '';
 
         const standings = this.getChampionshipStandings(champ);
-        const champPlays = this.data.plays.filter(p =>
+        const bggPlays = this.data.plays.filter(p =>
             champ.playIds.some(pid => String(pid) === String(p.id))
-        ).sort((a, b) => new Date(b.playDate) - new Date(a.playDate));
+        );
+        const manualPlays = (champ.plays || []).filter(p =>
+            champ.playIds.some(pid => String(pid) === String(p.id))
+        );
+        const champPlays = [...bggPlays, ...manualPlays].sort((a, b) => new Date(b.playDate) - new Date(a.playDate));
 
         content.innerHTML = `
             <div class="campeonato-detail-header">
@@ -960,6 +1023,7 @@ const App = {
                 <p style="color:#a0a0a0;margin-top:8px;">Creado: ${date} | Participantes: ${(champ.participants || []).length} | Partidas: ${(champ.playIds || []).length}</p>
                 ${ownerDisplay ? `<p style="color:#a0a0a0;margin-top:4px;">${ownerDisplay}</p>` : ''}
                 ${!isOwner && champ.owner ? '<p style="color:#e94560;margin-top:4px;font-size:0.9rem;">⚠ Solo lectura (no eres el propietario)</p>' : ''}
+                ${!this.bggUsername ? '<p style="color:#e94560;margin-top:4px;font-size:0.9rem;">⚠ Inicia sesión en BGG para editar campeonatos</p>' : ''}
             </div>
             <div class="campeonato-section">
                 <h3>Clasificación</h3>
@@ -983,10 +1047,11 @@ const App = {
             </div>
             <div class="campeonato-section">
                 <h3>Partidas (${champPlays.length})</h3>
-                ${isOwner || !champ.owner ? `
+                ${(isOwner || !champ.owner) && this.bggUsername ? `
                 <div class="campeonato-actions">
                     <button id="btn-import-plays-campeonato" class="btn-primary btn-narrow">+ Importar Partidas</button>
                     <button id="btn-add-manual-play" class="btn-secondary btn-narrow">+ Añadir Partida Manual</button>
+                    <button id="btn-delete-campeonato" class="btn-danger btn-narrow">✕ Borrar Campeonato</button>
                 </div>
                 ` : ''}
                 <div style="margin-top:15px;" class="campeonato-plays-list">
@@ -1016,6 +1081,14 @@ const App = {
                 this.openAddManualPlayModal();
             });
         }
+        const deleteBtn = document.getElementById('btn-delete-campeonato');
+        if (deleteBtn) {
+            deleteBtn.addEventListener('click', () => {
+                if (confirm('¿Eliminar este campeonato? Esta acción no se puede deshacer.')) {
+                    this.deleteChampionship(champ.id);
+                }
+            });
+        }
         content.querySelectorAll('.remove-play').forEach(btn => {
             btn.addEventListener('click', () => {
                 if (confirm('¿Eliminar esta partida del campeonato?')) {
@@ -1026,9 +1099,11 @@ const App = {
     },
 
     getChampionshipStandings(champ) {
-        if (!champ || !champ.playIds || !champ.participants) return [];
-        const champPlayIds = new Set(champ.playIds.map(id => String(id)));
-        const champPlays = this.data.plays.filter(p => champPlayIds.has(String(p.id)));
+        if (!champ || !champ.participants) return [];
+        const champPlayIds = new Set((champ.playIds || []).map(id => String(id)));
+        const bggPlays = this.data.plays.filter(p => champPlayIds.has(String(p.id)));
+        const manualPlays = (champ.plays || []).filter(p => champPlayIds.has(String(p.id)));
+        const allPlays = [...bggPlays, ...manualPlays];
         const participantIds = new Set(champ.participants.map(id => String(id)));
 
         const stats = {};
@@ -1039,7 +1114,7 @@ const App = {
             }
         }
 
-        for (const play of champPlays) {
+        for (const play of allPlays) {
             for (const ps of play.playerScores) {
                 const pid = String(ps.playerRefId);
                 if (participantIds.has(pid) && stats[pid]) {
