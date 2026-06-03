@@ -590,6 +590,25 @@
         ],
         "evidence": "Modificado renderChampionshipDetail(): tabla ahora muestra columnas por partida en lugar de Partidas/Victorias/Puntos. Cabeceras muestran flag emoji + nombre del circuito. Añadido loadChampionships() en loadData() y loadMockData() para cargar campeonatos incluso sin login BGG. Tests: 87/87 pasan."
       }
+    },
+    {
+      "id": "FIX-HDH-04",
+      "priority": 1,
+      "name": "Mejoras en consulta de Campeonatos",
+      "description": [
+        "Al consultar un campeonato (sin haber cargado datos desde BGG), la clasificación aparecía vacía porque getChampionshipStandings() buscaba los jugadores en this.data.players, que estaba vacío.",
+        "Añadir columna 'Total' a la tabla de clasificación del campeonato.",
+        "Mock data SOLO debe usarse para tests, nunca para consulta de campeonatos reales."
+      ],
+      "status": "completed",
+      "verification": {
+        "checks": [
+          "Consultar campeonato sin datos BGG cargados muestra la clasificación correcta",
+          "Tabla de clasificación tiene columna Total",
+          "Tests E2E pasan (87/87)"
+        ],
+        "evidence": "Modificado getChampionshipStandings(): ahora no depende de this.data.players para funcionar. Si el jugador no existe localmente, usa 'Jugador ${pid}'. Añadida columna Total en la tabla. Mock data solo para tests."
+      }
     }
   ]
 }
