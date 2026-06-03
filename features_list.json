@@ -570,6 +570,26 @@
         ],
         "evidence": "HTML: combo box reemplaza tarjetas, eliminado botón Volver, añadido modal partida manual. CSS: estilos para combo box, acciones y formulario manual. JS: renderChampionshipsSelect, openAddManualPlayModal, saveManualPlay, saveChampionshipToServer. Backend: PUT /championships/:id. Tests HDH-09: 6/6 pasados."
       }
+    },
+    {
+      "id": "FIX-HDH-03",
+      "priority": 1,
+      "name": "Correcciones en Tabla de Campeonatos",
+      "description": [
+        "La tabla de clasificación del campeonato muestra una columna 'Partidas' con el número de partidas jugadas. En lugar de esto, se quiere una columna por cada partida mostrando los puntos conseguidos en la misma.",
+        "La cabecera de cada columna de partidas debe ser el nombre del circuito (con flag emoji).",
+        "Cuando no se ha conectado con BGG (usando mock data), los campeonatos no se cargan porque loadMockData() no llama a loadChampionships()."
+      ],
+      "status": "completed",
+      "verification": {
+        "checks": [
+          "La tabla de clasificación tiene una columna por cada partida",
+          "Las cabeceras de las columnas son el nombre del circuito con flag emoji",
+          "Los campeonatos se cargan automáticamente al usar mock data (sin BGG)",
+          "Tests E2E pasan (87/87)"
+        ],
+        "evidence": "Modificado renderChampionshipDetail(): tabla ahora muestra columnas por partida en lugar de Partidas/Victorias/Puntos. Cabeceras muestran flag emoji + nombre del circuito. Añadido loadChampionships() en loadData() y loadMockData() para cargar campeonatos incluso sin login BGG. Tests: 87/87 pasan."
+      }
     }
   ]
 }
