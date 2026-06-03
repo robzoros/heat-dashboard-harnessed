@@ -1028,7 +1028,7 @@ const App = {
                 ${champPlays.length > 0 ? `
                 <table class="standings-table">
                     <thead>
-                        <tr><th></th><th>Jugador</th>${champPlays.map(p => `<th>${this.getTrackFlag(p.board)} ${p.board}</th>`).join('')}</tr>
+                        <tr><th></th><th>Jugador</th>${champPlays.map(p => `<th>${this.getTrackFlag(p.board)} ${p.board}</th>`).join('')}<th>Total</th></tr>
                     </thead>
                     <tbody>
                         ${standings.map((s, i) => `
@@ -1039,6 +1039,7 @@ const App = {
                                     const playerScore = p.playerScores.find(ps => String(ps.playerRefId) === String(s.id));
                                     return `<td>${playerScore ? playerScore.scoreNum : '-'}</td>`;
                                 }).join('')}
+                                <td><strong>${Math.round(s.totalScore)}</strong></td>
                             </tr>
                         `).join('')}
                     </tbody>
@@ -1114,9 +1115,8 @@ const App = {
         const stats = {};
         for (const pid of effectiveParticipantIds) {
             const player = this.data.players.find(p => String(p.id) === String(pid));
-            if (player) {
-                stats[pid] = { id: player.id, name: player.name, plays: 0, wins: 0, totalScore: 0 };
-            }
+            const playerName = player ? player.name : `Jugador ${pid}`;
+            stats[pid] = { id: pid, name: playerName, plays: 0, wins: 0, totalScore: 0 };
         }
 
         for (const play of allPlays) {

@@ -1011,3 +1011,35 @@
 
 #### Notas / Riesgos
 - Ninguno. Fix simple y controlado.
+
+---
+
+## Sesión 2026-06-03
+
+### Feature trabajada: FIX-HDH-04 - Mejoras en consulta de Campeonatos
+
+**Estado**: Completada
+
+#### Evidencia
+- **Bug 1 - Clasificación vacía tras recargar página**:
+  - `getChampionshipStandings()` ahora NO requiere que el jugador exista en `this.data.players`
+  - Si el jugador no existe en datos cargados, usa `Jugador ${pid}` como nombre
+  - Los datos del campeonato vienen del fichero JSON guardado, no de datos en memoria
+- **Bug 2 - Falta columna Total en tabla**:
+  - Añadida columna `<th>Total</th>` en la cabecera de la tabla
+  - Celda `<td><strong>${Math.round(s.totalScore)}</strong></td>` muestra la puntuación total
+
+#### Tareas completadas
+1. Modificar getChampionshipStandings() para funcionar sin datos BGG cargados
+2. Añadir columna Total a la tabla de clasificación
+3. Verificar con tests E2E (87/87 pasan)
+
+#### Verificación final
+- docker compose config --quiet: OK
+- node --check src/app.js: OK
+- docker compose up -d --build: OK
+- curl localhost:8082: HTTP 200 con DOCTYPE html
+- npx playwright test: 87/87 tests pasados
+
+#### Notas / Riesgos
+- Mock data SOLO se usa para tests, no para consulta de campeonatos reales
