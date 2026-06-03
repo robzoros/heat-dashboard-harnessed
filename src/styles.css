@@ -185,13 +185,20 @@ body.panel-open .btn-toggle {
     max-height: 160px;
     overflow-y: auto;
     margin-bottom: 8px;
+    padding-right: 10px;
 }
 
 .filter-list label {
-    display: block;
+    display: flex;
+    align-items: center;
     padding: 4px 0;
     cursor: pointer;
     font-size: 0.95rem;
+}
+
+.filter-list input {
+    margin-right: 8px;
+    flex-shrink: 0;
 }
 
 .filter-mode select {
@@ -687,17 +694,20 @@ th {
     overflow-y: auto;
     margin-bottom: 15px;
     text-align: left;
+    padding-right: 10px;
 }
 
 #new-campeonato-players label {
-    display: block;
-    padding: 4px 0;
+    display: flex;
+    align-items: center;
+    padding: 6px 0;
     cursor: pointer;
     font-size: 0.95rem;
 }
 
 #new-campeonato-players input {
-    margin-right: 8px;
+    margin-right: 10px;
+    flex-shrink: 0;
 }
 
 #import-plays-modal .filter-list {
@@ -721,6 +731,7 @@ th {
     overflow-y: auto;
     margin-bottom: 15px;
     text-align: left;
+    padding-right: 10px;
 }
 
 .player-manager-row {
@@ -734,6 +745,8 @@ th {
 .player-manager-name {
     font-family: 'Barlow Condensed', sans-serif;
     font-size: 1.1rem;
+    flex: 1;
+    margin-right: 10px;
 }
 
 .player-manager-select {
@@ -743,6 +756,7 @@ th {
     color: white;
     font-size: 0.85rem;
     border-radius: 4px;
+    flex-shrink: 0;
 }
 
 /* Cookie Consent Banner */
