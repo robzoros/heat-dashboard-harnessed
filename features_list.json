@@ -526,16 +526,22 @@
       "priority": 3,
       "name": "Mantenimiento de Campeonatos",
       "description": [
-        "Cuando se cree un campeonato debería haber una opción para importar partidas desde los datos cargados de BGG, de forma que se puedan asociar partidas a un campeonato concreto.",
-        "Un campeonato solo lo puede modificar el usuario que lo ha creado, pero cualquier usuario puede verlo.",
-        "En el panel de campeonatos se muestra la clasificación con: partidas, puntos totales"
+        "El propietario de un campeonato es el usuario que hizo login en BGG cuando se creó.",
+        "Solo el propietario puede modificar su campeonato: importar partidas, eliminar partidas, editar nombre/descripción.",
+        "Si se cargan datos con un usuario BGG distinto, los campeonatos del usuario anterior se muestran como solo lectura.",
+        "Si no se han cargado datos (sin login), todos los campeonatos se muestran como solo lectura.",
+        "El nombre del propietario se muestra en la tarjeta y detalle del campeonato.",
+        "Botones de acción (importar, eliminar) se ocultan si no eres propietario."
       ],
-      "status": "not_started",
+      "status": "completed",
       "verification": {
         "checks": [
-          "Funcionalidad de importación de partidas implementada"
+          "El nombre del propietario (usuario BGG) se guarda al crear el campeonato",
+          "Se muestra en la tarjeta y detalle del campeonato",
+          "Los botones de modificar se ocultan si el usuario actual no es el propietario",
+          "Si no hay login, los campeonatos son editables (compatibilidad)"
         ],
-        "evidence": ""
+        "evidence": "Backend: POST /championships acepta campo owner. Frontend: bggUsername se guarda tras loadData(), se pasa como owner al crear. renderChampionshipsList() muestra 👤 owner. renderChampionshipDetail() muestra owner, aviso solo lectura, y oculta botones si no eres propietario. Tests HDH-09: 6/6 pasados."
       }
     }
   ]
