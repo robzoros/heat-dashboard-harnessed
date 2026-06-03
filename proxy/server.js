@@ -351,6 +351,27 @@ const server = http.createServer((req, res) => {
                 sendJson(res, 500, { success: false, error: error.message });
             }
         });
+    // PUT /championships/:id — update a championship
+    } else if (req.method === 'PUT' && parts.length === 2 && parts[0] === 'championships') {
+        let body = '';
+        req.on('data', chunk => body += chunk);
+        req.on('end', () => {
+            try {
+                const id = parts[1];
+                const existing = readChampionship(id);
+                if (!existing) {
+                    sendJson(res, 404, { success: false, error: 'Championship not found' });
+                    return;
+                }
+                const updated = JSON.parse(body);
+                const championship = { ...existing, ...updated, id: existing.id, createdAt: existing.createdAt };
+                writeChampionship(championship);
+                sendJson(res, 200, { success: true, data: championship });
+            } catch (error) {
+                console.error('Update championship error:', error.message);
+                sendJson(res, 500, { success: false, error: error.message });
+            }
+        });
     // DELETE /championships/:id — delete a championship
     } else if (req.method === 'DELETE' && parts.length === 2 && parts[0] === 'championships') {
         try {

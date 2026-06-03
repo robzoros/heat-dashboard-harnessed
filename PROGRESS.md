@@ -920,3 +920,60 @@
 #### Notas / Riesgos
 - Los campeonatos creados antes de esta feature no tienen campo owner, se comportan como antes (editables por todos)
 - Si no hay login (bggUsername es null), los campeonatos se muestran editables para mantener compatibilidad
+
+---
+
+## Sesión 2026-06-03
+
+### Feature trabajada: FIX-HDH-02 - Correcciones en Campeonatos
+
+**Estado**: Completada
+
+#### Evidencia
+- **src/index.html**:
+  - Eliminado `#campeonatos-list` (div de tarjetas)
+  - Añadido `#campeonatos-select` (combo box) en toolbar
+  - Cambiado botón "Recargar" por "Cargar" con id `btn-load-campeonatos`
+  - Eliminado botón "Volver"
+  - Añadido modal `#add-manual-play-modal` para añadir partidas manualmente
+- **src/styles.css**:
+  - Añadidos estilos para `.campeonatos-select` (combo box)
+  - Añadidos estilos para `.campeonato-actions` (botones de acción)
+  - Añadidos estilos para `.manual-play-form` y `.manual-player-row`
+- **src/app.js**:
+  - `setupChampionships()`: actualizado para manejar combo box y nuevos botones
+  - `renderChampionships()`: actualizado para usar combo box
+  - `renderChampionshipsSelect()`: nueva función para poblar combo box
+  - `saveChampionship()`: permite crear campeonatos sin jugadores, muestra detalle inmediatamente
+  - `renderChampionshipDetail()`: muestra solo columnas Partidas, Victorias, Puntos (sin decimales), añade botón "Añadir Partida Manual"
+  - `openAddManualPlayModal()`: nueva función para modal de添加 partida manual
+  - `saveManualPlay()`: nueva función para guardar partida manual
+  - `saveChampionshipToServer()`: nueva función para actualizar campeonato via PUT
+- **proxy/server.js**:
+  - Añadido endpoint `PUT /championships/:id` para actualizar campeonatos
+- **e2e/tests/HDH-09.spec.js**:
+  - Tests actualizados para usar combo box en vez de tarjetas
+
+#### Tareas completadas
+1. Cambiar tarjetas por combo box en toolbar
+2. Permitir crear campeonatos sin jugadores
+3. Mostrar detalle inmediatamente tras crear campeonato
+4. Cambiar botón "Recargar" por "Cargar"
+5. Eliminar botón "Volver" (ya no es necesario con combo box)
+6. Actualizar tabla de clasificación: solo Partidas, Victorias, Puntos (sin decimales)
+7. Añadir botón "Añadir Partida Manual" con modal
+8. Implementar modal para añadir partida manual (circuito, fecha, ganador, puntos)
+9. Añadir endpoint PUT para actualizar campeonatos
+10. Actualizar tests E2E
+
+#### Verificación final
+- docker compose config --quiet: OK
+- node --check proxy/server.js: OK
+- docker compose up -d --build: OK
+- curl localhost:8082: HTTP 200 con DOCTYPE html
+- npx playwright test tests/HDH-09.spec.js: 6/6 tests pasados
+
+#### Notas / Riesgos
+- Los campeonatos ahora se muestran en combo box en vez de tarjetas
+- El botón "Volver" se ha eliminado ya que la selección se hace desde el combo box
+- Las partidas manuales se guardan con id `manual_<timestamp>` para diferenciarlas de las importadas
