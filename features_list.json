@@ -511,10 +511,29 @@
         "Mover los combo boxes para que no estén tapados por la barra de scrolll vertical",
         "En la ventana modal de creación de campeoonatos, los checkboxes no están bien alineados con los nombres de los jugadores"
       ],
+      "status": "completed",
+      "verification": {
+        "checks": [
+          "Barra de scroll no tapa combo boxes en modal de gestión de jugadores",
+          "Checkboxes bien alineados con nombres en modal de creación de campeonatos",
+          "Tests existentes pasan"
+        ],
+        "evidence": "CSS actualizado: player-manager-list con padding-right, player-manager-name con flex:1, player-manager-select con flex-shrink:0. new-campeonato-players con padding-right, labels con display:flex align-items:center, inputs con flex-shrink:0. filter-list mejorado para consistencia. Tests HDH-10 (5/5), HDH-11 (6/6), HDH-09 (6/6), app base (6/6) pasan."
+      }
+    },
+    {
+      "id": "HDH-12",
+      "priority": 3,
+      "name": "Mantenimiento de Campeonatos",
+      "description": [
+        "Cuando se cree un campeonato debería haber una opción para importar partidas desde los datos cargados de BGG, de forma que se puedan asociar partidas a un campeonato concreto.",
+        "Un campeonato solo lo puede modificar el usuario que lo ha creado, pero cualquier usuario puede verlo.",
+        "En el panel de campeonatos se muestra la clasificación con: partidas, puntos totales"
+      ],
       "status": "not_started",
       "verification": {
         "checks": [
-          "UI mejorada"
+          "Funcionalidad de importación de partidas implementada"
         ],
         "evidence": ""
       }

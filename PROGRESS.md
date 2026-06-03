@@ -836,3 +836,44 @@
 
 #### Próximo paso
 - Feature FIX-HDH-01 - Mejoras UI
+
+---
+
+## Sesión 2026-06-03
+
+### Feature trabajada: FIX-HDH-01 - Mejoras UI
+
+**Estado**: Completada
+
+#### Evidencia
+- **src/styles.css** actualizado con mejoras de UI:
+  - `.player-manager-list`: añadido `padding-right: 10px` para evitar que la barra de scroll tape los combo boxes
+  - `.player-manager-name`: añadido `flex: 1` y `margin-right: 10px` para mejor alineación
+  - `.player-manager-select`: añadido `flex-shrink: 0` para mantener tamaño fijo
+  - `#new-campeonato-players`: añadido `padding-right: 10px` para scrollbar
+  - `#new-campeonato-players label`: cambiado a `display: flex` con `align-items: center` para mejor alineación de checkboxes
+  - `#new-campeonato-players input`: añadido `flex-shrink: 0` para mantener tamaño fijo
+  - `.filter-list`: añadido `padding-right: 10px` y cambiado a `display: flex` con `align-items: center`
+  - `.filter-list input`: añadido `flex-shrink: 0` para mantener tamaño fijo
+
+#### Tareas completadas
+1. Diagnosticar problemas de UI en modales de jugadores y campeonatos
+2. Actualizar CSS para evitar que barras de scroll tapen elementos interactivos
+3. Mejorar alineación de checkboxes en modal de creación de campeonatos
+4. Aplicar mejoras a todos los filter-list para consistencia
+5. Verificar que tests existentes siguen pasando (HDH-10, HDH-11, HDH-09, app base)
+
+#### Verificación final
+- docker compose config --quiet: OK
+- node --check proxy/server.js: OK
+- docker compose up -d --build: OK
+- curl localhost:8082: HTTP 200 con DOCTYPE html
+- npx playwright test tests/HDH-10.spec.js: 5/5 tests pasados
+- npx playwright test tests/HDH-11.spec.js: 6/6 tests pasados
+- npx playwright test tests/HDH-09.spec.js: 6/6 tests pasados
+- npx playwright test tests/app.spec.js: 6/6 tests pasados
+
+#### Notas / Riesgos
+- Los cambios son puramente de UI/CSS y no afectan funcionalidad existente
+- Se mejoró la experiencia de usuario al evitar que barras de scroll tapen elementos interactivos
+- Todos los tests existentes pasan sin problemas
