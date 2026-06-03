@@ -408,6 +408,7 @@ const App = {
             this.populateFilters();
             this.updateHeaderStats();
             this.renderAll();
+            this.loadChampionships();
         } catch (error) {
             console.error('Error loading data:', error);
             this.loadMockData();
@@ -468,6 +469,7 @@ const App = {
         this.populateFilters();
         this.updateHeaderStats();
         this.renderAll();
+        this.loadChampionships();
     },
 
     populateFilters() {
@@ -1023,19 +1025,20 @@ const App = {
             </div>
             <div class="campeonato-section">
                 <h3>Clasificación</h3>
-                ${standings.length > 0 ? `
+                ${champPlays.length > 0 ? `
                 <table class="standings-table">
                     <thead>
-                        <tr><th></th><th>Jugador</th><th>Partidas</th><th>Victorias</th><th>Puntos</th></tr>
+                        <tr><th></th><th>Jugador</th>${champPlays.map(p => `<th>${this.getTrackFlag(p.board)} ${p.board}</th>`).join('')}</tr>
                     </thead>
                     <tbody>
                         ${standings.map((s, i) => `
                             <tr>
                                 <td class="pos">${i === 0 ? '<span class="medal">🥇</span>' : i === 1 ? '<span class="medal">🥈</span>' : i === 2 ? '<span class="medal">🥉</span>' : i + 1}</td>
                                 <td>${s.name}</td>
-                                <td>${s.plays}</td>
-                                <td>${s.wins}</td>
-                                <td>${Math.round(s.totalScore)}</td>
+                                ${champPlays.map(p => {
+                                    const playerScore = p.playerScores.find(ps => String(ps.playerRefId) === String(s.id));
+                                    return `<td>${playerScore ? playerScore.scoreNum : '-'}</td>`;
+                                }).join('')}
                             </tr>
                         `).join('')}
                     </tbody>

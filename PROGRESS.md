@@ -977,3 +977,37 @@
 - Los campeonatos ahora se muestran en combo box en vez de tarjetas
 - El botón "Volver" se ha eliminado ya que la selección se hace desde el combo box
 - Las partidas manuales se guardan con id `manual_<timestamp>` para diferenciarlas de las importadas
+
+---
+
+## Sesión 2026-06-03
+
+### Feature trabajada: FIX-HDH-03 - Correcciones en Tabla de Campeonatos
+
+**Estado**: Completada
+
+#### Evidencia
+- **Bug 1 - Columna Partidas vs columnas por partida**:
+  - `renderChampionshipDetail()` modificado para mostrar UNA COLUMNA POR PARTIDA en la tabla de clasificación
+  - Cabeceras de columnas: `${flag} ${p.board}` (flag emoji + nombre del circuito)
+  - Celda para cada jugador/partida: muestra `playerScore.scoreNum` o `-` si no participó
+- **Bug 2 - Campeonatos no cargan sin BGG**:
+  - Añadido `this.loadChampionships()` al final de `loadData()` (tras login BGG exitoso)
+  - Añadido `this.loadChampionships()` al final de `loadMockData()` (cuando no hay conexión BGG)
+  - Ahora los campeonatos están disponibles tanto con datos reales como con mock data
+
+#### Tareas completadas
+1. Cambiar tabla de clasificación: columna por partida con puntos
+2. Cabeceras de columnas muestran flag emoji + nombre del circuito
+3. Cargar campeonatos automáticamente tras loadData() y loadMockData()
+4. Verificar con tests E2E (87/87 pasan)
+
+#### Verificación final
+- docker compose config --quiet: OK
+- node --check src/app.js: OK
+- docker compose up -d --build: OK
+- curl localhost:8082: HTTP 200 con DOCTYPE html
+- npx playwright test: 87/87 tests pasados
+
+#### Notas / Riesgos
+- Ninguno. Fix simple y controlado.
