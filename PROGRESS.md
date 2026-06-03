@@ -877,3 +877,46 @@
 - Los cambios son puramente de UI/CSS y no afectan funcionalidad existente
 - Se mejoró la experiencia de usuario al evitar que barras de scroll tapen elementos interactivos
 - Todos los tests existentes pasan sin problemas
+
+---
+
+## Sesión 2026-06-03
+
+### Feature trabajada: HDH-12 - Mantenimiento de Campeonatos
+
+**Estado**: Completada
+
+#### Evidencia
+- **proxy/server.js**: Endpoint POST /championships ahora acepta campo `owner` (usuario BGG)
+- **src/app.js**:
+  - Añadida propiedad `bggUsername` para almacenar el usuario BGG tras login
+  - `loadData()` guarda `this.bggUsername = username` tras login exitoso
+  - `createChampionship()` pasa `owner` al backend
+  - `saveChampionship()` incluye `this.bggUsername` como propietario
+  - `renderChampionshipsList()` muestra 👤 propietario en tarjeta
+  - `renderChampionshipDetail()`:
+    - Muestra propietario en cabecera
+    - Muestra aviso "⚠ Solo lectura (no eres el propietario)" si no eres el owner
+    - Oculta botón "Importar Partidas" si no eres propietario
+    - Oculta botones "✕" de eliminar partida si no eres propietario
+- **features_list.json**: Descripción actualizada con reglas de propiedad
+
+#### Tareas completadas
+1. Actualizar backend para guardar propietario (owner) al crear campeonato
+2. Almacenar username BGG tras login en frontend
+3. Pasar username como owner al crear campeonato
+4. Mostrar propietario en tarjeta de campeonato
+5. Mostrar propietario y aviso de solo lectura en detalle
+6. Ocultar botones de edición si no eres propietario
+7. Verificar que tests existentes siguen pasando
+
+#### Verificación final
+- docker compose config --quiet: OK
+- node --check proxy/server.js: OK
+- docker compose up -d --build: OK
+- curl localhost:8082: HTTP 200 con DOCTYPE html
+- npx playwright test tests/HDH-09.spec.js: 6/6 tests pasados
+
+#### Notas / Riesgos
+- Los campeonatos creados antes de esta feature no tienen campo owner, se comportan como antes (editables por todos)
+- Si no hay login (bggUsername es null), los campeonatos se muestran editables para mantener compatibilidad

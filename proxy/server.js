@@ -287,7 +287,7 @@ const server = http.createServer((req, res) => {
         req.on('data', chunk => body += chunk);
         req.on('end', () => {
             try {
-                const { name, description, participants } = JSON.parse(body);
+                const { name, description, participants, owner } = JSON.parse(body);
                 if (!name || !name.trim()) {
                     sendJson(res, 400, { success: false, error: 'Name is required' });
                     return;
@@ -297,6 +297,7 @@ const server = http.createServer((req, res) => {
                     name: name.trim(),
                     description: (description || '').trim(),
                     createdAt: new Date().toISOString(),
+                    owner: owner || null,
                     participants: participants || [],
                     playIds: []
                 };

@@ -17,6 +17,7 @@ const App = {
         list: [],
         selected: null
     },
+    bggUsername: null,
 
     init() {
         this.setupTabs();
@@ -116,12 +117,12 @@ const App = {
         }
     },
 
-    async createChampionship(name, description, participants) {
+    async createChampionship(name, description, participants, owner) {
         try {
             const response = await fetch('/bgg-api/championships', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name, description, participants })
+                body: JSON.stringify({ name, description, participants, owner })
             });
             const result = await response.json();
             return result;
@@ -200,7 +201,7 @@ const App = {
             alert('Selecciona al menos un participante');
             return;
         }
-        this.createChampionship(name, description, selectedPlayers).then(result => {
+        this.createChampionship(name, description, selectedPlayers, this.bggUsername).then(result => {
             if (result.success) {
                 document.getElementById('create-campeonato-modal').classList.add('hidden');
                 this.loadChampionships();
@@ -249,6 +250,7 @@ const App = {
             document.getElementById('login-modal').classList.add('hidden');
             if (result.success && result.data) {
                 this.data = result.data;
+                this.bggUsername = username;
                 this.originalPlayers = this.data.players.map(p => ({ ...p }));
                 this.applyPlayerOverrides();
                 console.log('BGG Data loaded:');
@@ -848,10 +850,12 @@ const App = {
         }
         listEl.innerHTML = this.championships.list.map(champ => {
             const date = new Date(champ.createdAt).toLocaleDateString('es-ES');
+            const ownerDisplay = champ.owner ? `👤 ${champ.owner}` : '';
             return `
                 <div class="campeonato-card" data-champ-id="${champ.id}">
                     <h3>${this.escapeHtml(champ.name)}</h3>
                     <p>${champ.description ? this.escapeHtml(champ.description) : 'Sin descripción'}</p>
+                    ${ownerDisplay ? `<p style="color:#a0a0a0;font-size:0.85rem;">${ownerDisplay}</p>` : ''}
                     <div class="campeonato-meta">
                         <span>👥 ${champ.participantCount} jugs</span>
                         <span>🎲 ${champ.playCount} partidas</span>
@@ -872,6 +876,8 @@ const App = {
         if (!champ) return;
         const content = document.getElementById('campeonato-detail-content');
         const date = new Date(champ.createdAt).toLocaleDateString('es-ES');
+        const isOwner = champ.owner && this.bggUsername && champ.owner === this.bggUsername;
+        const ownerDisplay = champ.owner ? `👤 Propietario: ${champ.owner}` : '';
 
         const standings = this.getChampionshipStandings(champ);
         const champPlays = this.data.plays.filter(p =>
@@ -883,6 +889,8 @@ const App = {
                 <h2>${this.escapeHtml(champ.name)}</h2>
                 <p>${champ.description ? this.escapeHtml(champ.description) : 'Sin descripción'}</p>
                 <p style="color:#a0a0a0;margin-top:8px;">Creado: ${date} | Participantes: ${(champ.participants || []).length} | Partidas: ${(champ.playIds || []).length}</p>
+                ${ownerDisplay ? `<p style="color:#a0a0a0;margin-top:4px;">${ownerDisplay}</p>` : ''}
+                ${!isOwner && champ.owner ? '<p style="color:#e94560;margin-top:4px;font-size:0.9rem;">⚠ Solo lectura (no eres el propietario)</p>' : ''}
             </div>
             <div class="campeonato-section">
                 <h3>Clasificación</h3>
@@ -907,7 +915,7 @@ const App = {
             </div>
             <div class="campeonato-section">
                 <h3>Partidas (${champPlays.length})</h3>
-                <button id="btn-import-plays-campeonato" class="btn-primary btn-narrow">+ Importar Partidas</button>
+                ${isOwner || !champ.owner ? `<button id="btn-import-plays-campeonato" class="btn-primary btn-narrow">+ Importar Partidas</button>` : ''}
                 <div style="margin-top:15px;" class="campeonato-plays-list">
                     ${champPlays.map(p => {
                         const winnerPs = p.playerScores.find(ps => ps.winner);
@@ -916,16 +924,19 @@ const App = {
                         return `
                             <div class="campeonato-play-item">
                                 <span>${p.playDate} | ${flag} ${p.board} | Ganador: ${winnerName}</span>
-                                <button class="remove-play" data-play-id="${p.id}">✕</button>
+                                ${isOwner || !champ.owner ? `<button class="remove-play" data-play-id="${p.id}">✕</button>` : ''}
                             </div>
                         `;
                     }).join('')}
                 </div>
             </div>
         `;
-        document.getElementById('btn-import-plays-campeonato').addEventListener('click', () => {
-            this.openImportPlaysModal();
-        });
+        const importBtn = document.getElementById('btn-import-plays-campeonato');
+        if (importBtn) {
+            importBtn.addEventListener('click', () => {
+                this.openImportPlaysModal();
+            });
+        }
         content.querySelectorAll('.remove-play').forEach(btn => {
             btn.addEventListener('click', () => {
                 if (confirm('¿Eliminar esta partida del campeonato?')) {
