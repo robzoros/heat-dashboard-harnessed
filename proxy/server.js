@@ -206,7 +206,7 @@ function listChampionships() {
     const files = fs.readdirSync(CHAMPIONSHIPS_DIR).filter(f => f.endsWith('.json'));
     return files.map(f => {
         const data = JSON.parse(fs.readFileSync(path.join(CHAMPIONSHIPS_DIR, f), 'utf8'));
-        return { id: data.id, name: data.name, description: data.description, createdAt: data.createdAt, participantCount: (data.participants || []).length, playCount: (data.playIds || []).length };
+        return { id: data.id, name: data.name, description: data.description, createdAt: data.createdAt, participantCount: (data.participants || []).length, playCount: (data.plays || data.playIds || []).length };
     }).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 }
 
@@ -334,18 +334,21 @@ const server = http.createServer((req, res) => {
                     sendJson(res, 404, { success: false, error: 'Championship not found' });
                     return;
                 }
-                const { playIds, participants } = JSON.parse(body);
-                if (!Array.isArray(playIds)) {
-                    sendJson(res, 400, { success: false, error: 'playIds must be an array' });
+                const { plays, participants } = JSON.parse(body);
+                if (!Array.isArray(plays)) {
+                    sendJson(res, 400, { success: false, error: 'plays must be an array' });
                     return;
                 }
-                const existing = new Set(championship.playIds);
-                for (const playId of playIds) {
-                    existing.add(String(playId));
+                if (!championship.plays) championship.plays = [];
+                const existingPlayIds = new Set(championship.plays.map(p => String(p.id)));
+                for (const play of plays) {
+                    if (!existingPlayIds.has(String(play.id))) {
+                        championship.plays.push(play);
+                        existingPlayIds.add(String(play.id));
+                    }
                 }
-                championship.playIds = [...existing];
                 if (Array.isArray(participants)) {
-                    championship.participants = participants;
+                    championship.participants = [...new Set([...(championship.participants || []), ...participants].map(id => String(id)))];
                 }
                 writeChampionship(championship);
                 sendJson(res, 200, { success: true, data: championship });
@@ -400,7 +403,7 @@ const server = http.createServer((req, res) => {
                 sendJson(res, 404, { success: false, error: 'Championship not found' });
                 return;
             }
-            championship.playIds = championship.playIds.filter(pid => String(pid) !== String(playId));
+            championship.plays = (championship.plays || []).filter(p => String(p.id) !== String(playId));
             writeChampionship(championship);
             sendJson(res, 200, { success: true, data: championship });
         } catch (error) {

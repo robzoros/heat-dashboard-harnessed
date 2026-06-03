@@ -118,7 +118,21 @@ test.describe('HDH-09 - Pestaña Campeonatos', () => {
   async function addPlaysViaAPI(page, champId, playIds) {
     const baseUrl = 'http://localhost:8082';
     const http = await import('http');
-    const postData = JSON.stringify({ playIds });
+    const allPlaysData = await new Promise((resolve, reject) => {
+      const req = http.request(`${baseUrl}/bgg-api/test-login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+      }, res => {
+        let d = '';
+        res.on('data', c => d += c);
+        res.on('end', () => resolve(JSON.parse(d)));
+      });
+      req.on('error', reject);
+      req.write('{}');
+      req.end();
+    });
+    const fullPlays = allPlaysData.data.plays.filter(p => playIds.includes(String(p.id)));
+    const postData = JSON.stringify({ plays: fullPlays });
     await new Promise((resolve, reject) => {
       const req = http.request(`${baseUrl}/bgg-api/championships/${champId}/plays`, {
         method: 'POST',

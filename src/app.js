@@ -182,10 +182,12 @@ const App = {
         try {
             const champ = this.championships.selected;
             const existingParticipantIds = new Set((champ.participants || []).map(id => String(id)));
+            const fullPlays = [];
 
             for (const playId of playIds) {
                 const play = this.data.plays.find(p => String(p.id) === String(playId));
                 if (play) {
+                    fullPlays.push(play);
                     for (const ps of play.playerScores) {
                         existingParticipantIds.add(String(ps.playerRefId));
                     }
@@ -195,7 +197,7 @@ const App = {
             const response = await fetch(`/bgg-api/championships/${championshipId}/plays`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ playIds, participants: updatedParticipants })
+                body: JSON.stringify({ plays: fullPlays, participants: updatedParticipants })
             });
             const result = await response.json();
             if (result.success) {
@@ -378,7 +380,6 @@ const App = {
         };
         if (!champ.plays) champ.plays = [];
         champ.plays.push(newPlay);
-        champ.playIds.push(newPlay.id);
         this.saveChampionshipToServer(champ);
         document.getElementById('add-manual-play-modal').classList.add('hidden');
         this.renderChampionshipDetail();
@@ -1009,13 +1010,7 @@ const App = {
         const ownerDisplay = champ.owner ? `👤 Propietario: ${champ.owner}` : '';
 
         const standings = this.getChampionshipStandings(champ);
-        const bggPlays = this.data.plays.filter(p =>
-            champ.playIds.some(pid => String(pid) === String(p.id))
-        );
-        const manualPlays = (champ.plays || []).filter(p =>
-            champ.playIds.some(pid => String(pid) === String(p.id))
-        );
-        const champPlays = [...bggPlays, ...manualPlays].sort((a, b) => new Date(b.playDate) - new Date(a.playDate));
+        const champPlays = (champ.plays || []).sort((a, b) => new Date(b.playDate) - new Date(a.playDate));
 
         content.innerHTML = `
             <div class="campeonato-detail-header">
@@ -1101,10 +1096,7 @@ const App = {
 
     getChampionshipStandings(champ) {
         if (!champ) return [];
-        const champPlayIds = new Set((champ.playIds || []).map(id => String(id)));
-        const bggPlays = this.data.plays.filter(p => champPlayIds.has(String(p.id)));
-        const manualPlays = (champ.plays || []).filter(p => champPlayIds.has(String(p.id)));
-        const allPlays = [...bggPlays, ...manualPlays];
+        const allPlays = champ.plays || [];
 
         const allPlayerIds = new Set();
         for (const play of allPlays) {
