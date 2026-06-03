@@ -83,8 +83,17 @@ const App = {
         document.getElementById('btn-create-campeonato').addEventListener('click', () => {
             this.showCreateChampionshipModal();
         });
-        document.getElementById('btn-refresh-campeonatos').addEventListener('click', () => {
+        document.getElementById('btn-load-campeonatos').addEventListener('click', () => {
             this.loadChampionships();
+        });
+        document.getElementById('campeonatos-select').addEventListener('change', (e) => {
+            const id = e.target.value;
+            if (id) {
+                this.selectChampionship(id);
+            } else {
+                this.championships.selected = null;
+                this.renderChampionshipDetail();
+            }
         });
         document.getElementById('btn-save-campeonato').addEventListener('click', () => {
             this.saveChampionship();
@@ -92,15 +101,17 @@ const App = {
         document.getElementById('btn-cancel-create-campeonato').addEventListener('click', () => {
             document.getElementById('create-campeonato-modal').classList.add('hidden');
         });
-        document.getElementById('btn-back-campeonatos').addEventListener('click', () => {
-            this.championships.selected = null;
-            this.renderChampionships();
-        });
         document.getElementById('btn-import-plays').addEventListener('click', () => {
             this.importSelectedPlays();
         });
         document.getElementById('btn-cancel-import-plays').addEventListener('click', () => {
             document.getElementById('import-plays-modal').classList.add('hidden');
+        });
+        document.getElementById('btn-save-manual-play').addEventListener('click', () => {
+            this.saveManualPlay();
+        });
+        document.getElementById('btn-cancel-manual-play').addEventListener('click', () => {
+            document.getElementById('add-manual-play-modal').classList.add('hidden');
         });
     },
 
@@ -129,6 +140,22 @@ const App = {
         } catch (error) {
             console.error('Error creating championship:', error);
             return { success: false, error: error.message };
+        }
+    },
+
+    async saveChampionshipToServer(champ) {
+        try {
+            const response = await fetch(`/bgg-api/championships/${champ.id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(champ)
+            });
+            const result = await response.json();
+            if (result.success) {
+                this.championships.selected = result.data;
+            }
+        } catch (error) {
+            console.error('Error saving championship:', error);
         }
     },
 
@@ -197,14 +224,12 @@ const App = {
             alert('El nombre es obligatorio');
             return;
         }
-        if (selectedPlayers.length === 0) {
-            alert('Selecciona al menos un participante');
-            return;
-        }
         this.createChampionship(name, description, selectedPlayers, this.bggUsername).then(result => {
             if (result.success) {
                 document.getElementById('create-campeonato-modal').classList.add('hidden');
-                this.loadChampionships();
+                this.loadChampionships().then(() => {
+                    this.selectChampionship(result.data.id);
+                });
             } else {
                 alert('Error: ' + (result.error || 'No se pudo crear el campeonato'));
             }
@@ -237,6 +262,66 @@ const App = {
         if (selected.length === 0) return;
         this.addPlaysToChampionship(champ.id, selected);
         document.getElementById('import-plays-modal').classList.add('hidden');
+    },
+
+    openAddManualPlayModal() {
+        const champ = this.championships.selected;
+        if (!champ) return;
+        const boardSelect = document.getElementById('manual-play-board');
+        boardSelect.innerHTML = this.data.boards.map(b => 
+            `<option value="${b.name}">${b.name}</option>`
+        ).join('');
+        document.getElementById('manual-play-date').value = new Date().toISOString().split('T')[0];
+        const playersDiv = document.getElementById('manual-play-players');
+        const participants = champ.participants || [];
+        playersDiv.innerHTML = participants.map(pid => {
+            const player = this.data.players.find(p => String(p.id) === String(pid));
+            if (!player) return '';
+            return `
+                <div class="manual-player-row">
+                    <span class="manual-player-name">${player.name}</span>
+                    <input type="number" class="manual-player-score" data-player-id="${pid}" placeholder="Pts" min="0">
+                    <label class="manual-player-winner">
+                        <input type="radio" name="manual-winner" value="${pid}"> Ganador
+                    </label>
+                </div>
+            `;
+        }).join('');
+        if (participants.length === 0) {
+            playersDiv.innerHTML = '<p style="color:#a0a0a0;text-align:center;">No hay participantes. Añade jugadores al campeonato primero.</p>';
+        }
+        document.getElementById('add-manual-play-modal').classList.remove('hidden');
+    },
+
+    saveManualPlay() {
+        const champ = this.championships.selected;
+        if (!champ) return;
+        const board = document.getElementById('manual-play-board').value;
+        const date = document.getElementById('manual-play-date').value;
+        const winnerRadio = document.querySelector('input[name="manual-winner"]:checked');
+        if (!winnerRadio) {
+            alert('Selecciona un ganador');
+            return;
+        }
+        const winnerId = winnerRadio.value;
+        const playerScores = Array.from(document.querySelectorAll('.manual-player-score')).map(input => ({
+            playerRefId: input.dataset.playerId,
+            score: parseInt(input.value) || 0,
+            scoreNum: parseInt(input.value) || 0,
+            winner: input.dataset.playerId === winnerId
+        }));
+        const newPlay = {
+            id: `manual_${Date.now()}`,
+            playDate: date,
+            board: board,
+            playerScores: playerScores
+        };
+        if (!champ.plays) champ.plays = [];
+        champ.plays.push(newPlay);
+        champ.playIds.push(newPlay.id);
+        this.saveChampionshipToServer(champ);
+        document.getElementById('add-manual-play-modal').classList.add('hidden');
+        this.renderChampionshipDetail();
     },
 
     async loadData(username, password) {
@@ -829,46 +914,30 @@ const App = {
     },
 
     renderChampionships() {
-        const listEl = document.getElementById('campeonatos-list');
         const detailEl = document.getElementById('campeonato-detail');
+        const selectEl = document.getElementById('campeonatos-select');
         if (this.championships.selected) {
-            listEl.classList.add('hidden');
             detailEl.classList.remove('hidden');
             this.renderChampionshipDetail();
         } else {
-            listEl.classList.remove('hidden');
             detailEl.classList.add('hidden');
-            this.renderChampionshipsList();
         }
+        this.renderChampionshipsSelect();
     },
 
-    renderChampionshipsList() {
-        const listEl = document.getElementById('campeonatos-list');
-        if (this.championships.list.length === 0) {
-            listEl.innerHTML = '<div class="campeonato-empty">No hay campeonatos. Crea uno nuevo.</div>';
-            return;
-        }
-        listEl.innerHTML = this.championships.list.map(champ => {
-            const date = new Date(champ.createdAt).toLocaleDateString('es-ES');
-            const ownerDisplay = champ.owner ? `👤 ${champ.owner}` : '';
-            return `
-                <div class="campeonato-card" data-champ-id="${champ.id}">
-                    <h3>${this.escapeHtml(champ.name)}</h3>
-                    <p>${champ.description ? this.escapeHtml(champ.description) : 'Sin descripción'}</p>
-                    ${ownerDisplay ? `<p style="color:#a0a0a0;font-size:0.85rem;">${ownerDisplay}</p>` : ''}
-                    <div class="campeonato-meta">
-                        <span>👥 ${champ.participantCount} jugs</span>
-                        <span>🎲 ${champ.playCount} partidas</span>
-                        <span>📅 ${date}</span>
-                    </div>
-                </div>
-            `;
-        }).join('');
-        listEl.querySelectorAll('.campeonato-card').forEach(card => {
-            card.addEventListener('click', () => {
-                this.selectChampionship(card.dataset.champId);
-            });
+    renderChampionshipsSelect() {
+        const selectEl = document.getElementById('campeonatos-select');
+        const currentValue = selectEl.value;
+        selectEl.innerHTML = '<option value="">Seleccionar campeonato...</option>';
+        this.championships.list.forEach(champ => {
+            const option = document.createElement('option');
+            option.value = champ.id;
+            option.textContent = champ.name;
+            selectEl.appendChild(option);
         });
+        if (currentValue) {
+            selectEl.value = currentValue;
+        }
     },
 
     renderChampionshipDetail() {
@@ -897,7 +966,7 @@ const App = {
                 ${standings.length > 0 ? `
                 <table class="standings-table">
                     <thead>
-                        <tr><th></th><th>Jugador</th><th>Partidas</th><th>Victorias</th><th>Puntos</th><th>Media</th></tr>
+                        <tr><th></th><th>Jugador</th><th>Partidas</th><th>Victorias</th><th>Puntos</th></tr>
                     </thead>
                     <tbody>
                         ${standings.map((s, i) => `
@@ -906,16 +975,20 @@ const App = {
                                 <td>${s.name}</td>
                                 <td>${s.plays}</td>
                                 <td>${s.wins}</td>
-                                <td>${s.totalScore}</td>
-                                <td>${s.avg}</td>
+                                <td>${Math.round(s.totalScore)}</td>
                             </tr>
                         `).join('')}
                     </tbody>
-                </table>` : '<div class="campeonato-empty">No hay partidas en este campeonato. Importa partidas para ver la clasificación.</div>'}
+                </table>` : '<div class="campeonato-empty">No hay partidas en este campeonato. Importa o añade partidas para ver la clasificación.</div>'}
             </div>
             <div class="campeonato-section">
                 <h3>Partidas (${champPlays.length})</h3>
-                ${isOwner || !champ.owner ? `<button id="btn-import-plays-campeonato" class="btn-primary btn-narrow">+ Importar Partidas</button>` : ''}
+                ${isOwner || !champ.owner ? `
+                <div class="campeonato-actions">
+                    <button id="btn-import-plays-campeonato" class="btn-primary btn-narrow">+ Importar Partidas</button>
+                    <button id="btn-add-manual-play" class="btn-secondary btn-narrow">+ Añadir Partida Manual</button>
+                </div>
+                ` : ''}
                 <div style="margin-top:15px;" class="campeonato-plays-list">
                     ${champPlays.map(p => {
                         const winnerPs = p.playerScores.find(ps => ps.winner);
@@ -935,6 +1008,12 @@ const App = {
         if (importBtn) {
             importBtn.addEventListener('click', () => {
                 this.openImportPlaysModal();
+            });
+        }
+        const addManualBtn = document.getElementById('btn-add-manual-play');
+        if (addManualBtn) {
+            addManualBtn.addEventListener('click', () => {
+                this.openAddManualPlayModal();
             });
         }
         content.querySelectorAll('.remove-play').forEach(btn => {

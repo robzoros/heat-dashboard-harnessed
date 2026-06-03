@@ -543,6 +543,33 @@
         ],
         "evidence": "Backend: POST /championships acepta campo owner. Frontend: bggUsername se guarda tras loadData(), se pasa como owner al crear. renderChampionshipsList() muestra 👤 owner. renderChampionshipDetail() muestra owner, aviso solo lectura, y oculta botones si no eres propietario. Tests HDH-09: 6/6 pasados."
       }
+    },
+    {
+      "id": "FIX-HDH-02",
+      "priority": 3,
+      "name": "Correcciones en Campeonatos",
+      "description": [
+        "Al crear un campeonato dar la posibilidad de crearlo sin jugadores (en caso de querer crear un campeonato vacío para luego importar partidas manualmente).",
+        "Después de crear un campeonato este no se ve hasta que no se pulsa botón volver, debería verse inmediatamente.",
+        "Cambiar nombre de botón VOLVER por SALIR con texttooltip 'Salir del detalle del campeonato y volver a la lista de campeonatos'.",
+        "Cambiar botón RECARGAR por CARGAR con tooltip 'Cargar campeonatos'",
+        "En vez de paneles con los campeonatos cargados cargar combo box con los campeonatos.",
+        "Panel del campeonato. Columnas deben ser, las partidas del campeonato, victorias y puntos totales. Todo sin decimales.",
+        "Debe existir además de un botón para cargar partidas un botón para añadir partida manualmente (saldrá una modal con los participantes del campeonato para elegir el ganador y los puntos, y se añadirá esa partida al campeonato).",
+        "Las partidas incluidas manualmente se deben poder sustituir por partidas importadas."
+      ],
+      "status": "completed",
+      "verification": {
+        "checks": [
+          "Combo box muestra campeonatos disponibles",
+          "Permite crear campeonatos sin jugadores",
+          "Muestra detalle inmediatamente tras crear",
+          "Tabla clasificación sin decimales (Partidas, Victorias, Puntos)",
+          "Botón 'Añadir Partida Manual' funciona correctamente",
+          "Endpoint PUT para actualizar campeonatos funciona"
+        ],
+        "evidence": "HTML: combo box reemplaza tarjetas, eliminado botón Volver, añadido modal partida manual. CSS: estilos para combo box, acciones y formulario manual. JS: renderChampionshipsSelect, openAddManualPlayModal, saveManualPlay, saveChampionshipToServer. Backend: PUT /championships/:id. Tests HDH-09: 6/6 pasados."
+      }
     }
   ]
 }

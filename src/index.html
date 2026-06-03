@@ -69,6 +69,21 @@
                 <button id="btn-close-player-manager" class="btn-secondary">Cerrar</button>
             </div>
         </div>
+        <div id="add-manual-play-modal" class="modal hidden">
+            <div class="modal-content modal-wide">
+                <h2>Añadir Partida Manual</h2>
+                <p style="color:#a0a0a0;margin-bottom:15px;text-align:left;">Selecciona el circuito, ganador y puntos para cada jugador participante.</p>
+                <div class="manual-play-form">
+                    <label>Circuito:</label>
+                    <select id="manual-play-board"></select>
+                    <label>Fecha:</label>
+                    <input type="date" id="manual-play-date">
+                    <div id="manual-play-players"></div>
+                </div>
+                <button id="btn-save-manual-play" class="btn-primary">Guardar Partida</button>
+                <button id="btn-cancel-manual-play" class="btn-secondary">Cancelar</button>
+            </div>
+        </div>
     </header>
 
     <nav id="tabs">
@@ -208,11 +223,12 @@
             <h2>Campeonatos</h2>
             <div class="campeonatos-toolbar">
                 <button id="btn-create-campeonato" class="btn-primary btn-narrow">+ Nuevo Campeonato</button>
-                <button id="btn-refresh-campeonatos" class="btn-secondary btn-narrow">⟳ Recargar</button>
+                <select id="campeonatos-select" class="campeonatos-select">
+                    <option value="">Seleccionar campeonato...</option>
+                </select>
+                <button id="btn-load-campeonatos" class="btn-secondary btn-narrow" title="Cargar campeonatos">⟳ Cargar</button>
             </div>
-            <div id="campeonatos-list" class="campeonatos-list"></div>
-            <div id="campeonato-detail" class="campeonato-detail hidden">
-                <button id="btn-back-campeonatos" class="btn-secondary btn-narrow">← Volver</button>
+            <div id="campeonato-detail" class="campeonato-detail">
                 <div id="campeonato-detail-content"></div>
             </div>
         </section>

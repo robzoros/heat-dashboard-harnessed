@@ -520,6 +520,25 @@ th {
     display: flex;
     gap: 12px;
     margin-bottom: 20px;
+    align-items: center;
+}
+
+.campeonatos-select {
+    flex: 1;
+    max-width: 400px;
+    padding: 8px 12px;
+    background: #0f3460;
+    border: 1px solid #e94560;
+    color: white;
+    font-family: 'Barlow', sans-serif;
+    font-size: 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.campeonatos-select option {
+    background: #0f3460;
+    color: white;
 }
 
 .campeonatos-list {
@@ -665,6 +684,61 @@ th {
     font-style: italic;
 }
 
+.campeonato-actions {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.manual-play-form {
+    text-align: left;
+    margin-bottom: 15px;
+}
+
+.manual-play-form label {
+    display: block;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    color: #a0a0a0;
+}
+
+.manual-play-form select,
+.manual-play-form input {
+    width: 100%;
+    padding: 8px;
+    background: #0f3460;
+    border: 1px solid #e94560;
+    color: white;
+    border-radius: 4px;
+}
+
+.manual-player-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid #0f3460;
+}
+
+.manual-player-name {
+    flex: 1;
+}
+
+.manual-player-score {
+    width: 80px;
+    padding: 4px;
+    background: #0f3460;
+    border: 1px solid #e94560;
+    color: white;
+    border-radius: 4px;
+}
+
+.manual-player-winner {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
 .modal-wide {
     min-width: 400px;
     max-width: 500px;
@@ -708,6 +782,19 @@ th {
 #new-campeonato-players input {
     margin-bottom: 0;
     flex-shrink: 0;
+}
+
+#import-plays-list input {
+    margin-bottom: 0;
+}
+
+#import-plays-list label {
+    display: grid;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.95rem;
+    grid-template-columns: 20px 1fr;
+    text-align: left;
 }
 
 #import-plays-modal .filter-list {
