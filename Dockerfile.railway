@@ -5,7 +5,7 @@ RUN apk add --no-cache nginx
 WORKDIR /app
 
 COPY proxy/package*.json ./proxy/
-RUN cd proxy && npm ci --omit=dev
+RUN cd proxy && npm install --omit=dev
 
 COPY src/ ./src/
 COPY proxy/ ./proxy/
