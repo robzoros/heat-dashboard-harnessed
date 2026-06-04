@@ -1,0 +1,22 @@
+FROM node:20-alpine
+
+RUN apk add --no-cache nginx
+
+WORKDIR /app
+
+COPY proxy/package*.json ./proxy/
+RUN cd proxy && npm ci --omit=dev
+
+COPY src/ ./src/
+COPY proxy/ ./proxy/
+COPY nginx.railway.conf /etc/nginx/nginx.conf
+COPY entrypoint.sh /entrypoint.sh
+
+RUN mkdir -p /run/nginx && chmod +x /entrypoint.sh
+
+ENV CHAMPIONSHIPS_DIR=/data/championships
+ENV PORT=8080
+
+EXPOSE 8080
+
+CMD ["/entrypoint.sh"]

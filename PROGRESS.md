@@ -1043,3 +1043,45 @@
 
 #### Notas / Riesgos
 - Mock data SOLO se usa para tests, no para consulta de campeonatos reales
+
+---
+
+## Sesión 2026-06-04
+
+### Feature trabajada: HDH-13 - Despliegue monolítico en Railway
+
+**Estado**: Completada
+
+#### Evidencia
+- **Dockerfile.railway** (nuevo): imagen monolítica basada en `node:20-alpine` + nginx (apk), copia proxy y src, expone puerto 8080
+- **entrypoint.sh** (nuevo): script que arranca nginx y node server.js en background, crea `/data/championships`
+- **nginx.railway.conf** (nuevo): configuración nginx para monolito, `proxy_pass http://localhost:3001/`, listen 8080, gzip optimizado
+- **.dockerignore** (nuevo): excluye `e2e/`, `.git/`, `.github/`, `documents/`, `evidence/`, `node_modules/`, `secrets.json`, etc.
+- **docker-compose.yml** y **Dockerfile** root: sin cambios, desarrollo local intacto
+- Build de `Dockerfile.railway` exitoso, contenedor de prueba arrancó correctamente
+- Verificación: `curl localhost:8083` → HTTP 200 con `<!DOCTYPE html>`, `curl localhost:8083/bgg-api/championships` → HTTP 200 con JSON
+- `docker compose up -d --build` local: OK, 87/87 tests E2E pasan
+
+#### Tareas completadas
+1. Crear Dockerfile.railway con node:20-alpine + nginx
+2. Crear entrypoint.sh para arrancar ambos procesos
+3. Crear nginx.railway.conf con proxy_pass a localhost:3001
+4. Crear .dockerignore para imagen optimizada
+5. Verificar build y ejecución del contenedor monolítico
+6. Verificar que docker-compose local sigue funcionando (87/87 tests)
+
+#### Verificación final
+- docker build -f Dockerfile.railway: OK
+- docker run: nginx + node arrancan, HTTP 200 en frontend y API
+- docker compose config --quiet: OK
+- docker compose up -d --build: OK
+- curl localhost:8082: HTTP 200 con DOCTYPE html
+- npx playwright test: 87/87 tests pasados
+
+#### Notas / Riesgos
+- Para Railway: conectar repo, seleccionar `Dockerfile.railway`, añadir env var `CHAMPIONSHIPS_DIR=/data/championships`, adjuntar Volume en `/data`
+- El proxy no necesita credenciales en env vars: el usuario hace login vía UI (modal de login)
+- Puerto expuesto: 8080 (Railway inyecta `$PORT` si se desea, pero 8080 funciona como default)
+
+#### Próximo paso
+- Desplegar en Railway.com

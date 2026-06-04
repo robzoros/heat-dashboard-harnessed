@@ -1,0 +1,14 @@
+e2e/
+.git/
+.github/
+documents/
+evidence/
+test-results/
+node_modules/
+proxy/node_modules/
+proxy/championships/*.json
+!proxy/championships/.gitkeep
+proxy/test-championships/
+*.log
+.DS_Store
+secrets.json
