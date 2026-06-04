@@ -629,6 +629,7 @@ th {
 .standings-table {
     width: 100%;
     border-collapse: collapse;
+    table-layout: fixed;
 }
 
 .standings-table th,
@@ -646,6 +647,7 @@ th {
 
 .standings-table .pos {
     width: 40px;
+    max-width: 40px;
     text-align: center;
     color: #e94560;
     font-weight: 600;

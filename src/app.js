@@ -1028,7 +1028,7 @@ const App = {
                 ${champPlays.length > 0 ? `
                 <table class="standings-table">
                     <thead>
-                        <tr><th></th><th>Jugador</th>${champPlays.map(p => `<th>${this.getTrackFlag(p.board)} ${p.board}</th>`).join('')}<th>Total</th></tr>
+                        <tr><th class="pos"></th><th>Jugador</th>${champPlays.map(p => `<th>${this.getTrackFlag(p.board)} ${p.board}</th>`).join('')}<th>Total</th></tr>
                     </thead>
                     <tbody>
                         ${standings.map((s, i) => `
