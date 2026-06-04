@@ -8,6 +8,7 @@ const { classifyPlayers } = require('./classify');
 const BGG_LOGIN_URL = 'boardgamegeek.com';
 const BGG_API_HOST = 'boardgamegeek.com';
 const GAME_ID = '366013';
+const CHAMPIONSHIPS_DIR = process.env.CHAMPIONSHIPS_DIR || path.join(__dirname, 'championships');
 
 function parseXml(xml) {
     return new Promise((resolve, reject) => {
@@ -176,8 +177,6 @@ function normalizeData(rawPlays) {
     const classifiedPlayers = classifyPlayers(players, plays);
     return { players: classifiedPlayers, locations, boards, plays };
 }
-
-const CHAMPIONSHIPS_DIR = path.join(__dirname, 'championships');
 
 function sendJson(res, statusCode, data) {
     res.setHeader('Content-Type', 'application/json');

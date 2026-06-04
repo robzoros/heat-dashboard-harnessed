@@ -1,19 +1,18 @@
 import { test, expect } from '@playwright/test';
 
-const TEST_OWNER = 'hdh-09-test';
-
 test.describe('HDH-09 - Pestaña Campeonatos', () => {
   test.beforeEach(async ({ page }) => {
-    await cleanupChampionships(TEST_OWNER);
+    await cleanupChampionships();
     await page.goto('/');
     await page.waitForLoadState('networkidle');
     const banner = page.locator('#cookie-consent-banner:not(.hidden)');
     if (await banner.isVisible({ timeout: 2000 }).catch(() => false)) {
       await page.click('#btn-accept-cookies');
     }
+    await page.waitForTimeout(300);
   });
 
-  async function cleanupChampionships(owner) {
+async function cleanupChampionships() {
     const baseUrl = 'http://localhost:8082';
     const http = await import('http');
     const listData = await new Promise((resolve, reject) => {
@@ -25,20 +24,20 @@ test.describe('HDH-09 - Pestaña Campeonatos', () => {
     });
     if (listData.success && Array.isArray(listData.data)) {
       for (const champ of listData.data) {
-        if (champ.owner === owner || !champ.owner) {
-          await new Promise((resolve, reject) => {
-            const req = http.request(`${baseUrl}/bgg-api/championships/${champ.id}`, {
-              method: 'DELETE'
-            }, res => {
-              res.on('data', () => {});
-              res.on('end', () => resolve());
-            });
-            req.on('error', reject);
-            req.end();
+        await new Promise((resolve, reject) => {
+          const req = http.request(`${baseUrl}/bgg-api/championships/${champ.id}`, {
+            method: 'DELETE'
+          }, res => {
+            let d = '';
+            res.on('data', c => d += c);
+            res.on('end', () => resolve(JSON.parse(d)));
           });
-        }
+          req.on('error', reject);
+          req.end();
+        });
       }
     }
+    await new Promise(r => setTimeout(r, 500));
   }
 
   async function loadData(page) {
