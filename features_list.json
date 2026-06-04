@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-06-02",
+  "last_updated": "2026-06-04",
   "active_feature": null,
   "user": "Roberto Méndez",
   "rules": {
@@ -608,6 +608,27 @@
           "Tests E2E pasan (87/87)"
         ],
         "evidence": "Modificado getChampionshipStandings(): ahora no depende de this.data.players para funcionar. Si el jugador no existe localmente, usa 'Jugador ${pid}'. Añadida columna Total en la tabla. Mock data solo para tests."
+      }
+    },
+    {
+      "id": "FIX-HDH-05",
+      "priority": 1,
+      "name": "Tests HDH-09 usan directorio separado para evitar interferencia con producción",
+      "description": [
+        "Los tests HDH-09 (Campeonatos) estaban escribiendo y borrando ficheros en proxy/championships/ que es el directorio de producción.",
+        "Esto causaba fallos en CI donde los tests de diferentes branches interferían entre sí.",
+        "Fix: El proxy ahora usa la variable de entorno CHAMPIONSHIPS_DIR para determinar dónde guardar los JSON de campeonatos.",
+        "En docker-compose.yml se monta un volumen dedicado proxy/test-championships:/app/championships para los tests.",
+        "Los tests ahora usan un entorno completamente separado sin tocar datos de producción."
+      ],
+      "status": "in_progress",
+      "verification": {
+        "checks": [
+          "CHAMPIONSHIPS_DIR configurable via variable de entorno",
+          "docker-compose.yml monta volumen dedicado para tests",
+          "Tests HDH-09 pasan en CI (90/90)"
+        ],
+        "evidence": "Pendiente de verificar en CI"
       }
     }
   ]

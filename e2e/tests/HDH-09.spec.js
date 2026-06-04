@@ -9,9 +9,10 @@ test.describe('HDH-09 - Pestaña Campeonatos', () => {
     if (await banner.isVisible({ timeout: 2000 }).catch(() => false)) {
       await page.click('#btn-accept-cookies');
     }
+    await page.waitForTimeout(300);
   });
 
-  async function cleanupChampionships() {
+async function cleanupChampionships() {
     const baseUrl = 'http://localhost:8082';
     const http = await import('http');
     const listData = await new Promise((resolve, reject) => {
@@ -27,14 +28,16 @@ test.describe('HDH-09 - Pestaña Campeonatos', () => {
           const req = http.request(`${baseUrl}/bgg-api/championships/${champ.id}`, {
             method: 'DELETE'
           }, res => {
-            res.on('data', () => {});
-            res.on('end', () => resolve());
+            let d = '';
+            res.on('data', c => d += c);
+            res.on('end', () => resolve(JSON.parse(d)));
           });
           req.on('error', reject);
           req.end();
         });
       }
     }
+    await new Promise(r => setTimeout(r, 500));
   }
 
   async function loadData(page) {
@@ -94,7 +97,6 @@ test.describe('HDH-09 - Pestaña Campeonatos', () => {
   const ALL_PARTICIPANTS = ['1','2','3','4','5','6','7','8','9','10','11','12','13','14'];
 
   async function createChampViaAPI(page, champName, participants) {
-    // Create championship via native Node HTTP (not browser fetch)
     const baseUrl = 'http://localhost:8082';
     const http = await import('http');
     const postData = JSON.stringify({ name: champName, description: '', participants: participants || ALL_PARTICIPANTS, owner: 'testuser' });
