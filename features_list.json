@@ -611,6 +611,34 @@
       }
     },
     {
+      "id": "HDH-13",
+      "priority": 1,
+      "name": "Despliegue monolítico en Railway",
+      "description": [
+        "Preparar el proyecto para despliegue productivo en Railway.com como un solo servicio monolítico.",
+        "Crear Dockerfile.railway que combine nginx + proxy Node.js en un solo contenedor.",
+        "Crear entrypoint.sh que arranque ambos procesos (nginx escuchando en $PORT, node en 3001 interno).",
+        "Crear nginx.railway.conf: proxy_pass apunta a http://localhost:3001/ en vez de http://bgg-proxy:3001/.",
+        "Crear .dockerignore para excluir e2e/, .git/, documents/, evidence/, node_modules/, etc.",
+        "Configurar CHAMPIONSHIPS_DIR=/data/championships para persistencia con Railway Volume montado en /data.",
+        "secrets.json se mantiene para desarrollo local (ya está en .gitignore), en Railway el usuario hace login vía UI.",
+        "docker-compose.yml y Dockerfile root se mantienen sin cambios para desarrollo local."
+      ],
+      "status": "completed",
+      "verification": {
+        "checks": [
+          "Dockerfile.railway se construye sin errores",
+          "Contenedor arranca con nginx + node internos",
+          "curl localhost:$PORT devuelve HTML (200)",
+          "curl localhost:$PORT/bgg-api/championships devuelve JSON (200)",
+          "CHAMPIONSHIPS_DIR configurable via env var",
+          "docker-compose.yml y Dockerfile root no se modifican",
+          "Tests E2E existentes pasan con docker-compose local"
+        ],
+        "evidence": "Dockerfile.railway creado: node:20-alpine + nginx, copia proxy y src, expone puerto 8080. entrypoint.sh arranca nginx + node en background. nginx.railway.conf con proxy_pass a localhost:3001. .dockerignore excluye e2e/, .git/, evidence/, etc. Build exitoso, container testado: HTTP 200 en frontend y API. docker-compose local intacto: 87/87 tests E2E pasan. CHAMPIONSHIPS_DIR=/data/championships listo para Railway Volume en /data."
+      }
+    },
+    {
       "id": "FIX-HDH-05",
       "priority": 1,
       "name": "Tests HDH-09 usan directorio separado para evitar interferencia con producción",
