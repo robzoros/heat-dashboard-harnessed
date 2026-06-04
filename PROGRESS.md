@@ -1085,3 +1085,54 @@
 
 #### Próximo paso
 - Desplegar en Railway.com
+
+---
+
+## Sesión 2026-06-04
+
+### Feature trabajada: HDH-SEC01 - Rate limiting en endpoints del proxy
+
+**Estado**: Completada
+
+#### Evidencia
+- **proxy/rate-limiter.js** (nuevo): módulo vanilla sin dependencias con ventana deslizante de 60s por IP
+  - Tres buckets configurables: login (5/min), test-login (10/min), championships (30/min)
+  - Variables de entorno: `RATE_LIMIT_LOGIN`, `RATE_LIMIT_TEST_LOGIN`, `RATE_LIMIT_CHAMPIONSHIPS`
+  - `RATE_LIMIT_DISABLED=true` para desactivar en desarrollo/tests
+  - Respuesta HTTP 429 con header `Retry-After` en segundos
+  - Soporte `X-Forwarded-For` para detectar IP real detrás de proxies
+- **proxy/server.js**: integrados los 3 limiters en todos los endpoints protegidos
+  - `loginLimiter` en POST /login
+  - `testLoginLimiter` en POST /test-login
+  - `championshipsLimiter` en GET/POST/PUT/DELETE /championships y sub-rutas
+- **proxy/test-rate-limiter.js** (nuevo): 6 tests unitarios
+  - Permite requests bajo límite
+  - Bloquea tras exceder límite
+  - IPs separadas tienen límites independientes
+  - Buckets separados tienen límites independientes
+  - Retry-After positivo y razonable
+  - X-Forwarded-For funciona correctamente
+- **docker-compose.yml**: añadido `RATE_LIMIT_DISABLED=true` para desarrollo
+- **proxy/package.json**: script test incluye test-rate-limiter.js
+
+#### Tareas completadas
+1. Crear módulo rate-limiter.js sin dependencias externas
+2. Integrar rate limiting en todos los endpoints del proxy
+3. Crear tests unitarios para el rate limiter
+4. Configurar RATE_LIMIT_DISABLED=true en docker-compose para dev
+5. Verificar tests unitarios: 10/10 (4 classify + 6 rate-limiter)
+6. Verificar tests E2E: 87/87 pasan
+
+#### Verificación final
+- node --check proxy/server.js: OK
+- node --check proxy/rate-limiter.js: OK
+- npm test (proxy): 10/10 tests pasados
+- docker compose config --quiet: OK
+- docker compose up -d --build: OK
+- curl localhost:8082: HTTP 200 con DOCTYPE html
+- npx playwright test: 87/87 tests pasados
+
+#### Notas / Riesgos
+- En producción (Railway) el rate limiting está activo con valores por defecto
+- Para ajustar límites: configurar variables de entorno en Railway
+- RATE_LIMIT_DISABLED debe ser false o no existir en producción

@@ -17,6 +17,7 @@ services:
     build: ./proxy
     environment:
       - CHAMPIONSHIPS_DIR=/app/championships
+      - RATE_LIMIT_DISABLED=true
     networks:
       - game-net
     restart: unless-stopped
