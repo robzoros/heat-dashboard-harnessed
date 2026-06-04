@@ -1,8 +1,10 @@
 import { test, expect } from '@playwright/test';
 
+const TEST_OWNER = 'hdh-09-test';
+
 test.describe('HDH-09 - Pestaña Campeonatos', () => {
   test.beforeEach(async ({ page }) => {
-    await cleanupChampionships();
+    await cleanupChampionships(TEST_OWNER);
     await page.goto('/');
     await page.waitForLoadState('networkidle');
     const banner = page.locator('#cookie-consent-banner:not(.hidden)');
@@ -11,7 +13,7 @@ test.describe('HDH-09 - Pestaña Campeonatos', () => {
     }
   });
 
-  async function cleanupChampionships() {
+  async function cleanupChampionships(owner) {
     const baseUrl = 'http://localhost:8082';
     const http = await import('http');
     const listData = await new Promise((resolve, reject) => {
@@ -23,16 +25,18 @@ test.describe('HDH-09 - Pestaña Campeonatos', () => {
     });
     if (listData.success && Array.isArray(listData.data)) {
       for (const champ of listData.data) {
-        await new Promise((resolve, reject) => {
-          const req = http.request(`${baseUrl}/bgg-api/championships/${champ.id}`, {
-            method: 'DELETE'
-          }, res => {
-            res.on('data', () => {});
-            res.on('end', () => resolve());
+        if (champ.owner === owner || !champ.owner) {
+          await new Promise((resolve, reject) => {
+            const req = http.request(`${baseUrl}/bgg-api/championships/${champ.id}`, {
+              method: 'DELETE'
+            }, res => {
+              res.on('data', () => {});
+              res.on('end', () => resolve());
+            });
+            req.on('error', reject);
+            req.end();
           });
-          req.on('error', reject);
-          req.end();
-        });
+        }
       }
     }
   }
@@ -94,7 +98,6 @@ test.describe('HDH-09 - Pestaña Campeonatos', () => {
   const ALL_PARTICIPANTS = ['1','2','3','4','5','6','7','8','9','10','11','12','13','14'];
 
   async function createChampViaAPI(page, champName, participants) {
-    // Create championship via native Node HTTP (not browser fetch)
     const baseUrl = 'http://localhost:8082';
     const http = await import('http');
     const postData = JSON.stringify({ name: champName, description: '', participants: participants || ALL_PARTICIPANTS, owner: 'testuser' });

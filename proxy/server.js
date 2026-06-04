@@ -206,7 +206,7 @@ function listChampionships() {
     const files = fs.readdirSync(CHAMPIONSHIPS_DIR).filter(f => f.endsWith('.json'));
     return files.map(f => {
         const data = JSON.parse(fs.readFileSync(path.join(CHAMPIONSHIPS_DIR, f), 'utf8'));
-        return { id: data.id, name: data.name, description: data.description, createdAt: data.createdAt, participantCount: (data.participants || []).length, playCount: (data.plays || data.playIds || []).length };
+        return { id: data.id, name: data.name, description: data.description, createdAt: data.createdAt, owner: data.owner || null, participantCount: (data.participants || []).length, playCount: (data.plays || data.playIds || []).length };
     }).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 }
 
