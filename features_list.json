@@ -639,6 +639,33 @@
       }
     },
     {
+      "id": "HDH-SEC01",
+      "priority": 1,
+      "name": "Rate limiting en endpoints del proxy",
+      "description": [
+        "Implementar rate limiting en el proxy para prevenir abuso de endpoints.",
+        "Crear módulo rate-limiter.js con lógica de ventana deslizante por IP.",
+        "Aplicar rate limiting a POST /login (máx 5 requests por minuto).",
+        "Aplicar rate limiting a POST /test-login (máx 10 requests por minuto).",
+        "Aplicar rate limiting a endpoints de championships (máx 30 requests por minuto).",
+        "Respuesta 429 Too Many Requests cuando se excede el límite.",
+        "Header Retry-After con segundos hasta que se puede reintentar.",
+        "Sin dependencias externas — implementación vanilla.",
+        "Configurable via variables de entorno: RATE_LIMIT_LOGIN, RATE_LIMIT_CHAMPIONSHIPS."
+      ],
+      "status": "completed",
+      "verification": {
+        "checks": [
+          "POST /login bloqueado tras 5 requests en menos de 1 minuto",
+          "Respuesta 429 con header Retry-After al exceder límite",
+          "Los límites se resetean tras pasar la ventana de tiempo",
+          "Tests E2E existentes siguen pasando",
+          "Sin dependencias nuevas en package.json"
+        ],
+        "evidence": "Creado proxy/rate-limiter.js: módulo vanilla con ventana deslizante de 60s por IP. Tres buckets: login (5/min), test-login (10/min), championships (30/min). Configurable via RATE_LIMIT_LOGIN, RATE_LIMIT_TEST_LOGIN, RATE_LIMIT_CHAMPIONSHIPS. RATE_LIMIT_DISABLED=true para desarrollo/tests. Respuesta 429 con header Retry-After. Soporte X-Forwarded-For para proxies. proxy/test-rate-limiter.js: 6 tests unitarios. docker-compose.yml: RATE_LIMIT_DISABLED=true para dev. 87/87 tests E2E pasan."
+      }
+    },
+    {
       "id": "FIX-HDH-05",
       "priority": 1,
       "name": "Tests HDH-09 usan directorio separado para evitar interferencia con producción",

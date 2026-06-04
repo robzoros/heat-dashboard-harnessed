@@ -4,6 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const xml2js = require('xml2js');
 const { classifyPlayers } = require('./classify');
+const { loginLimiter, testLoginLimiter, championshipsLimiter } = require('./rate-limiter');
 
 const BGG_LOGIN_URL = 'boardgamegeek.com';
 const BGG_API_HOST = 'boardgamegeek.com';
@@ -238,6 +239,7 @@ const server = http.createServer((req, res) => {
 
     // POST /login — BGG login
     if (req.method === 'POST' && urlPath === '/login') {
+        if (!loginLimiter(req, res)) return;
         let body = '';
         req.on('data', chunk => body += chunk);
         req.on('end', async () => {
@@ -254,6 +256,7 @@ const server = http.createServer((req, res) => {
         });
     // POST /test-login — test entry with local XML
     } else if (req.method === 'POST' && urlPath === '/test-login') {
+        if (!testLoginLimiter(req, res)) return;
         const xmlPath = path.join(__dirname, 'test-data', 'bgg-plays.xml');
         fs.readFile(xmlPath, 'utf8', async (err, xml) => {
             if (err) {
@@ -273,6 +276,7 @@ const server = http.createServer((req, res) => {
         });
     // GET /championships — list all championships
     } else if (req.method === 'GET' && urlPath === '/championships') {
+        if (!championshipsLimiter(req, res)) return;
         try {
             const championships = listChampionships();
             sendJson(res, 200, { success: true, data: championships });
@@ -282,6 +286,7 @@ const server = http.createServer((req, res) => {
         }
     // POST /championships — create new championship
     } else if (req.method === 'POST' && urlPath === '/championships') {
+        if (!championshipsLimiter(req, res)) return;
         let body = '';
         req.on('data', chunk => body += chunk);
         req.on('end', () => {
@@ -309,6 +314,7 @@ const server = http.createServer((req, res) => {
         });
     // GET /championships/:id — get championship details
     } else if (req.method === 'GET' && parts.length === 2 && parts[0] === 'championships') {
+        if (!championshipsLimiter(req, res)) return;
         try {
             const id = parts[1];
             const championship = readChampionship(id);
@@ -323,6 +329,7 @@ const server = http.createServer((req, res) => {
         }
     // POST /championships/:id/plays — add plays to championship
     } else if (req.method === 'POST' && parts.length === 3 && parts[0] === 'championships' && parts[2] === 'plays') {
+        if (!championshipsLimiter(req, res)) return;
         let body = '';
         req.on('data', chunk => body += chunk);
         req.on('end', () => {
@@ -358,6 +365,7 @@ const server = http.createServer((req, res) => {
         });
     // PUT /championships/:id — update a championship
     } else if (req.method === 'PUT' && parts.length === 2 && parts[0] === 'championships') {
+        if (!championshipsLimiter(req, res)) return;
         let body = '';
         req.on('data', chunk => body += chunk);
         req.on('end', () => {
@@ -379,6 +387,7 @@ const server = http.createServer((req, res) => {
         });
     // DELETE /championships/:id — delete a championship
     } else if (req.method === 'DELETE' && parts.length === 2 && parts[0] === 'championships') {
+        if (!championshipsLimiter(req, res)) return;
         try {
             const id = parts[1];
             const filePath = getChampionshipFilePath(id);
@@ -394,6 +403,7 @@ const server = http.createServer((req, res) => {
         }
     // DELETE /championships/:id/plays/:playId — remove play from championship
     } else if (req.method === 'DELETE' && parts.length === 4 && parts[0] === 'championships' && parts[2] === 'plays') {
+        if (!championshipsLimiter(req, res)) return;
         try {
             const id = parts[1];
             const playId = parts[3];
