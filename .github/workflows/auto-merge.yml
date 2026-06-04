@@ -55,6 +55,8 @@ jobs:
           EOF
 
       - name: Build & Start Docker
+        env:
+          CHAMPIONSHIPS_DIR: /app/test-championships
         run: docker compose up -d --build
 
       - name: Wait for services
