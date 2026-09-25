@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-25T10:46:16.001Z",
+  "generatedAt": "2026-09-25T11:59:22.287Z",
   "source": "GitHub Actions weekly export",
   "players": [
     {
@@ -211,39 +211,39 @@
     },
     {
       "id": 2,
-      "name": "Deutschland"
+      "name": "South Africa"
     },
     {
       "id": 3,
-      "name": "Francia"
+      "name": "Deutschland"
     },
     {
       "id": 4,
-      "name": "México"
+      "name": "Francia"
     },
     {
       "id": 5,
-      "name": "Great Britain"
+      "name": "México"
     },
     {
       "id": 6,
-      "name": "USA"
+      "name": "Great Britain"
     },
     {
       "id": 7,
-      "name": "España"
+      "name": "USA"
     },
     {
       "id": 8,
-      "name": "Nederland"
+      "name": "España"
     },
     {
       "id": 9,
-      "name": "Japón"
+      "name": "Nederland"
     },
     {
       "id": 10,
-      "name": "South Africa"
+      "name": "Japón"
     },
     {
       "id": 11,
@@ -316,7 +316,7 @@
     {
       "id": "119004320",
       "playDate": "2026-09-22",
-      "board": "Italia",
+      "board": "South Africa",
       "locationRefId": 2,
       "playerScores": [
         {
