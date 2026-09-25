@@ -734,6 +734,28 @@
       }
     },
     {
+      "id": "HDH-FIREBASE01",
+      "priority": 1,
+      "name": "Campeonatos compartidos con Firebase Authentication y Firestore",
+      "description": [
+        "Conectar GitHub Pages con Firebase Authentication.",
+        "Migrar campeonatos desde localStorage a la colección Firestore championships.",
+        "Permitir lectura pública y escritura sólo al administrador.",
+        "Mantener heat-data.json como fuente exclusiva de partidas BGG."
+      ],
+      "status": "in_progress",
+      "verification": {
+        "checks": [
+          "Firebase se inicializa en producción",
+          "Usuarios anónimos pueden leer campeonatos",
+          "El administrador puede escribir con su UID",
+          "La persistencia local de desarrollo se mantiene para tests",
+          "Los tests E2E pasan"
+        ],
+        "evidence": "Pendiente de implementar y verificar"
+      }
+    },
+    {
       "id": "FIX-HDH-05",
       "priority": 1,
       "name": "Tests HDH-09 usan directorio separado para evitar interferencia con producción",

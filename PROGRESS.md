@@ -1225,3 +1225,33 @@
 - `git check-ignore` confirma que el script está ignorado.
 - Dry run ejecutado en un worktree temporal: 129 partidas y 19 jugadores generados, sin commit ni push.
 - No se realizaron cambios en el repositorio remoto durante la verificación.
+
+---
+
+## Sesión 2026-09-25
+
+### Feature trabajada: HDH-FIREBASE01 - Campeonatos compartidos con Firebase
+
+**Estado**: En progreso; implementación y reglas de Firestore listas, pendiente de verificación contra la aplicación publicada.
+
+#### Cambios implementados
+- Configuración pública de Firebase en `src/firebase-config.js`.
+- Carga dinámica del SDK de Firebase sólo en producción para no bloquear los tests estáticos locales.
+- Acceso Email/Password para el administrador.
+- Firestore utiliza la colección `championships`.
+- Reglas públicas de lectura y escritura restringida al UID `TRJQfvQ8MjcVw5spX23skZBiSqr1`.
+- Persistencia local conservada para desarrollo y tests locales.
+- Los Campeonato dejan de ser la fuente principal en producción y pasan a Firestore.
+- Añadidos `firebase.json` y `firestore.rules`.
+- Spec E2E `e2e/tests/HDH-FIREBASE01.spec.js`.
+
+#### Verificación local
+- `node --check src/app.js`: OK.
+- Tests específicos HDH-09 + HDH-FIREBASE01: 8/8 pasan.
+- Suite completa: se ejecutó hasta 80/92 antes del timeout externo de 900s por esperas de `networkidle`; los tests ejecutados hasta ese punto pasaron.
+- Las reglas `firestore.rules` han sido desplegadas por el usuario mediante Firebase CLI en el proyecto `heat-dashboard-511cf`.
+
+#### Pendiente de entrega
+- Probar lectura anónima y escritura con la cuenta `zorotrabajo@gmail.com` en el sitio publicado.
+- Verificar que los botones de administración sólo aparecen al administrador autenticado.
+- Actualizar la documentación de despliegue.
