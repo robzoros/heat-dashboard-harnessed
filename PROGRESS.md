@@ -1177,7 +1177,7 @@
 
 #### Notas / Riesgos
 - El workflow real de GitHub todavía necesita que `BGG_USER` y `BGG_PASS` estén configurados como secrets del repositorio y que Pages esté configurado con fuente GitHub Actions.
-- El JSON será público al publicarse en Pages. Antes de publicly exponer datos reales, confirmar que las partidas y nombres son públicos o anonimizar el export.
+- El JSON será público al publicarse en Pages. Antes de publicar datos reales, confirmar que las partidas y nombres son públicos o anonimizar el export.
 - Los campeonatos son locales al navegador y no se comparten entre dispositivos.
 - Los workflows programados pueden retrasarse; la web muestra la última exportación disponible.
 
@@ -1204,3 +1204,24 @@
 
 #### Nota
 - Un 403 persistente después de todos los reintentos probablemente indicará bloqueo de IP/rate limiting de BGG para el runner de GitHub Actions. En ese caso el workflow conserva el deployment anterior y debe revisarse el rate limiting de BGG.
+
+---
+
+## Sesión 2026-09-25
+
+### Feature trabajada: HDH-MIGRATION-AUTOPUSH - Script local de actualización BGG
+
+**Estado**: Completada
+
+#### Evidencia
+- Creado localmente `scripts/update-bgg-data-local.sh`, deliberadamente ignorado mediante `.gitignore`.
+- El script obtiene `BGG_USER` y `BGG_PASS` del entorno o de `secrets.json`, ejecuta el exportador, hace commit sólo si cambia `src/data/heat-data.json` y hace push a la rama actual.
+- El script aborta si encuentra cambios previos en el repositorio para no publicar cambios ajenos.
+- Añadido modo `DRY_RUN=true` para generar datos sin commit ni push.
+- `STATIC_DEPLOYMENT.md` documenta el uso local y la posibilidad de programarlo con `cron`.
+
+#### Verificación final
+- `bash -n scripts/update-bgg-data-local.sh`: OK.
+- `git check-ignore` confirma que el script está ignorado.
+- Dry run ejecutado en un worktree temporal: 129 partidas y 19 jugadores generados, sin commit ni push.
+- No se realizaron cambios en el repositorio remoto durante la verificación.

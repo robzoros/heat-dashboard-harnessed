@@ -710,6 +710,30 @@
       }
     },
     {
+      "id": "HDH-MIGRATION-AUTOPUSH",
+      "priority": 1,
+      "name": "Script local para generar y publicar JSON BGG",
+      "description": [
+        "Crear un script local que ejecute el exportador BGG.",
+        "Crear un commit sólo cuando heat-data.json cambie.",
+        "Hacer push a la rama actual después de la generación.",
+        "Mantener el script fuera de Git mediante .gitignore.",
+        "Permitir un modo DRY_RUN para verificar sin commit ni push."
+      ],
+      "status": "completed",
+      "verification": {
+        "checks": [
+          "El script lee credenciales del entorno o secrets.json",
+          "El script aborta si el repositorio tiene cambios previos",
+          "El script genera el JSON y hace commit sólo si hay cambios",
+          "El script hace push a la rama actual",
+          "El script está ignorado por Git",
+          "El modo DRY_RUN funciona"
+        ],
+        "evidence": "scripts/update-bgg-data-local.sh creado localmente y añadido a .gitignore. Dry run verificado en un worktree temporal: 129 partidas y 19 jugadores, sin commit ni push."
+      }
+    },
+    {
       "id": "FIX-HDH-05",
       "priority": 1,
       "name": "Tests HDH-09 usan directorio separado para evitar interferencia con producción",
