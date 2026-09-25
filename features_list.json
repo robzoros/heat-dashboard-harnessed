@@ -743,7 +743,7 @@
         "Permitir lectura pública y escritura sólo al administrador.",
         "Mantener heat-data.json como fuente exclusiva de partidas BGG."
       ],
-      "status": "in_progress",
+      "status": "completed",
       "verification": {
         "checks": [
           "Firebase se inicializa en producción",
@@ -752,7 +752,7 @@
           "La persistencia local de desarrollo se mantiene para tests",
           "Los tests E2E pasan"
         ],
-        "evidence": "Pendiente de implementar y verificar"
+        "evidence": "La aplicación publicada se probó correctamente como administrador y como usuario de lectura. El administrador puede crear y modificar campeonatos; los usuarios anónimos pueden leerlos. Las reglas de Firestore están desplegadas en heat-dashboard-511cf."
       }
     },
     {

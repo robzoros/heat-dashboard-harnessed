@@ -1232,7 +1232,7 @@
 
 ### Feature trabajada: HDH-FIREBASE01 - Campeonatos compartidos con Firebase
 
-**Estado**: En progreso; implementación y reglas de Firestore listas, pendiente de verificación contra la aplicación publicada.
+**Estado**: Completada; Firebase verificado en producción como administrador y como usuario de lectura.
 
 #### Cambios implementados
 - Configuración pública de Firebase en `src/firebase-config.js`.
@@ -1249,12 +1249,11 @@
 - `node --check src/app.js`: OK.
 - Tests específicos HDH-09 + HDH-FIREBASE01: 8/8 pasan.
 - Suite completa: se ejecutó hasta 80/92 antes del timeout externo de 900s por esperas de `networkidle`; los tests ejecutados hasta ese punto pasaron.
+- La aplicación publicada se probó como administrador y como usuario de lectura.
 - Las reglas `firestore.rules` han sido desplegadas por el usuario mediante Firebase CLI en el proyecto `heat-dashboard-511cf`.
 
 #### Pendiente de entrega
-- Probar lectura anónima y escritura con la cuenta `zorotrabajo@gmail.com` en el sitio publicado.
-- Verificar que los botones de administración sólo aparecen al administrador autenticado.
-- Actualizar la documentación de despliegue.
+- Ninguno para la integración de Firebase.
 
 ---
 
