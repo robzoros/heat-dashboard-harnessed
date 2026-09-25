@@ -689,6 +689,27 @@
       }
     },
     {
+      "id": "HDH-MIGRATION-BUG01",
+      "priority": 1,
+      "name": "Reintentos y timeout para errores BGG en exportación estática",
+      "description": [
+        "Añadir reintentos para errores transitorios de BGG durante el workflow semanal.",
+        "Reintentar 403, 408, 425, 429, 5xx y errores de red con backoff exponencial.",
+        "Respetar la cabecera Retry-After y añadir timeout de petición.",
+        "Añadir User-Agent al cliente de exportación."
+      ],
+      "status": "completed",
+      "verification": {
+        "checks": [
+          "El login BGG reintenta errores transitorios",
+          "La descarga de páginas BGG reintenta errores transitorios",
+          "Las peticiones tienen timeout",
+          "El workflow usa seis intentos con backoff de tres segundos"
+        ],
+        "evidence": "Implementado en proxy/scripts/generate-bgg-data.js y configurado en weekly-data.yml. La generación local con salida temporal volvió a producir 129 partidas y 19 jugadores; los tests de retry simulan dos 403 seguidos y verifican que un 401 no se reintenta."
+      }
+    },
+    {
       "id": "FIX-HDH-05",
       "priority": 1,
       "name": "Tests HDH-09 usan directorio separado para evitar interferencia con producción",
