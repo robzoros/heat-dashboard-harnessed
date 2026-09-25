@@ -1,0 +1,54 @@
+name: Actualizar datos BGG y publicar Pages
+
+on:
+  schedule:
+    # Every Monday at 06:00 UTC.
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: github-pages-weekly-data
+  cancel-in-progress: true
+
+jobs:
+  generate-and-deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: proxy/package.json
+
+      - name: Install proxy dependencies
+        run: npm install --prefix proxy --no-audit --no-fund
+
+      - name: Generate static BGG data
+        env:
+          BGG_USER: ${{ secrets.BGG_USER }}
+          BGG_PASS: ${{ secrets.BGG_PASS }}
+        run: node proxy/scripts/generate-bgg-data.js
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload static site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: src
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

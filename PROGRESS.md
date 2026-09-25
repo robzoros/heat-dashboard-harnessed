@@ -1136,3 +1136,47 @@
 - En producción (Railway) el rate limiting está activo con valores por defecto
 - Para ajustar límites: configurar variables de entorno en Railway
 - RATE_LIMIT_DISABLED debe ser false o no existir en producción
+
+---
+
+## Sesión 2026-09-25
+
+### Feature trabajada: HDH-MIGRATION01 - Migración a GitHub Pages con datos estáticos semanales
+
+**Estado**: Completada
+
+#### Evidencia
+- El frontend deja de llamar a `/bgg-api/login` y carga `src/data/heat-data.json` al arrancar y al pulsar `Actualizar datos`.
+- `proxy/scripts/generate-bgg-data.js` genera el JSON usando `BGG_USER` y `BGG_PASS` como secrets, descarga todas las páginas de BGG y normaliza los datos.
+- Verificación real del generador ejecutada con credenciales locales y `OUTPUT_PATH=/tmp/heat-data-verification.json`: 129 partidas y 19 jugadores generados correctamente, sin publicar el JSON real en el repositorio.
+- `.github/workflows/weekly-data.yml` ejecuta la generación cada lunes a las 06:00 UTC y despliega el artifact estático en GitHub Pages.
+- `.github/workflows/deploy-pages.yml` publica `src/` en cada cambio mergeado a `main`.
+- Los campeonatos ahora se guardan en `localStorage` y ya no requieren el proxy ni persistencia de servidor.
+- `init.sh`, `AGENTS.md` y el workflow de auto-merge actualizados para no depender de Docker.
+- `STATIC_DEPLOYMENT.md` documenta configuración de Pages, secrets, workflow y privacidad del JSON.
+
+#### Tareas completadas
+1. Crear rama `github_migration` antes de modificar archivos.
+2. Convertir el frontend en sitio estático servible desde `src/`.
+3. Añadir carga de `heat-data.json` y fallback de datos de ejemplo.
+4. Migrar campeonatos a `localStorage`.
+5. Crear script de generación BGG idempotente y seguro ante fallo.
+6. Crear workflow semanal y workflow de despliegue de GitHub Pages.
+7. Actualizar CI y captura de evidencias para servidor HTTP estático.
+8. Añadir spec E2E de la migración.
+
+#### Verificación final
+- `bash init.sh`: OK, sin Docker.
+- `node --check src/app.js`: OK.
+- `node --check proxy/scripts/generate-bgg-data.js`: OK.
+- `npm test` en `proxy`: 10/10 tests pasados.
+- `npx playwright test` con `python3 -m http.server 8082 --directory src`: 90/90 tests pasados.
+- `npm run capture:evidence`: 90/90 tests pasados y screenshots/reportes generados.
+- `git diff --check`, `bash -n init.sh` y `bash -n e2e/scripts/capture-evidence.sh`: OK.
+- Workflows YAML parseados correctamente con PyYAML.
+
+#### Notas / Riesgos
+- El workflow real de GitHub todavía necesita que `BGG_USER` y `BGG_PASS` estén configurados como secrets del repositorio y que Pages esté configurado con fuente GitHub Actions.
+- El JSON será público al publicarse en Pages. Antes de publicly exponer datos reales, confirmar que las partidas y nombres son públicos o anonimizar el export.
+- Los campeonatos son locales al navegador y no se comparten entre dispositivos.
+- Los workflows programados pueden retrasarse; la web muestra la última exportación disponible.

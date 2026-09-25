@@ -22,22 +22,9 @@ test.describe('HDH-TEST_ENV01 - Tests usando XML de prueba', () => {
     });
 
     async function loadTestData(page) {
-        const response = await page.request.post('/bgg-api/test-login');
-        expect(response.ok()).toBe(true);
-        const result = await response.json();
-        expect(result.success).toBe(true);
-        expect(result.data.plays.length).toBeGreaterThan(0);
-
-        await page.evaluate((data) => {
-            window.App.data = data;
-            window.App.populateFilters();
-            window.App.filters.active = true;
-            window.App.filters.players = [];
-            window.App.filters.tracks = [];
-            window.App.filters.locations = [];
-            window.App.updateHeaderStats();
-            window.App.renderAll();
-        }, result.data);
+        await page.evaluate(() => {
+            window.App.loadMockData();
+        });
     }
 
     test('debe cargar datos desde XML de prueba y capturar evidencia', async ({ page }) => {

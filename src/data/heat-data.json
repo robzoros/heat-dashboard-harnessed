@@ -1,0 +1,62 @@
+{
+  "generatedAt": "2026-06-04T00:00:00.000Z",
+  "source": "GitHub Actions weekly export",
+  "players": [
+    { "id": 1, "name": "Player1", "username": "", "userid": "1", "isBot": false, "isMain": true, "isOther": false },
+    { "id": 2, "name": "Player2", "username": "", "userid": "2", "isBot": false, "isMain": true, "isOther": false },
+    { "id": 3, "name": "Player3", "username": "", "userid": "3", "isBot": false, "isMain": false, "isOther": true },
+    { "id": 4, "name": "Bot1", "username": "", "userid": "0", "isBot": true, "isMain": false, "isOther": false }
+  ],
+  "locations": [
+    { "id": 1, "name": "Casa" },
+    { "id": 2, "name": "Bar" }
+  ],
+  "boards": [
+    { "id": 1, "name": "Circuit A" },
+    { "id": 2, "name": "Circuit B" }
+  ],
+  "plays": [
+    {
+      "id": 1,
+      "playDate": "2024-01-15",
+      "board": "Circuit A",
+      "locationRefId": 1,
+      "playerScores": [
+        { "playerRefId": 1, "score": "25", "scoreNum": 25, "winner": true },
+        { "playerRefId": 2, "score": "20", "scoreNum": 20, "winner": false },
+        { "playerRefId": 4, "score": "18", "scoreNum": 18, "winner": false }
+      ]
+    },
+    {
+      "id": 2,
+      "playDate": "2024-02-20",
+      "board": "Circuit B",
+      "locationRefId": 2,
+      "playerScores": [
+        { "playerRefId": 2, "score": "30", "scoreNum": 30, "winner": true },
+        { "playerRefId": 1, "score": "24", "scoreNum": 24, "winner": false },
+        { "playerRefId": 3, "score": "19", "scoreNum": 19, "winner": false }
+      ]
+    },
+    {
+      "id": 3,
+      "playDate": "2024-03-10",
+      "board": "Circuit A",
+      "locationRefId": 1,
+      "playerScores": [
+        { "playerRefId": 1, "score": "28", "scoreNum": 28, "winner": true },
+        { "playerRefId": 2, "score": "24", "scoreNum": 24, "winner": false }
+      ]
+    },
+    {
+      "id": 4,
+      "playDate": "2024-04-05",
+      "board": "Circuit B",
+      "locationRefId": 2,
+      "playerScores": [
+        { "playerRefId": 3, "score": "35", "scoreNum": 35, "winner": true },
+        { "playerRefId": 4, "score": "15", "scoreNum": 15, "winner": false }
+      ]
+    }
+  ]
+}

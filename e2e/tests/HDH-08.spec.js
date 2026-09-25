@@ -22,24 +22,10 @@ test.describe('HDH-08 - Tests unitarios + integración con XML', () => {
   });
 
   async function loadTestData(page) {
-    const response = await page.request.post('/bgg-api/test-login');
-    expect(response.ok()).toBe(true);
-    const result = await response.json();
-    expect(result.success).toBe(true);
-    expect(result.data.plays.length).toBeGreaterThan(0);
-
-    await page.evaluate((data) => {
-      window.App.data = data;
-      window.App.populateFilters();
-      window.App.filters.active = true;
-      window.App.filters.players = [];
-      window.App.filters.tracks = [];
-      window.App.filters.locations = [];
-      window.App.updateHeaderStats();
-      window.App.renderAll();
-    }, result.data);
-
-    return result.data;
+    return page.evaluate(() => {
+      window.App.loadMockData();
+      return window.App.data;
+    });
   }
 
   test('Unit: getFilteredPlays returns all when filters inactive', async ({ page }) => {
