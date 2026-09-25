@@ -1255,3 +1255,23 @@
 - Probar lectura anónima y escritura con la cuenta `zorotrabajo@gmail.com` en el sitio publicado.
 - Verificar que los botones de administración sólo aparecen al administrador autenticado.
 - Actualizar la documentación de despliegue.
+
+---
+
+## Sesión 2026-09-25
+
+### Feature trabajada: HDH-PAGES01 - Despliegue tras merges automáticos
+
+**Estado**: En progreso; cambio implementado localmente, pendiente de entrega y verificación en GitHub Actions.
+
+#### Cambio implementado
+- `deploy-pages.yml` conserva `push` en `main`.
+- Añadido `workflow_run` para `CI y merge automático`.
+- El job sólo despliega cuando `workflow_run` termina con `success`.
+- Se mantiene `workflow_dispatch` para ejecuciones manuales.
+- La concurrencia existente evita despliegues simultáneos.
+
+#### Verificación local
+- YAML parseado correctamente.
+- `git diff --check`: pendiente de ejecutar antes de la entrega.
+- No se ha ejecutado todavía un workflow real con el nuevo disparador.

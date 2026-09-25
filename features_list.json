@@ -756,6 +756,27 @@
       }
     },
     {
+      "id": "HDH-PAGES01",
+      "priority": 1,
+      "name": "Desplegar GitHub Pages tras merges automáticos",
+      "description": [
+        "Añadir workflow_run como disparador alternativo de Deploy GitHub Pages.",
+        "Desplegar después de que CI y merge automático termine correctamente.",
+        "Conservar el disparador push y la ejecución manual."
+      ],
+      "status": "in_progress",
+      "verification": {
+        "checks": [
+          "El workflow se dispara tras push a main",
+          "El workflow se dispara tras workflow_run exitoso",
+          "No despliega cuando auto-merge falla",
+          "El workflow manual sigue disponible",
+          "El YAML es válido"
+        ],
+        "evidence": "Pendiente de verificar en GitHub Actions"
+      }
+    },
+    {
       "id": "FIX-HDH-05",
       "priority": 1,
       "name": "Tests HDH-09 usan directorio separado para evitar interferencia con producción",
