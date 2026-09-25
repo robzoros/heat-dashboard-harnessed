@@ -17,7 +17,13 @@ const App = {
         list: [],
         selected: null
     },
-    bggUsername: 'local',
+    bggUsername: null,
+    firebaseApp: null,
+    firebaseAuth: null,
+    firebaseDb: null,
+    firebaseUser: null,
+    firebaseEnabled: false,
+    championshipsUnsubscribe: null,
 
     init() {
         this.setupTabs();
@@ -25,7 +31,9 @@ const App = {
         this.setupModal();
         this.setupChampionships();
         this.setupPlayerManager();
+        this.setupAdminAuth();
         this.setupCookieConsent();
+        this.initFirebase();
         this.initCharts();
         this.updateHeaderStats();
         this.loadStaticData();
@@ -61,6 +69,100 @@ const App = {
 
         document.getElementById('btn-apply-filters').addEventListener('click', () => {
             this.applyFilters();
+        });
+    },
+
+    loadFirebaseScript(src) {
+        return new Promise((resolve, reject) => {
+            const script = document.createElement('script');
+            script.src = src;
+            script.onload = resolve;
+            script.onerror = reject;
+            document.head.appendChild(script);
+        });
+    },
+
+    async loadFirebaseSdk() {
+        if (window.firebase) return;
+        const base = 'https://www.gstatic.com/firebasejs/10.14.1/';
+        await this.loadFirebaseScript(`${base}firebase-app-compat.js`);
+        await this.loadFirebaseScript(`${base}firebase-auth-compat.js`);
+        await this.loadFirebaseScript(`${base}firebase-firestore-compat.js`);
+    },
+
+    async initFirebase() {
+        const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+        if (isLocal || !window.FIREBASE_CONFIG) {
+            this.firebaseEnabled = false;
+            this.renderAdminStatus();
+            return;
+        }
+        try {
+            await this.loadFirebaseSdk();
+            this.firebaseApp = window.firebase.initializeApp(window.FIREBASE_CONFIG);
+            this.firebaseAuth = window.firebase.auth();
+            this.firebaseDb = window.firebase.firestore();
+            this.firebaseEnabled = true;
+            this.firebaseAuth.onAuthStateChanged(user => {
+                this.firebaseUser = user;
+                this.bggUsername = user && user.uid === window.FIREBASE_ADMIN_UID ? user.email : null;
+                this.renderAdminStatus();
+                if (this.data && this.data.players) this.renderAll();
+            });
+            if (this.data && this.data.players) this.loadChampionships();
+        } catch (error) {
+            console.error('Firebase initialization failed:', error);
+            this.firebaseEnabled = false;
+        }
+        this.renderAdminStatus();
+    },
+
+    isAdmin() {
+        return this.bggUsername === 'local' || (this.firebaseUser && this.firebaseUser.uid === window.FIREBASE_ADMIN_UID);
+    },
+
+    renderAdminStatus() {
+        const status = document.getElementById('admin-status');
+        const loginButton = document.getElementById('btn-admin-login');
+        const logoutButton = document.getElementById('btn-admin-logout');
+        const createButton = document.getElementById('btn-create-campeonato');
+        if (!status || !loginButton || !logoutButton) return;
+        const admin = this.isAdmin();
+        status.textContent = admin ? 'Administrador conectado' : 'Modo lectura';
+        loginButton.classList.toggle('hidden', admin && this.firebaseEnabled);
+        logoutButton.classList.toggle('hidden', !admin || !this.firebaseEnabled);
+        if (createButton) createButton.classList.toggle('hidden', !admin);
+    },
+
+    setupAdminAuth() {
+        const modal = document.getElementById('admin-login-modal');
+        const errorEl = document.getElementById('admin-login-error');
+        document.getElementById('btn-admin-login').addEventListener('click', () => {
+            errorEl.classList.add('hidden');
+            modal.classList.remove('hidden');
+        });
+        document.getElementById('btn-admin-cancel').addEventListener('click', () => modal.classList.add('hidden'));
+        document.getElementById('btn-admin-submit').addEventListener('click', async () => {
+            const email = document.getElementById('admin-email').value.trim();
+            const password = document.getElementById('admin-password').value;
+            errorEl.classList.add('hidden');
+            if (!this.firebaseEnabled) {
+                errorEl.textContent = 'Firebase sólo está disponible en el sitio publicado.';
+                errorEl.classList.remove('hidden');
+                return;
+            }
+            try {
+                await this.firebaseAuth.signInWithEmailAndPassword(email, password);
+                modal.classList.add('hidden');
+                document.getElementById('admin-password').value = '';
+            } catch (error) {
+                errorEl.textContent = 'No se pudo iniciar sesión.';
+                errorEl.classList.remove('hidden');
+            }
+        });
+        document.getElementById('btn-admin-logout').addEventListener('click', async () => {
+            await this.firebaseAuth.signOut();
+            modal.classList.add('hidden');
         });
     },
 
@@ -111,6 +213,22 @@ const App = {
         });
     },
 
+    isFirestoreMode() {
+        return this.firebaseEnabled && this.firebaseDb;
+    },
+
+    championshipSummary(championship) {
+        return {
+            id: championship.id,
+            name: championship.name,
+            description: championship.description,
+            createdAt: championship.createdAt,
+            owner: championship.owner || null,
+            participantCount: (championship.participants || []).length,
+            playCount: (championship.plays || []).length
+        };
+    },
+
     getStoredChampionships() {
         try {
             const stored = JSON.parse(localStorage.getItem('hdh-championships') || '[]');
@@ -126,32 +244,43 @@ const App = {
     },
 
     async loadChampionships() {
+        if (this.isFirestoreMode()) {
+            const collection = this.firebaseDb.collection('championships');
+            if (this.championshipsUnsubscribe) this.championshipsUnsubscribe();
+            this.championshipsUnsubscribe = collection.onSnapshot(snapshot => {
+                const championships = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                this.championships.list = championships
+                    .map(champ => this.championshipSummary(champ))
+                    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                this.championships.selected = null;
+                this.renderChampionshipsSelect();
+                this.renderChampionships();
+            }, error => console.error('Error loading championships:', error));
+            return;
+        }
         this.championships.list = this.getStoredChampionships()
-            .map(champ => ({
-                id: champ.id,
-                name: champ.name,
-                description: champ.description,
-                createdAt: champ.createdAt,
-                owner: champ.owner || null,
-                participantCount: (champ.participants || []).length,
-                playCount: (champ.plays || []).length
-            }))
+            .map(champ => this.championshipSummary(champ))
             .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
         this.renderChampionshipsSelect();
         this.renderChampionships();
     },
 
     async createChampionship(name, description, participants, owner) {
+        if (this.isFirestoreMode()) {
+            if (!this.isAdmin()) return { success: false, error: 'Sólo el administrador puede crear campeonatos' };
+            const doc = this.firebaseDb.collection('championships').doc();
+            const championship = {
+                id: doc.id, name, description: description || '', createdAt: new Date().toISOString(),
+                owner: owner || this.bggUsername || 'local', participants: participants || [], playIds: [], plays: []
+            };
+            await doc.set(championship);
+            return { success: true, data: championship };
+        }
         const championships = this.getStoredChampionships();
         const championship = {
             id: `local_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
-            name,
-            description: description || '',
-            createdAt: new Date().toISOString(),
-            owner: owner || 'local',
-            participants: participants || [],
-            playIds: [],
-            plays: []
+            name, description: description || '', createdAt: new Date().toISOString(),
+            owner: owner || 'local', participants: participants || [], playIds: [], plays: []
         };
         championships.push(championship);
         this.saveStoredChampionships(championships);
@@ -159,6 +288,12 @@ const App = {
     },
 
     async saveChampionshipToServer(champ) {
+        if (this.isFirestoreMode()) {
+            if (!this.isAdmin()) throw new Error('Sólo el administrador puede modificar campeonatos');
+            await this.firebaseDb.collection('championships').doc(champ.id).set(champ);
+            this.championships.selected = champ;
+            return;
+        }
         const championships = this.getStoredChampionships();
         const index = championships.findIndex(item => item.id === champ.id);
         if (index >= 0) championships[index] = champ;
@@ -168,6 +303,13 @@ const App = {
     },
 
     async selectChampionship(id) {
+        if (this.isFirestoreMode()) {
+            const snapshot = await this.firebaseDb.collection('championships').doc(id).get();
+            if (!snapshot.exists) return;
+            this.championships.selected = { id: snapshot.id, ...snapshot.data() };
+            this.renderChampionships();
+            return;
+        }
         const championship = this.getStoredChampionships().find(item => item.id === id);
         if (!championship) return;
         this.championships.selected = championship;
@@ -175,10 +317,11 @@ const App = {
     },
 
     async addPlaysToChampionship(championshipId, playIds) {
-        const championships = this.getStoredChampionships();
-        const championship = championships.find(item => item.id === championshipId);
-        if (!championship) return;
-        championship.plays = championship.plays || [];
+        const current = this.isFirestoreMode()
+            ? await this.firebaseDb.collection('championships').doc(championshipId).get().then(s => s.data())
+            : this.getStoredChampionships().find(item => item.id === championshipId);
+        if (!current) return;
+        const championship = { ...current, plays: current.plays || [] };
         const existingIds = new Set(championship.plays.map(play => String(play.id)));
         const participants = new Set((championship.participants || []).map(id => String(id)));
         for (const playId of playIds) {
@@ -190,25 +333,29 @@ const App = {
         }
         championship.participants = [...participants];
         championship.playIds = championship.plays.map(play => play.id);
-        this.saveStoredChampionships(championships);
-        this.championships.selected = championship;
+        await this.saveChampionshipToServer(championship);
         this.renderChampionships();
     },
 
     async deleteChampionship(championshipId) {
-        this.saveStoredChampionships(this.getStoredChampionships().filter(champ => champ.id !== championshipId));
+        if (this.isFirestoreMode()) {
+            if (!this.isAdmin()) throw new Error('Sólo el administrador puede eliminar campeonatos');
+            await this.firebaseDb.collection('championships').doc(championshipId).delete();
+        } else {
+            this.saveStoredChampionships(this.getStoredChampionships().filter(champ => champ.id !== championshipId));
+        }
         this.championships.selected = null;
         await this.loadChampionships();
     },
 
     async removePlayFromChampionship(championshipId, playId) {
-        const championships = this.getStoredChampionships();
-        const championship = championships.find(item => item.id === championshipId);
-        if (!championship) return;
-        championship.plays = (championship.plays || []).filter(play => String(play.id) !== String(playId));
+        const current = this.isFirestoreMode()
+            ? await this.firebaseDb.collection('championships').doc(championshipId).get().then(s => s.data())
+            : this.getStoredChampionships().find(item => item.id === championshipId);
+        if (!current) return;
+        const championship = { ...current, plays: (current.plays || []).filter(play => String(play.id) !== String(playId)) };
         championship.playIds = championship.plays.map(play => play.id);
-        this.saveStoredChampionships(championships);
-        this.championships.selected = championship;
+        await this.saveChampionshipToServer(championship);
         this.renderChampionships();
     },
 
@@ -386,6 +533,7 @@ const App = {
     },
 
     loadMockData() {
+        this.bggUsername = 'local';
         this.data = {
             players: [
                 { id: 1, name: 'Player1', isBot: false, isMain: true, isOther: false },
@@ -439,6 +587,7 @@ const App = {
         this.populateFilters();
         this.updateHeaderStats();
         this.renderAll();
+        this.renderAdminStatus();
         this.loadChampionships();
     },
 

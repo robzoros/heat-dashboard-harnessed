@@ -15,6 +15,28 @@
     color: #e94560;
 }
 
+.admin-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.admin-toolbar h2 {
+    margin-right: auto;
+}
+
+.admin-status {
+    color: #a0a0a0;
+    font-size: 0.9rem;
+}
+
+.form-error {
+    color: #e94560;
+    margin: 0;
+    text-align: left;
+}
+
 body {
     font-family: 'Barlow', sans-serif;
     background: #1a1a2e;

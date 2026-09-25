@@ -43,6 +43,20 @@ DRY_RUN=true DATA_FILE=/tmp/heat-data-local.json ./scripts/update-bgg-data-local
 
 Para ejecutarlo periódicamente, se puede configurar `cron` o el programador de tareas del sistema. El push a `main` dispara el workflow de despliegue de GitHub Pages.
 
+## Firebase: campeonatos compartidos
+
+En producción, los campeonatos se almacenan en la colección `championships` de Firestore, proyecto `heat-dashboard-511cf`, región `europe-southwest1`. Los usuarios anónimos pueden leerlos. El usuario administrador `zorotrabajo@gmail.com`, UID `TRJQfvQ8MjcVw5spX23skZBiSqr1`, puede crear, editar y eliminar mediante la aplicación.
+
+La configuración Web App pública está en `src/firebase-config.js`. Las reglas de autorización están en `firestore.rules` y deben publicarse en Firebase antes de probar la escritura:
+
+```bash
+firebase login
+firebase use heat-dashboard-511cf
+firebase deploy --only firestore:rules
+```
+
+En desarrollo local, la aplicación conserva `localStorage` para permitir pruebas sin escribir en Firebase. En el sitio publicado, la fuente de campeonatos es Firestore.
+
 ## Persistencia de campeonatos
 
 Los campeonatos ya no se guardan en el servidor. El frontend los almacena en `localStorage`, por lo que:

@@ -212,7 +212,12 @@
         </section>
 
         <section id="tab-campeonatos" class="tab-content">
-            <h2>Campeonatos</h2>
+            <div class="admin-toolbar">
+                <h2>Campeonatos</h2>
+                <span id="admin-status" class="admin-status">Modo lectura</span>
+                <button id="btn-admin-login" class="btn-primary btn-narrow">Acceso administrador</button>
+                <button id="btn-admin-logout" class="btn-secondary btn-narrow hidden">Cerrar sesión</button>
+            </div>
             <div class="campeonatos-toolbar">
                 <button id="btn-create-campeonato" class="btn-primary btn-narrow">+ Nuevo Campeonato</button>
                 <select id="campeonatos-select" class="campeonatos-select">
@@ -237,6 +242,18 @@
         </div>
     </div>
 
+    <div id="admin-login-modal" class="modal hidden">
+        <div class="modal-content">
+            <h2>Acceso administrador</h2>
+            <input type="email" id="admin-email" placeholder="Correo administrador" autocomplete="username">
+            <input type="password" id="admin-password" placeholder="Contraseña" autocomplete="current-password">
+            <p id="admin-login-error" class="form-error hidden"></p>
+            <button id="btn-admin-submit" class="btn-primary">Entrar</button>
+            <button id="btn-admin-cancel" class="btn-secondary">Cancelar</button>
+        </div>
+    </div>
+
+    <script src="firebase-config.js"></script>
     <script src="app.js"></script>
 </body>
 </html>
