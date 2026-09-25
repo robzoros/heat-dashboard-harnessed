@@ -777,6 +777,28 @@
       }
     },
     {
+      "id": "HDH-UI01",
+      "priority": 1,
+      "name": "Deshabilitar controles de Campeonatos sin administrador",
+      "description": [
+        "Mostrar Nuevo Campeonato y Cerrar sesión deshabilitados sin administrador.",
+        "Habilitarlos cuando el administrador esté identificado.",
+        "Volver a deshabilitarlos después de cerrar sesión.",
+        "Mantener las protecciones reales de autorización en la UI."
+      ],
+      "status": "completed",
+      "verification": {
+        "checks": [
+          "Ambos botones están visibles y deshabilitados sin administrador",
+          "Ambos botones se habilitan con administrador",
+          "Ambos botones se deshabilitan tras logout",
+          "El modal de creación rechaza usuarios no autorizados",
+          "Los tests E2E pasan"
+        ],
+        "evidence": "La spec HDH-FIREBASE01 verifica los estados no identificado, administrador y logout: 3/3 pasan. La suite HDH-09 de Campeonatos pasa 6/6. Los botones permanecen visibles y alternan disabled; las guardas de creación y logout también están verificadas."
+      }
+    },
+    {
       "id": "FIX-HDH-05",
       "priority": 1,
       "name": "Tests HDH-09 usan directorio separado para evitar interferencia con producción",

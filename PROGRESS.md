@@ -1274,3 +1274,27 @@
 - YAML parseado correctamente.
 - `git diff --check`: pendiente de ejecutar antes de la entrega.
 - No se ha ejecutado todavía un workflow real con el nuevo disparador.
+
+---
+
+## Sesión 2026-09-25
+
+### Feature trabajada: HDH-UI01 - Controles de Campeonatos según administrador
+
+**Estado**: Completada; controles de Campeonatos verificados para estados no identificado, administrador y logout.
+
+#### Cambios implementados
+- `Nuevo Campeonato` y `Cerrar sesión` permanecen visibles y usan `disabled` cuando no hay administrador.
+- Ambos se habilitan cuando `isAdmin()` devuelve true.
+- Ambos vuelven a deshabilitarse al perder el estado de administrador.
+- El handler de logout no intenta llamar a Firebase si no hay sesión.
+- El modal de creación comprueba la autorización aunque se invoque programáticamente.
+- Añadido estilo visual para botones deshabilitados.
+- Añadida prueba E2E con estados no identificado, identificado y logout.
+
+#### Verificación final
+- `node --check src/app.js`: OK.
+- `git diff --check`: OK.
+- `HDH-FIREBASE01`: 3/3 tests pasan.
+- `HDH-09`: 6/6 tests pasan.
+- Captura de evidencia generada en `evidence/screenshots/HDH-UI01-controles-admin.png`.
