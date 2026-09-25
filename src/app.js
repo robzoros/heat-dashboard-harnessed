@@ -130,8 +130,8 @@ const App = {
         const admin = this.isAdmin();
         status.textContent = admin ? 'Administrador conectado' : 'Modo lectura';
         loginButton.classList.toggle('hidden', admin && this.firebaseEnabled);
-        logoutButton.classList.toggle('hidden', !admin || !this.firebaseEnabled);
-        if (createButton) createButton.classList.toggle('hidden', !admin);
+        logoutButton.disabled = !admin;
+        if (createButton) createButton.disabled = !admin;
     },
 
     setupAdminAuth() {
@@ -161,6 +161,7 @@ const App = {
             }
         });
         document.getElementById('btn-admin-logout').addEventListener('click', async () => {
+            if (!this.firebaseAuth || !this.firebaseUser || !this.isAdmin()) return;
             await this.firebaseAuth.signOut();
             modal.classList.add('hidden');
         });
@@ -174,6 +175,7 @@ const App = {
 
     setupChampionships() {
         document.getElementById('btn-create-campeonato').addEventListener('click', () => {
+            if (!this.isAdmin()) return;
             this.showCreateChampionshipModal();
         });
         document.getElementById('btn-load-campeonatos').addEventListener('click', () => {
@@ -360,6 +362,7 @@ const App = {
     },
 
     showCreateChampionshipModal() {
+        if (!this.isAdmin()) return;
         const playerList = document.getElementById('new-campeonato-players');
         playerList.innerHTML = this.data.players.map(p =>
             `<label><input type="checkbox" value="${p.id}"> ${p.name}${p.isBot ? ' (Bot)' : ''}${p.isMain ? ' (Principal)' : ''}${p.isOther ? ' (Otro)' : ''}</label>`

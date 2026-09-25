@@ -243,6 +243,13 @@ body.panel-open .btn-toggle {
     margin-bottom: 10px;
 }
 
+.btn-primary:disabled,
+.btn-secondary:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    filter: grayscale(0.4);
+}
+
 .btn-primary, .btn-secondary {
     width: 100%;
     padding: 12px;
