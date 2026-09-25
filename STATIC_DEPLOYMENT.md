@@ -23,7 +23,25 @@ El script `proxy/scripts/generate-bgg-data.js`:
 5. genera `src/data/heat-data.json`;
 6. publica `src/` como artifact de GitHub Pages.
 
-Si BGG devuelve un error persistente después de los reintentos o no encuentra partidas, el workflow termina unsuccessfully y GitHub Pages conserva el deployment anterior.
+Si BGG devuelve un error persistente después de los reintentos o no encuentra partidas, el workflow termina con error y GitHub Pages conserva el deployment anterior.
+
+## Actualización local automatizada
+
+En el entorno donde exista una copia local del repositorio se puede utilizar el script ignorado por Git:
+
+```text
+scripts/update-bgg-data-local.sh
+```
+
+El script lee `BGG_USER` y `BGG_PASS` del entorno o, si no existen, de `secrets.json`; ejecuta el exportador, crea un commit sólo si el JSON cambia y hace `git push` a la rama actual.
+
+Como el script está en `.gitignore`, no se publica en GitHub y no contiene ni descarga credenciales al repositorio. Para probarlo sin hacer commit ni push:
+
+```bash
+DRY_RUN=true DATA_FILE=/tmp/heat-data-local.json ./scripts/update-bgg-data-local.sh
+```
+
+Para ejecutarlo periódicamente, se puede configurar `cron` o el programador de tareas del sistema. El push a `main` dispara el workflow de despliegue de GitHub Pages.
 
 ## Persistencia de campeonatos
 
