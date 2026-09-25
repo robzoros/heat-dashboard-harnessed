@@ -1180,3 +1180,27 @@
 - El JSON será público al publicarse en Pages. Antes de publicly exponer datos reales, confirmar que las partidas y nombres son públicos o anonimizar el export.
 - Los campeonatos son locales al navegador y no se comparten entre dispositivos.
 - Los workflows programados pueden retrasarse; la web muestra la última exportación disponible.
+
+---
+
+## Sesión 2026-09-25
+
+### Corregido: HDH-MIGRATION-BUG01 - Reintentos BGG en exportación estática
+
+**Estado**: Completada
+
+#### Evidencia
+- `proxy/scripts/generate-bgg-data.js` ahora reintenta errores de red, timeouts y respuestas HTTP 403, 408, 425, 429, 500, 502, 503 y 504.
+- Los reintentos usan backoff exponencial, respetan `Retry-After` y están limitados por `BGG_MAX_ATTEMPTS`.
+- Se añadió `User-Agent` y timeout de 30 segundos a las peticiones BGG.
+- El workflow semanal usa seis intentos, backoff inicial de tres segundos y timeout configurable.
+- La generación local con credenciales y salida temporal produjo 129 partidas y 19 jugadores.
+- `proxy/test-generate-bgg-data.js` simula dos respuestas 403 y verifica que 401 no se reintenta.
+
+#### Verificación final
+- `node --check proxy/scripts/generate-bgg-data.js`: OK.
+- `npm test` en `proxy`: clasificación, rate limiting y retries BGG: OK.
+- `git diff --check`: OK.
+
+#### Nota
+- Un 403 persistente después de todos los reintentos probablemente indicará bloqueo de IP/rate limiting de BGG para el runner de GitHub Actions. En ese caso el workflow conserva el deployment anterior y debe revisarse el rate limiting de BGG.

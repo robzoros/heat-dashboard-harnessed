@@ -39,6 +39,9 @@ jobs:
         env:
           BGG_USER: ${{ secrets.BGG_USER }}
           BGG_PASS: ${{ secrets.BGG_PASS }}
+          BGG_MAX_ATTEMPTS: 6
+          BGG_RETRY_BASE_MS: 3000
+          BGG_REQUEST_TIMEOUT_MS: 30000
         run: node proxy/scripts/generate-bgg-data.js
 
       - name: Configure Pages

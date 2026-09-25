@@ -8,6 +8,25 @@ const BGG_LOGIN_HOST = 'boardgamegeek.com';
 const BGG_API_HOST = 'boardgamegeek.com';
 const GAME_ID = '366013';
 const OUTPUT_PATH = process.env.OUTPUT_PATH || path.join(__dirname, '..', '..', 'src', 'data', 'heat-data.json');
+const MAX_ATTEMPTS = Math.max(1, parseInt(process.env.BGG_MAX_ATTEMPTS || '5', 10));
+const RETRY_BASE_MS = Math.max(250, parseInt(process.env.BGG_RETRY_BASE_MS || '2000', 10));
+const REQUEST_TIMEOUT_MS = Math.max(5000, parseInt(process.env.BGG_REQUEST_TIMEOUT_MS || '30000', 10));
+const RETRYABLE_STATUS_CODES = new Set([403, 408, 425, 429, 500, 502, 503, 504]);
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function getRetryDelay(headers, attempt) {
+    const retryAfter = headers && headers['retry-after'];
+    if (retryAfter) {
+        const seconds = Number(retryAfter);
+        if (Number.isFinite(seconds)) return Math.max(1000, seconds * 1000);
+        const dateDelay = new Date(retryAfter).getTime() - Date.now();
+        if (Number.isFinite(dateDelay)) return Math.max(1000, dateDelay);
+    }
+    return RETRY_BASE_MS * (2 ** (attempt - 1));
+}
 
 function makeRequest(options, postData) {
     return new Promise((resolve, reject) => {
@@ -21,10 +40,35 @@ function makeRequest(options, postData) {
                 body
             }));
         });
+        request.setTimeout(REQUEST_TIMEOUT_MS, () => {
+            request.destroy(new Error(`Request timeout after ${REQUEST_TIMEOUT_MS}ms`));
+        });
         request.on('error', reject);
         if (postData) request.write(postData);
         request.end();
     });
+}
+
+async function makeRequestWithRetry(options, postData, operation, request = makeRequest) {
+    let lastError;
+    for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+        try {
+            const response = await request(options, postData);
+            if (!RETRYABLE_STATUS_CODES.has(response.statusCode)) return response;
+            lastError = new Error(`${operation} returned HTTP ${response.statusCode}`);
+            if (attempt === MAX_ATTEMPTS) break;
+            const delay = getRetryDelay(response.headers, attempt);
+            console.warn(`${operation}: HTTP ${response.statusCode}; retrying in ${delay}ms (${attempt}/${MAX_ATTEMPTS})`);
+            await sleep(delay);
+        } catch (error) {
+            lastError = error;
+            if (attempt === MAX_ATTEMPTS) break;
+            const delay = RETRY_BASE_MS * (2 ** (attempt - 1));
+            console.warn(`${operation}: ${error.message}; retrying in ${delay}ms (${attempt}/${MAX_ATTEMPTS})`);
+            await sleep(delay);
+        }
+    }
+    throw new Error(`${lastError.message} after ${MAX_ATTEMPTS} attempts`);
 }
 
 function extractCookies(setCookieHeader) {
@@ -44,37 +88,40 @@ function parseXml(xml) {
 
 async function login(username, password) {
     const body = JSON.stringify({ credentials: { username, password } });
-    const response = await makeRequest({
+    const response = await makeRequestWithRetry({
         hostname: BGG_LOGIN_HOST,
         port: 443,
         path: '/login/api/v1',
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Content-Length': Buffer.byteLength(body)
+            'Accept': 'application/json',
+            'Content-Length': Buffer.byteLength(body),
+            'User-Agent': 'HeatDashboardHarnessed/1.0 (+https://github.com/robzoros/heat-dashboard-harnessed)'
         }
-    }, body);
+    }, body, 'BGG login');
 
     if (response.statusCode !== 204) {
-        throw new Error(`BGG login failed with status ${response.statusCode}`);
+        throw new Error(`BGG login failed with status ${response.statusCode} after ${MAX_ATTEMPTS} attempts`);
     }
     return extractCookies(response.headers['set-cookie']);
 }
 
 async function fetchPlaysPage(cookies, username, page) {
-    const response = await makeRequest({
+    const response = await makeRequestWithRetry({
         hostname: BGG_API_HOST,
         port: 443,
         path: `/xmlapi2/plays?username=${encodeURIComponent(username)}&id=${GAME_ID}&page=${page}`,
         method: 'GET',
         headers: {
             Cookie: cookies,
-            Accept: 'application/xml'
+            Accept: 'application/xml',
+            'User-Agent': 'HeatDashboardHarnessed/1.0 (+https://github.com/robzoros/heat-dashboard-harnessed)'
         }
-    });
+    }, null, `BGG plays page ${page}`);
 
     if (response.statusCode !== 200) {
-        throw new Error(`BGG API returned ${response.statusCode} on page ${page}`);
+        throw new Error(`BGG API returned ${response.statusCode} on page ${page} after ${MAX_ATTEMPTS} attempts`);
     }
     return response.body;
 }
@@ -191,7 +238,15 @@ async function main() {
     console.log(`Generated ${OUTPUT_PATH}: ${data.plays.length} plays, ${data.players.length} players`);
 }
 
-main().catch(error => {
-    console.error(`Data generation failed: ${error.message}`);
-    process.exitCode = 1;
-});
+if (require.main === module) {
+    main().catch(error => {
+        console.error(`Data generation failed: ${error.message}`);
+        process.exitCode = 1;
+    });
+}
+
+module.exports = {
+    RETRYABLE_STATUS_CODES,
+    getRetryDelay,
+    makeRequestWithRetry
+};

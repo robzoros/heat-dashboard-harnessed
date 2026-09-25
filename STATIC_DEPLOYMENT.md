@@ -17,12 +17,13 @@ El workflow semanal `weekly-data.yml` se ejecuta todos los lunes a las 06:00 UTC
 El script `proxy/scripts/generate-bgg-data.js`:
 
 1. autentica contra BGG usando los secrets del workflow;
-2. descarga todas las páginas XML de las partidas de Heat;
-3. normaliza jugadores, circuitos, localizaciones y partidas;
-4. genera `src/data/heat-data.json`;
-5. publica `src/` como artifact de GitHub Pages.
+2. reintenta errores de red, timeouts y respuestas HTTP 403, 408, 425, 429 y 5xx con backoff exponencial y `Retry-After` cuando BGG lo indica;
+3. descarga todas las páginas XML de las partidas de Heat;
+4. normaliza jugadores, circuitos, localizaciones y partidas;
+5. genera `src/data/heat-data.json`;
+6. publica `src/` como artifact de GitHub Pages.
 
-Si BGG devuelve un error o no encuentra partidas, el workflow termina unsuccessfully y GitHub Pages conserva el deployment anterior.
+Si BGG devuelve un error persistente después de los reintentos o no encuentra partidas, el workflow termina unsuccessfully y GitHub Pages conserva el deployment anterior.
 
 ## Persistencia de campeonatos
 
