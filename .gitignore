@@ -10,3 +10,7 @@ evidence/reports/*
 !evidence/reports/.gitkeep
 evidence/logs/*.log
 scripts/update-bgg-data-local.sh
+.agents/
+.codegraph/
+.pi/
+prompts/
