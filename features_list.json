@@ -666,6 +666,29 @@
       }
     },
     {
+      "id": "HDH-MIGRATION01",
+      "priority": 1,
+      "name": "Migración a GitHub Pages con datos estáticos semanales",
+      "description": [
+        "Publicar el frontend directamente desde GitHub Pages sin depender de Docker ni de un servidor web en runtime.",
+        "Generar src/data/heat-data.json mediante GitHub Actions usando secrets de BGG.",
+        "Ejecutar la exportación automáticamente una vez por semana y desplegar el resultado a GitHub Pages.",
+        "Migrar la persistencia de campeonatos a localStorage para el sitio estático.",
+        "Actualizar los tests E2E para validar el sitio mediante un servidor HTTP estático."
+      ],
+      "status": "completed",
+      "verification": {
+        "checks": [
+          "El frontend carga src/data/heat-data.json sin llamadas a /bgg-api",
+          "El workflow semanal genera el JSON usando secrets de BGG",
+          "GitHub Pages recibe un artifact estático desde src/",
+          "Los campeonatos se guardan en localStorage",
+          "Las pruebas E2E pasan con servidor HTTP estático y sin Docker"
+        ],
+        "evidence": "Generador BGG verificado con 129 partidas y 19 jugadores usando credenciales locales, sin publicar el JSON real; 90/90 tests E2E y captura de evidencias pasaron con servidor HTTP estático, sin Docker. Workflows semanales y de Pages añadidos; falta únicamente configurar secrets y Pages en GitHub."
+      }
+    },
+    {
       "id": "FIX-HDH-05",
       "priority": 1,
       "name": "Tests HDH-09 usan directorio separado para evitar interferencia con producción",

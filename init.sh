@@ -20,36 +20,29 @@ else
   fail "Error: El fichero features_list.json no existe."
 fi
 
-if [ -f "Dockerfile" ]; then
-  ok "Dockerfile existe."
+if [ -f "src/index.html" ]; then
+  ok "Frontend estático existe."
 else
-  fail "Error: El fichero Dockerfile no existe."
+  fail "Error: El fichero src/index.html no existe."
 fi
 
-if [ -f "docker-compose.yml" ]; then
-  ok "docker-compose.yml existe."
+if [ -f "src/app.js" ]; then
+  ok "JavaScript estático existe."
 else
-  fail "Error: El fichero docker-compose.yml no existe."
+  fail "Error: El fichero src/app.js no existe."
 fi
 
-if [ -f "nginx.conf" ]; then
-  ok "nginx.conf existe."
+if [ -f "src/data/heat-data.json" ]; then
+  ok "JSON estático de datos existe."
 else
-  fail "Error: El fichero nginx.conf no existe."
+  fail "Error: El fichero src/data/heat-data.json no existe."
 fi
 
-if [ -f "secrets.json" ]; then
-  ok "secrets.json existe."
+if [ -f ".github/workflows/weekly-data.yml" ]; then
+  ok "Workflow semanal existe."
 else
-  fail "Error: El fichero secrets.json no existe."
+  fail "Error: El fichero .github/workflows/weekly-data.yml no existe."
 fi
-
-# Docker daemon activo
-if docker info &>/dev/null 2>&1; then
-  ok "Docker daemon en ejecución"
-else
-  fail "Docker daemon no responde. Arráncalo y reintenta."
-fi 
 
 #Git repository check
 DIR=$(pwd)

@@ -1,10 +1,9 @@
 # Heat Dashboard Harnessed
 
-## Sistema de evidencias
+## Límites por defecto
 
-### Ejecutar tests en local
-cd e2e  
-npm run test:e2e
-### Generar evidencias completas (screenshots + reports)
-npm run capture:evidence  
-Los screenshots se generan en evidence/screenshots/ pero no se versionan en git. En CI se suben automáticamente como artifacts de GitHub Actions con retención de 30 días.
+| Endpoint | Límite |Variable     |
+|:----------|:------:|------------:|
+|POST /login|5/min|RATE_LIMIT_LOGIN|
+|POST /test-login|10/min|RATE_LIMIT_TEST_LOGIN|
+|/championships (todos)|30/min|RATE_LIMIT_CHAMPIONSHIPS|

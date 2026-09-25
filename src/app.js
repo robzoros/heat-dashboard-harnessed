@@ -17,7 +17,7 @@ const App = {
         list: [],
         selected: null
     },
-    bggUsername: null,
+    bggUsername: 'local',
 
     init() {
         this.setupTabs();
@@ -28,6 +28,7 @@ const App = {
         this.setupCookieConsent();
         this.initCharts();
         this.updateHeaderStats();
+        this.loadStaticData();
     },
 
     setupTabs() {
@@ -65,17 +66,7 @@ const App = {
 
     setupModal() {
         document.getElementById('btn-load-data').addEventListener('click', () => {
-            document.getElementById('login-modal').classList.remove('hidden');
-        });
-
-        document.getElementById('btn-cancel-login').addEventListener('click', () => {
-            document.getElementById('login-modal').classList.add('hidden');
-        });
-
-        document.getElementById('btn-login').addEventListener('click', () => {
-            const username = document.getElementById('bgg-username').value;
-            const password = document.getElementById('bgg-password').value;
-            this.loadData(username, password);
+            this.loadStaticData();
         });
     },
 
@@ -120,126 +111,105 @@ const App = {
         });
     },
 
-    async loadChampionships() {
+    getStoredChampionships() {
         try {
-            const response = await fetch('/bgg-api/championships');
-            const result = await response.json();
-            if (result.success) {
-                this.championships.list = result.data;
-                this.renderChampionshipsSelect();
-                this.renderChampionships();
-            }
+            const stored = JSON.parse(localStorage.getItem('hdh-championships') || '[]');
+            return Array.isArray(stored) ? stored : [];
         } catch (error) {
-            console.error('Error loading championships:', error);
+            console.error('Error reading local championships:', error);
+            return [];
         }
+    },
+
+    saveStoredChampionships(championships) {
+        localStorage.setItem('hdh-championships', JSON.stringify(championships));
+    },
+
+    async loadChampionships() {
+        this.championships.list = this.getStoredChampionships()
+            .map(champ => ({
+                id: champ.id,
+                name: champ.name,
+                description: champ.description,
+                createdAt: champ.createdAt,
+                owner: champ.owner || null,
+                participantCount: (champ.participants || []).length,
+                playCount: (champ.plays || []).length
+            }))
+            .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        this.renderChampionshipsSelect();
+        this.renderChampionships();
     },
 
     async createChampionship(name, description, participants, owner) {
-        try {
-            const response = await fetch('/bgg-api/championships', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name, description, participants, owner })
-            });
-            const result = await response.json();
-            return result;
-        } catch (error) {
-            console.error('Error creating championship:', error);
-            return { success: false, error: error.message };
-        }
+        const championships = this.getStoredChampionships();
+        const championship = {
+            id: `local_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
+            name,
+            description: description || '',
+            createdAt: new Date().toISOString(),
+            owner: owner || 'local',
+            participants: participants || [],
+            playIds: [],
+            plays: []
+        };
+        championships.push(championship);
+        this.saveStoredChampionships(championships);
+        return { success: true, data: championship };
     },
 
     async saveChampionshipToServer(champ) {
-        try {
-            const response = await fetch(`/bgg-api/championships/${champ.id}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(champ)
-            });
-            const result = await response.json();
-            if (result.success) {
-                this.championships.selected = result.data;
-            }
-        } catch (error) {
-            console.error('Error saving championship:', error);
-        }
+        const championships = this.getStoredChampionships();
+        const index = championships.findIndex(item => item.id === champ.id);
+        if (index >= 0) championships[index] = champ;
+        else championships.push(champ);
+        this.saveStoredChampionships(championships);
+        this.championships.selected = champ;
     },
 
     async selectChampionship(id) {
-        try {
-            const response = await fetch(`/bgg-api/championships/${id}`);
-            const result = await response.json();
-            if (result.success) {
-                this.championships.selected = result.data;
-                this.renderChampionships();
-            }
-        } catch (error) {
-            console.error('Error loading championship:', error);
-        }
+        const championship = this.getStoredChampionships().find(item => item.id === id);
+        if (!championship) return;
+        this.championships.selected = championship;
+        this.renderChampionships();
     },
 
     async addPlaysToChampionship(championshipId, playIds) {
-        try {
-            const champ = this.championships.selected;
-            const existingParticipantIds = new Set((champ.participants || []).map(id => String(id)));
-            const fullPlays = [];
-
-            for (const playId of playIds) {
-                const play = this.data.plays.find(p => String(p.id) === String(playId));
-                if (play) {
-                    fullPlays.push(play);
-                    for (const ps of play.playerScores) {
-                        existingParticipantIds.add(String(ps.playerRefId));
-                    }
-                }
-            }
-            const updatedParticipants = [...existingParticipantIds];
-            const response = await fetch(`/bgg-api/championships/${championshipId}/plays`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ plays: fullPlays, participants: updatedParticipants })
-            });
-            const result = await response.json();
-            if (result.success) {
-                this.championships.selected = result.data;
-                this.renderChampionships();
-            }
-        } catch (error) {
-            console.error('Error adding plays:', error);
+        const championships = this.getStoredChampionships();
+        const championship = championships.find(item => item.id === championshipId);
+        if (!championship) return;
+        championship.plays = championship.plays || [];
+        const existingIds = new Set(championship.plays.map(play => String(play.id)));
+        const participants = new Set((championship.participants || []).map(id => String(id)));
+        for (const playId of playIds) {
+            const play = this.data.plays.find(item => String(item.id) === String(playId));
+            if (!play || existingIds.has(String(play.id))) continue;
+            championship.plays.push(play);
+            existingIds.add(String(play.id));
+            for (const playerScore of play.playerScores) participants.add(String(playerScore.playerRefId));
         }
+        championship.participants = [...participants];
+        championship.playIds = championship.plays.map(play => play.id);
+        this.saveStoredChampionships(championships);
+        this.championships.selected = championship;
+        this.renderChampionships();
     },
 
     async deleteChampionship(championshipId) {
-        try {
-            const response = await fetch(`/bgg-api/championships/${championshipId}`, {
-                method: 'DELETE'
-            });
-            const result = await response.json();
-            if (result.success) {
-                this.championships.selected = null;
-                this.championships.list = this.championships.list.filter(c => c.id !== championshipId);
-                document.getElementById('campeonatos-select').value = '';
-                document.getElementById('campeonato-detail').classList.add('hidden');
-                this.renderChampionshipsSelect();
-            }
-        } catch (error) {
-            console.error('Error deleting championship:', error);
-        }
+        this.saveStoredChampionships(this.getStoredChampionships().filter(champ => champ.id !== championshipId));
+        this.championships.selected = null;
+        await this.loadChampionships();
     },
 
     async removePlayFromChampionship(championshipId, playId) {
-        try {
-            const response = await fetch(`/bgg-api/championships/${championshipId}/plays/${playId}`, {
-                method: 'DELETE'
-            });
-            const result = await response.json();
-            if (result.success) {
-                this.championships.selected = result.data;
-                this.renderChampionships();
-            }
-        } catch (error) {
-            console.error('Error removing play:', error);
-        }
+        const championships = this.getStoredChampionships();
+        const championship = championships.find(item => item.id === championshipId);
+        if (!championship) return;
+        championship.plays = (championship.plays || []).filter(play => String(play.id) !== String(playId));
+        championship.playIds = championship.plays.map(play => play.id);
+        this.saveStoredChampionships(championships);
+        this.championships.selected = championship;
+        this.renderChampionships();
     },
 
     showCreateChampionshipModal() {
@@ -385,32 +355,32 @@ const App = {
         this.renderChampionshipDetail();
     },
 
-    async loadData(username, password) {
+    async loadStaticData() {
+        const status = document.getElementById('data-status');
+        status.textContent = 'Cargando datos...';
+        status.classList.remove('data-status-error');
         try {
-            const response = await fetch('/bgg-api/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, password })
-            });
-            const result = await response.json();
-            document.getElementById('login-modal').classList.add('hidden');
-            if (result.success && result.data) {
-                this.data = result.data;
-                this.bggUsername = username;
-                this.originalPlayers = this.data.players.map(p => ({ ...p }));
-                this.applyPlayerOverrides();
-                console.log('BGG Data loaded:');
-                console.log('Players:', this.data.players);
-                console.log('Locations:', this.data.locations);
-                console.log('Boards:', this.data.boards);
-                console.log('Plays:', this.data.plays);
+            const response = await fetch('./data/heat-data.json', { cache: 'no-store' });
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            const data = await response.json();
+            if (!Array.isArray(data.players) || !Array.isArray(data.plays)) {
+                throw new Error('Formato de datos inválido');
             }
+            this.data = data;
+            this.originalPlayers = this.data.players.map(p => ({ ...p }));
+            this.applyPlayerOverrides();
             this.populateFilters();
             this.updateHeaderStats();
             this.renderAll();
             this.loadChampionships();
+            const generatedAt = data.generatedAt ? new Date(data.generatedAt) : null;
+            status.textContent = generatedAt && !Number.isNaN(generatedAt.getTime())
+                ? `Actualizado: ${generatedAt.toLocaleDateString('es-ES')}`
+                : 'Datos cargados';
         } catch (error) {
-            console.error('Error loading data:', error);
+            console.error('Error loading static data:', error);
+            status.textContent = 'No se pudo cargar el JSON; usando datos de ejemplo';
+            status.classList.add('data-status-error');
             this.loadMockData();
         }
     },

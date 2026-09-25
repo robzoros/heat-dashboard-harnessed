@@ -4,6 +4,17 @@
     box-sizing: border-box;
 }
 
+.data-status {
+    display: inline-block;
+    margin-left: 12px;
+    color: #a0a0a0;
+    font-size: 0.85rem;
+}
+
+.data-status-error {
+    color: #e94560;
+}
+
 body {
     font-family: 'Barlow', sans-serif;
     background: #1a1a2e;

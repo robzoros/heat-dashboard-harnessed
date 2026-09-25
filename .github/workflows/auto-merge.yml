@@ -1,4 +1,4 @@
-name: CI automa
+name: CI y merge automático
 
 on:
   push:
@@ -19,7 +19,6 @@ jobs:
           fetch-depth: 0
 
       - name: Create Pull Request
-        id: create
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_REPO: ${{ github.repository }}
@@ -32,46 +31,29 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-      - name: Install dependencies
+
+      - name: Install E2E dependencies
         working-directory: e2e
         run: npm ci
 
       - name: Install Playwright browsers
         working-directory: e2e
-        run: npx playwright install chromium
+        run: npx playwright install --with-deps chromium
 
-      - name: Create secrets.json
-        working-directory: ${{ github.workspace }}
-        env:
-          BGG_USER: ${{ secrets.BGG_USER }}
-          BGG_PASS: ${{ secrets.BGG_PASS }}
+      - name: Start static site
         run: |
-          if [ -z "$BGG_USER" ] || [ -z "$BGG_PASS" ]; then
-            echo "WARNING: BGG_USER o BGG_PASS no configurados. El proxy no podrá autenticarse con BGG."
-            echo "Configúralos en GitHub Settings > Secrets > Actions"
-          fi
-          cat > secrets.json <<EOF
-          {"user":"$BGG_USER","password":"$BGG_PASS"}
-          EOF
-
-      - name: Build & Start Docker
-        env:
-          CHAMPIONSHIPS_DIR: /app/test-championships
-        run: docker compose up -d --build
-
-      - name: Wait for services
-        run: |
-          for i in $(seq 1 30); do
+          python3 -m http.server 8082 --directory src > /tmp/heat-dashboard-http.log 2>&1 &
+          echo $! > /tmp/heat-dashboard-http.pid
+          for i in $(seq 1 20); do
             if curl -sf http://localhost:8082 > /dev/null 2>&1; then
-              echo "Servicios listos."
+              echo "Static site ready."
               exit 0
             fi
-            echo "Intento $i/30..."
-            sleep 3
+            sleep 1
           done
-          echo "ERROR: Servicios no disponibles tras 90s"
-          docker compose logs
+          cat /tmp/heat-dashboard-http.log
           exit 1
+
       - name: Run E2E tests
         working-directory: e2e
         run: npx playwright test
@@ -88,9 +70,12 @@ jobs:
           if-no-files-found: warn
           retention-days: 30
 
-      - name: Stop Docker
+      - name: Stop static site
         if: always()
-        run: docker compose down
+        run: |
+          if [ -f /tmp/heat-dashboard-http.pid ]; then
+            kill "$(cat /tmp/heat-dashboard-http.pid)" || true
+          fi
 
       - name: Merge Pull Request
         if: success()
@@ -101,4 +86,4 @@ jobs:
           PR_NUMBER=$(gh pr list --base main --head ${{ github.ref_name }} \
             --json number --jq '.[0].number')
           [ -n "$PR_NUMBER" ] && [ "$PR_NUMBER" != "null" ] || { echo "No PR"; exit 1; }
-          gh pr merge $PR_NUMBER --squash
+          gh pr merge "$PR_NUMBER" --squash

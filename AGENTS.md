@@ -8,7 +8,7 @@ Dashboard web de estadísticas para partidas del juego de mesa **Heat: Pedal to 
 
 Antes de escribir código:
 
-1. Ejecuta script bash `init.sh`. Si sale con error terminas.
+1. Ejecuta el script bash `init.sh`. Si sale con error terminas. La verificación ya no requiere Docker.
 2. Lee `PROGRESS.md` para el estado verificado más reciente y el próximo paso.
 3. Lee `features_list.json` y elige la feature inacabada de mayor prioridad.
 4. **Crea nueva rama con el id de la feature como nombre.**
@@ -23,11 +23,10 @@ Si trabajas con tasks actualiza la task y cuando se hayan completado todas actua
 ## Stack técnico
 
 - **Frontend**: HTML + CSS + JavaScript puro + Chart.js + Google Fonts (Bebas Neue, Barlow Condensed, Barlow)
-- **Servidor**: nginx:alpine en Docker
-- **Proxy BGG**: Node.js 20 (servicio separado en Docker)
-- **Datos**: llamada a la API de BGG
+- **Publicación**: GitHub Pages publica el directorio `src/`
+- **Datos**: GitHub Actions genera semanalmente `src/data/heat-data.json` usando Node.js 20 y la API de BGG
 - **Repositorio**: Github
-- **Docker**: `docker compose up -d --build` → http://localhost:8082
+- **Servidor local**: `python3 -m http.server 8082 --directory src`
 
 ## Reglas de Trabajo
 
@@ -38,10 +37,10 @@ Si trabajas con tasks actualiza la task y cuando se hayan completado todas actua
 - Mantén los cambios dentro del alcance de la feature seleccionada a menos que un bloqueo fuerce una corrección de soporte estrecha.
 - No cambies silenciosamente las reglas de verificación durante la implementación.
 - Si no pasa las pruebas haz los cambios necesarios y vuelve a intentarlo (5 veces como máximo)
-- Para las pruebas de conexión con BGG usar usuario/password de archivo secrets.
+- Para las pruebas de datos estáticos usar `python3 -m http.server 8082 --directory src`; no se requieren credenciales BGG en el navegador.
 - Después de implementar una feature, crear/actualizar su spec en `e2e/tests/<feature-id>.spec.js`
 - Cada spec debe generar screenshots de evidencia con `page.screenshot()` donde aplique (ej. después de cargar datos, aplicar filtros, etc.)
-- Tras pasar la verificación local, ejecutar `cd e2e && npm run capture:evidence` para generar pantallazos
+- Tras pasar la verificación local, ejecutar `cd e2e && npm run capture:evidence` para generar pantallazos usando el servidor HTTP estático.
 - Los screenshots generados en local no se versionan en git; la evidencia oficial se almacena como artifacts en GitHub Actions
 
 ## Sinónimos

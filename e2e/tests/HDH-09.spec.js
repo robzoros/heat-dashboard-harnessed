@@ -2,8 +2,8 @@ import { test, expect } from '@playwright/test';
 
 test.describe('HDH-09 - Pestaña Campeonatos', () => {
   test.beforeEach(async ({ page }) => {
-    await cleanupChampionships();
     await page.goto('/');
+    await cleanupChampionships(page);
     await page.waitForLoadState('networkidle');
     const banner = page.locator('#cookie-consent-banner:not(.hidden)');
     if (await banner.isVisible({ timeout: 2000 }).catch(() => false)) {
@@ -12,53 +12,13 @@ test.describe('HDH-09 - Pestaña Campeonatos', () => {
     await page.waitForTimeout(300);
   });
 
-async function cleanupChampionships() {
-    const baseUrl = 'http://localhost:8082';
-    const http = await import('http');
-    const listData = await new Promise((resolve, reject) => {
-      http.get(`${baseUrl}/bgg-api/championships`, res => {
-        let d = '';
-        res.on('data', c => d += c);
-        res.on('end', () => resolve(JSON.parse(d)));
-      }).on('error', reject);
-    });
-    if (listData.success && Array.isArray(listData.data)) {
-      for (const champ of listData.data) {
-        await new Promise((resolve, reject) => {
-          const req = http.request(`${baseUrl}/bgg-api/championships/${champ.id}`, {
-            method: 'DELETE'
-          }, res => {
-            let d = '';
-            res.on('data', c => d += c);
-            res.on('end', () => resolve(JSON.parse(d)));
-          });
-          req.on('error', reject);
-          req.end();
-        });
-      }
-    }
-    await new Promise(r => setTimeout(r, 500));
+  async function cleanupChampionships(page) {
+    await page.evaluate(() => localStorage.removeItem('hdh-championships'));
   }
 
   async function loadData(page) {
     await page.waitForSelector('canvas', { timeout: 10000 });
-    await page.evaluate(async () => {
-      const response = await fetch('/bgg-api/test-login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({})
-      });
-      const result = await response.json();
-      if (result.success && result.data) {
-        window.App.data = result.data;
-        window.App.bggUsername = 'testuser';
-        window.App.originalPlayers = result.data.players.map(p => ({ ...p }));
-        window.App.applyPlayerOverrides();
-      }
-      window.App.populateFilters();
-      window.App.updateHeaderStats();
-      window.App.renderAll();
-    });
+    await page.evaluate(() => window.App.loadMockData());
   }
 
   test('debe mostrar la pestaña Campeonatos y su contenido', async ({ page }) => {
@@ -94,79 +54,23 @@ async function cleanupChampionships() {
     await page.screenshot({ path: '../evidence/screenshots/HDH-09-campeonato-creado.png', fullPage: true });
   });
 
-  const ALL_PARTICIPANTS = ['1','2','3','4','5','6','7','8','9','10','11','12','13','14'];
+  const ALL_PARTICIPANTS = ['1','2','3','4'];
 
   async function createChampViaAPI(page, champName, participants) {
-    const baseUrl = 'http://localhost:8082';
-    const http = await import('http');
-    const postData = JSON.stringify({ name: champName, description: '', participants: participants || ALL_PARTICIPANTS, owner: 'testuser' });
-    const createResult = await new Promise((resolve, reject) => {
-      const req = http.request(`${baseUrl}/bgg-api/championships`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(postData) }
-      }, res => {
-        let d = '';
-        res.on('data', c => d += c);
-        res.on('end', () => resolve(JSON.parse(d)));
-      });
-      req.on('error', reject);
-      req.write(postData);
-      req.end();
+    return page.evaluate(({ name, participants }) => window.App.createChampionship(name, '', participants, 'local').then(result => result.data), {
+      name: champName,
+      participants: participants || ALL_PARTICIPANTS
     });
-    if (!createResult.success) throw new Error('Create failed');
-    return createResult.data;
   }
 
   async function addPlaysViaAPI(page, champId, playIds) {
-    const baseUrl = 'http://localhost:8082';
-    const http = await import('http');
-    const allPlaysData = await new Promise((resolve, reject) => {
-      const req = http.request(`${baseUrl}/bgg-api/test-login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' }
-      }, res => {
-        let d = '';
-        res.on('data', c => d += c);
-        res.on('end', () => resolve(JSON.parse(d)));
-      });
-      req.on('error', reject);
-      req.write('{}');
-      req.end();
-    });
-    const fullPlays = allPlaysData.data.plays.filter(p => playIds.includes(String(p.id)));
-    const postData = JSON.stringify({ plays: fullPlays });
-    await new Promise((resolve, reject) => {
-      const req = http.request(`${baseUrl}/bgg-api/championships/${champId}/plays`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(postData) }
-      }, res => {
-        let d = '';
-        res.on('data', c => d += c);
-        res.on('end', () => resolve(JSON.parse(d)));
-      });
-      req.on('error', reject);
-      req.write(postData);
-      req.end();
-    });
+    await page.evaluate(async ({ id, playIds }) => {
+      await window.App.addPlaysToChampionship(id, playIds);
+    }, { id: champId, playIds });
   }
 
   async function loadChampsIntoApp(page) {
-    const baseUrl = 'http://localhost:8082';
-    const http = await import('http');
-    const listData = await new Promise((resolve, reject) => {
-      http.get(`${baseUrl}/bgg-api/championships`, res => {
-        let d = '';
-        res.on('data', c => d += c);
-        res.on('end', () => resolve(JSON.parse(d)));
-      }).on('error', reject);
-    });
-    if (listData.success) {
-      await page.evaluate(data => {
-        window.App.championships.list = data;
-        window.App.championships.selected = null;
-        window.App.renderChampionships();
-      }, listData.data);
-    }
+    await page.evaluate(() => window.App.loadChampionships());
   }
 
   async function selectChampInApp(page, champId) {
@@ -181,7 +85,7 @@ async function cleanupChampionships() {
   test('debe ver detalle del campeonato con clasificación tras importar partidas', async ({ page }) => {
     await loadData(page);
     const champData = await createChampViaAPI(page, 'Detalle Test');
-    await addPlaysViaAPI(page, champData.id, ['114140439', '113571664', '113505826']);
+    await addPlaysViaAPI(page, champData.id, ['1', '2', '3']);
     await loadChampsIntoApp(page);
 
     await page.locator('#tabs .tab-btn').nth(4).click();
@@ -194,7 +98,7 @@ async function cleanupChampionships() {
   test('debe importar partidas adicionales al campeonato', async ({ page }) => {
     await loadData(page);
     const champData = await createChampViaAPI(page, 'Import Test');
-    await addPlaysViaAPI(page, champData.id, ['114140439']);
+    await addPlaysViaAPI(page, champData.id, ['1']);
     await loadChampsIntoApp(page);
 
     await page.locator('#tabs .tab-btn').nth(4).click();
@@ -204,8 +108,8 @@ async function cleanupChampionships() {
 
     page.on('dialog', dialog => dialog.accept());
     await page.locator('#btn-import-plays-campeonato').click();
-    await page.locator('#import-plays-list input[value="113571664"]').check();
-    await page.locator('#import-plays-list input[value="113505826"]').check();
+    await page.locator('#import-plays-list input[value="2"]').check();
+    await page.locator('#import-plays-list input[value="3"]').check();
     await page.locator('#btn-import-plays').click();
     await page.waitForFunction(() => document.querySelectorAll('.campeonato-play-item').length >= 3, { timeout: 5000 });
     await expect(page.locator('.campeonato-play-item')).toHaveCount(3);
@@ -215,7 +119,7 @@ async function cleanupChampionships() {
   test('debe eliminar partida del campeonato', async ({ page }) => {
     await loadData(page);
     const champData = await createChampViaAPI(page, 'Delete Test');
-    await addPlaysViaAPI(page, champData.id, ['114140439', '113571664']);
+    await addPlaysViaAPI(page, champData.id, ['1', '2']);
     await loadChampsIntoApp(page);
 
     await page.locator('#tabs .tab-btn').nth(4).click();
