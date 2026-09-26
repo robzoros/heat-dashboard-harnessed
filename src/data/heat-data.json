@@ -1,14 +1,14 @@
 {
-  "generatedAt": "2026-09-25T11:59:22.287Z",
+  "generatedAt": "2026-09-26T06:51:41.253Z",
   "source": "GitHub Actions weekly export",
   "players": [
     {
       "id": 1,
       "name": "Alfonso Daganzo",
-      "username": "",
-      "userid": "0",
-      "isBot": true,
-      "isMain": false,
+      "username": "alfongmr",
+      "userid": "1428263",
+      "isBot": false,
+      "isMain": true,
       "isOther": false
     },
     {
