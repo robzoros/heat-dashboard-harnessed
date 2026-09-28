@@ -1298,3 +1298,42 @@
 - `HDH-FIREBASE01`: 3/3 tests pasan.
 - `HDH-09`: 6/6 tests pasan.
 - Captura de evidencia generada en `evidence/screenshots/HDH-UI01-controles-admin.png`.
+
+---
+
+## Sesión 2026-09-28
+
+### Mantenimiento: HDH-MAINT-CHANGELOG-ISSUES - Changelog, asunto de issue en el push y formato único de informe
+
+**Estado**: Implementada y verificada en local; la entrega (push y merge automático) se completa con esta misma sesión.
+
+#### Cambios implementados
+- Creado `CHANGELOG.md` en la raíz, **vacío** por requisito explícito de la petición.
+- `.github/workflows/auto-merge.yml`:
+  - Nuevo paso `Resolve PR subject from issue or commit` (id `pr`) que decide el asunto y el cuerpo del PR automático.
+  - El asunto se toma de una issue **solo si se referencia de forma explícita**: `issue-NN`/`issue_46` en el nombre de la rama o `Closes #N` en los commits de la rama. Los ids de feature del tipo `HDH-13` **no** se interpretan como número de issue porque se exige el prefijo `#`.
+  - Sin issue explícita se usa el subject del último commit (Conventional Commits).
+  - Si no hay issue real, `gh issue view` falla y se registra un aviso, nunca se inventa un número: el PR se crea igualmente con el asunto del commit.
+  - El cuerpo pasa de `Automated PR by CI` a un cuerpo con la rama y `Closes #N` o `Commit:` según el caso.
+  - Se añade el permiso `issues: read` al job, necesario para leer el título de la issue con `GITHUB_TOKEN`.
+  - Se conserva la guarda `|| echo "PR already exists"` y el merge squash sin cambios.
+- `AGENTS.md`: eliminado el doble formato de informe. `### Changes` / `### Evidence` / `### Notes for delivery` pasa a ser el **único** formato, declarado en la sección de workflow del bloque del harness; la sección `## Verification` remite a ese formato en vez de describir un segundo criterio de cierre.
+
+#### Verificación final
+- `bash init.sh`: OK, sin Docker (6/6 comprobaciones de infraestructura).
+- Workflows parseados con PyYAML: `auto-merge.yml`, `deploy-pages.yml` y `weekly-data.yml` parsean correctamente; el job expone los 10 pasos con el nuevo `id: pr` y `permissions` con `issues: read`.
+- `bash -n` sobre el script del paso `Resolve PR subject from issue or commit` extraído del YAML: OK.
+- Ensayo funcional del script con `GITHUB_OUTPUT` real en tres ramas simuladas:
+  - `HDH-MAINT-CHANGELOG-ISSUES` (sin issue) → asunto = subject del commit, sin `Closes`.
+  - `fix-issue-46` (issue existente) → asunto = `Habilitar controles de Campeonatos según sesión de administrador (#46)` y cuerpo con `Closes #46`.
+  - `fix-issue-999` (issue inexistente) → aviso `Issue #999 not found` y caída al subject del commit, sin romper el paso.
+- Detección de `Closes #N` en commits: positiva con `Closes #43`, negativa con `HDH-13` (no se confunde con la issue 13).
+- `git log --format=%B origin/main..HEAD` de esta rama: sin referencias `#N`, por lo que este PR se publica con el asunto del commit.
+- `git diff --check`: OK.
+- Tests E2E (`npx playwright test`) y `npm test` de `proxy`: **no ejecutados**, no aplican: el cambio no toca `src/`, `e2e/` ni `proxy/`. Lo ejecutará el propio workflow de CI en el push.
+
+#### Notas / Riesgos
+- `features_list.json` no se modifica: esta sesión es de mantenimiento del repositorio y no trabaja ninguna feature de producto.
+- `CHANGELOG.md` queda vacío por petición explícita. `.agents/skills/github-delivery/SKILL.md` pide registrar en el changelog los cambios de comportamiento o de configuración de build; este cambio de CI lo califica, así que la primera entrada `[Unreleased]` sigue pendiente de decidirse.
+- El primer push con el workflow ya modificado ejercita el propio paso nuevo: por eso se ensayó en local con `GITHUB_OUTPUT` real en los tres caminos (con issue, sin issue e issue inexistente).
+- El tema de issues se resuelve **por referencia explícita**, no de forma automática a partir del id de feature, porque el 90% de los PRs del repositorio no tiene issue asociada y forzarla rompería el flujo de entrega.

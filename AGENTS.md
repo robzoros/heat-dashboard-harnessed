@@ -132,8 +132,12 @@ Two ways to adopt it:
   `HARNESS-DONE` as the last line. The harness verifies the call first and the
   marker second; if neither is present it sends one repair turn for that step
   and stops if the report is still missing.
-- Reports are evidence-based: name the files changed, the checks actually run,
-  and every check that could not be run.
+- There is exactly **one** report format, used by every agent and every session:
+  `### Changes` (files changed, one line each), `### Evidence` (checks actually
+  run with their result, plus every check that could not be run and why) and
+  `### Notes for delivery` (what delivery must know). Completion is summarized
+  in those three sections, in terms of changed files and evidence; no second
+  format, checklist or closing section is added.
 - The harness performs a repository preflight before a pipeline. Warn the user
   about uncommitted changes, branch divergence, or an open pull request; do not
   claim the repository is clean when it is not. With
@@ -178,8 +182,10 @@ Before considering a task complete:
 - inspect the relevant diff;
 - run the project's own checks (focused checks for the touched area, broader
   ones when shared behavior changes);
-- mention every check that could not be run and why;
-- summarize completion in terms of changed files and evidence.
+- report the result of every check, including the ones that could not be run and
+  why, inside `### Evidence`;
+- report the result in the single format defined above (`### Changes` /
+  `### Evidence` / `### Notes for delivery`), never in a second variant.
 
 ## Project skills
 
