@@ -1,6 +1,6 @@
 {
-  "last_updated": "2026-06-04",
-  "active_feature": null,
+  "last_updated": "2026-10-05",
+  "active_feature": "FIX-HDH-06",
   "user": "Roberto Méndez",
   "rules": {
     "single_active_feature": true,
@@ -49,7 +49,7 @@
         ],
         "evidence": "Action creada en .github/workflows/auto-merge.yml. Funcionando: PR #1 creado y mergeado a main (commit e20739b). Configuración de permisos aplicada en Settings > Actions > General > Workflow permissions."
       }
-    },    
+    },
     {
       "id": "HDH-01",
       "priority": 1,
@@ -215,9 +215,9 @@
       "name": "Panel partidas por mes",
       "description": [
         "Gráfico de línea: partidas por mes",
-          "Chart tipo 'line'",
-          "Eje X: meses (YYYY-MM), ordenado cronológicamente",
-          "Eje Y: conteo de partidas por mes, stepSize=1"
+        "Chart tipo 'line'",
+        "Eje X: meses (YYYY-MM), ordenado cronológicamente",
+        "Eje Y: conteo de partidas por mes, stepSize=1"
       ],
       "status": "completed",
       "verification": {
@@ -230,7 +230,7 @@
     },
     {
       "id": "HDH-05e",
-      "name": "Panel puntos medios por jugador",      
+      "name": "Panel puntos medios por jugador",
       "description": [
         "Gráfico de barras horizontal: puntos medios por jugador",
         "Chart tipo 'bar' en canvas#chart-avgpts con indexAxis='y'",
@@ -485,7 +485,7 @@
       "description": [
         "Gestionar cookies según normativa de privacidad: mostrar banner de aceptación de cookies al usuario en la primera visita, con opciones para aceptar o rechazar cookies no esenciales.",
         "Guardar la elección del usuario en una cookie para no mostrar el banner en visitas futuras.",
-        "Si el usuario acepta, se pueden usar cookies para funcionalidades como marcar jugadores como bots o principales.", 
+        "Si el usuario acepta, se pueden usar cookies para funcionalidades como marcar jugadores como bots o principales.",
         "Si el usuario rechaza, no se deben usar cookies y se debe informar que algunas funcionalidades podrían no estar disponibles.",
         "El banner debe ser accesible y cumplir con las mejores prácticas de UX."
       ],
@@ -817,6 +817,28 @@
           "Tests HDH-09 pasan en CI (90/90)"
         ],
         "evidence": "Pendiente de verificar en CI"
+      }
+    },
+    {
+      "id": "FIX-HDH-06",
+      "priority": 1,
+      "name": "Orden cronologico de izquierda a derecha en las carreras de un campeonato",
+      "description": [
+        "En el detalle de un campeonato las carreras se ordenaban de la mas reciente a la mas antigua y se pintaban como columnas de izquierda a derecha.",
+        "El resultado era una lectura cronologica de derecha a izquierda, contrary a la convencion del tablero.",
+        "Fix: las columnas de la tabla de clasificacion se ordenan por fecha ascendente, de la carrera mas antigua (izquierda) a la mas reciente (derecha).",
+        "La lista de partidas mantiene la convencion reciente -> antigua y ya no se muta el array almacenado del campeonato.",
+        "Cada cabecera de columna incluye el atributo data-play-date para poder verificar y automatizar el orden."
+      ],
+      "status": "completed",
+      "verification": {
+        "checks": [
+          "node --check src/app.js",
+          "bash init.sh",
+          "npx playwright test tests/FIX-HDH-06.spec.js: 4/4",
+          "npx playwright test (suite completa): 97/97"
+        ],
+        "evidence": "evidence/screenshots/FIX-HDH-06-carreras-cronologicas.png"
       }
     }
   ]
