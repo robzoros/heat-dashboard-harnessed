@@ -1,36 +1,9 @@
 {
-  "generatedAt": "2026-09-28T08:16:34.595Z",
+  "generatedAt": "2026-10-05T07:56:18.140Z",
   "source": "GitHub Actions weekly export",
   "players": [
     {
       "id": 1,
-      "name": "Alfonso Daganzo",
-      "username": "alfongmr",
-      "userid": "1428263",
-      "isBot": false,
-      "isMain": true,
-      "isOther": false
-    },
-    {
-      "id": 2,
-      "name": "Automa Rojo",
-      "username": "",
-      "userid": "0",
-      "isBot": true,
-      "isMain": false,
-      "isOther": false
-    },
-    {
-      "id": 3,
-      "name": "Automa Verde",
-      "username": "",
-      "userid": "0",
-      "isBot": true,
-      "isMain": false,
-      "isOther": false
-    },
-    {
-      "id": 4,
       "name": "Automa",
       "username": "",
       "userid": "0",
@@ -39,7 +12,7 @@
       "isOther": false
     },
     {
-      "id": 5,
+      "id": 2,
       "name": "Automa2",
       "username": "",
       "userid": "0",
@@ -48,7 +21,7 @@
       "isOther": false
     },
     {
-      "id": 6,
+      "id": 3,
       "name": "Automa3",
       "username": "",
       "userid": "0",
@@ -57,19 +30,46 @@
       "isOther": false
     },
     {
+      "id": 4,
+      "name": "Automa4",
+      "username": "",
+      "userid": "0",
+      "isBot": true,
+      "isMain": false,
+      "isOther": false
+    },
+    {
+      "id": 5,
+      "name": "Automa5",
+      "username": "",
+      "userid": "0",
+      "isBot": true,
+      "isMain": false,
+      "isOther": false
+    },
+    {
+      "id": 6,
+      "name": "Canales",
+      "username": "Canales",
+      "userid": "125535",
+      "isBot": false,
+      "isMain": true,
+      "isOther": false
+    },
+    {
       "id": 7,
-      "name": "Calvo",
-      "username": "calvo",
-      "userid": "80677",
+      "name": "Carte",
+      "username": "cartesius",
+      "userid": "43892",
       "isBot": false,
       "isMain": true,
       "isOther": false
     },
     {
       "id": 8,
-      "name": "Tabo",
-      "username": "bertus_caylus",
-      "userid": "440730",
+      "name": "Korta",
+      "username": "Korta",
+      "userid": "20638",
       "isBot": false,
       "isMain": true,
       "isOther": false
@@ -85,16 +85,16 @@
     },
     {
       "id": 10,
-      "name": "Automa4",
-      "username": "",
-      "userid": "0",
-      "isBot": true,
-      "isMain": false,
+      "name": "Alfonso Daganzo",
+      "username": "alfongmr",
+      "userid": "1428263",
+      "isBot": false,
+      "isMain": true,
       "isOther": false
     },
     {
       "id": 11,
-      "name": "Automa5",
+      "name": "Automa Rojo",
       "username": "",
       "userid": "0",
       "isBot": true,
@@ -103,27 +103,27 @@
     },
     {
       "id": 12,
-      "name": "Canales",
-      "username": "Canales",
-      "userid": "125535",
-      "isBot": false,
-      "isMain": true,
+      "name": "Automa Verde",
+      "username": "",
+      "userid": "0",
+      "isBot": true,
+      "isMain": false,
       "isOther": false
     },
     {
       "id": 13,
-      "name": "Carte",
-      "username": "cartesius",
-      "userid": "43892",
+      "name": "Calvo",
+      "username": "calvo",
+      "userid": "80677",
       "isBot": false,
       "isMain": true,
       "isOther": false
     },
     {
       "id": 14,
-      "name": "Korta",
-      "username": "Korta",
-      "userid": "20638",
+      "name": "Tabo",
+      "username": "bertus_caylus",
+      "userid": "440730",
       "isBot": false,
       "isMain": true,
       "isOther": false
@@ -177,11 +177,11 @@
   "locations": [
     {
       "id": 1,
-      "name": "Casa Calvo"
+      "name": "BGA"
     },
     {
       "id": 2,
-      "name": "BGA"
+      "name": "Casa Calvo"
     },
     {
       "id": 3,
@@ -207,11 +207,11 @@
   "boards": [
     {
       "id": 1,
-      "name": "Italia"
+      "name": "Nederland"
     },
     {
       "id": 2,
-      "name": "South Africa"
+      "name": "Great Britain"
     },
     {
       "id": 3,
@@ -219,27 +219,27 @@
     },
     {
       "id": 4,
-      "name": "Francia"
+      "name": "Italia"
     },
     {
       "id": 5,
-      "name": "México"
+      "name": "South Africa"
     },
     {
       "id": 6,
-      "name": "Great Britain"
+      "name": "Francia"
     },
     {
       "id": 7,
-      "name": "USA"
+      "name": "México"
     },
     {
       "id": 8,
-      "name": "España"
+      "name": "USA"
     },
     {
       "id": 9,
-      "name": "Nederland"
+      "name": "España"
     },
     {
       "id": 10,
@@ -252,15 +252,139 @@
   ],
   "plays": [
     {
-      "id": "119051055",
-      "playDate": "2026-09-24",
-      "board": "Italia",
+      "id": "119447420",
+      "playDate": "2026-10-05",
+      "board": "Nederland",
       "locationRefId": 1,
       "playerScores": [
         {
           "playerRefId": 1,
+          "score": "2",
+          "scoreNum": 2,
+          "winner": false
+        },
+        {
+          "playerRefId": 2,
+          "score": "1",
+          "scoreNum": 1,
+          "winner": false
+        },
+        {
+          "playerRefId": 3,
+          "score": "3",
+          "scoreNum": 3,
+          "winner": false
+        },
+        {
+          "playerRefId": 4,
+          "score": "9",
+          "scoreNum": 9,
+          "winner": true
+        },
+        {
+          "playerRefId": 5,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 6,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 7,
+          "score": "4",
+          "scoreNum": 4,
+          "winner": false
+        },
+        {
+          "playerRefId": 8,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 9,
           "score": "6",
           "scoreNum": 6,
+          "winner": false
+        }
+      ]
+    },
+    {
+      "id": "119295755",
+      "playDate": "2026-10-01",
+      "board": "Great Britain",
+      "locationRefId": 2,
+      "playerScores": [
+        {
+          "playerRefId": 10,
+          "score": "1",
+          "scoreNum": 1,
+          "winner": false
+        },
+        {
+          "playerRefId": 11,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 12,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 1,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 2,
+          "score": "2",
+          "scoreNum": 2,
+          "winner": false
+        },
+        {
+          "playerRefId": 3,
+          "score": "6",
+          "scoreNum": 6,
+          "winner": false
+        },
+        {
+          "playerRefId": 13,
+          "score": "4",
+          "scoreNum": 4,
+          "winner": false
+        },
+        {
+          "playerRefId": 14,
+          "score": "3",
+          "scoreNum": 3,
+          "winner": false
+        },
+        {
+          "playerRefId": 9,
+          "score": "9",
+          "scoreNum": 9,
+          "winner": true
+        }
+      ]
+    },
+    {
+      "id": "119283517",
+      "playDate": "2026-10-01",
+      "board": "Deutschland",
+      "locationRefId": 1,
+      "playerScores": [
+        {
+          "playerRefId": 1,
+          "score": "4",
+          "scoreNum": 4,
           "winner": false
         },
         {
@@ -271,27 +395,89 @@
         },
         {
           "playerRefId": 3,
-          "score": "1",
-          "scoreNum": 1,
-          "winner": false
-        },
-        {
-          "playerRefId": 4,
           "score": "0",
           "scoreNum": 0,
           "winner": false
         },
         {
+          "playerRefId": 4,
+          "score": "2",
+          "scoreNum": 2,
+          "winner": false
+        },
+        {
           "playerRefId": 5,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 6,
           "score": "3",
           "scoreNum": 3,
           "winner": false
         },
         {
-          "playerRefId": 6,
+          "playerRefId": 7,
           "score": "9",
           "scoreNum": 9,
           "winner": true
+        },
+        {
+          "playerRefId": 8,
+          "score": "6",
+          "scoreNum": 6,
+          "winner": false
+        },
+        {
+          "playerRefId": 9,
+          "score": "1",
+          "scoreNum": 1,
+          "winner": false
+        }
+      ]
+    },
+    {
+      "id": "119202055",
+      "playDate": "2026-09-28",
+      "board": "Deutschland",
+      "locationRefId": 1,
+      "playerScores": [
+        {
+          "playerRefId": 1,
+          "score": "3",
+          "scoreNum": 3,
+          "winner": false
+        },
+        {
+          "playerRefId": 2,
+          "score": "",
+          "scoreNum": null,
+          "winner": false
+        },
+        {
+          "playerRefId": 3,
+          "score": "4",
+          "scoreNum": 4,
+          "winner": false
+        },
+        {
+          "playerRefId": 4,
+          "score": "9",
+          "scoreNum": 9,
+          "winner": true
+        },
+        {
+          "playerRefId": 5,
+          "score": "",
+          "scoreNum": null,
+          "winner": false
+        },
+        {
+          "playerRefId": 6,
+          "score": "6",
+          "scoreNum": 6,
+          "winner": false
         },
         {
           "playerRefId": 7,
@@ -301,6 +487,68 @@
         },
         {
           "playerRefId": 8,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 9,
+          "score": "1",
+          "scoreNum": 1,
+          "winner": false
+        }
+      ]
+    },
+    {
+      "id": "119051055",
+      "playDate": "2026-09-24",
+      "board": "Italia",
+      "locationRefId": 2,
+      "playerScores": [
+        {
+          "playerRefId": 10,
+          "score": "6",
+          "scoreNum": 6,
+          "winner": false
+        },
+        {
+          "playerRefId": 11,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 12,
+          "score": "1",
+          "scoreNum": 1,
+          "winner": false
+        },
+        {
+          "playerRefId": 1,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 2,
+          "score": "3",
+          "scoreNum": 3,
+          "winner": false
+        },
+        {
+          "playerRefId": 3,
+          "score": "9",
+          "scoreNum": 9,
+          "winner": true
+        },
+        {
+          "playerRefId": 13,
+          "score": "2",
+          "scoreNum": 2,
+          "winner": false
+        },
+        {
+          "playerRefId": 14,
           "score": "4",
           "scoreNum": 4,
           "winner": false
@@ -317,52 +565,52 @@
       "id": "119004320",
       "playDate": "2026-09-22",
       "board": "South Africa",
-      "locationRefId": 2,
+      "locationRefId": 1,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "0",
           "scoreNum": 0,
           "winner": false
         },
         {
-          "playerRefId": 5,
+          "playerRefId": 2,
           "score": "0",
           "scoreNum": 0,
           "winner": false
         },
         {
-          "playerRefId": 6,
+          "playerRefId": 3,
           "score": "1",
           "scoreNum": 1,
           "winner": false
         },
         {
-          "playerRefId": 10,
+          "playerRefId": 4,
           "score": "2",
           "scoreNum": 2,
           "winner": false
         },
         {
-          "playerRefId": 11,
+          "playerRefId": 5,
           "score": "3",
           "scoreNum": 3,
           "winner": false
         },
         {
-          "playerRefId": 12,
+          "playerRefId": 6,
           "score": "4",
           "scoreNum": 4,
           "winner": false
         },
         {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "6",
           "scoreNum": 6,
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "9",
           "scoreNum": 9,
           "winner": true
@@ -379,52 +627,52 @@
       "id": "118825612",
       "playDate": "2026-09-18",
       "board": "Italia",
-      "locationRefId": 2,
+      "locationRefId": 1,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "2",
           "scoreNum": 2,
           "winner": false
         },
         {
+          "playerRefId": 2,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 3,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 4,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
           "playerRefId": 5,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 6,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 10,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 11,
           "score": "1",
           "scoreNum": 1,
           "winner": false
         },
         {
-          "playerRefId": 12,
+          "playerRefId": 6,
           "score": "9",
           "scoreNum": 9,
           "winner": true
         },
         {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "6",
           "scoreNum": 6,
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "3",
           "scoreNum": 3,
           "winner": false
@@ -441,52 +689,52 @@
       "id": "118753415",
       "playDate": "2026-09-15",
       "board": "Deutschland",
-      "locationRefId": 2,
+      "locationRefId": 1,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "1",
           "scoreNum": 1,
           "winner": false
         },
         {
-          "playerRefId": 5,
+          "playerRefId": 2,
           "score": "3",
           "scoreNum": 3,
           "winner": false
         },
         {
-          "playerRefId": 6,
+          "playerRefId": 3,
           "score": "2",
           "scoreNum": 2,
           "winner": false
         },
         {
-          "playerRefId": 10,
+          "playerRefId": 4,
           "score": "0",
           "scoreNum": 0,
           "winner": false
         },
         {
-          "playerRefId": 11,
+          "playerRefId": 5,
           "score": "0",
           "scoreNum": 0,
           "winner": false
         },
         {
-          "playerRefId": 12,
+          "playerRefId": 6,
           "score": "4",
           "scoreNum": 4,
           "winner": false
         },
         {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "0",
           "scoreNum": 0,
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "6",
           "scoreNum": 6,
           "winner": false
@@ -503,12 +751,30 @@
       "id": "118647976",
       "playDate": "2026-09-13",
       "board": "Francia",
-      "locationRefId": 2,
+      "locationRefId": 1,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "0",
           "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 2,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 3,
+          "score": "1",
+          "scoreNum": 1,
+          "winner": false
+        },
+        {
+          "playerRefId": 4,
+          "score": "4",
+          "scoreNum": 4,
           "winner": false
         },
         {
@@ -519,36 +785,18 @@
         },
         {
           "playerRefId": 6,
-          "score": "1",
-          "scoreNum": 1,
-          "winner": false
-        },
-        {
-          "playerRefId": 10,
-          "score": "4",
-          "scoreNum": 4,
-          "winner": false
-        },
-        {
-          "playerRefId": 11,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 12,
           "score": "6",
           "scoreNum": 6,
           "winner": false
         },
         {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "2",
           "scoreNum": 2,
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "3",
           "scoreNum": 3,
           "winner": false
@@ -565,8 +813,26 @@
       "id": "118307404",
       "playDate": "2026-09-04",
       "board": "México",
-      "locationRefId": 2,
+      "locationRefId": 1,
       "playerScores": [
+        {
+          "playerRefId": 1,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 2,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 3,
+          "score": "1",
+          "scoreNum": 1,
+          "winner": false
+        },
         {
           "playerRefId": 4,
           "score": "0",
@@ -575,42 +841,24 @@
         },
         {
           "playerRefId": 5,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 6,
-          "score": "1",
-          "scoreNum": 1,
-          "winner": false
-        },
-        {
-          "playerRefId": 10,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 11,
           "score": "2",
           "scoreNum": 2,
           "winner": false
         },
         {
-          "playerRefId": 12,
+          "playerRefId": 6,
           "score": "6",
           "scoreNum": 6,
           "winner": false
         },
         {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "3",
           "scoreNum": 3,
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "4",
           "scoreNum": 4,
           "winner": false
@@ -627,52 +875,52 @@
       "id": "118221742",
       "playDate": "2026-09-01",
       "board": "Great Britain",
-      "locationRefId": 2,
+      "locationRefId": 1,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "0",
           "scoreNum": 0,
           "winner": false
         },
         {
-          "playerRefId": 5,
+          "playerRefId": 2,
           "score": "1",
           "scoreNum": 1,
           "winner": false
         },
         {
-          "playerRefId": 6,
+          "playerRefId": 3,
           "score": "0",
           "scoreNum": 0,
           "winner": false
         },
         {
-          "playerRefId": 10,
+          "playerRefId": 4,
           "score": "6",
           "scoreNum": 6,
           "winner": false
         },
         {
-          "playerRefId": 11,
+          "playerRefId": 5,
           "score": "2",
           "scoreNum": 2,
           "winner": false
         },
         {
-          "playerRefId": 12,
+          "playerRefId": 6,
           "score": "9",
           "scoreNum": 9,
           "winner": true
         },
         {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "4",
           "scoreNum": 4,
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "3",
           "scoreNum": 3,
           "winner": false
@@ -689,52 +937,52 @@
       "id": "118083800",
       "playDate": "2026-08-29",
       "board": "Great Britain",
-      "locationRefId": 2,
+      "locationRefId": 1,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "1",
           "scoreNum": 1,
           "winner": false
         },
         {
+          "playerRefId": 2,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 3,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 4,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
           "playerRefId": 5,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 6,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 10,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 11,
           "score": "6",
           "scoreNum": 6,
           "winner": false
         },
         {
-          "playerRefId": 12,
+          "playerRefId": 6,
           "score": "3",
           "scoreNum": 3,
           "winner": false
         },
         {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "4",
           "scoreNum": 4,
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "9",
           "scoreNum": 9,
           "winner": true
@@ -751,8 +999,26 @@
       "id": "118037386",
       "playDate": "2026-08-28",
       "board": "USA",
-      "locationRefId": 2,
+      "locationRefId": 1,
       "playerScores": [
+        {
+          "playerRefId": 1,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 2,
+          "score": "2",
+          "scoreNum": 2,
+          "winner": false
+        },
+        {
+          "playerRefId": 3,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
         {
           "playerRefId": 4,
           "score": "0",
@@ -761,42 +1027,24 @@
         },
         {
           "playerRefId": 5,
-          "score": "2",
-          "scoreNum": 2,
-          "winner": false
-        },
-        {
-          "playerRefId": 6,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 10,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 11,
           "score": "1",
           "scoreNum": 1,
           "winner": false
         },
         {
-          "playerRefId": 12,
+          "playerRefId": 6,
           "score": "4",
           "scoreNum": 4,
           "winner": false
         },
         {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "6",
           "scoreNum": 6,
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "3",
           "scoreNum": 3,
           "winner": false
@@ -813,52 +1061,52 @@
       "id": "117958680",
       "playDate": "2026-08-25",
       "board": "Francia",
-      "locationRefId": 2,
+      "locationRefId": 1,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "3",
           "scoreNum": 3,
           "winner": false
         },
         {
-          "playerRefId": 5,
+          "playerRefId": 2,
           "score": "2",
           "scoreNum": 2,
           "winner": false
         },
         {
-          "playerRefId": 6,
+          "playerRefId": 3,
           "score": "0",
           "scoreNum": 0,
           "winner": false
         },
         {
-          "playerRefId": 10,
+          "playerRefId": 4,
           "score": "0",
           "scoreNum": 0,
           "winner": false
         },
         {
-          "playerRefId": 11,
+          "playerRefId": 5,
           "score": "1",
           "scoreNum": 1,
           "winner": false
         },
         {
-          "playerRefId": 12,
+          "playerRefId": 6,
           "score": "9",
           "scoreNum": 9,
           "winner": true
         },
         {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "0",
           "scoreNum": 0,
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "6",
           "scoreNum": 6,
           "winner": false
@@ -875,52 +1123,52 @@
       "id": "117893027",
       "playDate": "2026-08-23",
       "board": "Great Britain",
-      "locationRefId": 2,
+      "locationRefId": 1,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "1",
           "scoreNum": 1,
           "winner": false
         },
         {
-          "playerRefId": 5,
+          "playerRefId": 2,
           "score": "2",
           "scoreNum": 2,
           "winner": false
         },
         {
-          "playerRefId": 6,
+          "playerRefId": 3,
           "score": "3",
           "scoreNum": 3,
           "winner": false
         },
         {
-          "playerRefId": 10,
+          "playerRefId": 4,
           "score": "0",
           "scoreNum": 0,
           "winner": false
         },
         {
-          "playerRefId": 11,
+          "playerRefId": 5,
           "score": "9",
           "scoreNum": 9,
           "winner": true
         },
         {
-          "playerRefId": 12,
+          "playerRefId": 6,
           "score": "4",
           "scoreNum": 4,
           "winner": false
         },
         {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "0",
           "scoreNum": 0,
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "6",
           "scoreNum": 6,
           "winner": false
@@ -937,52 +1185,52 @@
       "id": "117767701",
       "playDate": "2026-08-21",
       "board": "Italia",
-      "locationRefId": 2,
+      "locationRefId": 1,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "3",
           "scoreNum": 3,
           "winner": false
         },
         {
-          "playerRefId": 5,
+          "playerRefId": 2,
           "score": "9",
           "scoreNum": 9,
           "winner": true
         },
         {
+          "playerRefId": 3,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 4,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 5,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
           "playerRefId": 6,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 10,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 11,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 12,
           "score": "4",
           "scoreNum": 4,
           "winner": false
         },
         {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "2",
           "scoreNum": 2,
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "1",
           "scoreNum": 1,
           "winner": false
@@ -999,52 +1247,52 @@
       "id": "117674933",
       "playDate": "2026-08-18",
       "board": "España",
-      "locationRefId": 2,
+      "locationRefId": 1,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "1",
           "scoreNum": 1,
           "winner": false
         },
         {
-          "playerRefId": 5,
+          "playerRefId": 2,
           "score": "2",
           "scoreNum": 2,
           "winner": false
         },
         {
-          "playerRefId": 6,
+          "playerRefId": 3,
           "score": "9",
           "scoreNum": 9,
           "winner": true
         },
         {
-          "playerRefId": 10,
+          "playerRefId": 4,
           "score": "0",
           "scoreNum": 0,
           "winner": false
         },
         {
-          "playerRefId": 11,
+          "playerRefId": 5,
           "score": "0",
           "scoreNum": 0,
           "winner": false
         },
         {
-          "playerRefId": 12,
+          "playerRefId": 6,
           "score": "3",
           "scoreNum": 3,
           "winner": false
         },
         {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "0",
           "scoreNum": 0,
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "4",
           "scoreNum": 4,
           "winner": false
@@ -1061,52 +1309,52 @@
       "id": "117421532",
       "playDate": "2026-08-12",
       "board": "México",
-      "locationRefId": 2,
+      "locationRefId": 1,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "3",
           "scoreNum": 3,
           "winner": false
         },
         {
-          "playerRefId": 5,
+          "playerRefId": 2,
           "score": "1",
           "scoreNum": 1,
           "winner": false
         },
         {
+          "playerRefId": 3,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 4,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 5,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
           "playerRefId": 6,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 10,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 11,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 12,
           "score": "6",
           "scoreNum": 6,
           "winner": false
         },
         {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "2",
           "scoreNum": 2,
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "9",
           "scoreNum": 9,
           "winner": true
@@ -1123,12 +1371,30 @@
       "id": "117125907",
       "playDate": "2026-08-05",
       "board": "Great Britain",
-      "locationRefId": 2,
+      "locationRefId": 1,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "0",
           "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 2,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 3,
+          "score": "1",
+          "scoreNum": 1,
+          "winner": false
+        },
+        {
+          "playerRefId": 4,
+          "score": "2",
+          "scoreNum": 2,
           "winner": false
         },
         {
@@ -1139,36 +1405,18 @@
         },
         {
           "playerRefId": 6,
-          "score": "1",
-          "scoreNum": 1,
-          "winner": false
-        },
-        {
-          "playerRefId": 10,
-          "score": "2",
-          "scoreNum": 2,
-          "winner": false
-        },
-        {
-          "playerRefId": 11,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 12,
           "score": "3",
           "scoreNum": 3,
           "winner": false
         },
         {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "6",
           "scoreNum": 6,
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "4",
           "scoreNum": 4,
           "winner": false
@@ -1185,8 +1433,26 @@
       "id": "116897428",
       "playDate": "2026-07-31",
       "board": "USA",
-      "locationRefId": 2,
+      "locationRefId": 1,
       "playerScores": [
+        {
+          "playerRefId": 1,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 2,
+          "score": "4",
+          "scoreNum": 4,
+          "winner": false
+        },
+        {
+          "playerRefId": 3,
+          "score": "3",
+          "scoreNum": 3,
+          "winner": false
+        },
         {
           "playerRefId": 4,
           "score": "0",
@@ -1195,42 +1461,24 @@
         },
         {
           "playerRefId": 5,
-          "score": "4",
-          "scoreNum": 4,
-          "winner": false
-        },
-        {
-          "playerRefId": 6,
-          "score": "3",
-          "scoreNum": 3,
-          "winner": false
-        },
-        {
-          "playerRefId": 10,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 11,
           "score": "6",
           "scoreNum": 6,
           "winner": false
         },
         {
-          "playerRefId": 12,
+          "playerRefId": 6,
           "score": "0",
           "scoreNum": 0,
           "winner": false
         },
         {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "9",
           "scoreNum": 9,
           "winner": true
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "1",
           "scoreNum": 1,
           "winner": false
@@ -1247,52 +1495,52 @@
       "id": "116568590",
       "playDate": "2026-07-23",
       "board": "Italia",
-      "locationRefId": 2,
+      "locationRefId": 1,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "0",
           "scoreNum": 0,
           "winner": false
         },
         {
-          "playerRefId": 5,
+          "playerRefId": 2,
           "score": "0",
           "scoreNum": 0,
           "winner": false
         },
         {
-          "playerRefId": 6,
+          "playerRefId": 3,
           "score": "6",
           "scoreNum": 6,
           "winner": false
         },
         {
-          "playerRefId": 10,
+          "playerRefId": 4,
           "score": "3",
           "scoreNum": 3,
           "winner": false
         },
         {
-          "playerRefId": 11,
+          "playerRefId": 5,
           "score": "9",
           "scoreNum": 9,
           "winner": true
         },
         {
-          "playerRefId": 12,
+          "playerRefId": 6,
           "score": "1",
           "scoreNum": 1,
           "winner": false
         },
         {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "4",
           "scoreNum": 4,
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "2",
           "scoreNum": 2,
           "winner": false
@@ -1309,52 +1557,52 @@
       "id": "116285778",
       "playDate": "2026-07-16",
       "board": "USA",
-      "locationRefId": 2,
+      "locationRefId": 1,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "1",
           "scoreNum": 1,
           "winner": false
         },
         {
-          "playerRefId": 5,
+          "playerRefId": 2,
           "score": "2",
           "scoreNum": 2,
           "winner": false
         },
         {
-          "playerRefId": 6,
+          "playerRefId": 3,
           "score": "6",
           "scoreNum": 6,
           "winner": false
         },
         {
-          "playerRefId": 10,
+          "playerRefId": 4,
           "score": "4",
           "scoreNum": 4,
           "winner": false
         },
         {
-          "playerRefId": 11,
+          "playerRefId": 5,
           "score": "0",
           "scoreNum": 0,
           "winner": false
         },
         {
-          "playerRefId": 12,
+          "playerRefId": 6,
           "score": "0",
           "scoreNum": 0,
           "winner": false
         },
         {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "3",
           "scoreNum": 3,
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "9",
           "scoreNum": 9,
           "winner": true
@@ -1371,12 +1619,30 @@
       "id": "116192387",
       "playDate": "2026-07-13",
       "board": "Italia",
-      "locationRefId": 2,
+      "locationRefId": 1,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "0",
           "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 2,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 3,
+          "score": "9",
+          "scoreNum": 9,
+          "winner": true
+        },
+        {
+          "playerRefId": 4,
+          "score": "2",
+          "scoreNum": 2,
           "winner": false
         },
         {
@@ -1387,36 +1653,18 @@
         },
         {
           "playerRefId": 6,
-          "score": "9",
-          "scoreNum": 9,
-          "winner": true
-        },
-        {
-          "playerRefId": 10,
-          "score": "2",
-          "scoreNum": 2,
-          "winner": false
-        },
-        {
-          "playerRefId": 11,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 12,
           "score": "6",
           "scoreNum": 6,
           "winner": false
         },
         {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "4",
           "scoreNum": 4,
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "1",
           "scoreNum": 1,
           "winner": false
@@ -1433,12 +1681,30 @@
       "id": "116061433",
       "playDate": "2026-07-10",
       "board": "Great Britain",
-      "locationRefId": 2,
+      "locationRefId": 1,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "6",
           "scoreNum": 6,
+          "winner": false
+        },
+        {
+          "playerRefId": 2,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 3,
+          "score": "3",
+          "scoreNum": 3,
+          "winner": false
+        },
+        {
+          "playerRefId": 4,
+          "score": "2",
+          "scoreNum": 2,
           "winner": false
         },
         {
@@ -1449,36 +1715,18 @@
         },
         {
           "playerRefId": 6,
-          "score": "3",
-          "scoreNum": 3,
-          "winner": false
-        },
-        {
-          "playerRefId": 10,
-          "score": "2",
-          "scoreNum": 2,
-          "winner": false
-        },
-        {
-          "playerRefId": 11,
           "score": "0",
           "scoreNum": 0,
           "winner": false
         },
         {
-          "playerRefId": 12,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "1",
           "scoreNum": 1,
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "9",
           "scoreNum": 9,
           "winner": true
@@ -1495,8 +1743,26 @@
       "id": "115977013",
       "playDate": "2026-07-08",
       "board": "España",
-      "locationRefId": 2,
+      "locationRefId": 1,
       "playerScores": [
+        {
+          "playerRefId": 1,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 2,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 3,
+          "score": "4",
+          "scoreNum": 4,
+          "winner": false
+        },
         {
           "playerRefId": 4,
           "score": "0",
@@ -1505,42 +1771,24 @@
         },
         {
           "playerRefId": 5,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 6,
-          "score": "4",
-          "scoreNum": 4,
-          "winner": false
-        },
-        {
-          "playerRefId": 10,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 11,
           "score": "3",
           "scoreNum": 3,
           "winner": false
         },
         {
-          "playerRefId": 12,
+          "playerRefId": 6,
           "score": "9",
           "scoreNum": 9,
           "winner": true
         },
         {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "2",
           "scoreNum": 2,
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "6",
           "scoreNum": 6,
           "winner": false
@@ -1557,52 +1805,52 @@
       "id": "115743241",
       "playDate": "2026-07-02",
       "board": "Nederland",
-      "locationRefId": 2,
+      "locationRefId": 1,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "1",
           "scoreNum": 1,
           "winner": false
         },
         {
-          "playerRefId": 5,
+          "playerRefId": 2,
           "score": "0",
           "scoreNum": 0,
           "winner": false
         },
         {
-          "playerRefId": 6,
+          "playerRefId": 3,
           "score": "0",
           "scoreNum": 0,
           "winner": false
         },
         {
-          "playerRefId": 10,
+          "playerRefId": 4,
           "score": "9",
           "scoreNum": 9,
           "winner": true
         },
         {
-          "playerRefId": 11,
+          "playerRefId": 5,
           "score": "4",
           "scoreNum": 4,
           "winner": false
         },
         {
-          "playerRefId": 12,
+          "playerRefId": 6,
           "score": "2",
           "scoreNum": 2,
           "winner": false
         },
         {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "6",
           "scoreNum": 6,
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "3",
           "scoreNum": 3,
           "winner": false
@@ -1619,52 +1867,52 @@
       "id": "115686728",
       "playDate": "2026-06-30",
       "board": "Italia",
-      "locationRefId": 1,
+      "locationRefId": 2,
       "playerScores": [
         {
-          "playerRefId": 1,
+          "playerRefId": 10,
           "score": "4",
           "scoreNum": 4,
           "winner": false
         },
         {
-          "playerRefId": 2,
+          "playerRefId": 11,
           "score": "6",
           "scoreNum": 6,
           "winner": false
         },
         {
-          "playerRefId": 3,
+          "playerRefId": 12,
           "score": "0",
           "scoreNum": 0,
           "winner": false
         },
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "0",
           "scoreNum": 0,
           "winner": false
         },
         {
-          "playerRefId": 5,
+          "playerRefId": 2,
           "score": "2",
           "scoreNum": 2,
           "winner": false
         },
         {
-          "playerRefId": 6,
+          "playerRefId": 3,
           "score": "3",
           "scoreNum": 3,
           "winner": false
         },
         {
-          "playerRefId": 7,
+          "playerRefId": 13,
           "score": "0",
           "scoreNum": 0,
           "winner": false
         },
         {
-          "playerRefId": 8,
+          "playerRefId": 14,
           "score": "1",
           "scoreNum": 1,
           "winner": false
@@ -1681,8 +1929,26 @@
       "id": "115626749",
       "playDate": "2026-06-28",
       "board": "Francia",
-      "locationRefId": 2,
+      "locationRefId": 1,
       "playerScores": [
+        {
+          "playerRefId": 1,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 2,
+          "score": "1",
+          "scoreNum": 1,
+          "winner": false
+        },
+        {
+          "playerRefId": 3,
+          "score": "3",
+          "scoreNum": 3,
+          "winner": false
+        },
         {
           "playerRefId": 4,
           "score": "0",
@@ -1691,42 +1957,24 @@
         },
         {
           "playerRefId": 5,
-          "score": "1",
-          "scoreNum": 1,
-          "winner": false
-        },
-        {
-          "playerRefId": 6,
-          "score": "3",
-          "scoreNum": 3,
-          "winner": false
-        },
-        {
-          "playerRefId": 10,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 11,
           "score": "2",
           "scoreNum": 2,
           "winner": false
         },
         {
-          "playerRefId": 12,
+          "playerRefId": 6,
           "score": "4",
           "scoreNum": 4,
           "winner": false
         },
         {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "0",
           "scoreNum": 0,
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "6",
           "scoreNum": 6,
           "winner": false
@@ -1743,52 +1991,52 @@
       "id": "115429311",
       "playDate": "2026-06-23",
       "board": "Italia",
-      "locationRefId": 2,
+      "locationRefId": 1,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "2",
           "scoreNum": 2,
           "winner": false
         },
         {
-          "playerRefId": 5,
+          "playerRefId": 2,
           "score": "9",
           "scoreNum": 9,
           "winner": true
         },
         {
-          "playerRefId": 6,
+          "playerRefId": 3,
           "score": "1",
           "scoreNum": 1,
           "winner": false
         },
         {
-          "playerRefId": 10,
+          "playerRefId": 4,
           "score": "4",
           "scoreNum": 4,
           "winner": false
         },
         {
-          "playerRefId": 11,
+          "playerRefId": 5,
           "score": "6",
           "scoreNum": 6,
           "winner": false
         },
         {
-          "playerRefId": 12,
+          "playerRefId": 6,
           "score": "0",
           "scoreNum": 0,
           "winner": false
         },
         {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "0",
           "scoreNum": 0,
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "3",
           "scoreNum": 3,
           "winner": false
@@ -1805,19 +2053,37 @@
       "id": "115057160",
       "playDate": "2026-06-13",
       "board": "México",
-      "locationRefId": 2,
+      "locationRefId": 1,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "2",
           "scoreNum": 2,
           "winner": false
         },
         {
-          "playerRefId": 5,
+          "playerRefId": 2,
           "score": "9",
           "scoreNum": 9,
           "winner": true
+        },
+        {
+          "playerRefId": 3,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 4,
+          "score": "1",
+          "scoreNum": 1,
+          "winner": false
+        },
+        {
+          "playerRefId": 5,
+          "score": "6",
+          "scoreNum": 6,
+          "winner": false
         },
         {
           "playerRefId": 6,
@@ -1826,31 +2092,13 @@
           "winner": false
         },
         {
-          "playerRefId": 10,
-          "score": "1",
-          "scoreNum": 1,
-          "winner": false
-        },
-        {
-          "playerRefId": 11,
-          "score": "6",
-          "scoreNum": 6,
-          "winner": false
-        },
-        {
-          "playerRefId": 12,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "4",
           "scoreNum": 4,
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "0",
           "scoreNum": 0,
           "winner": false
@@ -1867,12 +2115,30 @@
       "id": "114678307",
       "playDate": "2026-06-02",
       "board": "USA",
-      "locationRefId": 1,
+      "locationRefId": 2,
       "playerScores": [
         {
-          "playerRefId": 1,
+          "playerRefId": 10,
           "score": "0",
           "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 11,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 12,
+          "score": "1",
+          "scoreNum": 1,
+          "winner": false
+        },
+        {
+          "playerRefId": 1,
+          "score": "3",
+          "scoreNum": 3,
           "winner": false
         },
         {
@@ -1883,36 +2149,18 @@
         },
         {
           "playerRefId": 3,
-          "score": "1",
-          "scoreNum": 1,
-          "winner": false
-        },
-        {
-          "playerRefId": 4,
-          "score": "3",
-          "scoreNum": 3,
-          "winner": false
-        },
-        {
-          "playerRefId": 5,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 6,
           "score": "9",
           "scoreNum": 9,
           "winner": true
         },
         {
-          "playerRefId": 7,
+          "playerRefId": 13,
           "score": "2",
           "scoreNum": 2,
           "winner": false
         },
         {
-          "playerRefId": 8,
+          "playerRefId": 14,
           "score": "4",
           "scoreNum": 4,
           "winner": false
@@ -1929,12 +2177,602 @@
       "id": "114140439",
       "playDate": "2026-05-19",
       "board": "Great Britain",
+      "locationRefId": 2,
+      "playerScores": [
+        {
+          "playerRefId": 10,
+          "score": "3",
+          "scoreNum": 3,
+          "winner": false
+        },
+        {
+          "playerRefId": 11,
+          "score": "1",
+          "scoreNum": 1,
+          "winner": false
+        },
+        {
+          "playerRefId": 12,
+          "score": "6",
+          "scoreNum": 6,
+          "winner": false
+        },
+        {
+          "playerRefId": 1,
+          "score": "9",
+          "scoreNum": 9,
+          "winner": true
+        },
+        {
+          "playerRefId": 2,
+          "score": "2",
+          "scoreNum": 2,
+          "winner": false
+        },
+        {
+          "playerRefId": 3,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 13,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 14,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 9,
+          "score": "4",
+          "scoreNum": 4,
+          "winner": false
+        }
+      ]
+    },
+    {
+      "id": "113571664",
+      "playDate": "2026-05-04",
+      "board": "USA",
       "locationRefId": 1,
       "playerScores": [
         {
           "playerRefId": 1,
           "score": "3",
           "scoreNum": 3,
+          "winner": false
+        },
+        {
+          "playerRefId": 2,
+          "score": "2",
+          "scoreNum": 2,
+          "winner": false
+        },
+        {
+          "playerRefId": 3,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 4,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 5,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 6,
+          "score": "1",
+          "scoreNum": 1,
+          "winner": false
+        },
+        {
+          "playerRefId": 7,
+          "score": "9",
+          "scoreNum": 9,
+          "winner": true
+        },
+        {
+          "playerRefId": 8,
+          "score": "4",
+          "scoreNum": 4,
+          "winner": false
+        },
+        {
+          "playerRefId": 9,
+          "score": "6",
+          "scoreNum": 6,
+          "winner": false
+        }
+      ]
+    },
+    {
+      "id": "113505826",
+      "playDate": "2026-05-03",
+      "board": "Francia",
+      "locationRefId": 1,
+      "playerScores": [
+        {
+          "playerRefId": 1,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 2,
+          "score": "4",
+          "scoreNum": 4,
+          "winner": false
+        },
+        {
+          "playerRefId": 3,
+          "score": "2",
+          "scoreNum": 2,
+          "winner": false
+        },
+        {
+          "playerRefId": 4,
+          "score": "1",
+          "scoreNum": 1,
+          "winner": false
+        },
+        {
+          "playerRefId": 5,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 6,
+          "score": "3",
+          "scoreNum": 3,
+          "winner": false
+        },
+        {
+          "playerRefId": 7,
+          "score": "9",
+          "scoreNum": 9,
+          "winner": true
+        },
+        {
+          "playerRefId": 8,
+          "score": "6",
+          "scoreNum": 6,
+          "winner": false
+        },
+        {
+          "playerRefId": 9,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        }
+      ]
+    },
+    {
+      "id": "113373186",
+      "playDate": "2026-04-30",
+      "board": "Great Britain",
+      "locationRefId": 1,
+      "playerScores": [
+        {
+          "playerRefId": 1,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 2,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 3,
+          "score": "2",
+          "scoreNum": 2,
+          "winner": false
+        },
+        {
+          "playerRefId": 4,
+          "score": "1",
+          "scoreNum": 1,
+          "winner": false
+        },
+        {
+          "playerRefId": 5,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 6,
+          "score": "3",
+          "scoreNum": 3,
+          "winner": false
+        },
+        {
+          "playerRefId": 7,
+          "score": "9",
+          "scoreNum": 9,
+          "winner": true
+        },
+        {
+          "playerRefId": 8,
+          "score": "6",
+          "scoreNum": 6,
+          "winner": false
+        },
+        {
+          "playerRefId": 9,
+          "score": "4",
+          "scoreNum": 4,
+          "winner": false
+        }
+      ]
+    },
+    {
+      "id": "113316434",
+      "playDate": "2026-04-28",
+      "board": "México",
+      "locationRefId": 1,
+      "playerScores": [
+        {
+          "playerRefId": 1,
+          "score": "2",
+          "scoreNum": 2,
+          "winner": false
+        },
+        {
+          "playerRefId": 2,
+          "score": "3",
+          "scoreNum": 3,
+          "winner": false
+        },
+        {
+          "playerRefId": 3,
+          "score": "1",
+          "scoreNum": 1,
+          "winner": false
+        },
+        {
+          "playerRefId": 4,
+          "score": "6",
+          "scoreNum": 6,
+          "winner": false
+        },
+        {
+          "playerRefId": 5,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 6,
+          "score": "4",
+          "scoreNum": 4,
+          "winner": false
+        },
+        {
+          "playerRefId": 7,
+          "score": "9",
+          "scoreNum": 9,
+          "winner": true
+        },
+        {
+          "playerRefId": 8,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 9,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        }
+      ]
+    },
+    {
+      "id": "113213301",
+      "playDate": "2026-04-25",
+      "board": "Nederland",
+      "locationRefId": 1,
+      "playerScores": [
+        {
+          "playerRefId": 1,
+          "score": "3",
+          "scoreNum": 3,
+          "winner": false
+        },
+        {
+          "playerRefId": 2,
+          "score": "2",
+          "scoreNum": 2,
+          "winner": false
+        },
+        {
+          "playerRefId": 3,
+          "score": "1",
+          "scoreNum": 1,
+          "winner": false
+        },
+        {
+          "playerRefId": 4,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 6,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 7,
+          "score": "9",
+          "scoreNum": 9,
+          "winner": true
+        },
+        {
+          "playerRefId": 8,
+          "score": "6",
+          "scoreNum": 6,
+          "winner": false
+        },
+        {
+          "playerRefId": 9,
+          "score": "4",
+          "scoreNum": 4,
+          "winner": false
+        }
+      ]
+    },
+    {
+      "id": "113114505",
+      "playDate": "2026-04-23",
+      "board": "Italia",
+      "locationRefId": 1,
+      "playerScores": [
+        {
+          "playerRefId": 1,
+          "score": "4",
+          "scoreNum": 4,
+          "winner": false
+        },
+        {
+          "playerRefId": 2,
+          "score": "6",
+          "scoreNum": 6,
+          "winner": false
+        },
+        {
+          "playerRefId": 3,
+          "score": "1",
+          "scoreNum": 1,
+          "winner": false
+        },
+        {
+          "playerRefId": 4,
+          "score": "9",
+          "scoreNum": 9,
+          "winner": true
+        },
+        {
+          "playerRefId": 6,
+          "score": "2",
+          "scoreNum": 2,
+          "winner": false
+        },
+        {
+          "playerRefId": 7,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 8,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 9,
+          "score": "3",
+          "scoreNum": 3,
+          "winner": false
+        }
+      ]
+    },
+    {
+      "id": "113060523",
+      "playDate": "2026-04-21",
+      "board": "México",
+      "locationRefId": 1,
+      "playerScores": [
+        {
+          "playerRefId": 1,
+          "score": "2",
+          "scoreNum": 2,
+          "winner": false
+        },
+        {
+          "playerRefId": 2,
+          "score": "1",
+          "scoreNum": 1,
+          "winner": false
+        },
+        {
+          "playerRefId": 3,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 4,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 6,
+          "score": "9",
+          "scoreNum": 9,
+          "winner": true
+        },
+        {
+          "playerRefId": 7,
+          "score": "4",
+          "scoreNum": 4,
+          "winner": false
+        },
+        {
+          "playerRefId": 8,
+          "score": "3",
+          "scoreNum": 3,
+          "winner": false
+        },
+        {
+          "playerRefId": 9,
+          "score": "6",
+          "scoreNum": 6,
+          "winner": false
+        }
+      ]
+    },
+    {
+      "id": "112950814",
+      "playDate": "2026-04-18",
+      "board": "España",
+      "locationRefId": 1,
+      "playerScores": [
+        {
+          "playerRefId": 1,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 2,
+          "score": "6",
+          "scoreNum": 6,
+          "winner": false
+        },
+        {
+          "playerRefId": 3,
+          "score": "1",
+          "scoreNum": 1,
+          "winner": false
+        },
+        {
+          "playerRefId": 4,
+          "score": "9",
+          "scoreNum": 9,
+          "winner": true
+        },
+        {
+          "playerRefId": 6,
+          "score": "4",
+          "scoreNum": 4,
+          "winner": false
+        },
+        {
+          "playerRefId": 7,
+          "score": "3",
+          "scoreNum": 3,
+          "winner": false
+        },
+        {
+          "playerRefId": 8,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 9,
+          "score": "2",
+          "scoreNum": 2,
+          "winner": false
+        }
+      ]
+    },
+    {
+      "id": "112831194",
+      "playDate": "2026-04-15",
+      "board": "México",
+      "locationRefId": 1,
+      "playerScores": [
+        {
+          "playerRefId": 1,
+          "score": "2",
+          "scoreNum": 2,
+          "winner": false
+        },
+        {
+          "playerRefId": 2,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 3,
+          "score": "3",
+          "scoreNum": 3,
+          "winner": false
+        },
+        {
+          "playerRefId": 4,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 6,
+          "score": "11",
+          "scoreNum": 11,
+          "winner": true
+        },
+        {
+          "playerRefId": 7,
+          "score": "6",
+          "scoreNum": 6,
+          "winner": false
+        },
+        {
+          "playerRefId": 8,
+          "score": "4",
+          "scoreNum": 4,
+          "winner": false
+        },
+        {
+          "playerRefId": 9,
+          "score": "1",
+          "scoreNum": 1,
+          "winner": false
+        }
+      ]
+    },
+    {
+      "id": "112780130",
+      "playDate": "2026-04-13",
+      "board": "Japón",
+      "locationRefId": 1,
+      "playerScores": [
+        {
+          "playerRefId": 1,
+          "score": "4",
+          "scoreNum": 4,
           "winner": false
         },
         {
@@ -1951,14 +2789,8 @@
         },
         {
           "playerRefId": 4,
-          "score": "9",
-          "scoreNum": 9,
-          "winner": true
-        },
-        {
-          "playerRefId": 5,
-          "score": "2",
-          "scoreNum": 2,
+          "score": "3",
+          "scoreNum": 3,
           "winner": false
         },
         {
@@ -1969,8 +2801,568 @@
         },
         {
           "playerRefId": 7,
+          "score": "9",
+          "scoreNum": 9,
+          "winner": true
+        },
+        {
+          "playerRefId": 8,
+          "score": "1",
+          "scoreNum": 1,
+          "winner": false
+        },
+        {
+          "playerRefId": 9,
           "score": "0",
           "scoreNum": 0,
+          "winner": false
+        }
+      ]
+    },
+    {
+      "id": "112593916",
+      "playDate": "2026-04-09",
+      "board": "Francia",
+      "locationRefId": 1,
+      "playerScores": [
+        {
+          "playerRefId": 1,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 2,
+          "score": "1",
+          "scoreNum": 1,
+          "winner": false
+        },
+        {
+          "playerRefId": 3,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 4,
+          "score": "2",
+          "scoreNum": 2,
+          "winner": false
+        },
+        {
+          "playerRefId": 6,
+          "score": "3",
+          "scoreNum": 3,
+          "winner": false
+        },
+        {
+          "playerRefId": 7,
+          "score": "6",
+          "scoreNum": 6,
+          "winner": false
+        },
+        {
+          "playerRefId": 8,
+          "score": "9",
+          "scoreNum": 9,
+          "winner": true
+        },
+        {
+          "playerRefId": 9,
+          "score": "4",
+          "scoreNum": 4,
+          "winner": false
+        }
+      ]
+    },
+    {
+      "id": "112430365",
+      "playDate": "2026-04-05",
+      "board": "Italia",
+      "locationRefId": 1,
+      "playerScores": [
+        {
+          "playerRefId": 1,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 2,
+          "score": "4",
+          "scoreNum": 4,
+          "winner": false
+        },
+        {
+          "playerRefId": 3,
+          "score": "3",
+          "scoreNum": 3,
+          "winner": false
+        },
+        {
+          "playerRefId": 4,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 6,
+          "score": "9",
+          "scoreNum": 9,
+          "winner": true
+        },
+        {
+          "playerRefId": 7,
+          "score": "6",
+          "scoreNum": 6,
+          "winner": false
+        },
+        {
+          "playerRefId": 8,
+          "score": "2",
+          "scoreNum": 2,
+          "winner": false
+        },
+        {
+          "playerRefId": 9,
+          "score": "1",
+          "scoreNum": 1,
+          "winner": false
+        }
+      ]
+    },
+    {
+      "id": "112261529",
+      "playDate": "2026-04-01",
+      "board": "Japón",
+      "locationRefId": 1,
+      "playerScores": [
+        {
+          "playerRefId": 1,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 2,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 3,
+          "score": "1",
+          "scoreNum": 1,
+          "winner": false
+        },
+        {
+          "playerRefId": 4,
+          "score": "2",
+          "scoreNum": 2,
+          "winner": false
+        },
+        {
+          "playerRefId": 6,
+          "score": "3",
+          "scoreNum": 3,
+          "winner": false
+        },
+        {
+          "playerRefId": 7,
+          "score": "9",
+          "scoreNum": 9,
+          "winner": true
+        },
+        {
+          "playerRefId": 8,
+          "score": "6",
+          "scoreNum": 6,
+          "winner": false
+        },
+        {
+          "playerRefId": 9,
+          "score": "4",
+          "scoreNum": 4,
+          "winner": false
+        }
+      ]
+    },
+    {
+      "id": "112193975",
+      "playDate": "2026-03-30",
+      "board": "USA",
+      "locationRefId": 1,
+      "playerScores": [
+        {
+          "playerRefId": 1,
+          "score": "4",
+          "scoreNum": 4,
+          "winner": false
+        },
+        {
+          "playerRefId": 2,
+          "score": "1",
+          "scoreNum": 1,
+          "winner": false
+        },
+        {
+          "playerRefId": 3,
+          "score": "9",
+          "scoreNum": 9,
+          "winner": true
+        },
+        {
+          "playerRefId": 4,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 6,
+          "score": "3",
+          "scoreNum": 3,
+          "winner": false
+        },
+        {
+          "playerRefId": 7,
+          "score": "6",
+          "scoreNum": 6,
+          "winner": false
+        },
+        {
+          "playerRefId": 8,
+          "score": "2",
+          "scoreNum": 2,
+          "winner": false
+        },
+        {
+          "playerRefId": 9,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        }
+      ]
+    },
+    {
+      "id": "112010807",
+      "playDate": "2026-03-26",
+      "board": "USA",
+      "locationRefId": 1,
+      "playerScores": [
+        {
+          "playerRefId": 1,
+          "score": "4",
+          "scoreNum": 4,
+          "winner": false
+        },
+        {
+          "playerRefId": 2,
+          "score": "6",
+          "scoreNum": 6,
+          "winner": false
+        },
+        {
+          "playerRefId": 3,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 4,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 6,
+          "score": "1",
+          "scoreNum": 1,
+          "winner": false
+        },
+        {
+          "playerRefId": 7,
+          "score": "9",
+          "scoreNum": 9,
+          "winner": true
+        },
+        {
+          "playerRefId": 8,
+          "score": "2",
+          "scoreNum": 2,
+          "winner": false
+        },
+        {
+          "playerRefId": 9,
+          "score": "3",
+          "scoreNum": 3,
+          "winner": false
+        }
+      ]
+    },
+    {
+      "id": "111969570",
+      "playDate": "2026-03-25",
+      "board": "Italia",
+      "locationRefId": 1,
+      "playerScores": [
+        {
+          "playerRefId": 1,
+          "score": "2",
+          "scoreNum": 2,
+          "winner": false
+        },
+        {
+          "playerRefId": 2,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 3,
+          "score": "6",
+          "scoreNum": 6,
+          "winner": false
+        },
+        {
+          "playerRefId": 4,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 6,
+          "score": "3",
+          "scoreNum": 3,
+          "winner": false
+        },
+        {
+          "playerRefId": 7,
+          "score": "4",
+          "scoreNum": 4,
+          "winner": false
+        },
+        {
+          "playerRefId": 8,
+          "score": "11",
+          "scoreNum": 11,
+          "winner": true
+        },
+        {
+          "playerRefId": 9,
+          "score": "1",
+          "scoreNum": 1,
+          "winner": false
+        }
+      ]
+    },
+    {
+      "id": "111939391",
+      "playDate": "2026-03-24",
+      "board": "España",
+      "locationRefId": 1,
+      "playerScores": [
+        {
+          "playerRefId": 1,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 2,
+          "score": "1",
+          "scoreNum": 1,
+          "winner": false
+        },
+        {
+          "playerRefId": 3,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 4,
+          "score": "4",
+          "scoreNum": 4,
+          "winner": false
+        },
+        {
+          "playerRefId": 6,
+          "score": "6",
+          "scoreNum": 6,
+          "winner": false
+        },
+        {
+          "playerRefId": 7,
+          "score": "3",
+          "scoreNum": 3,
+          "winner": false
+        },
+        {
+          "playerRefId": 8,
+          "score": "9",
+          "scoreNum": 9,
+          "winner": true
+        },
+        {
+          "playerRefId": 9,
+          "score": "2",
+          "scoreNum": 2,
+          "winner": false
+        }
+      ]
+    },
+    {
+      "id": "111879204",
+      "playDate": "2026-03-22",
+      "board": "México",
+      "locationRefId": 1,
+      "playerScores": [
+        {
+          "playerRefId": 1,
+          "score": "4",
+          "scoreNum": 4,
+          "winner": false
+        },
+        {
+          "playerRefId": 2,
+          "score": "3",
+          "scoreNum": 3,
+          "winner": false
+        },
+        {
+          "playerRefId": 3,
+          "score": "9",
+          "scoreNum": 9,
+          "winner": true
+        },
+        {
+          "playerRefId": 4,
+          "score": "6",
+          "scoreNum": 6,
+          "winner": false
+        },
+        {
+          "playerRefId": 6,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 7,
+          "score": "2",
+          "scoreNum": 2,
+          "winner": false
+        },
+        {
+          "playerRefId": 8,
+          "score": "1",
+          "scoreNum": 1,
+          "winner": false
+        },
+        {
+          "playerRefId": 9,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        }
+      ]
+    },
+    {
+      "id": "111666743",
+      "playDate": "2026-03-17",
+      "board": "Great Britain",
+      "locationRefId": 1,
+      "playerScores": [
+        {
+          "playerRefId": 1,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 2,
+          "score": "2",
+          "scoreNum": 2,
+          "winner": false
+        },
+        {
+          "playerRefId": 3,
+          "score": "4",
+          "scoreNum": 4,
+          "winner": false
+        },
+        {
+          "playerRefId": 4,
+          "score": "1",
+          "scoreNum": 1,
+          "winner": false
+        },
+        {
+          "playerRefId": 6,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 7,
+          "score": "3",
+          "scoreNum": 3,
+          "winner": false
+        },
+        {
+          "playerRefId": 8,
+          "score": "6",
+          "scoreNum": 6,
+          "winner": false
+        },
+        {
+          "playerRefId": 9,
+          "score": "9",
+          "scoreNum": 9,
+          "winner": true
+        }
+      ]
+    },
+    {
+      "id": "111463759",
+      "playDate": "2026-03-13",
+      "board": "USA",
+      "locationRefId": 1,
+      "playerScores": [
+        {
+          "playerRefId": 1,
+          "score": "2",
+          "scoreNum": 2,
+          "winner": false
+        },
+        {
+          "playerRefId": 2,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 3,
+          "score": "1",
+          "scoreNum": 1,
+          "winner": false
+        },
+        {
+          "playerRefId": 4,
+          "score": "6",
+          "scoreNum": 6,
+          "winner": false
+        },
+        {
+          "playerRefId": 6,
+          "score": "9",
+          "scoreNum": 9,
+          "winner": true
+        },
+        {
+          "playerRefId": 7,
+          "score": "3",
+          "scoreNum": 3,
           "winner": false
         },
         {
@@ -1988,1193 +3380,49 @@
       ]
     },
     {
-      "id": "113571664",
-      "playDate": "2026-05-04",
-      "board": "USA",
-      "locationRefId": 2,
-      "playerScores": [
-        {
-          "playerRefId": 4,
-          "score": "3",
-          "scoreNum": 3,
-          "winner": false
-        },
-        {
-          "playerRefId": 5,
-          "score": "2",
-          "scoreNum": 2,
-          "winner": false
-        },
-        {
-          "playerRefId": 6,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 10,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 11,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 12,
-          "score": "1",
-          "scoreNum": 1,
-          "winner": false
-        },
-        {
-          "playerRefId": 13,
-          "score": "9",
-          "scoreNum": 9,
-          "winner": true
-        },
-        {
-          "playerRefId": 14,
-          "score": "4",
-          "scoreNum": 4,
-          "winner": false
-        },
-        {
-          "playerRefId": 9,
-          "score": "6",
-          "scoreNum": 6,
-          "winner": false
-        }
-      ]
-    },
-    {
-      "id": "113505826",
-      "playDate": "2026-05-03",
-      "board": "Francia",
-      "locationRefId": 2,
-      "playerScores": [
-        {
-          "playerRefId": 4,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 5,
-          "score": "4",
-          "scoreNum": 4,
-          "winner": false
-        },
-        {
-          "playerRefId": 6,
-          "score": "2",
-          "scoreNum": 2,
-          "winner": false
-        },
-        {
-          "playerRefId": 10,
-          "score": "1",
-          "scoreNum": 1,
-          "winner": false
-        },
-        {
-          "playerRefId": 11,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 12,
-          "score": "3",
-          "scoreNum": 3,
-          "winner": false
-        },
-        {
-          "playerRefId": 13,
-          "score": "9",
-          "scoreNum": 9,
-          "winner": true
-        },
-        {
-          "playerRefId": 14,
-          "score": "6",
-          "scoreNum": 6,
-          "winner": false
-        },
-        {
-          "playerRefId": 9,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        }
-      ]
-    },
-    {
-      "id": "113373186",
-      "playDate": "2026-04-30",
-      "board": "Great Britain",
-      "locationRefId": 2,
-      "playerScores": [
-        {
-          "playerRefId": 4,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 5,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 6,
-          "score": "2",
-          "scoreNum": 2,
-          "winner": false
-        },
-        {
-          "playerRefId": 10,
-          "score": "1",
-          "scoreNum": 1,
-          "winner": false
-        },
-        {
-          "playerRefId": 11,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 12,
-          "score": "3",
-          "scoreNum": 3,
-          "winner": false
-        },
-        {
-          "playerRefId": 13,
-          "score": "9",
-          "scoreNum": 9,
-          "winner": true
-        },
-        {
-          "playerRefId": 14,
-          "score": "6",
-          "scoreNum": 6,
-          "winner": false
-        },
-        {
-          "playerRefId": 9,
-          "score": "4",
-          "scoreNum": 4,
-          "winner": false
-        }
-      ]
-    },
-    {
-      "id": "113316434",
-      "playDate": "2026-04-28",
-      "board": "México",
-      "locationRefId": 2,
-      "playerScores": [
-        {
-          "playerRefId": 4,
-          "score": "2",
-          "scoreNum": 2,
-          "winner": false
-        },
-        {
-          "playerRefId": 5,
-          "score": "3",
-          "scoreNum": 3,
-          "winner": false
-        },
-        {
-          "playerRefId": 6,
-          "score": "1",
-          "scoreNum": 1,
-          "winner": false
-        },
-        {
-          "playerRefId": 10,
-          "score": "6",
-          "scoreNum": 6,
-          "winner": false
-        },
-        {
-          "playerRefId": 11,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 12,
-          "score": "4",
-          "scoreNum": 4,
-          "winner": false
-        },
-        {
-          "playerRefId": 13,
-          "score": "9",
-          "scoreNum": 9,
-          "winner": true
-        },
-        {
-          "playerRefId": 14,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 9,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        }
-      ]
-    },
-    {
-      "id": "113213301",
-      "playDate": "2026-04-25",
-      "board": "Nederland",
-      "locationRefId": 2,
-      "playerScores": [
-        {
-          "playerRefId": 4,
-          "score": "3",
-          "scoreNum": 3,
-          "winner": false
-        },
-        {
-          "playerRefId": 5,
-          "score": "2",
-          "scoreNum": 2,
-          "winner": false
-        },
-        {
-          "playerRefId": 6,
-          "score": "1",
-          "scoreNum": 1,
-          "winner": false
-        },
-        {
-          "playerRefId": 10,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 12,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 13,
-          "score": "9",
-          "scoreNum": 9,
-          "winner": true
-        },
-        {
-          "playerRefId": 14,
-          "score": "6",
-          "scoreNum": 6,
-          "winner": false
-        },
-        {
-          "playerRefId": 9,
-          "score": "4",
-          "scoreNum": 4,
-          "winner": false
-        }
-      ]
-    },
-    {
-      "id": "113114505",
-      "playDate": "2026-04-23",
-      "board": "Italia",
-      "locationRefId": 2,
-      "playerScores": [
-        {
-          "playerRefId": 4,
-          "score": "4",
-          "scoreNum": 4,
-          "winner": false
-        },
-        {
-          "playerRefId": 5,
-          "score": "6",
-          "scoreNum": 6,
-          "winner": false
-        },
-        {
-          "playerRefId": 6,
-          "score": "1",
-          "scoreNum": 1,
-          "winner": false
-        },
-        {
-          "playerRefId": 10,
-          "score": "9",
-          "scoreNum": 9,
-          "winner": true
-        },
-        {
-          "playerRefId": 12,
-          "score": "2",
-          "scoreNum": 2,
-          "winner": false
-        },
-        {
-          "playerRefId": 13,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 14,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 9,
-          "score": "3",
-          "scoreNum": 3,
-          "winner": false
-        }
-      ]
-    },
-    {
-      "id": "113060523",
-      "playDate": "2026-04-21",
-      "board": "México",
-      "locationRefId": 2,
-      "playerScores": [
-        {
-          "playerRefId": 4,
-          "score": "2",
-          "scoreNum": 2,
-          "winner": false
-        },
-        {
-          "playerRefId": 5,
-          "score": "1",
-          "scoreNum": 1,
-          "winner": false
-        },
-        {
-          "playerRefId": 6,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 10,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 12,
-          "score": "9",
-          "scoreNum": 9,
-          "winner": true
-        },
-        {
-          "playerRefId": 13,
-          "score": "4",
-          "scoreNum": 4,
-          "winner": false
-        },
-        {
-          "playerRefId": 14,
-          "score": "3",
-          "scoreNum": 3,
-          "winner": false
-        },
-        {
-          "playerRefId": 9,
-          "score": "6",
-          "scoreNum": 6,
-          "winner": false
-        }
-      ]
-    },
-    {
-      "id": "112950814",
-      "playDate": "2026-04-18",
-      "board": "España",
-      "locationRefId": 2,
-      "playerScores": [
-        {
-          "playerRefId": 4,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 5,
-          "score": "6",
-          "scoreNum": 6,
-          "winner": false
-        },
-        {
-          "playerRefId": 6,
-          "score": "1",
-          "scoreNum": 1,
-          "winner": false
-        },
-        {
-          "playerRefId": 10,
-          "score": "9",
-          "scoreNum": 9,
-          "winner": true
-        },
-        {
-          "playerRefId": 12,
-          "score": "4",
-          "scoreNum": 4,
-          "winner": false
-        },
-        {
-          "playerRefId": 13,
-          "score": "3",
-          "scoreNum": 3,
-          "winner": false
-        },
-        {
-          "playerRefId": 14,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 9,
-          "score": "2",
-          "scoreNum": 2,
-          "winner": false
-        }
-      ]
-    },
-    {
-      "id": "112831194",
-      "playDate": "2026-04-15",
-      "board": "México",
-      "locationRefId": 2,
-      "playerScores": [
-        {
-          "playerRefId": 4,
-          "score": "2",
-          "scoreNum": 2,
-          "winner": false
-        },
-        {
-          "playerRefId": 5,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 6,
-          "score": "3",
-          "scoreNum": 3,
-          "winner": false
-        },
-        {
-          "playerRefId": 10,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 12,
-          "score": "11",
-          "scoreNum": 11,
-          "winner": true
-        },
-        {
-          "playerRefId": 13,
-          "score": "6",
-          "scoreNum": 6,
-          "winner": false
-        },
-        {
-          "playerRefId": 14,
-          "score": "4",
-          "scoreNum": 4,
-          "winner": false
-        },
-        {
-          "playerRefId": 9,
-          "score": "1",
-          "scoreNum": 1,
-          "winner": false
-        }
-      ]
-    },
-    {
-      "id": "112780130",
-      "playDate": "2026-04-13",
-      "board": "Japón",
-      "locationRefId": 2,
-      "playerScores": [
-        {
-          "playerRefId": 4,
-          "score": "4",
-          "scoreNum": 4,
-          "winner": false
-        },
-        {
-          "playerRefId": 5,
-          "score": "1",
-          "scoreNum": 1,
-          "winner": false
-        },
-        {
-          "playerRefId": 6,
-          "score": "6",
-          "scoreNum": 6,
-          "winner": false
-        },
-        {
-          "playerRefId": 10,
-          "score": "3",
-          "scoreNum": 3,
-          "winner": false
-        },
-        {
-          "playerRefId": 12,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 13,
-          "score": "9",
-          "scoreNum": 9,
-          "winner": true
-        },
-        {
-          "playerRefId": 14,
-          "score": "1",
-          "scoreNum": 1,
-          "winner": false
-        },
-        {
-          "playerRefId": 9,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        }
-      ]
-    },
-    {
-      "id": "112593916",
-      "playDate": "2026-04-09",
-      "board": "Francia",
-      "locationRefId": 2,
-      "playerScores": [
-        {
-          "playerRefId": 4,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 5,
-          "score": "1",
-          "scoreNum": 1,
-          "winner": false
-        },
-        {
-          "playerRefId": 6,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 10,
-          "score": "2",
-          "scoreNum": 2,
-          "winner": false
-        },
-        {
-          "playerRefId": 12,
-          "score": "3",
-          "scoreNum": 3,
-          "winner": false
-        },
-        {
-          "playerRefId": 13,
-          "score": "6",
-          "scoreNum": 6,
-          "winner": false
-        },
-        {
-          "playerRefId": 14,
-          "score": "9",
-          "scoreNum": 9,
-          "winner": true
-        },
-        {
-          "playerRefId": 9,
-          "score": "4",
-          "scoreNum": 4,
-          "winner": false
-        }
-      ]
-    },
-    {
-      "id": "112430365",
-      "playDate": "2026-04-05",
-      "board": "Italia",
-      "locationRefId": 2,
-      "playerScores": [
-        {
-          "playerRefId": 4,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 5,
-          "score": "4",
-          "scoreNum": 4,
-          "winner": false
-        },
-        {
-          "playerRefId": 6,
-          "score": "3",
-          "scoreNum": 3,
-          "winner": false
-        },
-        {
-          "playerRefId": 10,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 12,
-          "score": "9",
-          "scoreNum": 9,
-          "winner": true
-        },
-        {
-          "playerRefId": 13,
-          "score": "6",
-          "scoreNum": 6,
-          "winner": false
-        },
-        {
-          "playerRefId": 14,
-          "score": "2",
-          "scoreNum": 2,
-          "winner": false
-        },
-        {
-          "playerRefId": 9,
-          "score": "1",
-          "scoreNum": 1,
-          "winner": false
-        }
-      ]
-    },
-    {
-      "id": "112261529",
-      "playDate": "2026-04-01",
-      "board": "Japón",
-      "locationRefId": 2,
-      "playerScores": [
-        {
-          "playerRefId": 4,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 5,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 6,
-          "score": "1",
-          "scoreNum": 1,
-          "winner": false
-        },
-        {
-          "playerRefId": 10,
-          "score": "2",
-          "scoreNum": 2,
-          "winner": false
-        },
-        {
-          "playerRefId": 12,
-          "score": "3",
-          "scoreNum": 3,
-          "winner": false
-        },
-        {
-          "playerRefId": 13,
-          "score": "9",
-          "scoreNum": 9,
-          "winner": true
-        },
-        {
-          "playerRefId": 14,
-          "score": "6",
-          "scoreNum": 6,
-          "winner": false
-        },
-        {
-          "playerRefId": 9,
-          "score": "4",
-          "scoreNum": 4,
-          "winner": false
-        }
-      ]
-    },
-    {
-      "id": "112193975",
-      "playDate": "2026-03-30",
-      "board": "USA",
-      "locationRefId": 2,
-      "playerScores": [
-        {
-          "playerRefId": 4,
-          "score": "4",
-          "scoreNum": 4,
-          "winner": false
-        },
-        {
-          "playerRefId": 5,
-          "score": "1",
-          "scoreNum": 1,
-          "winner": false
-        },
-        {
-          "playerRefId": 6,
-          "score": "9",
-          "scoreNum": 9,
-          "winner": true
-        },
-        {
-          "playerRefId": 10,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 12,
-          "score": "3",
-          "scoreNum": 3,
-          "winner": false
-        },
-        {
-          "playerRefId": 13,
-          "score": "6",
-          "scoreNum": 6,
-          "winner": false
-        },
-        {
-          "playerRefId": 14,
-          "score": "2",
-          "scoreNum": 2,
-          "winner": false
-        },
-        {
-          "playerRefId": 9,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        }
-      ]
-    },
-    {
-      "id": "112010807",
-      "playDate": "2026-03-26",
-      "board": "USA",
-      "locationRefId": 2,
-      "playerScores": [
-        {
-          "playerRefId": 4,
-          "score": "4",
-          "scoreNum": 4,
-          "winner": false
-        },
-        {
-          "playerRefId": 5,
-          "score": "6",
-          "scoreNum": 6,
-          "winner": false
-        },
-        {
-          "playerRefId": 6,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 10,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 12,
-          "score": "1",
-          "scoreNum": 1,
-          "winner": false
-        },
-        {
-          "playerRefId": 13,
-          "score": "9",
-          "scoreNum": 9,
-          "winner": true
-        },
-        {
-          "playerRefId": 14,
-          "score": "2",
-          "scoreNum": 2,
-          "winner": false
-        },
-        {
-          "playerRefId": 9,
-          "score": "3",
-          "scoreNum": 3,
-          "winner": false
-        }
-      ]
-    },
-    {
-      "id": "111969570",
-      "playDate": "2026-03-25",
-      "board": "Italia",
-      "locationRefId": 2,
-      "playerScores": [
-        {
-          "playerRefId": 4,
-          "score": "2",
-          "scoreNum": 2,
-          "winner": false
-        },
-        {
-          "playerRefId": 5,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 6,
-          "score": "6",
-          "scoreNum": 6,
-          "winner": false
-        },
-        {
-          "playerRefId": 10,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 12,
-          "score": "3",
-          "scoreNum": 3,
-          "winner": false
-        },
-        {
-          "playerRefId": 13,
-          "score": "4",
-          "scoreNum": 4,
-          "winner": false
-        },
-        {
-          "playerRefId": 14,
-          "score": "11",
-          "scoreNum": 11,
-          "winner": true
-        },
-        {
-          "playerRefId": 9,
-          "score": "1",
-          "scoreNum": 1,
-          "winner": false
-        }
-      ]
-    },
-    {
-      "id": "111939391",
-      "playDate": "2026-03-24",
-      "board": "España",
-      "locationRefId": 2,
-      "playerScores": [
-        {
-          "playerRefId": 4,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 5,
-          "score": "1",
-          "scoreNum": 1,
-          "winner": false
-        },
-        {
-          "playerRefId": 6,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 10,
-          "score": "4",
-          "scoreNum": 4,
-          "winner": false
-        },
-        {
-          "playerRefId": 12,
-          "score": "6",
-          "scoreNum": 6,
-          "winner": false
-        },
-        {
-          "playerRefId": 13,
-          "score": "3",
-          "scoreNum": 3,
-          "winner": false
-        },
-        {
-          "playerRefId": 14,
-          "score": "9",
-          "scoreNum": 9,
-          "winner": true
-        },
-        {
-          "playerRefId": 9,
-          "score": "2",
-          "scoreNum": 2,
-          "winner": false
-        }
-      ]
-    },
-    {
-      "id": "111879204",
-      "playDate": "2026-03-22",
-      "board": "México",
-      "locationRefId": 2,
-      "playerScores": [
-        {
-          "playerRefId": 4,
-          "score": "4",
-          "scoreNum": 4,
-          "winner": false
-        },
-        {
-          "playerRefId": 5,
-          "score": "3",
-          "scoreNum": 3,
-          "winner": false
-        },
-        {
-          "playerRefId": 6,
-          "score": "9",
-          "scoreNum": 9,
-          "winner": true
-        },
-        {
-          "playerRefId": 10,
-          "score": "6",
-          "scoreNum": 6,
-          "winner": false
-        },
-        {
-          "playerRefId": 12,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 13,
-          "score": "2",
-          "scoreNum": 2,
-          "winner": false
-        },
-        {
-          "playerRefId": 14,
-          "score": "1",
-          "scoreNum": 1,
-          "winner": false
-        },
-        {
-          "playerRefId": 9,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        }
-      ]
-    },
-    {
-      "id": "111666743",
-      "playDate": "2026-03-17",
-      "board": "Great Britain",
-      "locationRefId": 2,
-      "playerScores": [
-        {
-          "playerRefId": 4,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 5,
-          "score": "2",
-          "scoreNum": 2,
-          "winner": false
-        },
-        {
-          "playerRefId": 6,
-          "score": "4",
-          "scoreNum": 4,
-          "winner": false
-        },
-        {
-          "playerRefId": 10,
-          "score": "1",
-          "scoreNum": 1,
-          "winner": false
-        },
-        {
-          "playerRefId": 12,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 13,
-          "score": "3",
-          "scoreNum": 3,
-          "winner": false
-        },
-        {
-          "playerRefId": 14,
-          "score": "6",
-          "scoreNum": 6,
-          "winner": false
-        },
-        {
-          "playerRefId": 9,
-          "score": "9",
-          "scoreNum": 9,
-          "winner": true
-        }
-      ]
-    },
-    {
-      "id": "111463759",
-      "playDate": "2026-03-13",
-      "board": "USA",
-      "locationRefId": 2,
-      "playerScores": [
-        {
-          "playerRefId": 4,
-          "score": "2",
-          "scoreNum": 2,
-          "winner": false
-        },
-        {
-          "playerRefId": 5,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 6,
-          "score": "1",
-          "scoreNum": 1,
-          "winner": false
-        },
-        {
-          "playerRefId": 10,
-          "score": "6",
-          "scoreNum": 6,
-          "winner": false
-        },
-        {
-          "playerRefId": 12,
-          "score": "9",
-          "scoreNum": 9,
-          "winner": true
-        },
-        {
-          "playerRefId": 13,
-          "score": "3",
-          "scoreNum": 3,
-          "winner": false
-        },
-        {
-          "playerRefId": 14,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 9,
-          "score": "4",
-          "scoreNum": 4,
-          "winner": false
-        }
-      ]
-    },
-    {
       "id": "111426162",
       "playDate": "2026-03-12",
       "board": "Italia",
-      "locationRefId": 2,
+      "locationRefId": 1,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "1",
           "scoreNum": 1,
           "winner": false
         },
         {
-          "playerRefId": 5,
+          "playerRefId": 2,
           "score": "0",
           "scoreNum": 0,
           "winner": false
         },
         {
-          "playerRefId": 6,
+          "playerRefId": 3,
           "score": "0",
           "scoreNum": 0,
           "winner": false
         },
         {
-          "playerRefId": 10,
+          "playerRefId": 4,
           "score": "3",
           "scoreNum": 3,
           "winner": false
         },
         {
-          "playerRefId": 12,
+          "playerRefId": 6,
           "score": "6",
           "scoreNum": 6,
           "winner": false
         },
         {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "9",
           "scoreNum": 9,
           "winner": true
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "4",
           "scoreNum": 4,
           "winner": false
@@ -3194,43 +3442,43 @@
       "locationRefId": 3,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "0",
           "scoreNum": 0,
           "winner": false
         },
         {
-          "playerRefId": 5,
+          "playerRefId": 2,
           "score": "1",
           "scoreNum": 1,
           "winner": false
         },
         {
-          "playerRefId": 6,
+          "playerRefId": 3,
           "score": "0",
           "scoreNum": 0,
           "winner": false
         },
         {
-          "playerRefId": 10,
+          "playerRefId": 4,
           "score": "3",
           "scoreNum": 3,
           "winner": false
         },
         {
-          "playerRefId": 12,
+          "playerRefId": 6,
           "score": "2",
           "scoreNum": 2,
           "winner": false
         },
         {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "4",
           "scoreNum": 4,
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "9",
           "scoreNum": 9,
           "winner": true
@@ -3250,43 +3498,43 @@
       "locationRefId": 3,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "0",
           "scoreNum": 0,
           "winner": false
         },
         {
-          "playerRefId": 5,
+          "playerRefId": 2,
           "score": "0",
           "scoreNum": 0,
           "winner": false
         },
         {
-          "playerRefId": 6,
+          "playerRefId": 3,
           "score": "1",
           "scoreNum": 1,
           "winner": false
         },
         {
-          "playerRefId": 10,
+          "playerRefId": 4,
           "score": "2",
           "scoreNum": 2,
           "winner": false
         },
         {
-          "playerRefId": 12,
+          "playerRefId": 6,
           "score": "4",
           "scoreNum": 4,
           "winner": false
         },
         {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "6",
           "scoreNum": 6,
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "3",
           "scoreNum": 3,
           "winner": false
@@ -3306,43 +3554,43 @@
       "locationRefId": 3,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "0",
           "scoreNum": 0,
           "winner": false
         },
         {
-          "playerRefId": 5,
+          "playerRefId": 2,
           "score": "2",
           "scoreNum": 2,
           "winner": false
         },
         {
-          "playerRefId": 6,
+          "playerRefId": 3,
           "score": "0",
           "scoreNum": 0,
           "winner": false
         },
         {
-          "playerRefId": 10,
+          "playerRefId": 4,
           "score": "4",
           "scoreNum": 4,
           "winner": false
         },
         {
-          "playerRefId": 12,
+          "playerRefId": 6,
           "score": "6",
           "scoreNum": 6,
           "winner": false
         },
         {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "9",
           "scoreNum": 9,
           "winner": true
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "1",
           "scoreNum": 1,
           "winner": false
@@ -3359,46 +3607,46 @@
       "id": "111394926",
       "playDate": "2026-03-11",
       "board": "Great Britain",
-      "locationRefId": 2,
+      "locationRefId": 1,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "2",
           "scoreNum": 2,
           "winner": false
         },
         {
-          "playerRefId": 5,
+          "playerRefId": 2,
           "score": "3",
           "scoreNum": 3,
           "winner": false
         },
         {
-          "playerRefId": 6,
+          "playerRefId": 3,
           "score": "0",
           "scoreNum": 0,
           "winner": false
         },
         {
-          "playerRefId": 10,
+          "playerRefId": 4,
           "score": "1",
           "scoreNum": 1,
           "winner": false
         },
         {
-          "playerRefId": 12,
+          "playerRefId": 6,
           "score": "9",
           "scoreNum": 9,
           "winner": true
         },
         {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "4",
           "scoreNum": 4,
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "6",
           "scoreNum": 6,
           "winner": false
@@ -3415,46 +3663,46 @@
       "id": "111345073",
       "playDate": "2026-03-09",
       "board": "Francia",
-      "locationRefId": 2,
+      "locationRefId": 1,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "4",
           "scoreNum": 4,
           "winner": false
         },
         {
-          "playerRefId": 5,
+          "playerRefId": 2,
           "score": "3",
           "scoreNum": 3,
           "winner": false
         },
         {
-          "playerRefId": 6,
+          "playerRefId": 3,
           "score": "1",
           "scoreNum": 1,
           "winner": false
         },
         {
-          "playerRefId": 10,
+          "playerRefId": 4,
           "score": "0",
           "scoreNum": 0,
           "winner": false
         },
         {
-          "playerRefId": 12,
+          "playerRefId": 6,
           "score": "6",
           "scoreNum": 6,
           "winner": false
         },
         {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "9",
           "scoreNum": 9,
           "winner": true
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "0",
           "scoreNum": 0,
           "winner": false
@@ -3471,46 +3719,46 @@
       "id": "111296433",
       "playDate": "2026-03-08",
       "board": "México",
-      "locationRefId": 2,
+      "locationRefId": 1,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "1",
           "scoreNum": 1,
           "winner": false
         },
         {
-          "playerRefId": 5,
+          "playerRefId": 2,
           "score": "2",
           "scoreNum": 2,
           "winner": false
         },
         {
-          "playerRefId": 6,
+          "playerRefId": 3,
           "score": "6",
           "scoreNum": 6,
           "winner": false
         },
         {
-          "playerRefId": 10,
+          "playerRefId": 4,
           "score": "0",
           "scoreNum": 0,
           "winner": false
         },
         {
-          "playerRefId": 12,
+          "playerRefId": 6,
           "score": "11",
           "scoreNum": 11,
           "winner": true
         },
         {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "0",
           "scoreNum": 0,
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "3",
           "scoreNum": 3,
           "winner": false
@@ -3527,46 +3775,46 @@
       "id": "111190458",
       "playDate": "2026-03-06",
       "board": "España",
-      "locationRefId": 2,
+      "locationRefId": 1,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "2",
           "scoreNum": 2,
           "winner": false
         },
         {
-          "playerRefId": 5,
+          "playerRefId": 2,
           "score": "3",
           "scoreNum": 3,
           "winner": false
         },
         {
+          "playerRefId": 3,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 4,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
           "playerRefId": 6,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 10,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 12,
           "score": "1",
           "scoreNum": 1,
           "winner": false
         },
         {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "6",
           "scoreNum": 6,
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "9",
           "scoreNum": 9,
           "winner": true
@@ -3583,46 +3831,46 @@
       "id": "111130343",
       "playDate": "2026-03-04",
       "board": "España",
-      "locationRefId": 2,
+      "locationRefId": 1,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "1",
           "scoreNum": 1,
           "winner": false
         },
         {
-          "playerRefId": 5,
+          "playerRefId": 2,
           "score": "3",
           "scoreNum": 3,
           "winner": false
         },
         {
-          "playerRefId": 6,
+          "playerRefId": 3,
           "score": "0",
           "scoreNum": 0,
           "winner": false
         },
         {
-          "playerRefId": 10,
+          "playerRefId": 4,
           "score": "2",
           "scoreNum": 2,
           "winner": false
         },
         {
-          "playerRefId": 12,
+          "playerRefId": 6,
           "score": "9",
           "scoreNum": 9,
           "winner": true
         },
         {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "4",
           "scoreNum": 4,
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "0",
           "scoreNum": 0,
           "winner": false
@@ -3639,46 +3887,46 @@
       "id": "111095378",
       "playDate": "2026-03-03",
       "board": "Francia",
-      "locationRefId": 2,
+      "locationRefId": 1,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "1",
           "scoreNum": 1,
           "winner": false
         },
         {
-          "playerRefId": 5,
+          "playerRefId": 2,
           "score": "3",
           "scoreNum": 3,
           "winner": false
         },
         {
+          "playerRefId": 3,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 4,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
           "playerRefId": 6,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 10,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 12,
           "score": "9",
           "scoreNum": 9,
           "winner": true
         },
         {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "6",
           "scoreNum": 6,
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "4",
           "scoreNum": 4,
           "winner": false
@@ -3695,46 +3943,46 @@
       "id": "111012833",
       "playDate": "2026-03-01",
       "board": "Francia",
-      "locationRefId": 2,
+      "locationRefId": 1,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "3",
           "scoreNum": 3,
           "winner": false
         },
         {
-          "playerRefId": 5,
+          "playerRefId": 2,
           "score": "0",
           "scoreNum": 0,
           "winner": false
         },
         {
-          "playerRefId": 6,
+          "playerRefId": 3,
           "score": "1",
           "scoreNum": 1,
           "winner": false
         },
         {
-          "playerRefId": 10,
+          "playerRefId": 4,
           "score": "4",
           "scoreNum": 4,
           "winner": false
         },
         {
-          "playerRefId": 12,
+          "playerRefId": 6,
           "score": "2",
           "scoreNum": 2,
           "winner": false
         },
         {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "6",
           "scoreNum": 6,
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "9",
           "scoreNum": 9,
           "winner": true
@@ -3751,19 +3999,31 @@
       "id": "110807284",
       "playDate": "2026-02-24",
       "board": "México",
-      "locationRefId": 2,
+      "locationRefId": 1,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "3",
           "scoreNum": 3,
           "winner": false
         },
         {
-          "playerRefId": 5,
+          "playerRefId": 2,
           "score": "9",
           "scoreNum": 9,
           "winner": true
+        },
+        {
+          "playerRefId": 3,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 4,
+          "score": "1",
+          "scoreNum": 1,
+          "winner": false
         },
         {
           "playerRefId": 6,
@@ -3772,25 +4032,13 @@
           "winner": false
         },
         {
-          "playerRefId": 10,
-          "score": "1",
-          "scoreNum": 1,
-          "winner": false
-        },
-        {
-          "playerRefId": 12,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "4",
           "scoreNum": 4,
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "6",
           "scoreNum": 6,
           "winner": false
@@ -3807,8 +4055,26 @@
       "id": "110711800",
       "playDate": "2026-02-22",
       "board": "Francia",
-      "locationRefId": 2,
+      "locationRefId": 1,
       "playerScores": [
+        {
+          "playerRefId": 1,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 2,
+          "score": "2",
+          "scoreNum": 2,
+          "winner": false
+        },
+        {
+          "playerRefId": 3,
+          "score": "1",
+          "scoreNum": 1,
+          "winner": false
+        },
         {
           "playerRefId": 4,
           "score": "0",
@@ -3816,37 +4082,19 @@
           "winner": false
         },
         {
-          "playerRefId": 5,
-          "score": "2",
-          "scoreNum": 2,
-          "winner": false
-        },
-        {
           "playerRefId": 6,
-          "score": "1",
-          "scoreNum": 1,
-          "winner": false
-        },
-        {
-          "playerRefId": 10,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 12,
           "score": "4",
           "scoreNum": 4,
           "winner": false
         },
         {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "3",
           "scoreNum": 3,
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "9",
           "scoreNum": 9,
           "winner": true
@@ -3863,46 +4111,46 @@
       "id": "110521853",
       "playDate": "2026-02-18",
       "board": "Great Britain",
-      "locationRefId": 2,
+      "locationRefId": 1,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "0",
           "scoreNum": 0,
           "winner": false
         },
         {
-          "playerRefId": 5,
+          "playerRefId": 2,
           "score": "1",
           "scoreNum": 1,
           "winner": false
         },
         {
-          "playerRefId": 6,
+          "playerRefId": 3,
           "score": "3",
           "scoreNum": 3,
           "winner": false
         },
         {
-          "playerRefId": 10,
+          "playerRefId": 4,
           "score": "2",
           "scoreNum": 2,
           "winner": false
         },
         {
-          "playerRefId": 12,
+          "playerRefId": 6,
           "score": "0",
           "scoreNum": 0,
           "winner": false
         },
         {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "10",
           "scoreNum": 10,
           "winner": true
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "5",
           "scoreNum": 5,
           "winner": false
@@ -3919,46 +4167,46 @@
       "id": "110386498",
       "playDate": "2026-02-15",
       "board": "Italia",
-      "locationRefId": 2,
+      "locationRefId": 1,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "0",
           "scoreNum": 0,
           "winner": false
         },
         {
-          "playerRefId": 5,
+          "playerRefId": 2,
           "score": "1",
           "scoreNum": 1,
           "winner": false
         },
         {
-          "playerRefId": 6,
+          "playerRefId": 3,
           "score": "0",
           "scoreNum": 0,
           "winner": false
         },
         {
-          "playerRefId": 10,
+          "playerRefId": 4,
           "score": "2",
           "scoreNum": 2,
           "winner": false
         },
         {
-          "playerRefId": 12,
+          "playerRefId": 6,
           "score": "3",
           "scoreNum": 3,
           "winner": false
         },
         {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "6",
           "scoreNum": 6,
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "9",
           "scoreNum": 9,
           "winner": true
@@ -3975,46 +4223,46 @@
       "id": "110209555",
       "playDate": "2026-02-11",
       "board": "Great Britain",
-      "locationRefId": 2,
+      "locationRefId": 1,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "1",
           "scoreNum": 1,
           "winner": false
         },
         {
-          "playerRefId": 5,
+          "playerRefId": 2,
           "score": "0",
           "scoreNum": 0,
           "winner": false
         },
         {
-          "playerRefId": 6,
+          "playerRefId": 3,
           "score": "6",
           "scoreNum": 6,
           "winner": false
         },
         {
-          "playerRefId": 10,
+          "playerRefId": 4,
           "score": "9",
           "scoreNum": 9,
           "winner": true
         },
         {
-          "playerRefId": 12,
+          "playerRefId": 6,
           "score": "3",
           "scoreNum": 3,
           "winner": false
         },
         {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "0",
           "scoreNum": 0,
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "2",
           "scoreNum": 2,
           "winner": false
@@ -4031,46 +4279,46 @@
       "id": "110178176",
       "playDate": "2026-02-10",
       "board": "USA",
-      "locationRefId": 2,
+      "locationRefId": 1,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "1",
           "scoreNum": 1,
           "winner": false
         },
         {
-          "playerRefId": 5,
+          "playerRefId": 2,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 3,
+          "score": "2",
+          "scoreNum": 2,
+          "winner": false
+        },
+        {
+          "playerRefId": 4,
           "score": "0",
           "scoreNum": 0,
           "winner": false
         },
         {
           "playerRefId": 6,
-          "score": "2",
-          "scoreNum": 2,
-          "winner": false
-        },
-        {
-          "playerRefId": 10,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 12,
           "score": "6",
           "scoreNum": 6,
           "winner": false
         },
         {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "3",
           "scoreNum": 3,
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "4",
           "scoreNum": 4,
           "winner": false
@@ -4087,46 +4335,46 @@
       "id": "110097945",
       "playDate": "2026-02-08",
       "board": "Japón",
-      "locationRefId": 2,
+      "locationRefId": 1,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "9",
           "scoreNum": 9,
           "winner": true
         },
         {
-          "playerRefId": 5,
+          "playerRefId": 2,
           "score": "2",
           "scoreNum": 2,
           "winner": false
         },
         {
-          "playerRefId": 6,
+          "playerRefId": 3,
           "score": "",
           "scoreNum": null,
           "winner": false
         },
         {
-          "playerRefId": 10,
+          "playerRefId": 4,
           "score": "3",
           "scoreNum": 3,
           "winner": false
         },
         {
-          "playerRefId": 12,
+          "playerRefId": 6,
           "score": "6",
           "scoreNum": 6,
           "winner": false
         },
         {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "0",
           "scoreNum": 0,
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "1",
           "scoreNum": 1,
           "winner": false
@@ -4143,46 +4391,46 @@
       "id": "109942417",
       "playDate": "2026-02-05",
       "board": "España",
-      "locationRefId": 2,
+      "locationRefId": 1,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "9",
           "scoreNum": 9,
           "winner": true
         },
         {
-          "playerRefId": 5,
+          "playerRefId": 2,
           "score": "4",
           "scoreNum": 4,
           "winner": false
         },
         {
-          "playerRefId": 6,
+          "playerRefId": 3,
           "score": "2",
           "scoreNum": 2,
           "winner": false
         },
         {
-          "playerRefId": 10,
+          "playerRefId": 4,
           "score": "1",
           "scoreNum": 1,
           "winner": false
         },
         {
-          "playerRefId": 12,
+          "playerRefId": 6,
           "score": "0",
           "scoreNum": 0,
           "winner": false
         },
         {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "6",
           "scoreNum": 6,
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "3",
           "scoreNum": 3,
           "winner": false
@@ -4199,46 +4447,46 @@
       "id": "109846269",
       "playDate": "2026-02-02",
       "board": "España",
-      "locationRefId": 2,
+      "locationRefId": 1,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "3",
           "scoreNum": 3,
           "winner": false
         },
         {
-          "playerRefId": 5,
+          "playerRefId": 2,
           "score": "1",
           "scoreNum": 1,
           "winner": false
         },
         {
+          "playerRefId": 3,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 4,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
           "playerRefId": 6,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 10,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 12,
           "score": "6",
           "scoreNum": 6,
           "winner": false
         },
         {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "9",
           "scoreNum": 9,
           "winner": true
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "2",
           "scoreNum": 2,
           "winner": false
@@ -4255,46 +4503,46 @@
       "id": "109671327",
       "playDate": "2026-01-30",
       "board": "USA",
-      "locationRefId": 2,
+      "locationRefId": 1,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "2",
           "scoreNum": 2,
           "winner": false
         },
         {
-          "playerRefId": 5,
+          "playerRefId": 2,
           "score": "1",
           "scoreNum": 1,
           "winner": false
         },
         {
+          "playerRefId": 3,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 4,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
           "playerRefId": 6,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 10,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 12,
           "score": "3",
           "scoreNum": 3,
           "winner": false
         },
         {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "4",
           "scoreNum": 4,
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "6",
           "scoreNum": 6,
           "winner": false
@@ -4311,46 +4559,46 @@
       "id": "109607261",
       "playDate": "2026-01-28",
       "board": "Great Britain",
-      "locationRefId": 2,
+      "locationRefId": 1,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "9",
           "scoreNum": 9,
           "winner": true
         },
         {
-          "playerRefId": 5,
+          "playerRefId": 2,
           "score": "4",
           "scoreNum": 4,
           "winner": false
         },
         {
+          "playerRefId": 3,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 4,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
           "playerRefId": 6,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 10,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 12,
           "score": "3",
           "scoreNum": 3,
           "winner": false
         },
         {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "2",
           "scoreNum": 2,
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "6",
           "scoreNum": 6,
           "winner": false
@@ -4367,46 +4615,46 @@
       "id": "109133152",
       "playDate": "2026-01-18",
       "board": "Francia",
-      "locationRefId": 2,
+      "locationRefId": 1,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "4",
           "scoreNum": 4,
           "winner": false
         },
         {
-          "playerRefId": 5,
+          "playerRefId": 2,
           "score": "3",
           "scoreNum": 3,
           "winner": false
         },
         {
+          "playerRefId": 3,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 4,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
           "playerRefId": 6,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 10,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 12,
           "score": "9",
           "scoreNum": 9,
           "winner": true
         },
         {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "6",
           "scoreNum": 6,
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "2",
           "scoreNum": 2,
           "winner": false
@@ -4423,46 +4671,46 @@
       "id": "108974888",
       "playDate": "2026-01-15",
       "board": "Italia",
-      "locationRefId": 2,
+      "locationRefId": 1,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "3",
           "scoreNum": 3,
           "winner": false
         },
         {
-          "playerRefId": 5,
+          "playerRefId": 2,
           "score": "2",
           "scoreNum": 2,
           "winner": false
         },
         {
-          "playerRefId": 6,
+          "playerRefId": 3,
           "score": "1",
           "scoreNum": 1,
           "winner": false
         },
         {
-          "playerRefId": 10,
+          "playerRefId": 4,
           "score": "0",
           "scoreNum": 0,
           "winner": false
         },
         {
-          "playerRefId": 12,
+          "playerRefId": 6,
           "score": "0",
           "scoreNum": 0,
           "winner": false
         },
         {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "6",
           "scoreNum": 6,
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "9",
           "scoreNum": 9,
           "winner": true
@@ -4479,46 +4727,46 @@
       "id": "108897883",
       "playDate": "2026-01-13",
       "board": "Great Britain",
-      "locationRefId": 2,
+      "locationRefId": 1,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "9",
           "scoreNum": 9,
           "winner": true
         },
         {
-          "playerRefId": 5,
+          "playerRefId": 2,
           "score": "6",
           "scoreNum": 6,
           "winner": false
         },
         {
+          "playerRefId": 3,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 4,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
           "playerRefId": 6,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 10,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 12,
           "score": "1",
           "scoreNum": 1,
           "winner": false
         },
         {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "4",
           "scoreNum": 4,
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "2",
           "scoreNum": 2,
           "winner": false
@@ -4535,46 +4783,46 @@
       "id": "108765489",
       "playDate": "2026-01-10",
       "board": "Japón",
-      "locationRefId": 2,
+      "locationRefId": 1,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "2",
           "scoreNum": 2,
           "winner": false
         },
         {
-          "playerRefId": 5,
+          "playerRefId": 2,
           "score": "1",
           "scoreNum": 1,
           "winner": false
         },
         {
+          "playerRefId": 3,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 4,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
           "playerRefId": 6,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 10,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 12,
           "score": "4",
           "scoreNum": 4,
           "winner": false
         },
         {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "3",
           "scoreNum": 3,
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "6",
           "scoreNum": 6,
           "winner": false
@@ -4591,46 +4839,46 @@
       "id": "108641280",
       "playDate": "2026-01-08",
       "board": "USA",
-      "locationRefId": 2,
+      "locationRefId": 1,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "2",
           "scoreNum": 2,
           "winner": false
         },
         {
-          "playerRefId": 5,
+          "playerRefId": 2,
           "score": "1",
           "scoreNum": 1,
           "winner": false
         },
         {
+          "playerRefId": 3,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 4,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
           "playerRefId": 6,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 10,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 12,
           "score": "6",
           "scoreNum": 6,
           "winner": false
         },
         {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "3",
           "scoreNum": 3,
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "4",
           "scoreNum": 4,
           "winner": false
@@ -4647,46 +4895,46 @@
       "id": "108601576",
       "playDate": "2026-01-07",
       "board": "Italia",
-      "locationRefId": 2,
+      "locationRefId": 1,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "3",
           "scoreNum": 3,
           "winner": false
         },
         {
-          "playerRefId": 5,
+          "playerRefId": 2,
           "score": "2",
           "scoreNum": 2,
           "winner": false
         },
         {
+          "playerRefId": 3,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 4,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
           "playerRefId": 6,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 10,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 12,
           "score": "6",
           "scoreNum": 6,
           "winner": false
         },
         {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "1",
           "scoreNum": 1,
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "4",
           "scoreNum": 4,
           "winner": false
@@ -4703,46 +4951,46 @@
       "id": "108515547",
       "playDate": "2026-01-05",
       "board": "Japón",
-      "locationRefId": 2,
+      "locationRefId": 1,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "9",
           "scoreNum": 9,
           "winner": true
         },
         {
-          "playerRefId": 5,
+          "playerRefId": 2,
           "score": "6",
           "scoreNum": 6,
           "winner": false
         },
         {
-          "playerRefId": 6,
+          "playerRefId": 3,
           "score": "4",
           "scoreNum": 4,
           "winner": false
         },
         {
-          "playerRefId": 10,
+          "playerRefId": 4,
           "score": "3",
           "scoreNum": 3,
           "winner": false
         },
         {
-          "playerRefId": 12,
+          "playerRefId": 6,
           "score": "2",
           "scoreNum": 2,
           "winner": false
         },
         {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "1",
           "scoreNum": 1,
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "0",
           "scoreNum": 0,
           "winner": false
@@ -4759,46 +5007,46 @@
       "id": "108292378",
       "playDate": "2026-01-02",
       "board": "Francia",
-      "locationRefId": 2,
+      "locationRefId": 1,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "3",
           "scoreNum": 3,
           "winner": false
         },
         {
-          "playerRefId": 5,
+          "playerRefId": 2,
           "score": "2",
           "scoreNum": 2,
           "winner": false
         },
         {
-          "playerRefId": 6,
+          "playerRefId": 3,
           "score": "1",
           "scoreNum": 1,
           "winner": false
         },
         {
-          "playerRefId": 10,
+          "playerRefId": 4,
           "score": "0",
           "scoreNum": 0,
           "winner": false
         },
         {
-          "playerRefId": 12,
+          "playerRefId": 6,
           "score": "9",
           "scoreNum": 9,
           "winner": true
         },
         {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "6",
           "scoreNum": 6,
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "4",
           "scoreNum": 4,
           "winner": false
@@ -4815,46 +5063,46 @@
       "id": "107884493",
       "playDate": "2025-12-28",
       "board": "Italia",
-      "locationRefId": 2,
+      "locationRefId": 1,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "3",
           "scoreNum": 3,
           "winner": false
         },
         {
-          "playerRefId": 5,
+          "playerRefId": 2,
           "score": "2",
           "scoreNum": 2,
           "winner": false
         },
         {
-          "playerRefId": 6,
+          "playerRefId": 3,
           "score": "1",
           "scoreNum": 1,
           "winner": false
         },
         {
-          "playerRefId": 10,
+          "playerRefId": 4,
           "score": "0",
           "scoreNum": 0,
           "winner": false
         },
         {
-          "playerRefId": 12,
+          "playerRefId": 6,
           "score": "4",
           "scoreNum": 4,
           "winner": false
         },
         {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "0",
           "scoreNum": 0,
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "6",
           "scoreNum": 6,
           "winner": false
@@ -4871,46 +5119,46 @@
       "id": "107629597",
       "playDate": "2025-12-24",
       "board": "USA",
-      "locationRefId": 2,
+      "locationRefId": 1,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "10",
           "scoreNum": 10,
           "winner": true
         },
         {
-          "playerRefId": 5,
+          "playerRefId": 2,
           "score": "3",
           "scoreNum": 3,
           "winner": false
         },
         {
+          "playerRefId": 3,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 4,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
           "playerRefId": 6,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 10,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 12,
           "score": "7",
           "scoreNum": 7,
           "winner": false
         },
         {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "2",
           "scoreNum": 2,
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "1",
           "scoreNum": 1,
           "winner": false
@@ -4927,46 +5175,46 @@
       "id": "107554727",
       "playDate": "2025-12-22",
       "board": "Japón",
-      "locationRefId": 2,
+      "locationRefId": 1,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "3",
           "scoreNum": 3,
           "winner": false
         },
         {
-          "playerRefId": 5,
+          "playerRefId": 2,
           "score": "1",
           "scoreNum": 1,
           "winner": false
         },
         {
+          "playerRefId": 3,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 4,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
           "playerRefId": 6,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 10,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 12,
           "score": "9",
           "scoreNum": 9,
           "winner": true
         },
         {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "2",
           "scoreNum": 2,
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "6",
           "scoreNum": 6,
           "winner": false
@@ -4983,46 +5231,46 @@
       "id": "107474796",
       "playDate": "2025-12-21",
       "board": "Great Britain",
-      "locationRefId": 2,
+      "locationRefId": 1,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "3",
           "scoreNum": 3,
           "winner": false
         },
         {
-          "playerRefId": 5,
+          "playerRefId": 2,
           "score": "1",
           "scoreNum": 1,
           "winner": false
         },
         {
+          "playerRefId": 3,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 4,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
           "playerRefId": 6,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 10,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 12,
           "score": "9",
           "scoreNum": 9,
           "winner": true
         },
         {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "4",
           "scoreNum": 4,
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "2",
           "scoreNum": 2,
           "winner": false
@@ -5039,46 +5287,46 @@
       "id": "107332267",
       "playDate": "2025-12-17",
       "board": "Italia",
-      "locationRefId": 2,
+      "locationRefId": 1,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "6",
           "scoreNum": 6,
           "winner": false
         },
         {
-          "playerRefId": 5,
+          "playerRefId": 2,
           "score": "3",
           "scoreNum": 3,
           "winner": false
         },
         {
-          "playerRefId": 6,
+          "playerRefId": 3,
           "score": "2",
           "scoreNum": 2,
           "winner": false
         },
         {
-          "playerRefId": 10,
+          "playerRefId": 4,
           "score": "0",
           "scoreNum": 0,
           "winner": false
         },
         {
-          "playerRefId": 12,
+          "playerRefId": 6,
           "score": "1",
           "scoreNum": 1,
           "winner": false
         },
         {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "0",
           "scoreNum": 0,
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "9",
           "scoreNum": 9,
           "winner": true
@@ -5095,46 +5343,46 @@
       "id": "107253746",
       "playDate": "2025-12-15",
       "board": "Francia",
-      "locationRefId": 2,
+      "locationRefId": 1,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "2",
           "scoreNum": 2,
           "winner": false
         },
         {
-          "playerRefId": 5,
+          "playerRefId": 2,
           "score": "0",
           "scoreNum": 0,
           "winner": false
         },
         {
-          "playerRefId": 6,
+          "playerRefId": 3,
           "score": "0",
           "scoreNum": 0,
           "winner": false
         },
         {
-          "playerRefId": 10,
+          "playerRefId": 4,
           "score": "3",
           "scoreNum": 3,
           "winner": false
         },
         {
-          "playerRefId": 12,
+          "playerRefId": 6,
           "score": "6",
           "scoreNum": 6,
           "winner": false
         },
         {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "9",
           "scoreNum": 9,
           "winner": true
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "4",
           "scoreNum": 4,
           "winner": false
@@ -5151,46 +5399,46 @@
       "id": "106983938",
       "playDate": "2025-12-08",
       "board": "Great Britain",
-      "locationRefId": 2,
+      "locationRefId": 1,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "3",
           "scoreNum": 3,
           "winner": false
         },
         {
-          "playerRefId": 5,
+          "playerRefId": 2,
           "score": "2",
           "scoreNum": 2,
           "winner": false
         },
         {
-          "playerRefId": 6,
+          "playerRefId": 3,
           "score": "1",
           "scoreNum": 1,
           "winner": false
         },
         {
-          "playerRefId": 10,
+          "playerRefId": 4,
           "score": "6",
           "scoreNum": 6,
           "winner": false
         },
         {
-          "playerRefId": 12,
+          "playerRefId": 6,
           "score": "9",
           "scoreNum": 9,
           "winner": true
         },
         {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "4",
           "scoreNum": 4,
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "0",
           "scoreNum": 0,
           "winner": false
@@ -5207,46 +5455,46 @@
       "id": "106703304",
       "playDate": "2025-12-01",
       "board": "México",
-      "locationRefId": 2,
+      "locationRefId": 1,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "4",
           "scoreNum": 4,
           "winner": false
         },
         {
-          "playerRefId": 5,
+          "playerRefId": 2,
           "score": "3",
           "scoreNum": 3,
           "winner": false
         },
         {
-          "playerRefId": 6,
+          "playerRefId": 3,
           "score": "2",
           "scoreNum": 2,
           "winner": false
         },
         {
-          "playerRefId": 10,
+          "playerRefId": 4,
           "score": "1",
           "scoreNum": 1,
           "winner": false
         },
         {
-          "playerRefId": 12,
+          "playerRefId": 6,
           "score": "9",
           "scoreNum": 9,
           "winner": true
         },
         {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "6",
           "scoreNum": 6,
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "0",
           "scoreNum": 0,
           "winner": false
@@ -5263,16 +5511,16 @@
       "id": "101574355",
       "playDate": "2025-07-20",
       "board": "USA",
-      "locationRefId": 2,
+      "locationRefId": 1,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "2",
           "scoreNum": 2,
           "winner": false
         },
         {
-          "playerRefId": 5,
+          "playerRefId": 2,
           "score": "1",
           "scoreNum": 1,
           "winner": false
@@ -5307,16 +5555,16 @@
       "id": "101574321",
       "playDate": "2025-07-20",
       "board": "Great Britain",
-      "locationRefId": 2,
+      "locationRefId": 1,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "4",
           "scoreNum": 4,
           "winner": false
         },
         {
-          "playerRefId": 5,
+          "playerRefId": 2,
           "score": "3",
           "scoreNum": 3,
           "winner": false
@@ -5351,40 +5599,40 @@
       "id": "99320317",
       "playDate": "2025-05-24",
       "board": "Great Britain",
-      "locationRefId": 2,
+      "locationRefId": 1,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "6",
           "scoreNum": 6,
           "winner": false
         },
         {
-          "playerRefId": 5,
+          "playerRefId": 2,
           "score": "4",
           "scoreNum": 4,
           "winner": false
         },
         {
-          "playerRefId": 6,
+          "playerRefId": 3,
           "score": "1",
           "scoreNum": 1,
           "winner": false
         },
         {
-          "playerRefId": 12,
+          "playerRefId": 6,
           "score": "9",
           "scoreNum": 9,
           "winner": true
         },
         {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "0",
           "scoreNum": 0,
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "3",
           "scoreNum": 3,
           "winner": false
@@ -5401,40 +5649,40 @@
       "id": "99021251",
       "playDate": "2025-05-16",
       "board": "Italia",
-      "locationRefId": 2,
+      "locationRefId": 1,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "3",
           "scoreNum": 3,
           "winner": false
         },
         {
-          "playerRefId": 5,
+          "playerRefId": 2,
           "score": "1",
           "scoreNum": 1,
           "winner": false
         },
         {
-          "playerRefId": 6,
+          "playerRefId": 3,
           "score": "0",
           "scoreNum": 0,
           "winner": false
         },
         {
-          "playerRefId": 12,
+          "playerRefId": 6,
           "score": "6",
           "scoreNum": 6,
           "winner": false
         },
         {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "2",
           "scoreNum": 2,
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "4",
           "scoreNum": 4,
           "winner": false
@@ -5451,40 +5699,40 @@
       "id": "98963741",
       "playDate": "2025-05-14",
       "board": "Italia",
-      "locationRefId": 2,
+      "locationRefId": 1,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "3",
           "scoreNum": 3,
           "winner": false
         },
         {
-          "playerRefId": 5,
+          "playerRefId": 2,
           "score": "1",
           "scoreNum": 1,
           "winner": false
         },
         {
-          "playerRefId": 6,
+          "playerRefId": 3,
           "score": "0",
           "scoreNum": 0,
           "winner": false
         },
         {
-          "playerRefId": 12,
+          "playerRefId": 6,
           "score": "2",
           "scoreNum": 2,
           "winner": false
         },
         {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "9",
           "scoreNum": 9,
           "winner": true
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "6",
           "scoreNum": 6,
           "winner": false
@@ -5501,7 +5749,7 @@
       "id": "98953697",
       "playDate": "2025-05-13",
       "board": "Great Britain",
-      "locationRefId": 2,
+      "locationRefId": 1,
       "playerScores": [
         {
           "playerRefId": 15,
@@ -5545,7 +5793,7 @@
       "id": "98658162",
       "playDate": "2025-05-05",
       "board": "Japón",
-      "locationRefId": 2,
+      "locationRefId": 1,
       "playerScores": [
         {
           "playerRefId": 15,
@@ -5589,40 +5837,40 @@
       "id": "98501912",
       "playDate": "2025-05-02",
       "board": "Francia",
-      "locationRefId": 2,
+      "locationRefId": 1,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "3",
           "scoreNum": 3,
           "winner": false
         },
         {
-          "playerRefId": 5,
+          "playerRefId": 2,
           "score": "2",
           "scoreNum": 2,
           "winner": false
         },
         {
-          "playerRefId": 6,
+          "playerRefId": 3,
           "score": "",
           "scoreNum": null,
           "winner": false
         },
         {
-          "playerRefId": 12,
+          "playerRefId": 6,
           "score": "4",
           "scoreNum": 4,
           "winner": false
         },
         {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "0",
           "scoreNum": 0,
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "9",
           "scoreNum": 9,
           "winner": true
@@ -5639,40 +5887,40 @@
       "id": "98330308",
       "playDate": "2025-04-27",
       "board": "Francia",
-      "locationRefId": 2,
+      "locationRefId": 1,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "6",
           "scoreNum": 6,
           "winner": false
         },
         {
-          "playerRefId": 5,
+          "playerRefId": 2,
           "score": "3",
           "scoreNum": 3,
           "winner": false
         },
         {
-          "playerRefId": 6,
+          "playerRefId": 3,
           "score": "1",
           "scoreNum": 1,
           "winner": false
         },
         {
-          "playerRefId": 12,
+          "playerRefId": 6,
           "score": "9",
           "scoreNum": 9,
           "winner": true
         },
         {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "0",
           "scoreNum": 0,
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "2",
           "scoreNum": 2,
           "winner": false
@@ -5689,7 +5937,7 @@
       "id": "98199665",
       "playDate": "2025-04-24",
       "board": "Great Britain",
-      "locationRefId": 2,
+      "locationRefId": 1,
       "playerScores": [
         {
           "playerRefId": 15,
@@ -5733,40 +5981,40 @@
       "id": "98114388",
       "playDate": "2025-04-20",
       "board": "Francia",
-      "locationRefId": 2,
+      "locationRefId": 1,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "4",
           "scoreNum": 4,
           "winner": false
         },
         {
-          "playerRefId": 5,
+          "playerRefId": 2,
           "score": "2",
           "scoreNum": 2,
           "winner": false
         },
         {
-          "playerRefId": 6,
+          "playerRefId": 3,
           "score": "1",
           "scoreNum": 1,
           "winner": false
         },
         {
-          "playerRefId": 12,
+          "playerRefId": 6,
           "score": "9",
           "scoreNum": 9,
           "winner": true
         },
         {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "6",
           "scoreNum": 6,
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "0",
           "scoreNum": 0,
           "winner": false
@@ -5783,40 +6031,40 @@
       "id": "97808379",
       "playDate": "2025-04-14",
       "board": "Japón",
-      "locationRefId": 2,
+      "locationRefId": 1,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "9",
           "scoreNum": 9,
           "winner": true
         },
         {
-          "playerRefId": 5,
+          "playerRefId": 2,
           "score": "4",
           "scoreNum": 4,
           "winner": false
         },
         {
-          "playerRefId": 6,
+          "playerRefId": 3,
           "score": "2",
           "scoreNum": 2,
           "winner": false
         },
         {
-          "playerRefId": 12,
+          "playerRefId": 6,
           "score": "6",
           "scoreNum": 6,
           "winner": false
         },
         {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "0",
           "scoreNum": 0,
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "3",
           "scoreNum": 3,
           "winner": false
@@ -5833,7 +6081,7 @@
       "id": "97808085",
       "playDate": "2025-04-14",
       "board": "Italia",
-      "locationRefId": 2,
+      "locationRefId": 1,
       "playerScores": [
         {
           "playerRefId": 15,
@@ -5877,40 +6125,40 @@
       "id": "97664946",
       "playDate": "2025-04-11",
       "board": "Italia",
-      "locationRefId": 2,
+      "locationRefId": 1,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "2",
           "scoreNum": 2,
           "winner": false
         },
         {
-          "playerRefId": 5,
+          "playerRefId": 2,
           "score": "1",
           "scoreNum": 1,
           "winner": false
         },
         {
-          "playerRefId": 6,
+          "playerRefId": 3,
           "score": "0",
           "scoreNum": 0,
           "winner": false
         },
         {
-          "playerRefId": 12,
+          "playerRefId": 6,
           "score": "6",
           "scoreNum": 6,
           "winner": false
         },
         {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "4",
           "scoreNum": 4,
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "3",
           "scoreNum": 3,
           "winner": false
@@ -5927,40 +6175,40 @@
       "id": "97603092",
       "playDate": "2025-04-09",
       "board": "Italia",
-      "locationRefId": 2,
+      "locationRefId": 1,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "2",
           "scoreNum": 2,
           "winner": false
         },
         {
-          "playerRefId": 5,
+          "playerRefId": 2,
           "score": "1",
           "scoreNum": 1,
           "winner": false
         },
         {
-          "playerRefId": 6,
+          "playerRefId": 3,
           "score": "0",
           "scoreNum": 0,
           "winner": false
         },
         {
-          "playerRefId": 12,
+          "playerRefId": 6,
           "score": "9",
           "scoreNum": 9,
           "winner": true
         },
         {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "6",
           "scoreNum": 6,
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "3",
           "scoreNum": 3,
           "winner": false
@@ -5977,40 +6225,40 @@
       "id": "97546205",
       "playDate": "2025-04-06",
       "board": "Great Britain",
-      "locationRefId": 2,
+      "locationRefId": 1,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "6",
           "scoreNum": 6,
           "winner": false
         },
         {
-          "playerRefId": 5,
+          "playerRefId": 2,
           "score": "2",
           "scoreNum": 2,
           "winner": false
         },
         {
-          "playerRefId": 6,
+          "playerRefId": 3,
           "score": "1",
           "scoreNum": 1,
           "winner": false
         },
         {
-          "playerRefId": 12,
+          "playerRefId": 6,
           "score": "3",
           "scoreNum": 3,
           "winner": false
         },
         {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "4",
           "scoreNum": 4,
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "9",
           "scoreNum": 9,
           "winner": true
@@ -6030,43 +6278,43 @@
       "locationRefId": 3,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "6",
           "scoreNum": 6,
           "winner": false
         },
         {
-          "playerRefId": 5,
+          "playerRefId": 2,
           "score": "1",
           "scoreNum": 1,
           "winner": false
         },
         {
+          "playerRefId": 3,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 4,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
           "playerRefId": 6,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 10,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 12,
           "score": "9",
           "scoreNum": 9,
           "winner": true
         },
         {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "3",
           "scoreNum": 3,
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "4",
           "scoreNum": 4,
           "winner": false
@@ -6086,43 +6334,43 @@
       "locationRefId": 3,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "1",
           "scoreNum": 1,
           "winner": false
         },
         {
-          "playerRefId": 5,
+          "playerRefId": 2,
           "score": "3",
           "scoreNum": 3,
           "winner": false
         },
         {
-          "playerRefId": 6,
+          "playerRefId": 3,
           "score": "2",
           "scoreNum": 2,
           "winner": false
         },
         {
-          "playerRefId": 10,
+          "playerRefId": 4,
           "score": "0",
           "scoreNum": 0,
           "winner": false
         },
         {
-          "playerRefId": 12,
+          "playerRefId": 6,
           "score": "4",
           "scoreNum": 4,
           "winner": false
         },
         {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "6",
           "scoreNum": 6,
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "0",
           "scoreNum": 0,
           "winner": false
@@ -6142,43 +6390,43 @@
       "locationRefId": 3,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "9",
           "scoreNum": 9,
           "winner": true
         },
         {
-          "playerRefId": 5,
+          "playerRefId": 2,
           "score": "6",
           "scoreNum": 6,
           "winner": false
         },
         {
-          "playerRefId": 6,
+          "playerRefId": 3,
           "score": "0",
           "scoreNum": 0,
           "winner": false
         },
         {
-          "playerRefId": 10,
+          "playerRefId": 4,
           "score": "1",
           "scoreNum": 1,
           "winner": false
         },
         {
-          "playerRefId": 12,
+          "playerRefId": 6,
           "score": "3",
           "scoreNum": 3,
           "winner": false
         },
         {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "0",
           "scoreNum": 0,
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "2",
           "scoreNum": 2,
           "winner": false
@@ -6198,43 +6446,43 @@
       "locationRefId": 3,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "2",
           "scoreNum": 2,
           "winner": false
         },
         {
-          "playerRefId": 5,
+          "playerRefId": 2,
+          "score": "0",
+          "scoreNum": 0,
+          "winner": false
+        },
+        {
+          "playerRefId": 3,
+          "score": "1",
+          "scoreNum": 1,
+          "winner": false
+        },
+        {
+          "playerRefId": 4,
           "score": "0",
           "scoreNum": 0,
           "winner": false
         },
         {
           "playerRefId": 6,
-          "score": "1",
-          "scoreNum": 1,
-          "winner": false
-        },
-        {
-          "playerRefId": 10,
-          "score": "0",
-          "scoreNum": 0,
-          "winner": false
-        },
-        {
-          "playerRefId": 12,
           "score": "9",
           "scoreNum": 9,
           "winner": true
         },
         {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "3",
           "scoreNum": 3,
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "4",
           "scoreNum": 4,
           "winner": false
@@ -6251,40 +6499,40 @@
       "id": "82250706",
       "playDate": "2024-03-06",
       "board": "Francia",
-      "locationRefId": 1,
+      "locationRefId": 2,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "9",
           "scoreNum": 9,
           "winner": true
         },
         {
-          "playerRefId": 5,
+          "playerRefId": 2,
           "score": "4",
           "scoreNum": 4,
           "winner": false
         },
         {
-          "playerRefId": 6,
+          "playerRefId": 3,
           "score": "0",
           "scoreNum": 0,
           "winner": false
         },
         {
-          "playerRefId": 10,
+          "playerRefId": 4,
           "score": "0",
           "scoreNum": 0,
           "winner": false
         },
         {
-          "playerRefId": 7,
+          "playerRefId": 13,
           "score": "1",
           "scoreNum": 1,
           "winner": false
         },
         {
-          "playerRefId": 12,
+          "playerRefId": 6,
           "score": "3",
           "scoreNum": 3,
           "winner": false
@@ -6302,7 +6550,7 @@
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "6",
           "scoreNum": 6,
           "winner": false
@@ -6319,40 +6567,40 @@
       "id": "82248310",
       "playDate": "2024-03-06",
       "board": "México",
-      "locationRefId": 1,
+      "locationRefId": 2,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "1",
           "scoreNum": 1,
           "winner": false
         },
         {
-          "playerRefId": 5,
+          "playerRefId": 2,
           "score": "0",
           "scoreNum": 0,
           "winner": false
         },
         {
-          "playerRefId": 6,
+          "playerRefId": 3,
           "score": "0",
           "scoreNum": 0,
           "winner": false
         },
         {
-          "playerRefId": 10,
+          "playerRefId": 4,
           "score": "0",
           "scoreNum": 0,
           "winner": false
         },
         {
-          "playerRefId": 7,
+          "playerRefId": 13,
           "score": "9",
           "scoreNum": 9,
           "winner": true
         },
         {
-          "playerRefId": 12,
+          "playerRefId": 6,
           "score": "2",
           "scoreNum": 2,
           "winner": false
@@ -6370,7 +6618,7 @@
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "4",
           "scoreNum": 4,
           "winner": false
@@ -6387,40 +6635,40 @@
       "id": "82244560",
       "playDate": "2024-03-06",
       "board": "Japón",
-      "locationRefId": 1,
+      "locationRefId": 2,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "9",
           "scoreNum": 9,
           "winner": true
         },
         {
-          "playerRefId": 5,
+          "playerRefId": 2,
           "score": "4",
           "scoreNum": 4,
           "winner": false
         },
         {
-          "playerRefId": 6,
+          "playerRefId": 3,
           "score": "3",
           "scoreNum": 3,
           "winner": false
         },
         {
-          "playerRefId": 10,
+          "playerRefId": 4,
           "score": "2",
           "scoreNum": 2,
           "winner": false
         },
         {
-          "playerRefId": 7,
+          "playerRefId": 13,
           "score": "0",
           "scoreNum": 0,
           "winner": false
         },
         {
-          "playerRefId": 12,
+          "playerRefId": 6,
           "score": "6",
           "scoreNum": 6,
           "winner": false
@@ -6438,7 +6686,7 @@
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "0",
           "scoreNum": 0,
           "winner": false
@@ -6455,10 +6703,10 @@
       "id": "82018483",
       "playDate": "2024-02-29",
       "board": "Italia",
-      "locationRefId": 2,
+      "locationRefId": 1,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "0",
           "scoreNum": 0,
           "winner": false
@@ -6502,37 +6750,37 @@
       "locationRefId": 4,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "3",
           "scoreNum": 3,
           "winner": false
         },
         {
-          "playerRefId": 5,
+          "playerRefId": 2,
           "score": "0",
           "scoreNum": 0,
           "winner": false
         },
         {
-          "playerRefId": 6,
+          "playerRefId": 3,
           "score": "2",
           "scoreNum": 2,
           "winner": false
         },
         {
-          "playerRefId": 10,
+          "playerRefId": 4,
           "score": "1",
           "scoreNum": 1,
           "winner": false
         },
         {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "9",
           "scoreNum": 9,
           "winner": true
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "6",
           "scoreNum": 6,
           "winner": false
@@ -6552,37 +6800,37 @@
       "locationRefId": 4,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "9",
           "scoreNum": 9,
           "winner": true
         },
         {
-          "playerRefId": 5,
+          "playerRefId": 2,
           "score": "6",
           "scoreNum": 6,
           "winner": false
         },
         {
-          "playerRefId": 6,
+          "playerRefId": 3,
           "score": "4",
           "scoreNum": 4,
           "winner": false
         },
         {
-          "playerRefId": 10,
+          "playerRefId": 4,
           "score": "2",
           "scoreNum": 2,
           "winner": false
         },
         {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "2",
           "scoreNum": 2,
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "0",
           "scoreNum": 0,
           "winner": false
@@ -6602,37 +6850,37 @@
       "locationRefId": 4,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "3",
           "scoreNum": 3,
           "winner": false
         },
         {
-          "playerRefId": 5,
+          "playerRefId": 2,
           "score": "2",
           "scoreNum": 2,
           "winner": false
         },
         {
-          "playerRefId": 6,
+          "playerRefId": 3,
           "score": "1",
           "scoreNum": 1,
           "winner": false
         },
         {
-          "playerRefId": 10,
+          "playerRefId": 4,
           "score": "",
           "scoreNum": null,
           "winner": false
         },
         {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "9",
           "scoreNum": 9,
           "winner": true
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "6",
           "scoreNum": 6,
           "winner": false
@@ -6652,31 +6900,31 @@
       "locationRefId": 4,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "9",
           "scoreNum": 9,
           "winner": true
         },
         {
-          "playerRefId": 5,
+          "playerRefId": 2,
           "score": "6",
           "scoreNum": 6,
           "winner": false
         },
         {
-          "playerRefId": 6,
+          "playerRefId": 3,
           "score": "4",
           "scoreNum": 4,
           "winner": false
         },
         {
-          "playerRefId": 12,
+          "playerRefId": 6,
           "score": "3",
           "scoreNum": 3,
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "1",
           "scoreNum": 1,
           "winner": false
@@ -6696,7 +6944,7 @@
       "locationRefId": 5,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "2",
           "scoreNum": 2,
           "winner": false
@@ -6737,34 +6985,34 @@
       "id": "71394107",
       "playDate": "2023-04-26",
       "board": "Francia",
-      "locationRefId": 1,
+      "locationRefId": 2,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "1",
           "scoreNum": 1,
           "winner": false
         },
         {
-          "playerRefId": 7,
+          "playerRefId": 13,
           "score": "2",
           "scoreNum": 2,
           "winner": false
         },
         {
-          "playerRefId": 12,
+          "playerRefId": 6,
           "score": "4",
           "scoreNum": 4,
           "winner": false
         },
         {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "3",
           "scoreNum": 3,
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "9",
           "scoreNum": 9,
           "winner": true
@@ -6781,34 +7029,34 @@
       "id": "71392546",
       "playDate": "2023-04-26",
       "board": "Great Britain",
-      "locationRefId": 1,
+      "locationRefId": 2,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "4",
           "scoreNum": 4,
           "winner": false
         },
         {
-          "playerRefId": 7,
+          "playerRefId": 13,
           "score": "2",
           "scoreNum": 2,
           "winner": false
         },
         {
-          "playerRefId": 12,
+          "playerRefId": 6,
           "score": "9",
           "scoreNum": 9,
           "winner": true
         },
         {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "6",
           "scoreNum": 6,
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "3",
           "scoreNum": 3,
           "winner": false
@@ -6825,34 +7073,34 @@
       "id": "71390872",
       "playDate": "2023-04-26",
       "board": "USA",
-      "locationRefId": 1,
+      "locationRefId": 2,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "9",
           "scoreNum": 9,
           "winner": true
         },
         {
-          "playerRefId": 7,
+          "playerRefId": 13,
           "score": "4",
           "scoreNum": 4,
           "winner": false
         },
         {
-          "playerRefId": 12,
+          "playerRefId": 6,
           "score": "6",
           "scoreNum": 6,
           "winner": false
         },
         {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "2",
           "scoreNum": 2,
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "1",
           "scoreNum": 1,
           "winner": false
@@ -6872,31 +7120,31 @@
       "locationRefId": 6,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "1",
           "scoreNum": 1,
           "winner": false
         },
         {
-          "playerRefId": 7,
+          "playerRefId": 13,
           "score": "3",
           "scoreNum": 3,
           "winner": false
         },
         {
-          "playerRefId": 12,
+          "playerRefId": 6,
           "score": "6",
           "scoreNum": 6,
           "winner": false
         },
         {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "2",
           "scoreNum": 2,
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "9",
           "scoreNum": 9,
           "winner": true
@@ -6916,31 +7164,31 @@
       "locationRefId": 6,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "1",
           "scoreNum": 1,
           "winner": false
         },
         {
-          "playerRefId": 7,
+          "playerRefId": 13,
           "score": "4",
           "scoreNum": 4,
           "winner": false
         },
         {
-          "playerRefId": 12,
+          "playerRefId": 6,
           "score": "2",
           "scoreNum": 2,
           "winner": false
         },
         {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "9",
           "scoreNum": 9,
           "winner": true
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "3",
           "scoreNum": 3,
           "winner": false
@@ -6960,31 +7208,31 @@
       "locationRefId": 6,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "6",
           "scoreNum": 6,
           "winner": false
         },
         {
-          "playerRefId": 7,
+          "playerRefId": 13,
           "score": "4",
           "scoreNum": 4,
           "winner": false
         },
         {
-          "playerRefId": 12,
+          "playerRefId": 6,
           "score": "2",
           "scoreNum": 2,
           "winner": false
         },
         {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "3",
           "scoreNum": 3,
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "1",
           "scoreNum": 1,
           "winner": false
@@ -7004,31 +7252,31 @@
       "locationRefId": 6,
       "playerScores": [
         {
-          "playerRefId": 4,
+          "playerRefId": 1,
           "score": "1",
           "scoreNum": 1,
           "winner": false
         },
         {
-          "playerRefId": 7,
+          "playerRefId": 13,
           "score": "4",
           "scoreNum": 4,
           "winner": false
         },
         {
-          "playerRefId": 12,
+          "playerRefId": 6,
           "score": "3",
           "scoreNum": 3,
           "winner": false
         },
         {
-          "playerRefId": 13,
+          "playerRefId": 7,
           "score": "9",
           "scoreNum": 9,
           "winner": true
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "2",
           "scoreNum": 2,
           "winner": false
@@ -7048,13 +7296,13 @@
       "locationRefId": 7,
       "playerScores": [
         {
-          "playerRefId": 12,
+          "playerRefId": 6,
           "score": "6",
           "scoreNum": 6,
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "9",
           "scoreNum": 9,
           "winner": true
@@ -7074,13 +7322,13 @@
       "locationRefId": 4,
       "playerScores": [
         {
-          "playerRefId": 7,
+          "playerRefId": 13,
           "score": "7",
           "scoreNum": 7,
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "5",
           "scoreNum": 5,
           "winner": false
@@ -7100,13 +7348,13 @@
       "locationRefId": 4,
       "playerScores": [
         {
-          "playerRefId": 7,
+          "playerRefId": 13,
           "score": "3",
           "scoreNum": 3,
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "1",
           "scoreNum": 1,
           "winner": false
@@ -7126,13 +7374,13 @@
       "locationRefId": 4,
       "playerScores": [
         {
-          "playerRefId": 7,
+          "playerRefId": 13,
           "score": "6",
           "scoreNum": 6,
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "9",
           "scoreNum": 9,
           "winner": true
@@ -7149,22 +7397,22 @@
       "id": "65650807",
       "playDate": "2022-11-10",
       "board": "Italia",
-      "locationRefId": 1,
+      "locationRefId": 2,
       "playerScores": [
         {
-          "playerRefId": 7,
+          "playerRefId": 13,
           "score": "3",
           "scoreNum": 3,
           "winner": false
         },
         {
-          "playerRefId": 12,
+          "playerRefId": 6,
           "score": "4",
           "scoreNum": 4,
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "6",
           "scoreNum": 6,
           "winner": false
@@ -7181,22 +7429,22 @@
       "id": "65648622",
       "playDate": "2022-11-10",
       "board": "USA",
-      "locationRefId": 1,
+      "locationRefId": 2,
       "playerScores": [
         {
-          "playerRefId": 7,
+          "playerRefId": 13,
           "score": "9",
           "scoreNum": 9,
           "winner": true
         },
         {
-          "playerRefId": 12,
+          "playerRefId": 6,
           "score": "3",
           "scoreNum": 3,
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "6",
           "scoreNum": 6,
           "winner": false
@@ -7213,22 +7461,22 @@
       "id": "65647042",
       "playDate": "2022-11-10",
       "board": "Great Britain",
-      "locationRefId": 1,
+      "locationRefId": 2,
       "playerScores": [
         {
-          "playerRefId": 7,
+          "playerRefId": 13,
           "score": "9",
           "scoreNum": 9,
           "winner": true
         },
         {
-          "playerRefId": 12,
+          "playerRefId": 6,
           "score": "4",
           "scoreNum": 4,
           "winner": false
         },
         {
-          "playerRefId": 14,
+          "playerRefId": 8,
           "score": "6",
           "scoreNum": 6,
           "winner": false
