@@ -1337,3 +1337,49 @@
 - `CHANGELOG.md` queda vacío por petición explícita. `.agents/skills/github-delivery/SKILL.md` pide registrar en el changelog los cambios de comportamiento o de configuración de build; este cambio de CI lo califica, así que la primera entrada `[Unreleased]` sigue pendiente de decidirse.
 - El primer push con el workflow ya modificado ejercita el propio paso nuevo: por eso se ensayó en local con `GITHUB_OUTPUT` real en los tres caminos (con issue, sin issue e issue inexistente).
 - El tema de issues se resuelve **por referencia explícita**, no de forma automática a partir del id de feature, porque el 90% de los PRs del repositorio no tiene issue asociada y forzarla rompería el flujo de entrega.
+
+---
+
+## Sesión 2026-10-05
+
+### Feature trabajada: FIX-HDH-06 - Orden cronológico de carreras en Campeonato
+
+**Estado**: Completada
+
+#### Evidencia
+- `src/app.js`, `renderChampionshipDetail()`:
+  - `champPlays` (orden descendente por fecha) se sustituyó por `champPlaysChrono`, orden **ascendente** por `playDate`, de modo que las columnas de la tabla de clasificación se leen de izquierda (más antigua) a derecha (más reciente).
+  - La lista de partidas usa `champPlaysList` (`champPlaysChrono` invertido), manteniendo la convención reciente → antigua.
+  - Ambas listas se construyen sobre copias (`[...champ.plays]`); antes el `.sort()` mutaba en memoria el array `plays` del campeonato almacenado.
+  - Cada `<th>` de carrera incluye `data-play-date` para poder verificar y automatizar el orden.
+  - Helper local `playTime()` para fechas ausentes o inválidas (evita `NaN` en el comparador).
+- `e2e/tests/FIX-HDH-06.spec.js` (nuevo): 4 tests
+  - Columnas de izquierda a derecha en orden cronológico con las partidas almacenadas en orden inverso
+  - El orden se mantiene aunque las partidas se añadan desordenadas
+  - Los puntos de cada columna siguen correspondiendo a su carrera (Player1: 25, 22, 28, -)
+  - La lista de partidas conserva el orden reciente → antigua y `championships.selected.plays` no se reordena
+- `features_list.json`: nueva entrada `FIX-HDH-06` con estado `completed` y evidencia.
+- `CHANGELOG.md`: entrada en `[Unreleased]` por cambio de comportamiento visible.
+
+#### Tareas completadas
+1. Ejecutar `bash init.sh` (verificación de referencia, sin Docker)
+2. Crear rama `FIX-HDH-06` antes de modificar archivos
+3. Ordenar las carreras de forma ascendente por fecha en la tabla de clasificación
+4. Dejar la lista de partidas en orden reciente → antigua sin mutar los datos almacenados
+5. Añadir `data-play-date` a las cabeceras de columna
+6. Crear spec E2E con 4 tests y screenshot de evidencia
+7. Actualizar `features_list.json`, `PROGRESS.md` y `CHANGELOG.md`
+8. Verificar la suite completa sin regresiones
+
+#### Verificación final
+- `bash init.sh`: OK (6/6 comprobaciones de infraestructura, `Already up to date`)
+- `node --check src/app.js`: OK
+- `npx playwright test tests/FIX-HDH-06.spec.js`: 4/4 tests pasados
+- `npx playwright test` (suite completa): 97/97 tests pasados
+- Screenshot: `evidence/screenshots/FIX-HDH-06-carreras-cronologicas.png` (columnas 2024-01-15 → 2024-04-05 de izquierda a derecha)
+
+#### Notas / Riesgos
+- El runner de Playwright (1.52.0) se cuelga en silencio con Node v24 en este equipo; los tests se ejecutaron con Node v22 (`C:/Users/robzo/AppData/Local/pi-node/current/node.exe`) mediante `node node_modules/@playwright/test/cli.js test`. `npm run capture:evidence` seguirá fallando en este entorno por lo mismo.
+- Los enlaces de `e2e/node_modules/.bin` están rotos (ficheros de 0 bytes), por eso `npx playwright` resuelve al CLI de Python; hay que invocar el CLI de Node directamente.
+- No se toca `getChampionshipStandings()`: el orden de las filas (por total de puntos) es correcto.
+- La cabecera de columna sigue mostrando sólo el circuito; con dos carreras en el mismo circuito las columnas son indistinguibles a simple vista. Mostrar también la fecha es una mejora opcional pendiente de decisión.

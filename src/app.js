@@ -1134,7 +1134,15 @@ const App = {
         const ownerDisplay = champ.owner ? `👤 Propietario: ${champ.owner}` : '';
 
         const standings = this.getChampionshipStandings(champ);
-        const champPlays = (champ.plays || []).sort((a, b) => new Date(b.playDate) - new Date(a.playDate));
+        const playTime = p => {
+            const t = new Date(p && p.playDate).getTime();
+            return Number.isNaN(t) ? 0 : t;
+        };
+        // Las carreras se muestran de izquierda a derecha en orden cronológico (antigua -> reciente).
+        const champPlaysChrono = [...(champ.plays || [])]
+            .sort((a, b) => playTime(a) - playTime(b) || String(a.id).localeCompare(String(b.id)));
+        // La lista de partidas mantiene la convención reciente -> antigua sin alterar el array original.
+        const champPlaysList = [...champPlaysChrono].reverse();
 
         content.innerHTML = `
             <div class="campeonato-detail-header">
@@ -1147,17 +1155,17 @@ const App = {
             </div>
             <div class="campeonato-section">
                 <h3>Clasificación</h3>
-                ${champPlays.length > 0 ? `
+                ${champPlaysChrono.length > 0 ? `
                 <table class="standings-table">
                     <thead>
-                        <tr><th class="pos"></th><th>Jugador</th>${champPlays.map(p => `<th>${this.getTrackFlag(p.board)} ${p.board}</th>`).join('')}<th>Total</th></tr>
+                        <tr><th class="pos"></th><th>Jugador</th>${champPlaysChrono.map(p => `<th data-play-date="${p.playDate || ''}">${this.getTrackFlag(p.board)} ${p.board}</th>`).join('')}<th>Total</th></tr>
                     </thead>
                     <tbody>
                         ${standings.map((s, i) => `
                             <tr>
                                 <td class="pos">${i === 0 ? '<span class="medal">🥇</span>' : i === 1 ? '<span class="medal">🥈</span>' : i === 2 ? '<span class="medal">🥉</span>' : i + 1}</td>
                                 <td>${s.name}</td>
-                                ${champPlays.map(p => {
+                                ${champPlaysChrono.map(p => {
                                     const playerScore = p.playerScores.find(ps => String(ps.playerRefId) === String(s.id));
                                     return `<td>${playerScore ? playerScore.scoreNum : '-'}</td>`;
                                 }).join('')}
@@ -1168,7 +1176,7 @@ const App = {
                 </table>` : '<div class="campeonato-empty">No hay partidas en este campeonato. Importa o añade partidas para ver la clasificación.</div>'}
             </div>
             <div class="campeonato-section">
-                <h3>Partidas (${champPlays.length})</h3>
+                <h3>Partidas (${champPlaysChrono.length})</h3>
                 ${(isOwner || !champ.owner) && this.bggUsername ? `
                 <div class="campeonato-actions">
                     <button id="btn-import-plays-campeonato" class="btn-primary btn-narrow">+ Importar Partidas</button>
@@ -1177,7 +1185,7 @@ const App = {
                 </div>
                 ` : ''}
                 <div style="margin-top:15px;" class="campeonato-plays-list">
-                    ${champPlays.map(p => {
+                    ${champPlaysList.map(p => {
                         const winnerPs = p.playerScores.find(ps => ps.winner);
                         const winnerName = winnerPs ? (this.data.players.find(pl => pl.id === winnerPs.playerRefId)?.name || '-') : '-';
                         const flag = this.getTrackFlag(p.board);
