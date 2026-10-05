@@ -31,15 +31,24 @@ En el entorno donde exista una copia local del repositorio se puede utilizar el 
 
 ```text
 scripts/update-bgg-data-local.sh
+scripts/update-bgg-data-local.ps1
 ```
 
-El script lee `BGG_USER` y `BGG_PASS` del entorno o, si no existen, de `secrets.json`; ejecuta el exportador, crea un commit sólo si el JSON cambia y hace `git push` a la rama actual.
+Ambos hacen lo mismo: leen `BGG_USER` y `BGG_PASS` del entorno o, si no existen, de `secrets.json`; ejecutan el exportador, crean un commit sólo si el JSON cambia y hacen `git push` a la rama actual.
 
-Como el script está en `.gitignore`, no se publica en GitHub y no contiene ni descarga credenciales al repositorio. Para probarlo sin hacer commit ni push:
+Como los scripts están en `.gitignore`, no se publican en GitHub y no contienen ni descargan credenciales al repositorio. Para probarlos sin hacer commit ni push:
 
 ```bash
 DRY_RUN=true DATA_FILE=/tmp/heat-data-local.json ./scripts/update-bgg-data-local.sh
 ```
+
+```powershell
+$env:DRY_RUN = 'true'
+$env:DATA_FILE = 'C:\temp\heat-data-local.json'
+./scripts/update-bgg-data-local.ps1
+```
+
+En PowerShell las variables de entorno se asignan con `$env:...`; el valor de `DRY_RUN` debe ser la cadena `true`. El script `.ps1` requiere PowerShell 7 (`pwsh`) o superior.
 
 Para ejecutarlo periódicamente, se puede configurar `cron` o el programador de tareas del sistema. El push a `main` dispara el workflow de despliegue de GitHub Pages.
 
