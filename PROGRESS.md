@@ -1383,3 +1383,45 @@
 - Los enlaces de `e2e/node_modules/.bin` están rotos (ficheros de 0 bytes), por eso `npx playwright` resuelve al CLI de Python; hay que invocar el CLI de Node directamente.
 - No se toca `getChampionshipStandings()`: el orden de las filas (por total de puntos) es correcto.
 - La cabecera de columna sigue mostrando sólo el circuito; con dos carreras en el mismo circuito las columnas son indistinguibles a simple vista. Mostrar también la fecha es una mejora opcional pendiente de decisión.
+
+---
+
+## Sesión 2026-10-08
+
+### Feature trabajada: HDH-14 - Desempate en campeonatos por carrera mas reciente
+
+**Estado**: Completada
+
+#### Evidencia
+- `src/app.js`, `getChampionshipStandings()`:
+  - Nuevo criterio de desempate: en caso de empate en puntos, va por delante el jugador que quedó mejor en la carrera más reciente del campeonato.
+  - Helpers locales `playTime()` (fechas ausentes/inválidas sin NaN) y `positionInPlay()` (puesto 1 = mejor, por `scoreNum` descendente).
+  - Cadena de orden final: puntos totales → puesto en la última carrera → victorias → nombre (determinístico).
+- `e2e/tests/HDH-14.spec.js` (nuevo): 4 tests
+  - Empate 50-50: gana quien venció en la carrera más reciente del campeonato
+  - Empate espejo: el otro jugador queda primero cuando él gana la última carrera
+  - Sin empate, los puntos mandan aunque se gane la última carrera
+  - Empate también en la última carrera: orden determinístico por victorias y nombre
+- `features_list.json`: nueva entrada `HDH-14` con estado `completed` y evidencia.
+- `CHANGELOG.md`: entrada en `[Unreleased]` por cambio de comportamiento visible.
+
+#### Tareas completadas
+1. Ejecutar `bash init.sh` (verificación de referencia, sin Docker)
+2. Crear rama `HDH-14` antes de modificar archivos
+3. Añadir desempate por carrera más reciente en `getChampionshipStandings()`
+4. Crear spec E2E con 4 tests y screenshot de evidencia
+5. Actualizar `features_list.json`, `PROGRESS.md` y `CHANGELOG.md`
+6. Verificar la suite completa sin regresiones
+
+#### Verificación final
+- `bash init.sh`: OK (6/6 comprobaciones de infraestructura, `Already up to date`)
+- `node --check src/app.js`: OK
+- `playwright test tests/HDH-14.spec.js` (Node v22, `CI=true`): 4/4 tests pasados
+- `playwright test` (suite completa): 101/101 tests pasados
+- Screenshot: `evidence/screenshots/HDH-14-desempate-ultima-carrera.png`
+
+#### Notas / Riesgos
+- Clarificación del usuario durante la sesión: "la carrera más reciente del campeonato" (no la última carrera común entre empatados) y "en un campeonato siempre están los mismos corredores" (todos compiten en cada carrera), por lo que ambos empatados siempre tienen puesto en la última carrera.
+- El runner de Playwright (1.52.0) se cuelga en silencio con Node v24 en este equipo; los tests se ejecutaron con Node v22 (`C:/Users/robzo/AppData/Local/pi-node/current/node.exe`) mediante `node node_modules/@playwright/test/cli.js test`.
+- `playwright.config.js` hardcodea una ruta Linux de chromium (`/snap/chromium/...`) para entornos no-CI; en este equipo los tests requieren `CI=true` para usar el registry de Playwright (`%LOCALAPPDATA%/ms-playwright`, chromium-1169/1208 presentes). `npm run capture:evidence` sigue fallando en este entorno por lo mismo.
+- Los enlaces de `e2e/node_modules/.bin` están rotos (ficheros de 0 bytes), por eso hay que invocar el CLI de Node directamente.

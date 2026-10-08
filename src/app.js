@@ -1232,6 +1232,24 @@ const App = {
         if (!champ) return [];
         const allPlays = champ.plays || [];
 
+        // Tiempo de carrera seguro (evita NaN con fechas ausentes o invalidas).
+        const playTime = p => {
+            const t = new Date(p && p.playDate).getTime();
+            return Number.isNaN(t) ? 0 : t;
+        };
+        // Carrera mas reciente del campeonato (criterio de desempate).
+        const latestPlay = allPlays.slice()
+            .sort((a, b) => playTime(b) - playTime(a) || String(b.id).localeCompare(String(a.id)))[0] || null;
+        // Puesto de un jugador en una carrera (1 = mejor puesto).
+        const positionInPlay = (play, pid) => {
+            if (!play) return null;
+            const ranked = (play.playerScores || [])
+                .map(ps => ({ pid: String(ps.playerRefId), scoreNum: ps.scoreNum || 0 }))
+                .sort((a, b) => b.scoreNum - a.scoreNum);
+            const idx = ranked.findIndex(s => s.pid === String(pid));
+            return idx === -1 ? null : idx + 1;
+        };
+
         const allPlayerIds = new Set();
         for (const play of allPlays) {
             for (const ps of play.playerScores) {
@@ -1262,7 +1280,20 @@ const App = {
 
         return Object.values(stats)
             .filter(s => s.plays > 0)
-            .sort((a, b) => b.totalScore - a.totalScore || b.wins - a.wins)
+            .sort((a, b) => {
+                // 1) Puntos totales.
+                if (b.totalScore !== a.totalScore) return b.totalScore - a.totalScore;
+                // 2) Desempate: mejor puesto en la carrera mas reciente del campeonato.
+                if (latestPlay) {
+                    const posA = positionInPlay(latestPlay, a.id);
+                    const posB = positionInPlay(latestPlay, b.id);
+                    if (posA !== null && posB !== null && posA !== posB) return posA - posB;
+                }
+                // 3) Desempate historico: victorias.
+                if (b.wins !== a.wins) return b.wins - a.wins;
+                // 4) Orden deterministico por nombre.
+                return a.name.localeCompare(b.name);
+            })
             .map(s => ({ ...s, avg: s.plays > 0 ? (s.totalScore / s.plays).toFixed(1) : '0.0' }));
     },
 
