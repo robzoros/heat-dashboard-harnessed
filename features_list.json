@@ -1,6 +1,6 @@
 {
-  "last_updated": "2026-10-05",
-  "active_feature": "FIX-HDH-06",
+  "last_updated": "2026-10-08",
+  "active_feature": "HDH-14",
   "user": "Roberto Méndez",
   "rules": {
     "single_active_feature": true,
@@ -839,6 +839,26 @@
           "npx playwright test (suite completa): 97/97"
         ],
         "evidence": "evidence/screenshots/FIX-HDH-06-carreras-cronologicas.png"
+      }
+    },
+    {
+      "id": "HDH-14",
+      "priority": 1,
+      "name": "Desempate en campeonatos por carrera mas reciente",
+      "description": [
+        "En la pestaña Campeonatos, en caso de empate en puntos en la clasificacion, el orden de los jugadores era ambiguo: solo se deshacia por numero de victorias.",
+        "Nuevo criterio de desempate: en caso de empate, va por delante el jugador que quedo mejor en la carrera mas reciente del campeonato.",
+        "Si la ultima carrera tampoco deshace el empate (misma posicion), se mantiene el respaldo por victorias y un orden deterministico por nombre."
+      ],
+      "status": "completed",
+      "verification": {
+        "checks": [
+          "node --check src/app.js",
+          "bash init.sh",
+          "playwright test tests/HDH-14.spec.js: 4/4",
+          "playwright test (suite completa): 101/101"
+        ],
+        "evidence": "evidence/screenshots/HDH-14-desempate-ultima-carrera.png"
       }
     }
   ]
