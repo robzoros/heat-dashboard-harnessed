@@ -199,6 +199,9 @@ const App = {
         document.getElementById('btn-import-plays').addEventListener('click', () => {
             this.importSelectedPlays();
         });
+        document.getElementById('import-plays-list').addEventListener('change', () => {
+            this.updateImportConsent();
+        });
         document.getElementById('btn-cancel-import-plays').addEventListener('click', () => {
             document.getElementById('import-plays-modal').classList.add('hidden');
         });
@@ -408,7 +411,46 @@ const App = {
         if (availablePlays.length === 0) {
             list.innerHTML = '<p style="color:#a0a0a0;text-align:center;">No hay partidas disponibles para importar</p>';
         }
+        const consentCheckbox = document.getElementById('import-consent-checkbox');
+        if (consentCheckbox) consentCheckbox.checked = false;
+        this.updateImportConsent();
         document.getElementById('import-plays-modal').classList.remove('hidden');
+    },
+
+    // FIX-HDH-07: calcula los jugadores de las partidas seleccionadas que aun no son
+    // participantes del campeonato y muestra el bloque de consentimiento explicito.
+    updateImportConsent() {
+        const champ = this.championships.selected;
+        const block = document.getElementById('import-consent-block');
+        if (!champ || !block) {
+            if (block) block.classList.add('hidden');
+            return;
+        }
+        const participantIds = new Set((champ.participants || []).map(id => String(id)));
+        // Sin participantes declarados la importacion es libre (comportamiento previo):
+        // no hace falta consentimiento.
+        if (participantIds.size === 0) {
+            block.classList.add('hidden');
+            return;
+        }
+        const selected = Array.from(
+            document.querySelectorAll('#import-plays-list input:checked')
+        ).map(i => i.value);
+        const newNames = [];
+        for (const playId of selected) {
+            const play = this.data.plays.find(p => String(p.id) === String(playId));
+            if (!play) continue;
+            for (const ps of play.playerScores) {
+                if (!participantIds.has(String(ps.playerRefId))) {
+                    const player = this.data.players.find(pl => String(pl.id) === String(ps.playerRefId));
+                    const name = player ? player.name : `Jugador ${ps.playerRefId}`;
+                    if (!newNames.includes(name)) newNames.push(name);
+                }
+            }
+        }
+        const namesEl = document.getElementById('import-consent-names');
+        if (namesEl) namesEl.textContent = newNames.join(', ');
+        block.classList.toggle('hidden', newNames.length === 0);
     },
 
     importSelectedPlays() {
@@ -421,6 +463,9 @@ const App = {
 
         const participantIds = new Set((champ.participants || []).map(id => String(id)));
         const hasParticipants = participantIds.size > 0;
+        // FIX-HDH-07: el propietario puede aceptar añadir los jugadores no participantes
+        // marcando la casilla de consentimiento del modal.
+        const consentGiven = document.getElementById('import-consent-checkbox')?.checked || false;
 
         if (hasParticipants) {
             const invalidPlays = [];
@@ -429,16 +474,32 @@ const App = {
                 if (play) {
                     for (const ps of play.playerScores) {
                         if (!participantIds.has(String(ps.playerRefId))) {
-                            const playerName = this.data.players.find(pl => pl.id === ps.playerRefId)?.name || ps.playerRefId;
+                            const playerName = this.data.players.find(pl => String(pl.id) === String(ps.playerRefId))?.name || ps.playerRefId;
                             invalidPlays.push({ playId, playerName });
                         }
                     }
                 }
             }
-            if (invalidPlays.length > 0) {
+            if (invalidPlays.length > 0 && !consentGiven) {
                 const names = [...new Set(invalidPlays.map(i => i.playerName))];
-                alert(`No se pueden añadir estas partidas.\n\nEstos jugadores no son participantes del campeonato:\n${names.join(', ')}\n\nAñádelos al campeonato primero.`);
+                alert(`No se pueden añadir estas partidas.\n\nEstos jugadores no son participantes del campeonato:\n${names.join(', ')}\n\nMarca la casilla del modal para añadirlos como participantes, o quita esas partidas de la selección.`);
                 return;
+            }
+        }
+
+        // FIX-HDH-07: con consentimiento, registrar los nuevos jugadores como participantes
+        // tambien en memoria para que el detalle del campeonato sea consistente.
+        if (consentGiven) {
+            for (const playId of selected) {
+                const play = this.data.plays.find(p => String(p.id) === String(playId));
+                if (!play) continue;
+                for (const ps of play.playerScores) {
+                    const pid = String(ps.playerRefId);
+                    if (!participantIds.has(pid)) {
+                        champ.participants = [...(champ.participants || []), pid];
+                        participantIds.add(pid);
+                    }
+                }
             }
         }
 

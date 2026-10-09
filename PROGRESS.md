@@ -1,5 +1,52 @@
 # PROGRESS.md
 
+## Sesión 2026-10-09
+
+### Feature trabajada: FIX-HDH-07 - Consentimiento explícito al importar partidas con jugadores no participantes
+
+**Estado**: Completada
+
+#### Evidencia
+- `src/app.js`:
+  - Nuevo método `updateImportConsent()`: calcula los jugadores de las partidas seleccionadas que aún no son participantes y muestra/oculta el bloque de consentimiento del modal con sus nombres.
+  - `openImportPlaysModal()`: resetea la casilla de consentimiento y llama a `updateImportConsent()` al abrir.
+  - `setupChampionships()`: listener `change` en `#import-plays-list` para actualizar el bloque al cambiar la selección.
+  - `importSelectedPlays()`: respeta la casilla de consentimiento; sin ella mantiene el bloqueo con un alert que explica el camino; con ella registra los nuevos jugadores como participantes en memoria antes de persistir.
+  - Comparaciones de IDs normalizadas con `String()` (checkbox values string vs `playerRefId` int).
+- `src/index.html`: bloque `#import-consent-block` con casilla `#import-consent-checkbox` y nombres `#import-consent-names` en el modal de importación.
+- `src/styles.css`: estilos del bloque de consentimiento (convención `.import-consent.hidden`, colores del tema).
+- `e2e/tests/FIX-HDH-07.spec.js` (nuevo): 4 tests
+  - Sin consentimiento: alert con mensaje explicativo, partida NO añadida, participantes NO mutan
+  - Con consentimiento: nuevos jugadores añadidos como participantes, detalle actualizado
+  - Bloque oculto cuando todos los jugadores ya son participantes
+  - Importación libre sin participantes declarados (comportamiento previo)
+- `features_list.json`: nueva entrada `FIX-HDH-07` con estado `in_progress` y evidencia.
+- `CHANGELOG.md`: entrada en `[Unreleased] > Fixed` por cambio de comportamiento visible.
+
+#### Tareas completadas
+1. Ejecutar `bash init.sh` (verificación de referencia, sin Docker)
+2. Crear rama `FIX-HDH-07` antes de modificar archivos
+3. Añadir bloque de consentimiento explícito en el modal de importación
+4. Respetar el consentimiento en `importSelectedPlays()` y normalizar comparaciones de IDs
+5. Crear spec E2E con 4 tests y screenshots de evidencia
+6. Actualizar `features_list.json`, `PROGRESS.md` y `CHANGELOG.md`
+7. Verificar la suite completa sin regresiones
+
+#### Verificación final
+- `bash init.sh`: OK (6/6 comprobaciones de infraestructura, `Already up to date`)
+- `node --check src/app.js`: OK
+- `playwright test tests/FIX-HDH-07.spec.js` (Node v22, `CI=true`): 4/4 tests pasados
+- `playwright test` (suite completa): 105/105 tests pasados
+- Screenshots: `evidence/screenshots/FIX-HDH-07-con-consentimiento.png`, `evidence/screenshots/FIX-HDH-07-sin-consentimiento.png`
+
+#### Notas / Riesgos
+- El runner de Playwright (1.52.0) se cuelga en silencio con Node v24 en este equipo; los tests se ejecutaron con Node v22 (`C:/Users/robzo/AppData/Local/pi-node/current/node.exe`) mediante `node node_modules/@playwright/test/cli.js test`.
+- `npm run capture:evidence` sigue fallando en este entorno (enlaces `e2e/node_modules/.bin` rotos → `npx` resuelve al CLI de Python: `error: unknown command 'test'`); los screenshots de evidencia se generaron en la corrida del spec.
+- `playwright.config.js` hardcodea una ruta Linux de chromium; en este equipo los tests requieren `CI=true`.
+- `addPlaysToChampionship()` sigue expandiendo participantes a partir de las partidas importadas (comportamiento previo, ahora con consentimiento explícito); no se modificó `getChampionshipStandings()`.
+
+---
+
 ## Sesión 2026-05-26
 
 ### Feature trabajada: HDH-01 - Crear Esqueleto de la aplicación
