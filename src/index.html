@@ -49,6 +49,12 @@
                 <h2>Importar Partidas</h2>
                 <p style="color:#a0a0a0;margin-bottom:15px;text-align:left;">Selecciona las partidas para añadir al campeonato:</p>
                 <div id="import-plays-list" class="filter-list"></div>
+                <div id="import-consent-block" class="import-consent hidden">
+                    <label class="import-consent-label">
+                        <input type="checkbox" id="import-consent-checkbox">
+                        <span>Añadir como participantes del campeonato a: <strong id="import-consent-names"></strong></span>
+                    </label>
+                </div>
                 <button id="btn-import-plays" class="btn-primary">Importar Seleccionadas</button>
                 <button id="btn-cancel-import-plays" class="btn-secondary">Cancelar</button>
             </div>

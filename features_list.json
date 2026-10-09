@@ -842,6 +842,28 @@
       }
     },
     {
+      "id": "FIX-HDH-07",
+      "priority": 1,
+      "name": "Consentimiento explicito al importar partidas con jugadores no participantes",
+      "description": [
+        "Al cargar un campeonato con partidas e intentar importar una nueva partida (boton +IMPORTAR PARTIDAS) aparecia un error 'Estos jugadores no son participantes del campeonato' sin ninguna via para anadirlos.",
+        "El dato era a la vez erroneo y cierto: addPlaysToChampionship expandia silenciosamente la lista de participantes con todos los jugadores de las partidas importadas, por lo que al recargar el campeonato la lista era distinta a la inicial.",
+        "Fix: el modal de importacion muestra un bloque de consentimiento explicito con los nombres de los jugadores nuevos; solo al marcar la casilla se anaden como participantes.",
+        "Sin consentimiento la importacion se bloquea con un alert que explica el camino a seguir, y la lista de participantes no muta.",
+        "Comportamiento previo preservado: campeonatos sin participantes declarados permiten importar libremente."
+      ],
+      "status": "completed",
+      "verification": {
+        "checks": [
+          "node --check src/app.js",
+          "bash init.sh",
+          "playwright test tests/FIX-HDH-07.spec.js (Node v22, CI=true): 4/4",
+          "playwright test (suite completa): 105/105"
+        ],
+        "evidence": "evidence/screenshots/FIX-HDH-07-con-consentimiento.png, evidence/screenshots/FIX-HDH-07-sin-consentimiento.png"
+      }
+    },
+    {
       "id": "HDH-14",
       "priority": 1,
       "name": "Desempate en campeonatos por carrera mas reciente",

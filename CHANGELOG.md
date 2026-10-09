@@ -4,6 +4,10 @@ Todas las novedades relevantes del proyecto se documentan en este fichero.
 
 ## [Unreleased]
 
+### Fixed
+
+- Campeonatos: al importar partidas con jugadores que aún no son participantes, el modal ahora pide consentimiento explícito para añadirlos como participantes. Antes aparecía un error sin salida ("Añádelos al campeonato primero") porque no existía ninguna forma de añadirlos; la lista de participantes solo cambia cuando el propietario lo acepta en la casilla del modal.
+
 ### Changed
 
 - Campeonatos: las carreras de la tabla de clasificación se muestran de izquierda a derecha en orden cronológico (de la más antigua a la más reciente). Antes se leían de derecha a izquierda porque las columnas se ordenaban por fecha descendente. La lista de partidas mantiene el orden reciente → antigua.

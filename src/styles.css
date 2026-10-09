@@ -296,6 +296,39 @@ body.panel-open .btn-toggle {
     display: none;
 }
 
+.import-consent.hidden {
+    display: none;
+}
+
+.import-consent {
+    margin-top: 15px;
+    padding: 12px;
+    background: #1e2a4a;
+    border: 1px solid #e94560;
+    border-radius: 6px;
+    text-align: left;
+}
+
+.import-consent-label {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.import-consent-label input[type="checkbox"] {
+    margin-top: 3px;
+}
+
+.import-consent-label span {
+    color: #e0e0e0;
+    font-size: 0.95rem;
+}
+
+#import-consent-names {
+    color: #e94560;
+}
+
 .modal-content {
     background: #16213e;
     padding: 30px;
