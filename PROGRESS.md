@@ -26,6 +26,7 @@
 - Los colores de todos los jugadores y bots cambiaron (reseed con la paleta nueva).
 - Los bots que comparten color con su principal se distinguen en el editor asignándoles un secundario a mano; por defecto repiten el color del grupo.
 - Si la suite de CI falla por los cambios de specs, corregir en esta rama y volver a push.
+- El run de auto-merge creó y mergeó el PR #62 en el mismo push; no queda PR pendiente.
 
 ---
 
