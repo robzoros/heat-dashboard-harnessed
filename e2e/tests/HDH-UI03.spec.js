@@ -118,10 +118,11 @@ test.describe('HDH-UI03 - Tema único Asfalto y brasa', () => {
       palette: App.colorPalette(),
       // cssVar vive en el navegador; se lee aquí, no en Node.
       muted: App.cssVar('--text-muted').trim().toLowerCase(),
+      players: App.data.players.length,
       colors: Object.fromEntries(App.colorMap.entries())
     }));
     expect(state.palette).toHaveLength(12);
-    expect(Object.keys(state.colors)).toHaveLength(App.data.players.length);
+    expect(Object.keys(state.colors)).toHaveLength(state.players);
     for (const [name, color] of Object.entries(state.colors)) {
       expect(color.trim().toLowerCase(), name).not.toBe(state.muted);
       expect(state.palette, name).toContain(color.trim().toLowerCase());

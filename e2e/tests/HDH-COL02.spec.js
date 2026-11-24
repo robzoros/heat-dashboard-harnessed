@@ -171,8 +171,9 @@ test.describe('HDH-COL02 - Editor visual de colores', () => {
     await page.waitForLoadState('networkidle');
     await expect(page.locator('#color-groups .color-row')).toHaveCount(20);
     await expect(page.locator('#palette-count')).toHaveText('12');
-    // 20 entradas y 12 colores: los bots repiten color de su grupo y el
-    // panel de avisos lo lista (no bloquea nada).
+    // 20 entradas y 12 colores: los bots repiten color de su grupo. El panel
+    // lista un aviso por color compartido (8) y uno por entrada que repite su
+    // primario (8); lo que importa es que el editor lo explique sin bloquear.
     await expect(page.locator('#issues-card')).toBeVisible();
     const shared = new Set();
     const seen = new Map();
@@ -181,7 +182,9 @@ test.describe('HDH-COL02 - Editor visual de colores', () => {
       if (seen.has(e.primary)) shared.add(e.primary);
       else seen.set(e.primary, e.name);
     }
-    await expect(page.locator('#issues-count')).toHaveText(String(shared.size));
+    expect(shared.size).toBe(8);
+    const firstShared = [...shared][0];
+    await expect(page.locator('#issues-list')).toContainText(`${firstShared} está asignado a 2 entradas`);
     await page.screenshot({ path: '../evidence/screenshots/HDH-COL02-editor-real.png', fullPage: true });
 
     await page.setViewportSize({ width: 390, height: 844 });
