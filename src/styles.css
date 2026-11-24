@@ -534,11 +534,21 @@ th {
     border-radius: 10px;
 }
 
-.track-card h4 {
+.track-card h4.track-name {
     color: #e94560;
     margin-bottom: 10px;
     font-family: 'Barlow Condensed', sans-serif;
     font-size: 1.2rem;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.track-card h4.track-name:hover {
+    text-decoration: underline;
+}
+
+.track-card.selected {
+    outline: 2px solid #e94560;
 }
 
 .track-card p {
