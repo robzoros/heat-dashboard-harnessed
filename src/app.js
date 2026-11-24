@@ -25,7 +25,58 @@ const App = {
     firebaseEnabled: false,
     championshipsUnsubscribe: null,
 
+    // Paleta categórica de jugadores, validada para fondos oscuros con
+    // validate_palette.js (CVD >= 8, contraste >= 3:1). Cada jugador principal
+    // conserva su color en toda la app: se asigna por orden alfabético, así que
+    // no cambia al filtrar. Más de 8 principales: los sobrantes van en gris.
+    PLAYER_PALETTE: ['#3987e5', '#d95926', '#199e70', '#c98500', '#d55181', '#0ca30c', '#9085e9', '#e66767'],
+
+    cssVar(name) {
+        return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    },
+
+    playerColor(name) {
+        const names = this.data.players
+            .filter(p => p.isMain)
+            .map(p => p.name)
+            .sort((a, b) => a.localeCompare(b));
+        const idx = names.indexOf(name);
+        return idx >= 0 && idx < this.PLAYER_PALETTE.length
+            ? this.PLAYER_PALETTE[idx]
+            : this.cssVar('--text-muted');
+    },
+
+    // Escribe el valor al final de cada barra (solo en gráficos con pocas barras).
+    valueLabelsPlugin: {
+        id: 'valueLabels',
+        afterDatasetsDraw(chart, args, opts) {
+            if (!opts || !opts.enabled) return;
+            const ctx = chart.ctx;
+            const horizontal = chart.options.indexAxis === 'y';
+            ctx.save();
+            ctx.font = `600 12px ${opts.font}`;
+            ctx.fillStyle = opts.color;
+            ctx.textBaseline = 'middle';
+            chart.getDatasetMeta(0).data.forEach((bar, i) => {
+                const value = chart.data.datasets[0].data[i];
+                if (value === null || value === undefined) return;
+                const text = opts.format ? opts.format(value) : String(value);
+                if (horizontal) {
+                    ctx.textAlign = 'left';
+                    ctx.fillText(text, bar.x + 6, bar.y);
+                } else {
+                    ctx.textAlign = 'center';
+                    ctx.fillText(text, bar.x, bar.y - 10);
+                }
+            });
+            ctx.restore();
+        }
+    },
+
     init() {
+        document.querySelectorAll('[data-variant-link]').forEach(a => {
+            a.setAttribute('aria-current', String(a.dataset.variantLink === document.documentElement.dataset.variant));
+        });
         this.selectedTrack = null;
         this.setupTabs();
         this.setupFilters();
@@ -411,7 +462,7 @@ const App = {
             return `<label><input type="checkbox" value="${p.id}"> ${p.playDate} | ${p.board} | Ganador: ${winnerName}</label>`;
         }).join('');
         if (availablePlays.length === 0) {
-            list.innerHTML = '<p style="color:#a0a0a0;text-align:center;">No hay partidas disponibles para importar</p>';
+            list.innerHTML = '<p style="color:var(--text-muted);text-align:center;">No hay partidas disponibles para importar</p>';
         }
         const consentCheckbox = document.getElementById('import-consent-checkbox');
         if (consentCheckbox) consentCheckbox.checked = false;
@@ -533,7 +584,7 @@ const App = {
             `;
         }).join('');
         if (participants.length === 0) {
-            playersDiv.innerHTML = '<p style="color:#a0a0a0;text-align:center;">No hay participantes. Añade jugadores al campeonato primero.</p>';
+            playersDiv.innerHTML = '<p style="color:var(--text-muted);text-align:center;">No hay participantes. Añade jugadores al campeonato primero.</p>';
         }
         document.getElementById('add-manual-play-modal').classList.remove('hidden');
     },
@@ -746,40 +797,122 @@ const App = {
     },
 
     initCharts() {
+        const accent = this.cssVar('--accent');
+        const surface = this.cssVar('--surface');
+        const text = this.cssVar('--text');
+        const font = this.cssVar('--font-body');
+
+        // Estilo común de todos los gráficos (leyendas redondas, tooltips y rejilla discretos)
+        Chart.defaults.font.family = font;
+        Chart.defaults.font.size = 12;
+        Chart.defaults.color = this.cssVar('--text-muted');
+        Chart.defaults.borderColor = this.cssVar('--chart-grid');
+        Chart.defaults.plugins.legend.labels.usePointStyle = true;
+        Chart.defaults.plugins.legend.labels.boxWidth = 8;
+        Chart.defaults.plugins.legend.labels.boxHeight = 8;
+        Object.assign(Chart.defaults.plugins.tooltip, {
+            backgroundColor: this.cssVar('--surface-3'),
+            titleColor: text,
+            bodyColor: text,
+            borderColor: this.cssVar('--line'),
+            borderWidth: 1,
+            padding: 10,
+            cornerRadius: 8,
+            boxPadding: 4
+        });
+
+        const playsMonthDataset = () => ({
+            label: 'Partidas',
+            data: [],
+            borderColor: accent,
+            backgroundColor: this.cssVar('--accent-soft'),
+            fill: true,
+            borderWidth: 2,
+            pointRadius: 0,
+            pointHoverRadius: 5,
+            pointHoverBackgroundColor: accent,
+            pointHoverBorderColor: surface,
+            pointHoverBorderWidth: 2,
+            tension: 0.3
+        });
+        const playsMonthScales = {
+            x: { grid: { display: false }, ticks: { maxTicksLimit: 6, maxRotation: 0 } },
+            y: { beginAtZero: true, ticks: { precision: 0, maxTicksLimit: 5 } }
+        };
+
         this.charts.wins = new Chart(document.getElementById('chart-wins'), {
             type: 'bar',
-            data: { labels: [], datasets: [{ label: 'Victorias', data: [], backgroundColor: '#e94560' }] },
-            options: { responsive: true, plugins: { legend: { display: false } } }
+            data: { labels: [], datasets: [{ label: 'Victorias', data: [], backgroundColor: accent, borderRadius: { topLeft: 4, topRight: 4 }, maxBarThickness: 28 }] },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                layout: { padding: { top: 20 } },
+                plugins: {
+                    legend: { display: false },
+                    valueLabels: { enabled: true, color: text, font },
+                    tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.y} victorias` } }
+                },
+                scales: {
+                    x: { grid: { display: false } },
+                    y: { beginAtZero: true, ticks: { precision: 0, maxTicksLimit: 5 } }
+                }
+            },
+            plugins: [this.valueLabelsPlugin]
         });
 
         this.charts.playsMonth = new Chart(document.getElementById('chart-plays-month'), {
             type: 'line',
-            data: { labels: [], datasets: [{ label: 'Partidas', data: [], borderColor: '#e94560', tension: 0.1 }] },
-            options: { responsive: true, scales: { y: { ticks: { stepSize: 1 } } } }
+            data: { labels: [], datasets: [playsMonthDataset()] },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: { mode: 'index', intersect: false },
+                plugins: { legend: { display: false } },
+                scales: playsMonthScales
+            }
         });
 
         this.charts.avgPts = new Chart(document.getElementById('chart-avgpts'), {
             type: 'bar',
-            data: { labels: [], datasets: [{ label: 'Pts Medios', data: [], backgroundColor: '#0f3460' }] },
-            options: { responsive: true, indexAxis: 'y' }
+            data: { labels: [], datasets: [{ label: 'Pts Medios', data: [], backgroundColor: accent, borderRadius: { topRight: 4, bottomRight: 4 }, maxBarThickness: 18 }] },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                layout: { padding: { right: 34 } },
+                plugins: {
+                    legend: { display: false },
+                    valueLabels: { enabled: true, color: text, font, format: v => Number(v).toFixed(1) }
+                },
+                scales: {
+                    x: { beginAtZero: true },
+                    y: { grid: { display: false } }
+                }
+            },
+            plugins: [this.valueLabelsPlugin]
         });
 
         this.charts.tracks = new Chart(document.getElementById('chart-tracks'), {
             type: 'doughnut',
-            data: { labels: [], datasets: [{ data: [], backgroundColor: ['#e94560', '#0f3460', '#16213e'] }] },
+            data: { labels: [], datasets: [{ data: [], backgroundColor: [accent, this.cssVar('--surface-3'), this.cssVar('--text-muted')], borderColor: surface, borderWidth: 2 }] },
             options: { responsive: true }
         });
 
         this.charts.winsEvolution = new Chart(document.getElementById('chart-wins-evolution'), {
             type: 'line',
             data: { labels: [], datasets: [] },
-            options: { responsive: true }
+            options: { responsive: true, interaction: { mode: 'index', intersect: false } }
         });
 
         this.charts.playsMonthHistorial = new Chart(document.getElementById('chart-plays-month-historial'), {
             type: 'line',
-            data: { labels: [], datasets: [{ label: 'Partidas', data: [], borderColor: '#e94560', tension: 0.1 }] },
-            options: { responsive: true, scales: { y: { ticks: { stepSize: 1 } } } }
+            data: { labels: [], datasets: [playsMonthDataset()] },
+            options: {
+                responsive: true,
+                interaction: { mode: 'index', intersect: false },
+                plugins: { legend: { display: false } },
+                scales: playsMonthScales
+            }
         });
     },
 
@@ -907,16 +1040,17 @@ const App = {
             return;
         }
 
+        // Altura del peldaño según el puesto (no según las victorias: 31/26/24 apenas se distinguirían)
         const places = [
-            { rank: 2, data: top3[1], cls: 'second', medal: '🥈' },
-            { rank: 1, data: top3[0], cls: 'first', medal: '🥇' },
-            { rank: 3, data: top3[2], cls: 'third', medal: '🥉' }
+            { rank: 2, data: top3[1], cls: 'second', medal: '🥈', height: 0.76 },
+            { rank: 1, data: top3[0], cls: 'first', medal: '🥇', height: 1 },
+            { rank: 3, data: top3[2], cls: 'third', medal: '🥉', height: 0.58 }
         ];
 
         podiumEl.innerHTML = places
             .filter(p => p.data)
             .map(p => `
-                <div class="podium-place ${p.cls}">
+                <div class="podium-place ${p.cls}" style="--pc:${this.playerColor(p.data.name)};--share:${p.height}">
                     <div class="podium-medal">${p.medal}</div>
                     <div class="podium-name">${p.data.name}</div>
                     <div class="podium-wins">${p.data.wins} victoria${p.data.wins !== 1 ? 's' : ''}</div>
@@ -940,6 +1074,7 @@ const App = {
 
         this.charts.wins.data.labels = winsByPlayer.map(p => p.name);
         this.charts.wins.data.datasets[0].data = winsByPlayer.map(p => p.wins);
+        this.charts.wins.data.datasets[0].backgroundColor = winsByPlayer.map(p => this.playerColor(p.name));
         this.charts.wins.update();
 
         // Plays by month chart
@@ -975,6 +1110,7 @@ const App = {
 
         this.charts.avgPts.data.labels = avgByPlayer.map(p => p.name);
         this.charts.avgPts.data.datasets[0].data = avgByPlayer.map(p => parseFloat(p.avg.toFixed(1)));
+        this.charts.avgPts.data.datasets[0].backgroundColor = avgByPlayer.map(p => this.playerColor(p.name));
         this.charts.avgPts.update();
 
         // Track chart: distribución de partidas o victorias del circuito seleccionado
@@ -983,7 +1119,6 @@ const App = {
         // Wins evolution chart: cumulative wins by date per main player (max 10)
         const top10Players = mainPlayers.slice(0, 10);
         const allDates = [...new Set(filteredPlays.map(p => p.playDate))].sort();
-        const colors = ['#e94560', '#0f3460', '#4caf50', '#ff9800', '#9c27b0', '#00bcd4', '#ff5722', '#795548', '#607d8b', '#ffc107'];
 
         const datasets = top10Players.map((player, idx) => {
             let cumulative = 0;
@@ -999,7 +1134,10 @@ const App = {
             return {
                 label: player.name,
                 data,
-                borderColor: colors[idx % colors.length],
+                borderColor: this.playerColor(player.name),
+                borderWidth: 2,
+                pointRadius: 0,
+                pointHoverRadius: 4,
                 tension: 0.1,
                 fill: false
             };
@@ -1257,10 +1395,10 @@ const App = {
             <div class="campeonato-detail-header">
                 <h2>${this.escapeHtml(champ.name)}</h2>
                 <p>${champ.description ? this.escapeHtml(champ.description) : 'Sin descripción'}</p>
-                <p style="color:#a0a0a0;margin-top:8px;">Creado: ${date} | Participantes: ${(champ.participants || []).length} | Partidas: ${(champ.playIds || []).length}</p>
-                ${ownerDisplay ? `<p style="color:#a0a0a0;margin-top:4px;">${ownerDisplay}</p>` : ''}
-                ${!isOwner && champ.owner ? '<p style="color:#e94560;margin-top:4px;font-size:0.9rem;">⚠ Solo lectura (no eres el propietario)</p>' : ''}
-                ${!this.bggUsername ? '<p style="color:#e94560;margin-top:4px;font-size:0.9rem;">⚠ Inicia sesión en BGG para editar campeonatos</p>' : ''}
+                <p style="color:var(--text-muted);margin-top:8px;">Creado: ${date} | Participantes: ${(champ.participants || []).length} | Partidas: ${(champ.playIds || []).length}</p>
+                ${ownerDisplay ? `<p style="color:var(--text-muted);margin-top:4px;">${ownerDisplay}</p>` : ''}
+                ${!isOwner && champ.owner ? '<p style="color:var(--accent);margin-top:4px;font-size:0.9rem;">⚠ Solo lectura (no eres el propietario)</p>' : ''}
+                ${!this.bggUsername ? '<p style="color:var(--accent);margin-top:4px;font-size:0.9rem;">⚠ Inicia sesión en BGG para editar campeonatos</p>' : ''}
             </div>
             <div class="campeonato-section">
                 <h3>Clasificación</h3>

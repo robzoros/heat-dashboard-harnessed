@@ -1,5 +1,37 @@
 # PROGRESS.md
 
+## Sesión 2026-11-24 (HDH-UI02)
+
+### Feature trabajada: HDH-UI02 - Rediseño visual de Resumen (dos variantes de color)
+
+**Estado**: Completada (pendiente de que el usuario elija variante y se retire la otra)
+
+#### Evidencia
+- `src/styles.css`:
+  - Todos los colores pasan a variables (`:root` = variante A índigo y coral; `:root[data-variant="b"]` = asfalto y brasa). Las demás pestañas heredan la paleta sin cambios de marcado.
+  - Nueva cabecera compacta (título, chips de contadores, estado y botón "Actualizar datos" discreto), pestañas fijas con subrayado de acento, botón de filtros flotante abajo a la izquierda, banner de cookies como tarjeta abajo a la derecha.
+  - Resumen en rejilla: podio (peldaños por puesto, color del jugador) + KPIs 2x2 + gráficos; una columna con podio primero por debajo de 960 px.
+  - Tipografía: Big Shoulders Display para títulos y cifras, Barlow para texto con cifras tabulares; cabeceras de tabla en sentence case.
+  - `.variant-switch`: selector flotante TEMPORAL.
+- `src/app.js`: `PLAYER_PALETTE`, `playerColor()` (orden alfabético entre principales: no cambia al filtrar), `cssVar()`, plugin `valueLabels`; `initCharts()` con estilo común (leyendas redondas, tooltips y rejilla discretos) y gráficos de Resumen sin leyenda de una sola serie; podio con `--pc` y `--share`; colores por jugador en Victorias, Puntos medios y Evolución de victorias.
+- `src/index.html`: tipografías, script de variante (`?variant=a|b`, recordada en localStorage), título "Heat dashboard", etiquetas de KPI claras, `.chart-box` en los tres gráficos de Resumen, selector de variante.
+- `e2e/tests/HDH-UI02.spec.js` (nuevo): 7 tests.
+
+#### Verificación final
+- `node --check src/app.js`: OK
+- Paleta de jugadores: `validate_palette.js --mode dark` sobre `#161c34` y `#1d1916`: OK
+- `playwright test tests/HDH-UI02.spec.js`: 7/7
+- `playwright test` (suite completa): 117/117 tests pasados (110 previos + 7 de HDH-UI02)
+- Screenshots: `evidence/screenshots/HDH-UI02-resumen-{a,b}-{escritorio,movil}.png`
+
+#### Notas / Riesgos
+- Alcance acordado: solo Resumen y elementos compartidos. Jugadores, Circuitos, Historial y Campeonatos solo heredan paleta y tipografía; el rediseño propio de cada una queda pendiente.
+- Chart.js y las fuentes se verificaron con copias locales (la sesión no alcanza CDN ni Google Fonts); el repo sigue usando los CDN originales.
+- Tabo (verde) y Canales (verde azulado) son dos verdes de la paleta validada; se distinguen por etiquetas, no solo por color.
+- Al elegir variante: borrar el bloque `:root[data-variant="b"]` (o el que sobre), el script de `index.html`, `.variant-switch` y su CSS.
+
+---
+
 ## Sesión 2026-11-24
 
 ### Feature trabajada: HDH-15 - Modificar pestaña Circuitos
