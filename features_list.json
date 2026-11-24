@@ -1,6 +1,6 @@
 {
   "last_updated": "2026-11-24",
-  "active_feature": "HDH-UI02",
+  "active_feature": "HDH-COL01",
   "user": "Roberto Méndez",
   "rules": {
     "single_active_feature": true,
@@ -921,6 +921,27 @@
           "Screenshots de Resumen en las dos variantes (escritorio y móvil)"
         ],
         "evidence": "Paleta de jugadores validada con validate_palette.js (modo dark) sobre las superficies de ambas variantes. Spec HDH-UI02: 7/7 tests pasados (variantes, KPIs, podio, colores fijos por jugador con filtros, gráficos y screenshots). Suite completa: 110/110 tests previos pasados sin regresiones (copia de pruebas con Chart.js y fuentes servidos en local). Screenshots: evidence/screenshots/HDH-UI02-resumen-{a,b}-{escritorio,movil}.png."
+      }
+    },
+    {
+      "id": "HDH-COL01",
+      "priority": 2,
+      "name": "Configuración de colores por jugador y bot",
+      "description": [
+        "Crear un JSON de configuración (src/data/player-colors.json) que defina color primario y secundario de cada jugador y bot.",
+        "Script CLI (scripts/player-colors.js) ejecutable cuando se quiera: init (genera/actualiza el JSON desde heat-data.json), list (tabla nombre/tipo/colores), set (cambiar primario/secundario de un jugador), check (detectar conflictos de color).",
+        "src/app.js usa el JSON como fuente de verdad para playerColor(); si dos jugadores comparten color primario, el conflicto se resuelve con el secundario.",
+        "Fallback: jugadores sin entrada en la config conservan el comportamiento actual (paleta alfabética para principales, gris para el resto)."
+      ],
+      "status": "completed",
+      "verification": {
+        "checks": [
+          "node scripts/player-colors.js init/list/set/check funcionan y son idempotentes en init",
+          "playerColor() devuelve el color primario de la config y el secundario en conflicto",
+          "e2e/tests/HDH-COL01.spec.js pasando con screenshots de evidencia",
+          "Suite completa de playwright pasa"
+        ],
+        "evidence": "Script scripts/player-colors.js verificado: init genera src/data/player-colors.json (20 entradas: 7 principales, 1 otro, 12 bots; los 7 principales mantienen el color alfabético anterior), list, set (naves inválidas y secondary none/auto) y check detecta primarios compartidos, primario==secundario y hex inválidos. src/app.js: loadColorConfig()+buildColorMap()+playerColor() con resolución de conflictos (primario -> secundario -> paleta -> gris); carga suave si falta el JSON. e2e: tests/HDH-COL01.spec.js 3/3; suite completa 120/120; capture:evidence OK; screenshots evidence/screenshots/HDH-COL01-resumen-{conflicto,config-real}.png. Soporte: e2e/playwright.config.js usa el chromium de snap solo si existe (compatible con Windows); e2e/scripts/capture-evidence.sh acepta PLAYWRIGHT_NODE porque Playwright 1.52 se cuelga con Node 24 en Windows (la suite se ejecuta con Node 22)."
       }
     }
   ]

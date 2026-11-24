@@ -1,4 +1,10 @@
+import { existsSync } from 'node:fs';
 import { defineConfig, devices } from '@playwright/test';
+
+// Ruta de Chromium del entorno original (Linux). Si no existe (p. ej. Windows),
+// se usa el navegador instalado por Playwright (~/AppData/Local/ms-playwright).
+const linuxChromium = '/snap/chromium/current/usr/lib/chromium-browser/chrome';
+const systemChromium = existsSync(linuxChromium) ? linuxChromium : undefined;
 
 export default defineConfig({
   testDir: './tests',
@@ -20,7 +26,7 @@ export default defineConfig({
       name: 'chromium',
       use: {
         ...devices['Desktop Chrome'],
-        ...(process.env.CI ? {} : { launchOptions: { executablePath: '/snap/chromium/current/usr/lib/chromium-browser/chrome', args: ['--no-sandbox'] } }),
+        ...(process.env.CI ? {} : { launchOptions: systemChromium ? { executablePath: systemChromium, args: ['--no-sandbox'] } : { args: ['--no-sandbox'] } }),
       },
     },
   ],

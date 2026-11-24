@@ -1,0 +1,126 @@
+{
+  "version": 1,
+  "generatedFrom": "src/data/heat-data.json",
+  "players": [
+    {
+      "name": "Alfonso Daganzo",
+      "type": "main",
+      "primary": "#3987e5",
+      "secondary": ""
+    },
+    {
+      "name": "Calvo",
+      "type": "main",
+      "primary": "#d95926",
+      "secondary": ""
+    },
+    {
+      "name": "Canales",
+      "type": "main",
+      "primary": "#199e70",
+      "secondary": ""
+    },
+    {
+      "name": "Carte",
+      "type": "main",
+      "primary": "#c98500",
+      "secondary": ""
+    },
+    {
+      "name": "Korta",
+      "type": "main",
+      "primary": "#d55181",
+      "secondary": ""
+    },
+    {
+      "name": "Tabo",
+      "type": "main",
+      "primary": "#0ca30c",
+      "secondary": ""
+    },
+    {
+      "name": "Zoro",
+      "type": "main",
+      "primary": "#9085e9",
+      "secondary": ""
+    },
+    {
+      "name": "fueramiseria",
+      "type": "other",
+      "primary": "#e66767",
+      "secondary": ""
+    },
+    {
+      "name": "Automa",
+      "type": "bot",
+      "primary": "#00b4d8",
+      "secondary": ""
+    },
+    {
+      "name": "Automa Azul",
+      "type": "bot",
+      "primary": "#f2b134",
+      "secondary": ""
+    },
+    {
+      "name": "Automa Rojo",
+      "type": "bot",
+      "primary": "#7bc86c",
+      "secondary": ""
+    },
+    {
+      "name": "Automa Verde",
+      "type": "bot",
+      "primary": "#c586d4",
+      "secondary": ""
+    },
+    {
+      "name": "Automa2",
+      "type": "bot",
+      "primary": "#e0a487",
+      "secondary": ""
+    },
+    {
+      "name": "Automa3",
+      "type": "bot",
+      "primary": "#5fa9c9",
+      "secondary": ""
+    },
+    {
+      "name": "Automa4",
+      "type": "bot",
+      "primary": "#a8c66c",
+      "secondary": ""
+    },
+    {
+      "name": "Automa5",
+      "type": "bot",
+      "primary": "#d98ac1",
+      "secondary": ""
+    },
+    {
+      "name": "BGA Player",
+      "type": "bot",
+      "primary": "#8ba888",
+      "secondary": ""
+    },
+    {
+      "name": "Fast1",
+      "type": "bot",
+      "primary": "#c9a085",
+      "secondary": ""
+    },
+    {
+      "name": "Fast2",
+      "type": "bot",
+      "primary": "#7f95c9",
+      "secondary": ""
+    },
+    {
+      "name": "Jugador anónimo",
+      "type": "bot",
+      "primary": "#c0c05a",
+      "secondary": ""
+    }
+  ]
+}

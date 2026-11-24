@@ -9,7 +9,17 @@ echo "=== Captura de Evidencias ==="
 mkdir -p "$EVIDENCE_DIR/screenshots" "$EVIDENCE_DIR/logs" "$EVIDENCE_DIR/reports"
 
 cd "$PROJECT_ROOT/e2e"
-npx playwright install chromium || echo "WARNING: No se pudo instalar Chromium via Playwright. Usando sistema si está disponible."
+
+# Runner de Playwright: `npx playwright` por defecto (CI). En hosts donde
+# npx/node no ejecutan bien Playwright (p. ej. Node 24 en Windows se cuelga),
+# se puede pasar PLAYWRIGHT_NODE=/ruta/a/node.exe.
+if [ -n "${PLAYWRIGHT_NODE:-}" ]; then
+  PW_RUN=("$PLAYWRIGHT_NODE" node_modules/playwright/cli.js)
+else
+  PW_RUN=(npx playwright)
+fi
+
+"${PW_RUN[@]}" install chromium || echo "WARNING: No se pudo instalar Chromium via Playwright. Usando sistema si está disponible."
 
 cd "$PROJECT_ROOT"
 python3 -m http.server 8082 --directory src > "$EVIDENCE_DIR/logs/static-server-$(date +%s).log" 2>&1 &
@@ -21,7 +31,7 @@ curl --retry 20 --retry-delay 1 --retry-connrefused \
   --max-time 30 http://localhost:8082 > /dev/null 2>&1
 
 cd "$PROJECT_ROOT/e2e"
-npx playwright test --reporter=list,html
+"${PW_RUN[@]}" test --reporter=list,html
 
 echo "=== Evidencias capturadas en $EVIDENCE_DIR ==="
 echo "Screenshots: $EVIDENCE_DIR/screenshots/"

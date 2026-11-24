@@ -1,5 +1,40 @@
 # PROGRESS.md
 
+## Sesión 2026-11-24 (HDH-COL01)
+
+### Feature trabajada: HDH-COL01 - Configuración de colores por jugador y bot
+
+**Estado**: Completada
+
+#### Qué se hizo
+- Decisión de diseño: hasta ahora `playerColor()` asignaba la paleta por orden alfabético solo a jugadores principales (`isMain`); bots y otros iban en gris. Ahora la fuente de verdad es un JSON de configuración con color primario y secundario por entrada.
+- `src/data/player-colors.json` (nuevo): generado desde `src/data/heat-data.json`. 20 entradas (7 principales, 1 otro, 12 bots) con `name`, `type` (main|bot|other), `primary` y `secondary`. Los 7 principales conservan exactamente su color anterior.
+- `scripts/player-colors.js` (nuevo, Node 20, sin dependencias):
+  - `init`: genera/actualiza la config sin perder asignaciones (añade nuevos, actualiza tipo, lista los eliminados); siembra desde paleta de 20 colores (los 8 primeros = PLAYER_PALETTE validada).
+  - `list [--json]`: tabla nombre / tipo / primario / secundario.
+  - `set <nombre> --primary <hex> --secondary <hex|none>`: cambia colores (normaliza hex, valida formato, permite mayúsculas/minúsculas en el nombre).
+  - `check`: detecta primarios compartidos (avisa la resolución alfabética aplicada), primario==secundario del mismo jugador, hex inválidos y colores muy parecidos (distancia RGB < 60).
+- `src/app.js`: `loadColorConfig()` (fetch de `./data/player-colors.json`, fallo suave), `buildColorMap()` (resolución: primario libre -> secundario libre -> siguiente color libre de PLAYER_PALETTE -> gris; recorrido alfabético estable, no cambia al filtrar) y `playerColor()` que consulta el mapa con fallback al comportamiento histórico. Se recalcula en `renderAll()`.
+- `e2e/tests/HDH-COL01.spec.js` (nuevo): 3 tests (playerColor con fixture y conflicto primario/secundario, colores de las barras del gráfico de Victorias, config real con bots coloreados) + screenshots de evidencia.
+
+#### Verificación final
+- `node --check src/app.js` y `node --check scripts/player-colors.js`: OK
+- Script probado por CLI: init idempotente, list, set/checkout de hex inválidos, check con conflicto inyectado y sin conflictos (AVISOs de colores parecidos en la paleta sembrada: distancia 60 tolerada).
+- `playwright test tests/HDH-COL01.spec.js`: 3/3
+- Suite completa: 120/120 (con Node 22; ver soporte abajo)
+- `capture:evidence`: OK; `evidence/screenshots/HDH-COL01-resumen-{conflicto,config-real}.png`
+
+#### Soporte fuera del alcance estricto (necesario para verificar en local)
+- `e2e/playwright.config.js`: solo usa el chromium de snap si la ruta existe (antes rompía en Windows).
+- `e2e/scripts/capture-evidence.sh`: acepta `PLAYWRIGHT_NODE` porque Playwright 1.52 se cuelga con Node 24 en Windows; en CI sigue usando `npx playwright`.
+
+#### Notas / Riesgos
+- Los gráficos actuales solo pitan jugadores Principales; los bots tienen color en la config pero de momento no hay ningún elemento visual que los muestre (queda como posible feature posterior).
+- Jugadores que aparezcan en heat-data.json sin entrada en la config usan el fallback histórico (paleta alfabética si son principales, si no gris) hasta reejecutar `init`.
+- `check` en función del umbral de similitud influye avisos para colores validados; el umbral RGB simple está en 60 y puede dar AVISOs con paletas grandes.
+
+---
+
 ## Sesión 2026-11-24 (HDH-UI02)
 
 ### Feature trabajada: HDH-UI02 - Rediseño visual de Resumen (dos variantes de color)
