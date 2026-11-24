@@ -1656,3 +1656,5 @@
 - El runner de Playwright (1.52.0) se cuelga en silencio con Node v24 en este equipo; los tests se ejecutaron con Node v22 (`C:/Users/robzo/AppData/Local/pi-node/current/node.exe`) mediante `node node_modules/@playwright/test/cli.js test`.
 - `playwright.config.js` hardcodea una ruta Linux de chromium (`/snap/chromium/...`) para entornos no-CI; en este equipo los tests requieren `CI=true` para usar el registry de Playwright (`%LOCALAPPDATA%/ms-playwright`, chromium-1169/1208 presentes). `npm run capture:evidence` sigue fallando en este entorno por lo mismo.
 - Los enlaces de `e2e/node_modules/.bin` están rotos (ficheros de 0 bytes), por eso hay que invocar el CLI de Node directamente.
+
+<!-- verificación HDH-INFRA01: cambio solo de documentación para comprobar que CI omite Playwright -->
