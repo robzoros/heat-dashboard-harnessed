@@ -33,14 +33,14 @@
     {
       "name": "Alfonso Daganzo",
       "type": "main",
-      "primary": "#d62828",
-      "secondary": ""
+      "primary": "#2563eb",
+      "secondary": "#f97316"
     },
     {
       "name": "Calvo",
       "type": "main",
-      "primary": "#2563eb",
-      "secondary": ""
+      "primary": "#64748b",
+      "secondary": "#d62828"
     },
     {
       "name": "Canales",
@@ -51,26 +51,26 @@
     {
       "name": "Carte",
       "type": "main",
-      "primary": "#ec4899",
+      "primary": "#d62828",
       "secondary": ""
     },
     {
       "name": "Korta",
       "type": "main",
-      "primary": "#06b6d4",
+      "primary": "#1a9e50",
       "secondary": ""
     },
     {
       "name": "Tabo",
       "type": "main",
-      "primary": "#1a9e50",
+      "primary": "#c084fc",
       "secondary": ""
     },
     {
       "name": "Zoro",
       "type": "main",
-      "primary": "#c084fc",
-      "secondary": ""
+      "primary": "#64748b",
+      "secondary": "#f3f4f6"
     },
     {
       "name": "fueramiseria",
@@ -81,49 +81,49 @@
     {
       "name": "Automa",
       "type": "bot",
-      "primary": "#c3cbd5",
+      "primary": "#f97316",
       "secondary": ""
     },
     {
       "name": "Automa Azul",
       "type": "bot",
-      "primary": "#f3f4f6",
+      "primary": "#2563eb",
       "secondary": ""
     },
     {
       "name": "Automa Rojo",
       "type": "bot",
-      "primary": "#b98a2e",
+      "primary": "#d62828",
       "secondary": ""
     },
     {
       "name": "Automa Verde",
       "type": "bot",
-      "primary": "#64748b",
+      "primary": "#1a9e50",
       "secondary": ""
     },
     {
       "name": "Automa2",
       "type": "bot",
-      "primary": "#d62828",
+      "primary": "#c3cbd5",
       "secondary": ""
     },
     {
       "name": "Automa3",
       "type": "bot",
-      "primary": "#2563eb",
+      "primary": "#eab308",
       "secondary": ""
     },
     {
       "name": "Automa4",
       "type": "bot",
-      "primary": "#eab308",
+      "primary": "#c084fc",
       "secondary": ""
     },
     {
       "name": "Automa5",
       "type": "bot",
-      "primary": "#ec4899",
+      "primary": "#f3f4f6",
       "secondary": ""
     },
     {
