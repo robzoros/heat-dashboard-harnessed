@@ -41,6 +41,11 @@
 - "Bots" en la explicación del requisito se interpreta como cualquier jugador no principal (bots y otros), tal y como dice la propia feature ("aquellos que no son considerados jugadores principales").
 - Runner de Playwright: se usa Node 22 (`C:/Users/robzo/AppData/Local/pi-node/current/node.exe`) porque con Node v24 se cuelga en este equipo; `CI=true` necesario.
 
+#### Bloqueo de CI resuelto durante la sesión
+- El push de la rama falló en CI: `ubuntu-latest` pasó a Ubuntu 26.04 (2026-11) y `npx playwright install --with-deps chromium` falla (Playwright 1.52.0 no soporta `ubuntu26.04-x64`). Afectaba también a la rama `pi-minimal-harness-branch` del mismo día.
+- Corrección de soporte estrecha: `.github/workflows/auto-merge.yml` fijado a `runs-on: ubuntu-24.04` (commit `1efc848`). Volver a `ubuntu-latest` cuando se actualice `@playwright/test`.
+- Tras el fix: auto-merge run 45367209878 `success` y merge a `main` OK (PR #54); deploy-pages run 45367735298 `success`.
+
 ---
 
 ## Sesión 2026-10-09
