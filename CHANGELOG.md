@@ -6,6 +6,8 @@ Todas las novedades relevantes del proyecto se documentan en este fichero.
 
 ### Changed
 
+- Circuitos: el gráfico de victorias de un circuito usa el color que cada jugador tiene definido en `src/data/player-colors.json` (el mismo del editor de colores). La entrada agregada «Bots» toma un color de la paleta de esa config que no esté ya presente en el gráfico, así siempre se distingue del resto.
+
 - Tema: se queda **Asfalto y brasa** como única piel. Desaparece la variante «Índigo y coral», el parámetro `?variant=`, el selector flotante y su código, así que ya no hay nada que elegir ni recordar en el navegador.
 - Colores de jugadores y bots: paleta nueva pensada para fondos cálidos oscuros (arena, oro, brasa, terracota, cielo, verde, violeta humo y rosa, más 12 tonos apagados para los bots). Sustituye a la anterior, que era azul/verde fría.
 

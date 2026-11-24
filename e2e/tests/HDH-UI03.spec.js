@@ -80,7 +80,9 @@ test.describe('HDH-UI03 - Tema único Asfalto y brasa', () => {
     await openApp(page);
 
     const data = await page.evaluate(() => ({
-      palette: App.PLAYER_PALETTE,
+      // La paleta válida es la de la config (12 colores), no solo los 8 de
+      // reserva: player-colors.json puede asignar cualquiera de los 12.
+      palette: App.colorPalette(),
       podium: Array.from(document.querySelectorAll('#podium .podium-place')).map(el => ({
         name: el.querySelector('.podium-name').textContent,
         color: el.style.getPropertyValue('--pc').trim()

@@ -1,5 +1,31 @@
 # PROGRESS.md
 
+## Sesión 2026-11-24 (HDH-COL04)
+
+### Feature trabajada: HDH-COL04 - Colores de la pestaña Circuitos desde player-colors.json
+
+**Estado**: Completada (evidencia en spec local; CI en el push)
+
+#### Qué se hizo
+- **Chart de victorias del circuito con los colores de la config**: `updateTracksChart()` en `src/app.js` ya no pinta todos los slices con el array fijo `[accent, surface-3, text-muted]`. Ahora calcula `backgroundColor` etiqueta a etiqueta con `playerColor(nombre)`, es decir, el color primario/secundario definido en `src/data/player-colors.json` (el mismo que muestra el editor de colores).
+- **«Bots» con un color libre de la paleta**: la entrada agregada de bots usa el primer color de `colorPalette()` (la paleta de la config) que no esté ya usado por los jugadores presentes en el gráfico; si no queda ninguno, cae a `--text-muted`. Así los bots nunca comparten color con un jugador del chart.
+- **La vista Distribución no cambia**: al deseleccionar el circuito se restauran los colores por defecto (`--accent`, `--surface-3`, `--text-muted`), porque esa vista no representa jugadores.
+- **Soporte en `e2e/tests/HDH-UI03.spec.js`**: el test «colores de los jugadores se aplican en el podio y en los gráficos» comprobaba contra `App.PLAYER_PALETTE` (los 8 colores de reserva). Con la config actual (commit manual `b8b9d72` repartió índices 9-12 a Calvo, Zoro y varios automas) el podio usa colores fuera de esos 8 y el test fallaba en CI, aunque el podio y el chart de victorias no se tocaron en esta feature. Ahora valida contra `App.colorPalette()` (los 12 de la config), igual que el test vecino. Verificado: 8/8.
+- **Soporte en `e2e/tests/HDH-COL02.spec.js`**: el test de la config real hardcodeaba 8 colores compartidos; el commit manual `b8b9d72 "Colors changed"` dejó la config con 7, así que el número ahora se calcula desde el JSON leído del repo (el aviso del editor en sí no cambió).
+
+#### Verificación
+- `node --check src/app.js`: OK.
+- `e2e/tests/HDH-COL04.spec.js` (nuevo, 4 tests): **4/4** — colores por jugador desde la config, «Bots» con color de paleta libre y determinista, restauración de Distribución, y evidencia con los datos reales comprobando que cada color del chart coincide con `playerColor()`.
+- Specs relacionadas (HDH-COL01, HDH-COL02, HDH-COL04, HDH-15): **21/21** pasadas con Node 22 y `CI=true`. `HDH-UI03`: **8/8**.
+- Screenshots: `evidence/screenshots/HDH-COL04-victorias-colores.png`, `evidence/screenshots/HDH-COL04-datos-reales.png`.
+- **Suite completa no reejecutada en local**: el runner de Playwright se queda colgado en este equipo (se abortó por timeout tras 15+7 minutos, sin fallos del diff); la ejecución oficial corre en el Action del push.
+
+#### Notas / Riesgos
+- El color de «Bots» es determinista (primer color libre de la paleta) pero puede cambiar si editas `player-colors.json`; es el comportamiento pedido ("cualquiera de los no presentes en el chart").
+- El resto del dashboard sigue sin pintar bots de forma individual (solo el agregado «Bots»); el color propio de cada bot solo se ve en el editor.
+
+---
+
 ## Sesión 2026-11-24 (HDH-COL03)
 
 ### Feature trabajada: HDH-COL03 - Paleta de 12 colores oficiales de Heat
