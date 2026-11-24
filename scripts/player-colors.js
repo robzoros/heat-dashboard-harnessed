@@ -8,6 +8,8 @@
  *   node scripts/player-colors.js init              Genera/actualiza la config desde heat-data.json.
  *                                                   Preserva los colores ya asignados; añade
  *                                                   jugadores nuevos y actualiza su tipo.
+ *                                                   Con --reseed reasigna TODOS los primarios con
+ *                                                   la paleta actual (y vacía los secundarios).
  *   node scripts/player-colors.js list [--json]     Lista jugadores y bots con su color actual.
  *   node scripts/player-colors.js set <nombre> [--primary <hex>] [--secondary <hex>]
  *                                                   Cambia el color primario/secundario de un
@@ -28,10 +30,14 @@ const DEFAULT_CONFIG = path.join(ROOT, 'src', 'data', 'player-colors.json');
 // Paleta de siembra: los 8 primeros son PLAYER_PALETTE de src/app.js
 // (validada para fondos oscuros con validate_palette.js). Los siguientes
 // completan hasta 20 entradas (jugadores + bots actuales).
+// Paleta del tema «Asfalto y brasa», validada con scripts/validate-palette.js:
+// contraste >= 3:1 sobre #14110f y #1d1916 y ΔE >= 12 (visión normal) / >= 10
+// (deuteranopia y protanopia) entre los 8 primeros, que son los que comparten
+// los jugadores principales en los gráficos.
 const SEED_PALETTE = [
-  '#3987e5', '#d95926', '#199e70', '#c98500', '#d55181', '#0ca30c', '#9085e9', '#e66767',
-  '#00b4d8', '#f2b134', '#7bc86c', '#c586d4', '#e0a487', '#5fa9c9', '#a8c66c', '#d98ac1',
-  '#8ba888', '#c9a085', '#7f95c9', '#c0c05a'
+  '#f4e3c4', '#f2c14e', '#e9913f', '#d1583c', '#86c8e3', '#2f8f76', '#7561ad', '#d67a9c',
+  '#c3aa79', '#b7d7d1', '#ab69a0', '#c8af9d', '#cdc570', '#83b0b9', '#aa79c3', '#b6825d',
+  '#d7d18e', '#d7ccb7', '#d0bc95', '#79c3b7'
 ];
 
 function fail(msg) {
@@ -113,10 +119,11 @@ function cmdInit(args) {
   const players = playersFromData(data);
   const result = [];
   const added = [];
+  const reseeded = [];
   for (const p of players) {
     const prev = prevByName.get(p.name);
     prevByName.delete(p.name);
-    if (prev) {
+    if (prev && !args['--reseed']) {
       result.push({
         name: p.name,
         type: p.type,
@@ -126,7 +133,8 @@ function cmdInit(args) {
     } else {
       const primary = nextSeedColor({ players: result });
       result.push({ name: p.name, type: p.type, primary, secondary: '' });
-      added.push(`${p.name} (${TYPE_LABEL[p.type]}) -> ${primary}`);
+      const line = `${p.name} (${TYPE_LABEL[p.type]}) -> ${primary}`;
+      if (prev) reseeded.push(line); else added.push(line);
     }
   }
 
@@ -142,8 +150,9 @@ function cmdInit(args) {
   writeJson(configFile, out);
 
   console.log(`Config escrita: ${path.relative(ROOT, configFile).replace(/\\/g, '/')}`);
-  console.log(`Entradas: ${result.length} (${added.length} nuevas)`);
+  console.log(`Entradas: ${result.length} (${added.length} nuevas, ${reseeded.length} reasignadas)`);
   if (added.length) console.log(`Nuevos:\n  ${added.join('\n  ')}`);
+  if (reseeded.length) console.log(`Reasignados (--reseed):\n  ${reseeded.join('\n  ')}`);
   if (dropped.length) console.log(`Eliminados (ya no están en los datos):\n  ${dropped.join('\n  ')}`);
 }
 
@@ -254,8 +263,9 @@ function parseArgs(argv) {
   const args = { _: [] };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
-    if (a === '--json' || a === '--help' || a === '-h') {
-      args[a.replace(/^-+/, '')] = true;
+    if (a === '--json' || a === '--reseed' || a === '--help' || a === '-h') {
+      args[a] = true;
+      if (a === '--help' || a === '-h') args.help = true;
     } else if (a === '--data' || a === '--config' || a === '--primary' || a === '--secondary') {
       args[a] = argv[++i];
       if (args[a] === undefined) fail(`Falta valor para ${a}`);
@@ -272,7 +282,8 @@ function usage() {
   console.log(`Uso: node scripts/player-colors.js <comando>
 
 Comandos:
-  init                        Genera/actualiza src/data/player-colors.json desde src/data/heat-data.json
+  init [--reseed]             Genera/actualiza src/data/player-colors.json desde heat-data.json
+                              (--reseed reasigna todos los primarios con la paleta actual)
   list [--json]               Lista jugadores/bots con su color actual
   set <nombre> [--primary hex] [--secondary hex|none]   Cambia colores
   check                       Detecta conflictos y hex inválidos

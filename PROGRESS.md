@@ -1,5 +1,35 @@
 # PROGRESS.md
 
+## Sesión 2026-11-24 (HDH-UI03)
+
+### Feature trabajada: HDH-UI03 - Tema único Asfalto y brasa y paleta a juego
+
+**Estado**: Completada
+
+#### Qué se hizo
+- **Fuera la variante índigo y coral**: `src/styles.css` queda con un único `:root` (los valores de la antigua B: `--bg #14110f`, `--surface #1d1916`, `--text #f2ece5`, `--accent #ff7a2f`, `--good #46c98b`), sin bloque `[data-variant="b"]`. `src/index.html` pierde el script de `?variant=` y el `<div class="variant-switch">`; `styles.css` pierde su CSS; `app.js` pierde el código que marcaba `aria-current` en el selector.
+- **Paleta nueva (20 colores)** para el perfil asfalto/brasa, en cuatro sitios: `PLAYER_PALETTE` de `app.js` (8 primeros, los que comparten los principales), `SEED_PALETTE` de `scripts/player-colors.js`, el campo `palette` de `src/data/player-colors.json` y `FALLBACK_PALETTE` de `src/color-editor.js`:
+  - principales: `#f4e3c4` arena, `#f2c14e` oro, `#e9913f` brasa, `#d1583c` terracota, `#86c8e3` cielo, `#2f8f76` verde, `#7561ad` violeta humo, `#d67a9c` rosa;
+  - bots: `#c3aa79`, `#b7d7d1`, `#ab69a0`, `#c8af9d`, `#cdc570`, `#83b0b9`, `#aa79c3`, `#b6825d`, `#d7d18e`, `#d7ccb7`, `#d0bc95`, `#79c3b7`.
+- **`scripts/validate-palette.js` (nuevo)**: contraste WCAG de cada color sobre `#14110f` y `#1d1916` (>= 3:1) y ΔE76 entre pares en visión normal y simulando deuteranopia/protanopia (matrices de Machado 2009). Los 8 primeros tienen umbral estricto (ΔE >= 12 normal, >= 10 CVD); el resto exige >= 6. Sale con código 1 si algo falla.
+- **`init --reseed`** en `scripts/player-colors.js`: reasigna todos los primarios con la paleta actual y vacía secundarios (los `init` normales siguen preservando lo ajustado a mano). Se usó una vez para migrar las 20 entradas a la paleta nueva.
+- **Cabecera**: el enlace al editor de colores ya no usa el emoji 🎨 (se veía como una mancha negra); ahora lleva una muestra con gradiente de la paleta. En `colors.html` el botón de descarga perdió el emoji ⬇ por el mismo motivo.
+- **Specs**: `e2e/tests/HDH-UI02.spec.js` sin el test de variantes y con screenshots de tema único; `e2e/tests/HDH-UI03.spec.js` (nuevo, 6 tests).
+
+#### Verificación final
+- `node scripts/validate-palette.js`: **OK** — 20 colores con contraste >= 3:1 sobre ambos fondos; peor par de los principales `#f2c14e`/`#e9913f` con ΔE 25.2 (normal), 12.3 (deuteranopia) y 18.0 (protanopia).
+- `node scripts/player-colors.js init --reseed` + `list`: 20 entradas reasignadas a la paleta nueva.
+- `playwright test tests/HDH-UI03.spec.js tests/HDH-UI02.spec.js`: 12/12
+- Suite completa: 140/140 (135 previos + 6 nuevos − 1 test de variantes eliminado)
+- `capture:evidence`: OK. Screenshots: `evidence/screenshots/HDH-UI03-resumen-asfalto-{escritorio,movil}.png`, `HDH-UI03-paleta-asfalto.png`
+
+#### Notas / Riesgos
+- Los colores asignados a cada jugador cambian (la paleta es nueva y se resembró). Si más adelante ajustas colores a mano, los `init` posteriores los respetan; solo `--reseed` los pisa.
+- La paleta de bots mantiene solo separación ΔE >= 6 entre ellos (no aparecen todos juntos en un gráfico); los 8 principales sí cumplen el umbral estricto.
+- `#3987e5`, `#d95926`, `#199e70`, `#0ca30c` y `#9085e9` (antiguos) quedan fuera; ningún archivo los referencia ya.
+
+---
+
 ## Sesión 2026-11-24 (HDH-INFRA01)
 
 ### Feature trabajada: HDH-INFRA01 - CI: deploy fiable a Pages y tests condicionales

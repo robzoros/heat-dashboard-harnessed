@@ -4,6 +4,16 @@ Todas las novedades relevantes del proyecto se documentan en este fichero.
 
 ## [Unreleased]
 
+### Changed
+
+- Tema: se queda **Asfalto y brasa** como única piel. Desaparece la variante «Índigo y coral», el parámetro `?variant=`, el selector flotante y su código, así que ya no hay nada que elegir ni recordar en el navegador.
+- Colores de jugadores y bots: paleta nueva pensada para fondos cálidos oscuros (arena, oro, brasa, terracota, cielo, verde, violeta humo y rosa, más 12 tonos apagados para los bots). Sustituye a la anterior, que era azul/verde fría.
+
+### Added
+
+- `scripts/validate-palette.js`: valida una paleta categórica contra los fondos del tema (contraste WCAG ≥ 3:1) y la separación entre colores en visión normal y simulando deuteranopia y protanopia (ΔE76). Sale con código 1 si algo no cumple.
+- `node scripts/player-colors.js init --reseed`: reasigna todos los primarios con la paleta actual (los `init` normales siguen conservando lo que hayas ajustado a mano).
+
 ### Fixed
 
 - CI: el despliegue en GitHub Pages fallaba de forma intermitente con «No artifacts named "github-pages" were found». El workflow subía el artefacto y desplegaba en el mismo job, de modo que `actions/deploy-pages` consultaba la API de artefactos antes de que estuviera indexado. Ahora `deploy-pages.yml` y `weekly-data.yml` separan los jobs `build` (sube el artefacto) y `deploy` (`needs: build`), y ambos comparten el grupo de concurrencia `github-pages-deploy` para que no haya dos despliegues de Pages a la vez.

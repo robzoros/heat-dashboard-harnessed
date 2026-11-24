@@ -17,10 +17,12 @@
     const TYPE_ORDER = ['main', 'other', 'bot'];
 
     // Solo se usa si player-colors.json no trae "palette" (config antigua).
+    // Paleta del tema «Asfalto y brasa»; solo se usa si player-colors.json no
+    // trae el campo "palette" (config antigua).
     const FALLBACK_PALETTE = [
-        '#3987e5', '#d95926', '#199e70', '#c98500', '#d55181', '#0ca30c', '#9085e9', '#e66767',
-        '#00b4d8', '#f2b134', '#7bc86c', '#c586d4', '#e0a487', '#5fa9c9', '#a8c66c', '#d98ac1',
-        '#8ba888', '#c9a085', '#7f95c9', '#c0c05a'
+        '#f4e3c4', '#f2c14e', '#e9913f', '#d1583c', '#86c8e3', '#2f8f76', '#7561ad', '#d67a9c',
+        '#c3aa79', '#b7d7d1', '#ab69a0', '#c8af9d', '#cdc570', '#83b0b9', '#aa79c3', '#b6825d',
+        '#d7d18e', '#d7ccb7', '#d0bc95', '#79c3b7'
     ];
 
     const state = {

@@ -8,19 +8,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800&family=Barlow+Condensed:wght@400;600&family=Barlow:wght@400;600&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-    <script>
-        // Variante visual (TEMPORAL): ?variant=a|b, recordada en este navegador.
-        (function () {
-            var variant = 'a';
-            try {
-                var q = new URLSearchParams(location.search).get('variant');
-                if (q === 'a' || q === 'b') localStorage.setItem('heat-variant', q);
-                var saved = localStorage.getItem('heat-variant');
-                if (saved === 'a' || saved === 'b') variant = saved;
-            } catch (e) { /* sin almacenamiento: variante A */ }
-            document.documentElement.setAttribute('data-variant', variant);
-        })();
-    </script>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -45,7 +32,7 @@
             </div>
         </div>
         <button id="btn-load-data" class="btn-primary">Actualizar datos</button>
-        <a class="header-link" href="colors.html" title="Editor visual de colores de jugadores y bots">🎨 Colores</a>
+        <a class="header-link" href="colors.html" title="Editor visual de colores de jugadores y bots"><span class="header-link-swatch" aria-hidden="true"></span>Colores</a>
         <span id="data-status" class="data-status" aria-live="polite">Cargando datos...</span>
         <div id="create-campeonato-modal" class="modal hidden">
             <div class="modal-content modal-wide">
@@ -271,12 +258,6 @@
             <button id="btn-admin-submit" class="btn-primary">Entrar</button>
             <button id="btn-admin-cancel" class="btn-secondary">Cancelar</button>
         </div>
-    </div>
-
-    <div class="variant-switch" role="group" aria-label="Variante visual (temporal)">
-        <span>Variante</span>
-        <a href="?variant=a" data-variant-link="a">A<span class="variant-name"> · Índigo y coral</span></a>
-        <a href="?variant=b" data-variant-link="b">B<span class="variant-name"> · Asfalto y brasa</span></a>
     </div>
 
     <script src="firebase-config.js"></script>
