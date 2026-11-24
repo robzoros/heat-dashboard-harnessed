@@ -1,6 +1,6 @@
 {
   "last_updated": "2026-11-24",
-  "active_feature": "HDH-COL01",
+  "active_feature": "HDH-COL02",
   "user": "Roberto Méndez",
   "rules": {
     "single_active_feature": true,
@@ -942,6 +942,31 @@
           "Suite completa de playwright pasa"
         ],
         "evidence": "Script scripts/player-colors.js verificado: init genera src/data/player-colors.json (20 entradas: 7 principales, 1 otro, 12 bots; los 7 principales mantienen el color alfabético anterior), list, set (naves inválidas y secondary none/auto) y check detecta primarios compartidos, primario==secundario y hex inválidos. src/app.js: loadColorConfig()+buildColorMap()+playerColor() con resolución de conflictos (primario -> secundario -> paleta -> gris); carga suave si falta el JSON. e2e: tests/HDH-COL01.spec.js 3/3; suite completa 120/120; capture:evidence OK; screenshots evidence/screenshots/HDH-COL01-resumen-{conflicto,config-real}.png. Soporte: e2e/playwright.config.js usa el chromium de snap solo si existe (compatible con Windows); e2e/scripts/capture-evidence.sh acepta PLAYWRIGHT_NODE porque Playwright 1.52 se cuelga con Node 24 en Windows (la suite se ejecuta con Node 22)."
+      }
+    },
+    {
+      "id": "HDH-COL02",
+      "priority": 2,
+      "name": "Editor visual de colores (app pequeña)",
+      "description": [
+        "Página src/colors.html con editor visual de los colores primario y secundario de cada jugador y bot.",
+        "Muestra los colores reales (chip del color final resuelto) y la paleta de colores disponibles con quién usa cada uno.",
+        "Paleta disponible se guarda en player-colors.json (campo palette) para que editor y script compartan la misma fuente.",
+        "Resolución de conflictos en vivo igual que la app: primario -> secundario -> siguiente color libre de la paleta -> gris.",
+        "Descargar player-colors.json y copiar al portapapeles; descartar cambios; buscador y filtro por tipo.",
+        "Enlace al editor desde la cabecera del dashboard."
+      ],
+      "status": "completed",
+      "verification": {
+        "checks": [
+          "La página carga los 20 jugadores/bots agrupados por tipo desde player-colors.json",
+          "Seleccionar un color actualiza el chip, el color final y marca cambios sin guardar",
+          "Conflicto de primario resuelto con el secundario, visible en la interfaz",
+          "Descarga de player-colors.json con los cambios (evento download real)",
+          "e2e/tests/HDH-COL02.spec.js pasando con screenshots de evidencia",
+          "Suite completa de playwright pasa"
+        ],
+        "evidence": "Editor visual en src/colors.html + src/color-editor.js + src/color-editor.css: filas agrupadas (Principales / Otros / Bots) con chip del color final, selector en línea con los 20 colores de la paleta (indicando quién usa cada uno), hex manual, vaciar color, buscador, filtro por tipo, panel de conflictos, vista previa de barras y Descargar/Copiar JSON. player-colors.json incorpora el campo palette (scripts/player-colors.js init) y app.js usa esa paleta como reserva. Enlace '🎨 Colores' en la cabecera del dashboard. e2e/tests/HDH-COL02.spec.js: 9/9; suite completa 129/129; capture:evidence OK; screenshots evidence/screenshots/HDH-COL02-editor-{inicial,conflicto,real,real-movil}.png."
       }
     }
   ]

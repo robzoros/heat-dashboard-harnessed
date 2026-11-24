@@ -1,6 +1,28 @@
 {
   "version": 1,
   "generatedFrom": "src/data/heat-data.json",
+  "palette": [
+    "#3987e5",
+    "#d95926",
+    "#199e70",
+    "#c98500",
+    "#d55181",
+    "#0ca30c",
+    "#9085e9",
+    "#e66767",
+    "#00b4d8",
+    "#f2b134",
+    "#7bc86c",
+    "#c586d4",
+    "#e0a487",
+    "#5fa9c9",
+    "#a8c66c",
+    "#d98ac1",
+    "#8ba888",
+    "#c9a085",
+    "#7f95c9",
+    "#c0c05a"
+  ],
   "players": [
     {
       "name": "Alfonso Daganzo",

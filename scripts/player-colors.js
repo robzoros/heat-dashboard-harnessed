@@ -131,7 +131,14 @@ function cmdInit(args) {
   }
 
   const dropped = [...prevByName.keys()];
-  const out = { version: 1, generatedFrom: path.relative(ROOT, dataFile).replace(/\\/g, '/'), players: result };
+  const out = {
+    version: 1,
+    generatedFrom: path.relative(ROOT, dataFile).replace(/\\/g, '/'),
+    // Paleta de colores disponibles: la usa el editor visual (src/colors.html)
+    // y sirve de reserva a la app cuando primario y secundario estan ocupados.
+    palette: SEED_PALETTE,
+    players: result
+  };
   writeJson(configFile, out);
 
   console.log(`Config escrita: ${path.relative(ROOT, configFile).replace(/\\/g, '/')}`);

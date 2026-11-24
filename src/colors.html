@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Colores — Heat Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800&family=Barlow+Condensed:wght@400;600&family=Barlow:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="color-editor.css">
+</head>
+<body class="colors-page">
+    <header>
+        <h1>Colores de jugadores</h1>
+        <a class="btn-secondary btn-narrow back-link" href="index.html">← Volver al dashboard</a>
+        <span id="dirty-badge" class="dirty-badge" hidden>Cambios sin guardar</span>
+    </header>
+
+    <main class="colors-main">
+        <section class="color-card intro-card" aria-labelledby="title-intro">
+            <h2 id="title-intro">Cómo funciona</h2>
+            <p>
+                Cada jugador y cada bot tiene un <strong>color primario</strong> y uno <strong>secundario</strong>.
+                El chip de la izquierda de cada fila muestra el color <strong>real</strong> que se usa hoy en el dashboard.
+                Si dos entradas comparten primario, la que va después por orden alfabético pasa a usar su secundario:
+                así puedes tener, por ejemplo, todos los bots del mismo color primario sin que se pisen.
+            </p>
+            <p class="hint">
+                Este editor no guarda en el servidor: al terminar, pulsa <strong>Descargar</strong> y sustituye
+                <code>src/data/player-colors.json</code> en el repositorio (o ejecuta
+                <code>node scripts/player-colors.js set …</code>).
+            </p>
+        </section>
+
+        <section class="color-card toolbar-card" aria-label="Acciones">
+            <div class="colors-toolbar">
+                <input id="colors-search" class="colors-search" type="search" placeholder="Buscar jugador o bot…" aria-label="Buscar jugador o bot">
+                <div id="colors-type-filters" class="colors-type-filters" role="group" aria-label="Filtrar por tipo">
+                    <button type="button" class="chip-btn active" data-type="all" aria-pressed="true">Todos</button>
+                    <button type="button" class="chip-btn" data-type="main" aria-pressed="false">Principales</button>
+                    <button type="button" class="chip-btn" data-type="other" aria-pressed="false">Otros</button>
+                    <button type="button" class="chip-btn" data-type="bot" aria-pressed="false">Bots</button>
+                </div>
+                <div class="colors-actions">
+                    <button id="btn-download" class="btn-primary btn-narrow" type="button">⬇ Descargar player-colors.json</button>
+                    <button id="btn-copy" class="btn-secondary btn-narrow" type="button">Copiar JSON</button>
+                    <button id="btn-reset" class="btn-secondary btn-narrow" type="button" disabled>Descartar cambios</button>
+                </div>
+            </div>
+            <p id="colors-status" class="colors-status" role="status" aria-live="polite"></p>
+        </section>
+
+        <section class="color-card" aria-labelledby="title-palette">
+            <h2 id="title-palette">Colores disponibles <span class="group-count" id="palette-count"></span></h2>
+            <p class="hint">Paleta validada para fondos oscuros. Cada color indica cuántas entradas lo usan como primario («N prim.») o como secundario («N sec.»). Pulsa uno para copiar su hex.</p>
+            <div id="palette-strip" class="palette-strip"></div>
+        </section>
+
+        <section class="color-card issues-card" id="issues-card" aria-labelledby="title-issues" hidden>
+            <h2 id="title-issues">Conflictos y avisos <span class="group-count" id="issues-count">0</span></h2>
+            <p class="hint">Nada de esto rompe la web: se resuelve automáticamente. Revísalo si quieres colores únicos.</p>
+            <ul id="issues-list" class="issues-list"></ul>
+        </section>
+
+        <div id="color-groups" class="color-groups"></div>
+
+        <section class="color-card" aria-labelledby="title-preview">
+            <h2 id="title-preview">Vista previa</h2>
+            <p class="hint">Colores finales, tal y como se verían juntos. Barras más altas = jugadores principales, medianas = otros, cortas = bots.</p>
+            <div id="color-preview" class="color-preview"></div>
+        </section>
+    </main>
+
+    <script src="color-editor.js"></script>
+</body>
+</html>

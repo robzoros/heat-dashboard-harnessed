@@ -63,8 +63,17 @@ const App = {
         }
     },
 
+    // Paleta de colores libres: la de la config (campo palette, la misma que
+    // muestra el editor visual) y, si falta, la paleta validada de reserva.
+    colorPalette() {
+        const fromConfig = this.colorConfig && Array.isArray(this.colorConfig.palette)
+            ? this.colorConfig.palette.map(c => this.normHex(c)).filter(Boolean)
+            : [];
+        return fromConfig.length ? fromConfig : this.PLAYER_PALETTE.map(c => this.normHex(c)).filter(Boolean);
+    },
+
     // Resuelve colors de la config: primario; si otro jugador ya lo usa, el
-    // secundario; si ambos están cogidos, siguiente libre de PLAYER_PALETTE;
+    // secundario; si ambos están cogidos, siguiente color libre de la paleta;
     // y si no, gris. Se recorre en orden alfabético para que el resultado no
     // cambie al filtrar.
     buildColorMap() {
@@ -77,6 +86,7 @@ const App = {
             .filter(e => e && e.name && dataNames.has(e.name))
             .slice()
             .sort((a, b) => a.name.localeCompare(b.name));
+        const free = this.colorPalette();
         const used = new Set();
         const map = new Map();
         for (const e of entries) {
@@ -84,7 +94,7 @@ const App = {
             const secondary = this.normHex(e.secondary);
             let color = primary && !used.has(primary) ? primary
                 : secondary && !used.has(secondary) ? secondary
-                : this.PLAYER_PALETTE.map(c => this.normHex(c)).find(c => c && !used.has(c))
+                : free.find(c => !used.has(c))
                 || this.cssVar('--text-muted');
             used.add(color);
             map.set(e.name, color);
