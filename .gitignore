@@ -13,5 +13,3 @@ scripts/update-bgg-data-local.sh
 scripts/update-bgg-data-local.ps1
 .agents/
 .codegraph/
-.pi/
-prompts/
