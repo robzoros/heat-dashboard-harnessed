@@ -1,6 +1,6 @@
 {
-  "last_updated": "2026-10-08",
-  "active_feature": "HDH-14",
+  "last_updated": "2026-11-24",
+  "active_feature": "HDH-UI02",
   "user": "Roberto Méndez",
   "rules": {
     "single_active_feature": true,
@@ -901,6 +901,26 @@
           "Se generan screenshots con filtros aplicados"
         ],
         "evidence": "evidence/screenshots/HDH-15-circuitos-custom.png, HDH-15-victorias-circuito.png, HDH-15-datos-reales.png, HDH-15-filtros-aplicados.png (suite completa 110/110 en local)"
+      }
+    },
+    {
+      "id": "HDH-UI02",
+      "priority": 1,
+      "name": "Rediseño visual de Resumen (dos variantes de color)",
+      "description": [
+        "Rediseño visual de la pestaña Resumen y del chrome compartido (cabecera, pestañas, botones, tarjetas, banner de cookies) sin cambiar lógica ni datos.",
+        "Colores en variables CSS con dos variantes seleccionables con ?variant=a|b: A (índigo y coral) y B (asfalto y brasa). Selector flotante TEMPORAL (.variant-switch) para compararlas; al elegir una se borra la otra.",
+        "Color fijo por jugador (paleta categórica validada) en los gráficos de Resumen y en la evolución de victorias; podio con peldaños por puesto; KPIs con etiquetas claras.",
+        "El marcado y los textos que usan los tests E2E se mantienen."
+      ],
+      "status": "completed",
+      "verification": {
+        "checks": [
+          "Paleta de jugadores validada con validate_palette.js sobre ambas superficies",
+          "Suite E2E completa sin regresiones",
+          "Screenshots de Resumen en las dos variantes (escritorio y móvil)"
+        ],
+        "evidence": "Paleta de jugadores validada con validate_palette.js (modo dark) sobre las superficies de ambas variantes. Spec HDH-UI02: 7/7 tests pasados (variantes, KPIs, podio, colores fijos por jugador con filtros, gráficos y screenshots). Suite completa: 110/110 tests previos pasados sin regresiones (copia de pruebas con Chart.js y fuentes servidos en local). Screenshots: evidence/screenshots/HDH-UI02-resumen-{a,b}-{escritorio,movil}.png."
       }
     }
   ]
