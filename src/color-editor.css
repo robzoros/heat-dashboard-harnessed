@@ -611,3 +611,10 @@ body.colors-page {
 
     .preview-item { min-width: 34px; }
 }
+
+/* ── Nombre oficial del color (Rojo, Azul...) ─────────────────────────── */
+
+.palette-name {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+}

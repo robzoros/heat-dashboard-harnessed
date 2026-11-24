@@ -1,5 +1,11 @@
 import { readFileSync } from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { test, expect } from '@playwright/test';
+
+// Config real del repositorio (la misma que sirve el servidor estático).
+const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
+const colorConfig = JSON.parse(readFileSync(path.join(repoRoot, 'src', 'data', 'player-colors.json'), 'utf8'));
 
 // Config de prueba: Alice y Bob comparten primario a propósito y Zac es bot.
 const fixtureConfig = {
@@ -160,12 +166,25 @@ test.describe('HDH-COL02 - Editor visual de colores', () => {
     await expect(page.locator('#dirty-badge')).toBeHidden();
   });
 
-  test('la config real muestra los 20 jugadores y bots sin conflictos y con evidencia', async ({ page }) => {
+  test('la config real muestra los 20 jugadores y bots, los 12 colores y los repetidos avisados', async ({ page }) => {
     await page.goto('/colors.html');
     await page.waitForLoadState('networkidle');
     await expect(page.locator('#color-groups .color-row')).toHaveCount(20);
-    await expect(page.locator('#issues-card')).toBeHidden();
-    await expect(page.locator('#palette-count')).toHaveText('20');
+    await expect(page.locator('#palette-count')).toHaveText('12');
+    // 20 entradas y 12 colores: los bots repiten color de su grupo. El panel
+    // lista un aviso por color compartido (8) y uno por entrada que repite su
+    // primario (8); lo que importa es que el editor lo explique sin bloquear.
+    await expect(page.locator('#issues-card')).toBeVisible();
+    const shared = new Set();
+    const seen = new Map();
+    for (const e of colorConfig.players) {
+      if (!e.primary) continue;
+      if (seen.has(e.primary)) shared.add(e.primary);
+      else seen.set(e.primary, e.name);
+    }
+    expect(shared.size).toBe(8);
+    const firstShared = [...shared][0];
+    await expect(page.locator('#issues-list')).toContainText(`${firstShared} está asignado a 2 entradas`);
     await page.screenshot({ path: '../evidence/screenshots/HDH-COL02-editor-real.png', fullPage: true });
 
     await page.setViewportSize({ width: 390, height: 844 });

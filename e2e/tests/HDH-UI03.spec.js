@@ -51,13 +51,19 @@ test.describe('HDH-UI03 - Tema único Asfalto y brasa', () => {
     expect(state.stored).toBeNull();
   });
 
-  test('la paleta de la app es la nueva y está armonizada con el tema', async ({ page }) => {
+  test('la paleta de la app son los 12 colores oficiales del juego', async ({ page }) => {
     await openApp(page);
     const palette = await page.evaluate(() => App.PLAYER_PALETTE);
     expect(palette).toEqual(colorConfig.palette.slice(0, 8));
-    expect(colorConfig.palette).toHaveLength(20);
-    // Ninguno de los colores antiguos del tema índigo sigue en uso.
-    for (const old of ['#3987e5', '#d95926', '#199e70', '#0ca30c', '#9085e9']) {
+    expect(colorConfig.palette).toHaveLength(12);
+    expect(colorConfig.paletteNames).toHaveLength(12);
+    expect(colorConfig.paletteNames).toEqual([
+      'Rojo', 'Azul', 'Amarillo', 'Rosa', 'Cian', 'Verde',
+      'Morado', 'Naranja', 'Plata', 'Blanco', 'Marrón', 'Negro'
+    ]);
+    // Los puros del juego que no llegan al contraste o se confunden con
+    // daltonismo no siguen en la paleta.
+    for (const old of ['#1f2937', '#1d4ed8', '#7e22ce', '#9ca3af', '#78350f']) {
       expect(colorConfig.palette).not.toContain(old);
     }
   });
@@ -96,12 +102,31 @@ test.describe('HDH-UI03 - Tema único Asfalto y brasa', () => {
     }
   });
 
-  test('el editor de colores muestra la misma paleta del tema', async ({ page }) => {
+  test('el editor de colores muestra los 12 con sus nombres oficiales', async ({ page }) => {
     await page.goto('/colors.html');
     await page.waitForLoadState('networkidle');
-    await expect(page.locator('#palette-count')).toHaveText('20');
+    await expect(page.locator('#palette-count')).toHaveText('12');
     const swatches = await page.locator('#palette-strip .palette-hex').allTextContents();
     expect(swatches).toEqual(colorConfig.palette);
+    const names = await page.locator('#palette-strip .palette-name').allTextContents();
+    expect(names).toEqual(colorConfig.paletteNames);
+  });
+
+  test('con 20 entradas y 12 colores, nadie cae al gris: la app reutiliza el primario', async ({ page }) => {
+    await openApp(page);
+    const state = await page.evaluate(() => ({
+      palette: App.colorPalette(),
+      // cssVar vive en el navegador; se lee aquí, no en Node.
+      muted: App.cssVar('--text-muted').trim().toLowerCase(),
+      players: App.data.players.length,
+      colors: Object.fromEntries(App.colorMap.entries())
+    }));
+    expect(state.palette).toHaveLength(12);
+    expect(Object.keys(state.colors)).toHaveLength(state.players);
+    for (const [name, color] of Object.entries(state.colors)) {
+      expect(color.trim().toLowerCase(), name).not.toBe(state.muted);
+      expect(state.palette, name).toContain(color.trim().toLowerCase());
+    }
   });
 
   test('genera screenshots del tema Asfalto y brasa', async ({ page }) => {

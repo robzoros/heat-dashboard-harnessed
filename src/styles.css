@@ -210,7 +210,7 @@ header .header-link-swatch {
     width: 13px;
     height: 13px;
     border-radius: 3px;
-    background: linear-gradient(135deg, #f4e3c4, #f2c14e 30%, #ff7a2f 55%, #2f8f76 80%, #86c8e3);
+    background: linear-gradient(135deg, #d62828, #f97316 30%, #06b6d4 55%, #1a9e50 80%, #ec4899);
 }
 
 header .header-link:hover {

@@ -1,6 +1,6 @@
 {
   "last_updated": "2026-11-24",
-  "active_feature": "HDH-UI03",
+  "active_feature": "HDH-COL03",
   "user": "Roberto Méndez",
   "rules": {
     "single_active_feature": true,
@@ -1014,6 +1014,26 @@
           "Deploy de Pages en verde"
         ],
         "evidence": "Eliminada la variante A: styles.css con un único juego de tokens (bg #14110f, surface #1d1916, text #f2ece5, accent #ff7a2f), sin bloque [data-variant], sin script ?variant= en index.html, sin .variant-switch ni .variant-switch CSS y sin código de variante en app.js. Nueva paleta de 20 colores para el perfil asfalto/brasa en app.js (PLAYER_PALETTE, 8 primeros), scripts/player-colors.js (SEED_PALETTE), src/data/player-colors.json (campo palette, primarios reasignados con init --reseed) y src/color-editor.js (FALLBACK_PALETTE). Nuevo scripts/validate-palette.js: contraste WCAG >= 3:1 sobre #14110f y #1d1916 para los 20 colores y ΔE76 >= 12 (normal) / >= 10 (deuteranopia y protanopia) entre los 8 principales; peor par resultante #f2c14e/#e9913f con ΔE 25.2 / 12.3 / 18.0 → OK. Spec HDH-UI03 6/6; HDH-UI02 actualizado (test de variantes eliminado) 5/5; suite completa 140/140; capture:evidence OK con HDH-UI03-resumen-asfalto-{escritorio,movil}.png y HDH-UI03-paleta-asfalto.png."
+      }
+    },
+    {
+      "id": "HDH-COL03",
+      "priority": 2,
+      "name": "Paleta de 12 colores oficiales de Heat",
+      "description": [
+        "La paleta de opciones del editor pasa a ser los 12 colores de los bots del juego Heat (Rojo, Azul, Verde, Amarillo, Negro, Plata, Naranja, Morado, Blanco, Rosa, Marrón y Cian), adaptados al tema Asfalto y brasa para cumplir contraste y separación (daltonismo incluido).",
+        "Reasignación completa (reseed): los 20 jugadores/bots se reparten los 12 colores; los secundarios diferencian quien repite color con un jugador principal.",
+        "Los swatches del editor muestran el nombre del color oficial (Rojo, Azul, ...)."
+      ],
+      "status": "in_progress",
+      "verification": {
+        "checks": [
+          "scripts/validate-palette.js acepta la paleta de 12 (contraste >= 3:1 sobre #14110f y #1d1916; DeltaE >= 12 normal y >= 10 en deuteranopia y protanopia): OK",
+          "node scripts/player-colors.js init --reseed + list + check: 20 entradas con los 12 colores y nombres; check exit 0 con avisos de color compartido",
+          "Resolucion de src/app.js verificada en puro Node (smoke): 20 entradas, 0 grises, principales con los 8 primeros colores, 8 colores reutilizados solo por su bot asociado",
+          "suite Playwright local: NO disponible (el runner se cuelga en este entorno incluso con un spec trivial y config minima, defecto preexistente); la suite completa corre en el Action de CI tras el push, que es donde el proyecto almacena la evidencia oficial (artifacts)"
+        ],
+        "evidence": "Paleta de 12 colores oficiales (con nombres) en scripts/player-colors.js, src/data/player-colors.json (paletteNames) y fallback de src/color-editor.js; PLAYER_PALETTE de src/app.js = 8 primeros. init --reseed reparte primarios en ciclo de 12 (principales primero) y check avisa (sin bloquear) los colores compartidos. app.js colorPalette/buildColorMap: principales -> otros -> bots y reutiliza el primario en vez de grisear cuando la paleta se agota; editor replica la resolucion y muestra Rojo/Azul/... en tira y swatches. Gradiente de cabecera con la paleta nueva (styles.css). Specs actualizados: HDH-UI03.spec.js (12 colores, nombres, sin grises) y HDH-COL02.spec.js (config real con avisos). Local: validate-palette OK, player-colors list/check OK, smoke de resolucion OK, node --check OK. Suite Playwright no ejecutable en local (runner colgado preexistente); verificacion completa delegada al CI (artifacts de Actions)."
       }
     }
   ]

@@ -31,7 +31,14 @@ const App = {
     // verdad de los colores de jugadores y bots es src/data/player-colors.json
     // (scripts/player-colors.js); esta paleta solo se usa si un jugador no
     // tiene entrada en la config o el config está agotado.
-    PLAYER_PALETTE: ['#f4e3c4', '#f2c14e', '#e9913f', '#d1583c', '#86c8e3', '#2f8f76', '#7561ad', '#d67a9c'],
+    // Paleta de reserva con los 12 colores de los bots del juego Heat (los mismos
+// de src/data/player-colors.json, scripts/player-colors.js) adaptados al tema
+// «Asfalto y brasa»: los tonos puros de Negro, Azul y Morado no llegan al
+// contraste 3:1 y Rojo/Marrón y Azul/Morado se confundían con daltonismo
+// (scripts/validate-palette.js). Los 8 primeros son los de los jugadores
+// principales. Esta paleta solo se usa si un jugador no tiene entrada en la
+// config o el config está agotado; la fuente de verdad es player-colors.json.
+PLAYER_PALETTE: ['#d62828', '#2563eb', '#eab308', '#ec4899', '#06b6d4', '#1a9e50', '#c084fc', '#f97316'],
 
     // Config de colores cargada de ./data/player-colors.json (null si falla).
     colorConfig: null,
@@ -75,18 +82,25 @@ const App = {
 
     // Resuelve colors de la config: primario; si otro jugador ya lo usa, el
     // secundario; si ambos están cogidos, siguiente color libre de la paleta;
-    // y si no, gris. Se recorre en orden alfabético para que el resultado no
-    // cambie al filtrar.
+    // si no hay ninguno libre, reutiliza su primario (los bots reparten 12
+    // colores entre 20 y comparten con su jugador principal); y si no tiene
+    // primario válido, gris. Se recorre principales primero (main -> other
+    // -> bot, alfabético dentro de cada grupo) para que el color elegido por
+    // un jugador principal no lo pise un bot y el resultado no cambie al
+    // filtrar.
     buildColorMap() {
         if (!this.colorConfig || !this.data || !Array.isArray(this.data.players)) {
             this.colorMap = null;
             return;
         }
         const dataNames = new Set(this.data.players.map(p => p.name));
+        const typeRank = { main: 0, other: 1, bot: 2 };
         const entries = this.colorConfig.players
             .filter(e => e && e.name && dataNames.has(e.name))
             .slice()
-            .sort((a, b) => a.name.localeCompare(b.name));
+            .sort((a, b) =>
+                (typeRank[a.type] ?? 1) - (typeRank[b.type] ?? 1)
+                || a.name.localeCompare(b.name));
         const free = this.colorPalette();
         const used = new Set();
         const map = new Map();
@@ -96,6 +110,7 @@ const App = {
             let color = primary && !used.has(primary) ? primary
                 : secondary && !used.has(secondary) ? secondary
                 : free.find(c => !used.has(c))
+                || (primary || secondary)
                 || this.cssVar('--text-muted');
             used.add(color);
             map.set(e.name, color);
