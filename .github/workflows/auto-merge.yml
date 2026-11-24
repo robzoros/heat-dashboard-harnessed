@@ -8,7 +8,9 @@ on:
 
 jobs:
   verify-and-merge:
-    runs-on: ubuntu-latest
+    # ubuntu-latest pasó a 26.04 (2026-11) y Playwright 1.52.0 no soporta
+    # chromium en ubuntu26.04-x64; fijamos 24.04 hasta actualizar Playwright.
+    runs-on: ubuntu-24.04
     permissions:
       contents: write
       issues: read
