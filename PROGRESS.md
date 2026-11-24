@@ -4,7 +4,12 @@
 
 ### Feature trabajada: HDH-INFRA01 - CI: deploy fiable a Pages y tests condicionales
 
-**Estado**: Completada (verificación en remoto al hacer push)
+**Estado**: Completada
+
+#### Verificación en remoto (posterior al push)
+- Run `45445248521` (Deploy GitHub Pages tras el merge de esta rama): **success** con los jobs `build` y `deploy` separados (36 s).
+- Rama de prueba `HDH-INFRA01-check` (solo `PROGRESS.md`) → run `45445420805`: `code_changed=false`, pasos de Node / `npm ci` / navegadores / servidor estático / Playwright / evidencias **skipped**, paso `Tests skipped (no code changes)` en success con el `::notice`, y `Merge Pull Request` ejecutado (PR #59). Su deploy de Pages también en success.
+- Conclusión: el camino «con código» ejecuta los 135 tests y el camino «solo docs» mergea sin gastar Playwright; Pages despliega en verde en ambos casos.
 
 #### Diagnóstico del deploy que "siempre falla"
 - Run `45442641743` (Deploy GitHub Pages, 16:55): el paso «Upload static site» terminó bien (`Artifact github-pages has been successfully uploaded! Artifact ID is 14943483171`) y **0,4 segundos después** `actions/deploy-pages@v4` respondió `Found 0 artifact(s)` → `No artifacts named "github-pages" were found for this workflow run`.
