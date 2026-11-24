@@ -1,5 +1,34 @@
 # PROGRESS.md
 
+## Sesión 2026-11-24 (HDH-COL03)
+
+### Feature trabajada: HDH-COL03 - Paleta de 12 colores oficiales de Heat
+
+**Estado**: en verificación (CI pendiente al momento del push)
+
+#### Qué se hizo
+- **Paleta de 12 colores oficiales del juego** (Rojo, Azul, Amarillo, Rosa, Cian, Verde, Morado, Naranja, Plata, Blanco, Marrón, Negro) adaptada al tema «Asfalto y brasa»: Negro puro (#1F2937), Azul #1D4ED8, Morado #7E22CE, Plata #9CA3AF y Marrón #78350F no llegan al contraste 3:1 o se confunden con daltonismo, así que se sustituyeron por equivalentes validados (#64748b, #2563eb, #c084fc, #c3cbd5, #b98a2e). `node scripts/validate-palette.js`: OK (contraste >= 3:1 sobre ambos fondos; ΔE >= 12 normal, >= 10 deuteranopía y protanopía).
+- **Un solo origen de la paleta en 4 sitios**: `SEED_PALETTE`/`SEED_PALETTE_NAMES` de `scripts/player-colors.js`, campo `palette`/`paletteNames` de `src/data/player-colors.json`, `FALLBACK_PALETTE` (12) de `src/color-editor.js` y `PLAYER_PALETTE` (los 8 primeros, grupo estricto del validador) de `src/app.js`.
+- **`init --reseed` reparte los 20 jugadores en ciclo de 12**: los 7 principales quedan con los 8 primeros colores, los bots completan y repiten cuando se acaban; los principales resuelven antes, así cada bot comparte color solo con su jugador principal.
+- **`buildColorMap` de `app.js` (y la resolución gemela del editor) ya no grisea cuando la paleta se agota**: reutiliza el primario del grupo. Orden de resolución principal -> otro -> bot, alfabético dentro de cada grupo. Verificado con smoke en puro Node: 20 entradas, 0 grises, 8 colores reutilizados (cada uno por el bot de su principal).
+- **`check` ya no marca como conflicto los primarios compartidos** (con 20 entradas y 12 colores es el estado esperable): aviso con lista de nombres y tipos, exit 0.
+- **Editor**: la tira de colores y los swatches del selector muestran el nombre oficial (Rojo, Azul...) junto al hex, con tooltip/aria-label completos; nuevo aviso «repite su primario (paleta agotada)».
+- **Gradiente de la cabecera** (muestra del enlace «Colores») con la paleta nueva.
+
+#### Verificación
+- `node scripts/validate-palette.js`: **OK**.
+- `node scripts/player-colors.js init --reseed && list && check`: 20 entradas, check exit 0 con avisos.
+- Smoke de la resolución en puro Node: **OK** (sin grises, principales primero, reutilización correcta).
+- `node --check` de los tres JS tocados: OK.
+- **Suite Playwright local NO disponible**: el runner se queda colgado en este entorno incluso con un spec trivial y config mínima (`playwright test --list` sin salida); defecto preexistente del entorno, no del diff. La suite completa corre en el Action de CI tras el push (la evidencia oficial del proyecto ya vive en artifacts de Actions); resultados en el run del push.
+
+#### Notas / Riesgos
+- Los colores de todos los jugadores y bots cambiaron (reseed con la paleta nueva).
+- Los bots que comparten color con su principal se distinguen en el editor asignándoles un secundario a mano; por defecto repiten el color del grupo.
+- Si la suite de CI falla por los cambios de specs, corregir en esta rama y volver a push.
+
+---
+
 ## Sesión 2026-11-24 (HDH-UI03)
 
 ### Feature trabajada: HDH-UI03 - Tema único Asfalto y brasa y paleta a juego
