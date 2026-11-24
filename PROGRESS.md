@@ -1,5 +1,39 @@
 # PROGRESS.md
 
+## Sesión 2026-11-24 (HDH-COL02)
+
+### Feature trabajada: HDH-COL02 - Editor visual de colores (app pequeña)
+
+**Estado**: Completada
+
+#### Qué se hizo
+- `src/colors.html` (nuevo): página independiente con el mismo diseño que el dashboard (tokens de variante A/B de `styles.css`). Cabecera con búsqueda, filtro por tipo, acciones y enlace de vuelta; tarjetas de introducción, paleta disponible, conflictos, grupos de jugadores y vista previa.
+- `src/color-editor.js` (nuevo): lee `src/data/player-colors.json` y el roster real de `heat-data.json`.
+  - Filas por tipo (Principales / Otros / Bots) con: chip del **color final** (el que usa la web), color primario, color secundario y la razón del resultado.
+  - Selector en línea al pulsar un color: los 20 colores de la paleta mostrando **quién usa cada uno** o «libre», campo de hex manual y «vaciar» primario/secundario.
+  - Resolución de conflictos idéntica a `app.js` (primario → secundario → siguiente libre de la paleta → gris, orden alfabético).
+  - Panel de conflictos y avisos, vista previa de barras con los colores finales, buscador, filtro por tipo, Descargar `player-colors.json`, Copiar JSON y Descartar cambios (con aviso «Cambios sin guardar»).
+  - Badge «nuevo» si una entrada no está en `heat-data.json` (roster desincronizado).
+  - Superficie `window.ColorEditor` para los tests.
+- `src/color-editor.css` (nuevo): estilos del editor (filas, paleta, swatches, vista previa, responsive a 980/640 px).
+- `scripts/player-colors.js`: `init` escribe ahora el campo `palette` (los 20 colores disponibles) para que editor y script compartan la misma fuente.
+- `src/app.js`: nueva `colorPalette()`; `buildColorMap()` usa la paleta de la config como reserva antes de la paleta interna.
+- `src/index.html` + `src/styles.css`: enlace discreto «🎨 Colores» en la cabecera del dashboard.
+- `e2e/tests/HDH-COL02.spec.js` (nuevo): 9 tests.
+
+#### Verificación final
+- `node --check src/color-editor.js` y `node --check src/app.js`: OK
+- `playwright test tests/HDH-COL02.spec.js`: 9/9 (carga y agrupación, elegir color, conflicto con secundario, descarga real del JSON con `waitForEvent('download')`, hex inválido, buscador/filtro, descartar cambios, config real 20 entradas sin conflictos, enlace desde el dashboard).
+- Suite completa: 129/129 (120 previos + 9 nuevos)
+- `capture:evidence`: OK. Screenshots: `evidence/screenshots/HDH-COL02-editor-{inicial,conflicto,real,real-movil}.png`
+
+#### Notas / Riesgos
+- El editor no escribe en el servidor (GitHub Pages es estático): el circuito es Descargar → reemplazar `src/data/player-colors.json` → commit, o `node scripts/player-colors.js set …`.
+- La paleta se puede ampliar editando `SEED_PALETTE` en `scripts/player-colors.js` y volviendo a ejecutar `init` (conserva las asignaciones).
+- Los gráficos del dashboard siguen pintando solo a los jugadores Principales: el color de los bots se configura y se ve en este editor, pero no en las vistas del dashboard (posible feature futura).
+
+---
+
 ## Sesión 2026-11-24 (HDH-COL01)
 
 ### Feature trabajada: HDH-COL01 - Configuración de colores por jugador y bot

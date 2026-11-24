@@ -201,6 +201,25 @@ header #btn-load-data:hover {
     border-color: var(--accent);
 }
 
+/* Enlace al editor visual de colores (src/colors.html) */
+header .header-link {
+    order: 5;
+    padding: 7px 14px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text);
+    text-decoration: none;
+    background: transparent;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    transition: border-color 0.15s, background 0.15s;
+}
+
+header .header-link:hover {
+    background: var(--surface);
+    border-color: var(--accent);
+}
+
 nav#tabs {
     position: sticky;
     top: 0;
