@@ -1,5 +1,11 @@
 import { readFileSync } from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { test, expect } from '@playwright/test';
+
+// Config real del repositorio (la misma que sirve el servidor estático).
+const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
+const colorConfig = JSON.parse(readFileSync(path.join(repoRoot, 'src', 'data', 'player-colors.json'), 'utf8'));
 
 // Config de prueba: Alice y Bob comparten primario a propósito y Zac es bot.
 const fixtureConfig = {

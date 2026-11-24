@@ -116,12 +116,14 @@ test.describe('HDH-UI03 - Tema único Asfalto y brasa', () => {
     await openApp(page);
     const state = await page.evaluate(() => ({
       palette: App.colorPalette(),
+      // cssVar vive en el navegador; se lee aquí, no en Node.
+      muted: App.cssVar('--text-muted').trim().toLowerCase(),
       colors: Object.fromEntries(App.colorMap.entries())
     }));
-    const muted = App.cssVar('--text-muted');
     expect(state.palette).toHaveLength(12);
+    expect(Object.keys(state.colors)).toHaveLength(App.data.players.length);
     for (const [name, color] of Object.entries(state.colors)) {
-      expect(color.trim().toLowerCase(), name).not.toBe(muted.trim().toLowerCase());
+      expect(color.trim().toLowerCase(), name).not.toBe(state.muted);
       expect(state.palette, name).toContain(color.trim().toLowerCase());
     }
   });
