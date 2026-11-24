@@ -5,9 +5,9 @@
 }
 
 /* ── Tokens ───────────────────────────────────────────────────────────────
-   Variante A (por defecto): índigo y coral.  Variante B: asfalto y brasa.
-   Se elige con ?variant=a|b (ver script del <head>). TEMPORAL: al elegir
-   variante se borra la otra y el selector flotante .variant-switch. */
+   Tema único «Asfalto y brasa»: fondos cálidos casi negros, texto marfil y
+   acento de brasa. La paleta de jugadores (src/data/player-colors.json) está
+   validada contra estos fondos con scripts/validate-palette.js. */
 :root {
     --font-display: 'Big Shoulders Display', 'Barlow Condensed', sans-serif;
     --font-body: 'Barlow', system-ui, sans-serif;
@@ -15,23 +15,6 @@
     --radius-sm: 8px;
     --gutter: 28px;
 
-    --bg: #0e1224;
-    --surface: #161c34;
-    --surface-2: #1f2645;
-    --surface-3: #2a3258;
-    --line: #2b3358;
-    --text: #e9ebf5;
-    --text-muted: #9aa2c0;
-    --accent: #ff5d7a;
-    --accent-ink: #1c0a10;
-    --accent-soft: rgba(255, 93, 122, 0.14);
-    --edge: linear-gradient(90deg, #ff5d7a, #ff5d7a 30%, rgba(255, 93, 122, 0) 100%);
-    --good: #3fcf8e;
-    --dot-off: #3a4268;
-    --chart-grid: rgba(255, 255, 255, 0.07);
-}
-
-:root[data-variant="b"] {
     --bg: #14110f;
     --surface: #1d1916;
     --surface-2: #28221f;
@@ -47,6 +30,7 @@
     --dot-off: #473f39;
     --chart-grid: rgba(255, 255, 255, 0.06);
 }
+
 
 @media (max-width: 720px) {
     :root { --gutter: 16px; }
@@ -213,6 +197,20 @@ header .header-link {
     border: 1px solid var(--line);
     border-radius: var(--radius-sm);
     transition: border-color 0.15s, background 0.15s;
+}
+
+header .header-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+}
+
+/* Muestra de la paleta de jugadores (sin emoji: se veía como una mancha) */
+header .header-link-swatch {
+    width: 13px;
+    height: 13px;
+    border-radius: 3px;
+    background: linear-gradient(135deg, #f4e3c4, #f2c14e 30%, #ff7a2f 55%, #2f8f76 80%, #86c8e3);
 }
 
 header .header-link:hover {
@@ -1218,52 +1216,3 @@ th {
     margin-top: 0;
 }
 
-/* Selector de variante (TEMPORAL) */
-.variant-switch {
-    position: fixed;
-    left: 50%;
-    bottom: 16px;
-    transform: translateX(-50%);
-    z-index: 90;
-    display: flex;
-    align-items: center;
-    gap: 2px;
-    padding: 3px;
-    font-size: 0.85rem;
-    white-space: nowrap;
-    background: var(--surface-2);
-    border: 1px solid var(--line);
-    border-radius: 999px;
-}
-
-.variant-switch > span {
-    padding: 0 8px 0 10px;
-    color: var(--text-muted);
-}
-
-.variant-switch a {
-    padding: 4px 12px;
-    color: var(--text);
-    text-decoration: none;
-    border-radius: 999px;
-}
-
-.variant-switch a[aria-current="true"] {
-    background: var(--accent);
-    color: var(--accent-ink);
-    font-weight: 600;
-}
-
-@media (max-width: 720px) {
-    .variant-switch {
-        left: auto;
-        right: 16px;
-        bottom: 16px;
-        transform: none;
-    }
-
-    .variant-switch .variant-name,
-    .variant-switch > span {
-        display: none;
-    }
-}

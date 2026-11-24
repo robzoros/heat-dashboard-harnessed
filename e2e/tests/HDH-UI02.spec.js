@@ -62,22 +62,6 @@ async function openApp(page, query = '') {
 }
 
 test.describe('HDH-UI02 - Rediseño visual de Resumen', () => {
-  test('la variante A es la de por defecto y ?variant=b cambia a la B y se recuerda', async ({ page }) => {
-    await openApp(page);
-    await expect(page.locator('html')).toHaveAttribute('data-variant', 'a');
-    const accentA = await page.evaluate(() => App.cssVar('--accent'));
-
-    await page.goto('/?variant=b');
-    await expect(page.locator('html')).toHaveAttribute('data-variant', 'b');
-    const accentB = await page.evaluate(() => App.cssVar('--accent'));
-    expect(accentB).not.toBe(accentA);
-
-    // Se recuerda al navegar sin parámetro
-    await page.goto('/');
-    await expect(page.locator('html')).toHaveAttribute('data-variant', 'b');
-    await expect(page.locator('[data-variant-link="b"]')).toHaveAttribute('aria-current', 'true');
-  });
-
   test('los KPIs usan etiquetas claras y mantienen sus valores', async ({ page }) => {
     await openApp(page);
     await loadCustomData(page);
@@ -159,17 +143,15 @@ test.describe('HDH-UI02 - Rediseño visual de Resumen', () => {
     }
   });
 
-  for (const variant of ['a', 'b']) {
-    test(`genera screenshots de Resumen en la variante ${variant.toUpperCase()} (escritorio y móvil)`, async ({ page }) => {
-      await page.setViewportSize({ width: 1440, height: 900 });
-      await openApp(page, `?variant=${variant}`);
-      await loadCustomData(page);
-      await page.waitForTimeout(500);
-      await page.screenshot({ path: `../evidence/screenshots/HDH-UI02-resumen-${variant}-escritorio.png`, fullPage: true });
+  test('genera screenshots de Resumen con el tema Asfalto y brasa (escritorio y móvil)', async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await openApp(page);
+    await loadCustomData(page);
+    await page.waitForTimeout(500);
+    await page.screenshot({ path: '../evidence/screenshots/HDH-UI02-resumen-escritorio.png', fullPage: true });
 
-      await page.setViewportSize({ width: 390, height: 844 });
-      await page.waitForTimeout(500);
-      await page.screenshot({ path: `../evidence/screenshots/HDH-UI02-resumen-${variant}-movil.png`, fullPage: true });
-    });
-  }
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.waitForTimeout(500);
+    await page.screenshot({ path: '../evidence/screenshots/HDH-UI02-resumen-movil.png', fullPage: true });
+  });
 });

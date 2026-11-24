@@ -1,6 +1,6 @@
 {
   "last_updated": "2026-11-24",
-  "active_feature": "HDH-INFRA01",
+  "active_feature": "HDH-UI03",
   "user": "Roberto Méndez",
   "rules": {
     "single_active_feature": true,
@@ -906,7 +906,7 @@
     {
       "id": "HDH-UI02",
       "priority": 1,
-      "name": "Rediseño visual de Resumen (dos variantes de color)",
+      "name": "Rediseño visual de Resumen (tema Asfalto y brasa)",
       "description": [
         "Rediseño visual de la pestaña Resumen y del chrome compartido (cabecera, pestañas, botones, tarjetas, banner de cookies) sin cambiar lógica ni datos.",
         "Colores en variables CSS con dos variantes seleccionables con ?variant=a|b: A (índigo y coral) y B (asfalto y brasa). Selector flotante TEMPORAL (.variant-switch) para compararlas; al elegir una se borra la otra.",
@@ -920,7 +920,7 @@
           "Suite E2E completa sin regresiones",
           "Screenshots de Resumen en las dos variantes (escritorio y móvil)"
         ],
-        "evidence": "Paleta de jugadores validada con validate_palette.js (modo dark) sobre las superficies de ambas variantes. Spec HDH-UI02: 7/7 tests pasados (variantes, KPIs, podio, colores fijos por jugador con filtros, gráficos y screenshots). Suite completa: 110/110 tests previos pasados sin regresiones (copia de pruebas con Chart.js y fuentes servidos en local). Screenshots: evidence/screenshots/HDH-UI02-resumen-{a,b}-{escritorio,movil}.png."
+        "evidence": "Paleta de jugadores validada con validate_palette.js (modo dark) sobre las superficies de ambas variantes. Spec HDH-UI02: 7/7 tests pasados (variantes, KPIs, podio, colores fijos por jugador con filtros, gráficos y screenshots). Suite completa: 110/110 tests previos pasados sin regresiones (copia de pruebas con Chart.js y fuentes servidos en local). Screenshots: evidence/screenshots/HDH-UI02-resumen-{a,b}-{escritorio,movil}.png. (Variante A índigo y coral eliminada en HDH-UI03; el spec se actualizó a tema único.)"
       }
     },
     {
@@ -990,6 +990,30 @@
           "Al hacer push: CI verde y deploy de Pages verde"
         ],
         "evidence": "Diagnóstico: run 45442641743 — el upload finalizó (Artifact ID 14943483171) y 0,4s después deploy-pages devolvió 'Found 0 artifact(s)': carrera entre actions/upload-pages-artifact y actions/deploy-pages en el mismo job. Fix: deploy-pages.yml y weekly-data.yml con jobs build + deploy (deploy: needs build) y grupo de concurrencia compartido github-pages-deploy. Nuevo .github/scripts/detect-code-changes.sh (allowlist de rutas) usado por auto-merge.yml: pasos de Playwright condicionados a code_changed=true, merge intacto, aviso en el log cuando se omiten. Verificación: detect-code-changes probado por CLI (docs→false, src/e2e/workflows/scripts→true, output GITHUB_OUTPUT correcto); YAML revisado; e2e/tests/HDH-INFRA01.spec.js 6/6; suite 135/135. Sin screenshots: el cambio es de infraestructura de CI, no hay UI que capturar. Pendiente de confirmar en remoto: CI verde y Deploy GitHub Pages verde tras el push de esta rama. Verificado en remoto: run 45445248521 (Deploy GitHub Pages tras el merge) -> success con jobs build+deploy; rama docs-only HDH-INFRA01-check (run 45445420805): pasos 6-10 y 12 (setup node, npm ci, navegadores, servidor, tests, evidencias) skipped, paso 'Tests skipped (no code changes)' success con code_changed=false y merge del PR #59 completado; su deploy de Pages también en success."
+      }
+    },
+    {
+      "id": "HDH-UI03",
+      "priority": 1,
+      "name": "Tema único Asfalto y brasa y paleta de jugadores a juego",
+      "description": [
+        "Eliminar la variante A (índigo y coral): tokens, script ?variant=, selector flotante .variant-switch y su código en app.js.",
+        "Dejar Asfalto y brasa como único tema (fondos cálidos oscuros, acento brasa).",
+        "Rediseñar la paleta de jugadores/bots para ese perfil: contraste suficiente sobre los fondos cálidos y separación para daltonismo.",
+        "Añadir scripts/validate-palette.js para verificar contraste WCAG y distancia en color percibido (normal, deuteranopia, protanopia).",
+        "Actualizar la paleta en app.js, scripts/player-colors.js (con --reseed), player-colors.json y el editor visual.",
+        "Actualizar el spec HDH-UI02 (ya no hay variantes) y añadir el de HDH-UI03."
+      ],
+      "status": "completed",
+      "verification": {
+        "checks": [
+          "styles.css tiene un solo juego de tokens y no queda ninguna referencia a data-variant",
+          "Abrir ?variant=a no cambia el tema",
+          "scripts/validate-palette.js pasa: contraste >= 3:1 sobre #14110f y #1d1916 y deltaE minimo aceptable en vision normal y simulada",
+          "Suite Playwright completa en verde con screenshots del tema nuevo",
+          "Deploy de Pages en verde"
+        ],
+        "evidence": "Eliminada la variante A: styles.css con un único juego de tokens (bg #14110f, surface #1d1916, text #f2ece5, accent #ff7a2f), sin bloque [data-variant], sin script ?variant= en index.html, sin .variant-switch ni .variant-switch CSS y sin código de variante en app.js. Nueva paleta de 20 colores para el perfil asfalto/brasa en app.js (PLAYER_PALETTE, 8 primeros), scripts/player-colors.js (SEED_PALETTE), src/data/player-colors.json (campo palette, primarios reasignados con init --reseed) y src/color-editor.js (FALLBACK_PALETTE). Nuevo scripts/validate-palette.js: contraste WCAG >= 3:1 sobre #14110f y #1d1916 para los 20 colores y ΔE76 >= 12 (normal) / >= 10 (deuteranopia y protanopia) entre los 8 principales; peor par resultante #f2c14e/#e9913f con ΔE 25.2 / 12.3 / 18.0 → OK. Spec HDH-UI03 6/6; HDH-UI02 actualizado (test de variantes eliminado) 5/5; suite completa 140/140; capture:evidence OK con HDH-UI03-resumen-asfalto-{escritorio,movil}.png y HDH-UI03-paleta-asfalto.png."
       }
     }
   ]

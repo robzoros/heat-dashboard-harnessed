@@ -25,12 +25,13 @@ const App = {
     firebaseEnabled: false,
     championshipsUnsubscribe: null,
 
-    // Fallback de color: paleta categórica validada para fondos oscuros con
-    // validate_palette.js (CVD >= 8, contraste >= 3:1). La fuente de verdad
-    // de los colores de jugadores y bots es src/data/player-colors.json
+    // Fallback de color: paleta «Asfalto y brasa» validada con
+    // scripts/validate-palette.js (contraste >= 3:1 sobre #14110f y #1d1916 y
+    // separación ΔE en visión normal, deuteranopia y protanopia). La fuente de
+    // verdad de los colores de jugadores y bots es src/data/player-colors.json
     // (scripts/player-colors.js); esta paleta solo se usa si un jugador no
     // tiene entrada en la config o el config está agotado.
-    PLAYER_PALETTE: ['#3987e5', '#d95926', '#199e70', '#c98500', '#d55181', '#0ca30c', '#9085e9', '#e66767'],
+    PLAYER_PALETTE: ['#f4e3c4', '#f2c14e', '#e9913f', '#d1583c', '#86c8e3', '#2f8f76', '#7561ad', '#d67a9c'],
 
     // Config de colores cargada de ./data/player-colors.json (null si falla).
     colorConfig: null,
@@ -143,9 +144,6 @@ const App = {
     },
 
     init() {
-        document.querySelectorAll('[data-variant-link]').forEach(a => {
-            a.setAttribute('aria-current', String(a.dataset.variantLink === document.documentElement.dataset.variant));
-        });
         this.selectedTrack = null;
         this.setupTabs();
         this.setupFilters();
