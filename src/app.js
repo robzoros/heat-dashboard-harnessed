@@ -25,17 +25,76 @@ const App = {
     firebaseEnabled: false,
     championshipsUnsubscribe: null,
 
-    // Paleta categórica de jugadores, validada para fondos oscuros con
-    // validate_palette.js (CVD >= 8, contraste >= 3:1). Cada jugador principal
-    // conserva su color en toda la app: se asigna por orden alfabético, así que
-    // no cambia al filtrar. Más de 8 principales: los sobrantes van en gris.
+    // Fallback de color: paleta categórica validada para fondos oscuros con
+    // validate_palette.js (CVD >= 8, contraste >= 3:1). La fuente de verdad
+    // de los colores de jugadores y bots es src/data/player-colors.json
+    // (scripts/player-colors.js); esta paleta solo se usa si un jugador no
+    // tiene entrada en la config o el config está agotado.
     PLAYER_PALETTE: ['#3987e5', '#d95926', '#199e70', '#c98500', '#d55181', '#0ca30c', '#9085e9', '#e66767'],
+
+    // Config de colores cargada de ./data/player-colors.json (null si falla).
+    colorConfig: null,
+    // Mapa nombre -> color resuelto, recalculado al cargar/cambiar datos.
+    colorMap: null,
 
     cssVar(name) {
         return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
     },
 
+    normHex(hex) {
+        if (typeof hex !== 'string') return '';
+        let h = hex.trim().toLowerCase();
+        if (!h.startsWith('#')) h = `#${h}`;
+        if (/^#[0-9a-f]{6}$/.test(h)) return h;
+        if (/^#[0-9a-f]{3}$/.test(h)) return `#${h[1]}${h[1]}${h[2]}${h[2]}${h[3]}${h[3]}`;
+        return '';
+    },
+
+    // Descarga la config de colores; fallo suave (queda null y se usa el fallback).
+    async loadColorConfig() {
+        this.colorConfig = null;
+        try {
+            const response = await fetch('./data/player-colors.json', { cache: 'no-store' });
+            if (!response.ok) return;
+            const config = await response.json();
+            if (config && Array.isArray(config.players)) this.colorConfig = config;
+        } catch (e) {
+            console.warn('No se pudo cargar player-colors.json; usando paleta por defecto', e);
+        }
+    },
+
+    // Resuelve colors de la config: primario; si otro jugador ya lo usa, el
+    // secundario; si ambos están cogidos, siguiente libre de PLAYER_PALETTE;
+    // y si no, gris. Se recorre en orden alfabético para que el resultado no
+    // cambie al filtrar.
+    buildColorMap() {
+        if (!this.colorConfig || !this.data || !Array.isArray(this.data.players)) {
+            this.colorMap = null;
+            return;
+        }
+        const dataNames = new Set(this.data.players.map(p => p.name));
+        const entries = this.colorConfig.players
+            .filter(e => e && e.name && dataNames.has(e.name))
+            .slice()
+            .sort((a, b) => a.name.localeCompare(b.name));
+        const used = new Set();
+        const map = new Map();
+        for (const e of entries) {
+            const primary = this.normHex(e.primary);
+            const secondary = this.normHex(e.secondary);
+            let color = primary && !used.has(primary) ? primary
+                : secondary && !used.has(secondary) ? secondary
+                : this.PLAYER_PALETTE.map(c => this.normHex(c)).find(c => c && !used.has(c))
+                || this.cssVar('--text-muted');
+            used.add(color);
+            map.set(e.name, color);
+        }
+        this.colorMap = map;
+    },
+
     playerColor(name) {
+        if (this.colorMap && this.colorMap.has(name)) return this.colorMap.get(name);
+        // Fallback histórico: paleta por orden alfabético de principales, resto gris.
         const names = this.data.players
             .filter(p => p.isMain)
             .map(p => p.name)
@@ -633,6 +692,8 @@ const App = {
             this.data = data;
             this.originalPlayers = this.data.players.map(p => ({ ...p }));
             this.applyPlayerOverrides();
+            await this.loadColorConfig();
+            this.buildColorMap();
             this.populateFilters();
             this.updateHeaderStats();
             this.renderAll();
@@ -701,6 +762,7 @@ const App = {
         };
         this.originalPlayers = this.data.players.map(p => ({ ...p }));
         this.applyPlayerOverrides();
+        this.buildColorMap();
         this.populateFilters();
         this.updateHeaderStats();
         this.renderAll();
@@ -917,6 +979,7 @@ const App = {
     },
 
     renderAll() {
+        this.buildColorMap();
         this.renderKPIs();
         this.renderPodium();
         this.renderCharts();
