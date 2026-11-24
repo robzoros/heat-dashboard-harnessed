@@ -1,9 +1,22 @@
 name: Deploy GitHub Pages
 
+# Publica el contenido de src/ en GitHub Pages.
+#
+# El build y el deploy van en JOBS SEPARADOS a propósito: si se sube el
+# artefacto y se despliega en el mismo job, actions/deploy-pages@v4 consulta la
+# API de artefactos pocos milisegundos después del upload y a veces todavía no
+# lo ve («Found 0 artifact(s)»). Separando en jobs el deploy arranca cuando el
+# artefacto ya está indexado. Es además el patrón recomendado por GitHub.
+#
+# El grupo de concurrencia es COMPARTIDO con weekly-data.yml: dos despliegues
+# simultáneos de Pages se pisan entre sí.
+
 on:
   push:
     branches:
       - main
+  # El merge automático usa GITHUB_TOKEN, y los push hechos con ese token no
+  # disparan workflows: por eso el despliegue se engancha al CI que acaba bien.
   workflow_run:
     workflows:
       - 'CI y merge automático'
@@ -21,16 +34,13 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  deploy:
+  build:
     if: >
       github.event_name == 'push' ||
       github.event_name == 'workflow_dispatch' ||
       (github.event_name == 'workflow_run' &&
         github.event.workflow_run.conclusion == 'success')
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -45,6 +55,13 @@ jobs:
         with:
           path: src
 
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4

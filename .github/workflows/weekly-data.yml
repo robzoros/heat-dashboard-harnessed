@@ -12,15 +12,13 @@ permissions:
   id-token: write
 
 concurrency:
-  group: github-pages-weekly-data
+  # Mismo grupo que deploy-pages.yml: solo un despliegue de Pages a la vez.
+  group: github-pages-deploy
   cancel-in-progress: true
 
 jobs:
-  generate-and-deploy:
+  build:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -54,6 +52,15 @@ jobs:
         with:
           path: src
 
+  deploy:
+    # Job separado para que el artefacto esté indexado antes de desplegar
+    # (mismo motivo que en deploy-pages.yml).
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4

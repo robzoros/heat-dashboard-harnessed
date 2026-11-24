@@ -13,3 +13,5 @@ scripts/update-bgg-data-local.sh
 scripts/update-bgg-data-local.ps1
 .agents/
 .codegraph/
+e2e/playwright-report/
+e2e/.tmp-*

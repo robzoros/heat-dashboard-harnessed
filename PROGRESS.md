@@ -1,5 +1,40 @@
 # PROGRESS.md
 
+## Sesión 2026-11-24 (HDH-INFRA01)
+
+### Feature trabajada: HDH-INFRA01 - CI: deploy fiable a Pages y tests condicionales
+
+**Estado**: Completada (verificación en remoto al hacer push)
+
+#### Diagnóstico del deploy que "siempre falla"
+- Run `45442641743` (Deploy GitHub Pages, 16:55): el paso «Upload static site» terminó bien (`Artifact github-pages has been successfully uploaded! Artifact ID is 14943483171`) y **0,4 segundos después** `actions/deploy-pages@v4` respondió `Found 0 artifact(s)` → `No artifacts named "github-pages" were found for this workflow run`.
+- Es una carrera: el artefacto existe (comprobado con la API: `14943483171`, 42158 B, no expirado), pero la API de artefactos aún no lo indexa justo después del upload. De ahí que unos runs salgan verdes (31 s) y otros rojos (13 s) sin cambios de contenido.
+- Segundo riesgo encontrado: `weekly-data.yml` usaba otro grupo de concurrencia (`github-pages-weekly-data`), así que podía desplegar en Pages a la vez que `deploy-pages.yml`.
+
+#### Qué se hizo
+- `.github/scripts/detect-code-changes.sh` (nuevo): decide si un cambio toca código ejecutable. Allowlist: `src/`, `e2e/`, `scripts/`, `proxy/`, `.github/workflows/`, `.github/scripts/`, `package*.json`, `init.sh`, `Dockerfile*`, `docker-compose.yml`, `nginx*.conf` y extensiones `*.js|mjs|cjs|ts|html|css`. Todo lo demás (docs, `PROGRESS.md`, `features_list.json`, `evidence/`, `.agents/`) no exige tests. Admite `CHANGED_FILES` para probarlo sin git y escribe `code_changed` en `$GITHUB_OUTPUT`.
+- `.github/workflows/auto-merge.yml`: nuevo paso `Detect whether the change touches code` (id `changes`). `Setup Node`, `npm ci`, `playwright install`, el servidor estático, los tests y la subida de evidencias sólo corren si `code_changed=true`; si no, un paso `Tests skipped (no code changes)` deja un `::notice` y el listado de archivos. **El merge no cambia**: se intenta siempre.
+- `.github/workflows/deploy-pages.yml`: separado en jobs `build` (checkout + configure-pages + upload-pages-artifact) y `deploy` (`needs: build`, environment `github-pages`, deploy-pages). Se mantiene el disparador `workflow_run` porque el merge automático usa `GITHUB_TOKEN` y esos push no disparan workflows.
+- `.github/workflows/weekly-data.yml`: mismo patrón build/deploy y **mismo grupo de concurrencia** `github-pages-deploy`.
+- `.gitignore`: `e2e/playwright-report/` y `e2e/.tmp-*`.
+- `CHANGELOG.md`: entradas de Fixed/Changed.
+- `e2e/tests/HDH-INFRA01.spec.js` (nuevo): 6 tests de regresión (jobs separados, `needs: build`, grupo compartido, condiciones del auto-merge, y la detección de cambios con varios casos).
+
+#### Verificación final
+- `bash -n .github/scripts/detect-code-changes.sh`: OK
+- Detección probada por CLI: `PROGRESS.md` → false; docs + evidencia + skills → false; `src/app.js`, `src/data/heat-data.json`, `e2e/...`, `.github/workflows/...`, `scripts/...` → true; `GITHUB_OUTPUT` con `code_changed` y `code_files` correcto.
+- YAML revisado (jobs `build`/`deploy`, grupos de concurrencia).
+- `playwright test tests/HDH-INFRA01.spec.js`: 6/6
+- Suite completa: 135/135 (129 previos + 6 nuevos)
+- Sin screenshots: cambio de infraestructura de CI, no hay UI nueva que capturar.
+
+#### Notas / Riesgos
+- El arreglo de la carrera se apoya en el patrón oficial (build y deploy en jobs distintos); si la API de artefactos vuelve a fallar de forma masiva, `::error` seguirá apareciendo y hay que reintentar el workflow.
+- Los tests condicionales se aplican al workflow de merge; el `weekly-data` no ejecuta tests (no los ejecutaba antes tampoco).
+- Pendiente de confirmar en remoto tras el push de la rama: CI verde y «Deploy GitHub Pages» verde.
+
+---
+
 ## Sesión 2026-11-24 (HDH-COL02)
 
 ### Feature trabajada: HDH-COL02 - Editor visual de colores (app pequeña)

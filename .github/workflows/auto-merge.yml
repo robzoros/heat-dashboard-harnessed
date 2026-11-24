@@ -85,20 +85,28 @@ jobs:
           gh pr create --base main --head ${{ github.ref_name }} \
             --title "$PR_TITLE" --body "$PR_BODY" || echo "PR already exists"
 
+      - name: Detect whether the change touches code
+        id: changes
+        run: bash .github/scripts/detect-code-changes.sh origin/main
+
       - name: Setup Node
+        if: steps.changes.outputs.code_changed == 'true'
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
       - name: Install E2E dependencies
+        if: steps.changes.outputs.code_changed == 'true'
         working-directory: e2e
         run: npm ci
 
       - name: Install Playwright browsers
+        if: steps.changes.outputs.code_changed == 'true'
         working-directory: e2e
         run: npx playwright install --with-deps chromium
 
       - name: Start static site
+        if: steps.changes.outputs.code_changed == 'true'
         run: |
           python3 -m http.server 8082 --directory src > /tmp/heat-dashboard-http.log 2>&1 &
           echo $! > /tmp/heat-dashboard-http.pid
@@ -113,11 +121,19 @@ jobs:
           exit 1
 
       - name: Run E2E tests
+        if: steps.changes.outputs.code_changed == 'true'
         working-directory: e2e
         run: npx playwright test
 
+      - name: Tests skipped (no code changes)
+        if: steps.changes.outputs.code_changed != 'true'
+        run: |
+          echo "::notice title=Tests omitidos::El cambio no toca código ejecutable; se omite Playwright y se mergea el PR."
+          echo "Archivos sin código en este cambio:"
+          echo "${{ steps.changes.outputs.code_files }}"
+
       - name: Upload evidence artifacts
-        if: always()
+        if: always() && steps.changes.outputs.code_changed == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: evidence-${{ github.ref_name }}-${{ github.run_id }}
@@ -134,7 +150,6 @@ jobs:
           if [ -f /tmp/heat-dashboard-http.pid ]; then
             kill "$(cat /tmp/heat-dashboard-http.pid)" || true
           fi
-
       - name: Merge Pull Request
         if: success()
         env:
