@@ -1334,8 +1334,16 @@ PLAYER_PALETTE: ['#d62828', '#2563eb', '#eab308', '#ec4899', '#06b6d4', '#1a9e50
                 }
             }
             if (titleEl) titleEl.textContent = `Victorias — ${this.selectedTrack}`;
-            this.charts.tracks.data.labels = Object.keys(wins);
+            const labels = Object.keys(wins);
+            // Color por jugador desde player-colors.json; la entrada agregada
+            // 'Bots' usa un color de la paleta que no esté presente en el chart.
+            const perPlayer = labels.map(l => l === 'Bots' ? null : this.playerColor(l));
+            const usedInChart = new Set(perPlayer.filter(Boolean).map(c => this.normHex(c)));
+            const botsColor = this.colorPalette().find(c => !usedInChart.has(this.normHex(c)))
+                || this.cssVar('--text-muted');
+            this.charts.tracks.data.labels = labels;
             this.charts.tracks.data.datasets[0].data = Object.values(wins);
+            this.charts.tracks.data.datasets[0].backgroundColor = perPlayer.map(c => c || botsColor);
         } else {
             const playsByTrack = {};
             for (const play of filteredPlays) {
@@ -1344,6 +1352,11 @@ PLAYER_PALETTE: ['#d62828', '#2563eb', '#eab308', '#ec4899', '#06b6d4', '#1a9e50
             if (titleEl) titleEl.textContent = 'Distribución';
             this.charts.tracks.data.labels = Object.keys(playsByTrack).sort();
             this.charts.tracks.data.datasets[0].data = Object.keys(playsByTrack).sort().map(t => playsByTrack[t]);
+            this.charts.tracks.data.datasets[0].backgroundColor = [
+                this.cssVar('--accent'),
+                this.cssVar('--surface-3'),
+                this.cssVar('--text-muted')
+            ];
         }
         this.charts.tracks.update();
     },

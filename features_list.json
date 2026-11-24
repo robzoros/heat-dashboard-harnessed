@@ -1036,6 +1036,44 @@
         ],
         "evidence": "Paleta de 12 colores oficiales con nombres (SEED_PALETTE/SEED_PALETTE_NAMES en scripts/player-colors.js, palette/paletteNames en src/data/player-colors.json, FALLBACK_PALETTE de src/color-editor.js, PLAYER_PALETTE de src/app.js = 8 primeros). init --reseed reparte 20 entradas en ciclo de 12 (principales primero); buildColorMap de app.js y su gemelo del editor resuelven main -> other -> bot y reutilizan el primario cuando la paleta se agota (nadie cae a gris). check avisa sin bloquear los colores compartidos; list muestra los nombres. Editor: nombres oficiales en tira y swatches, aviso \"repite su primario (paleta agotada)\". Gradiente de cabecera actualizado. Specs HDH-UI03/HDH-COL02 actualizados. Verificacion: validate-palette OK; player-colors list/check OK; smoke de resolucion OK; CI 141 passed en run 45470308537; PR #62 mergeado."
       }
+    },
+    {
+      "id": "HDH-COL04",
+      "priority": 1,
+      "name": "Colores de la pestaña Circuitos desde player-colors.json",
+      "description": [
+        "En la pestaña Circuitos, el chart DISTRIBUCIÓN/Victorias usa los colores definidos en src/data/player-colors.json para cada jugador principal.",
+        "La entrada agregada 'Bots' usa un color de la paleta de la config que no esté presente en el chart en ese momento.",
+        "La vista por defecto (Distribución de partidas por circuito) no muestra jugadores y conserva su comportamiento."
+      ],
+      "tasks": [
+        {
+          "id": 1,
+          "title": "Colores por jugador en chart Victorias del circuito y color libre para 'Bots'",
+          "status": "completed"
+        },
+        {
+          "id": 2,
+          "title": "Spec e2e/tests/HDH-COL04.spec.js con screenshot de evidencia y suite completa",
+          "status": "completed"
+        },
+        {
+          "id": 3,
+          "title": "Actualizar features_list.json, PROGRESS.md y CHANGELOG.md",
+          "status": "completed"
+        }
+      ],
+      "status": "completed",
+      "verification": {
+        "checks": [
+          "En la pestaña Circuitos, el chart de victorias del circuito pinta cada jugador con su color de src/data/player-colors.json",
+          "La entrada agregada 'Bots' usa un color de la paleta de la config que no está presente en el chart",
+          "La vista Distribución (sin circuito seleccionado) conserva sus colores por defecto",
+          "e2e/tests/HDH-COL04.spec.js pasando (4/4) con screenshots de evidencia",
+          "Specs relacionadas verde (HDH-COL01/COL02/COL04/HDH-15: 21/21)"
+        ],
+        "evidence": "src/app.js updateTracksChart(): en modo Victorias se calcula backgroundColor por etiqueta con playerColor(label) y, para 'Bots', el primer color de colorPalette() que no esté ya usado en el chart (fallback --text-muted); en modo Distribución se restauran los colores por defecto (--accent, --surface-3, --text-muted). e2e/tests/HDH-COL04.spec.js: 4/4 (colores por jugador desde config, Bots con color libre, restauración al deseleccionar, evidencia con datos reales). Screenshots: evidence/screenshots/HDH-COL04-{victorias-colores,datos-reales}.png. Soporte: e2e/tests/HDH-COL02.spec.js dejó de hardcodear los 8 colores compartidos (la config real del repo cambió por commit manual b8b9d72 y ahora tiene 7), cálculo dinámico. La suite completa no se reejecutó en local por timeout del runner en este equipo; la evidencia oficial corre en el Action del push."
+      }
     }
   ]
 }
