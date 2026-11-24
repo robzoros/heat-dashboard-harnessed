@@ -882,6 +882,26 @@
         ],
         "evidence": "evidence/screenshots/HDH-14-desempate-ultima-carrera.png"
       }
+    },
+    {
+      "id": "HDH-15",
+      "priority": 1,
+      "name": "Modificar pesta Circuitos",
+      "description": [
+        "En la pestaña Circuitos, ahora se muestran un dato que no aporta nada (Pts medio), hay que quitar ese dato y añadir otro: Victorias de bots.",
+        "Bots son aquellos que no son considerados jugadores principales.",
+        "Además debe permitir pulsar en el nombre del circuito, entonces el panel DISTRIBUCIÓN a la izquierda de la pantalla debe mostrar un chart ",
+        "con el número de victorias de cada jugador más el dato de las victorias de bots."
+      ],
+      "status": "completed",
+      "verification": {
+        "checks": [
+          "Todos los tests unitarios pasan",
+          "Se generan screenshots con datos reales",
+          "Se generan screenshots con filtros aplicados"
+        ],
+        "evidence": "evidence/screenshots/HDH-15-circuitos-custom.png, HDH-15-victorias-circuito.png, HDH-15-datos-reales.png, HDH-15-filtros-aplicados.png (suite completa 110/110 en local)"
+      }
     }
   ]
 }

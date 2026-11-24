@@ -1,5 +1,48 @@
 # PROGRESS.md
 
+## Sesión 2026-11-24
+
+### Feature trabajada: HDH-15 - Modificar pestaña Circuitos
+
+**Estado**: Completada
+
+#### Evidencia
+- `src/app.js`:
+  - `renderTrackList()`: eliminado el dato "Pts Medio" de las tarjetas; añadido "Victorias de Bots" (victorias de cualquier ganador no principal: bots y otros). El nombre de cada circuito ahora es clicable (`.track-name` con `data-track`).
+  - Nuevo `updateTracksChart()`: por defecto el chart DISTRIBUCIÓN muestra el reparto de partidas por circuito; con un circuito seleccionado muestra las victorias de cada jugador principal más una entrada agregada "Bots". Actualiza `#tracks-chart-title` ("Victorias — {circuito}" / "Distribución") y se auto-resetea si el circuito seleccionado desaparece al cambiar filtros.
+  - Nuevo `setupTrackList()`: delegación de eventos en `#track-list` (contenedor) para soportar re-render; segundo clic sobre el mismo circuito deselecciona y restaura la distribución.
+  - `init()`: estado `selectedTrack`.
+- `src/index.html`: `<h3 id="tracks-chart-title">` en el panel DISTRIBUCIÓN.
+- `src/styles.css`: `.track-card h4.track-name` (cursor pointer, hover underline, estilos previos conservados) y `.track-card.selected` con outline.
+- `e2e/tests/HDH-15.spec.js` (nuevo): 5 tests
+  - Sin "Pts Medio" y con "Victorias de Bots" correctas (custom data con bot y other ganadores)
+  - Click en circuito → DISTRIBUCIÓN muestra victorias por jugador + Bots (labels/datos verificados)
+  - Segundo click restaura la distribución de partidas
+  - Screenshots con datos reales (`heat-data.json`)
+  - Screenshots con filtros aplicados (filtro por circuito USA + click)
+
+#### Tareas completadas
+1. Ejecutar `bash init.sh` (verificación de referencia OK)
+2. Crear rama `HDH-15` antes de modificar archivos
+3. Quitar "Pts Medio" y añadir "Victorias de Bots" en tarjetas de circuito
+4. Hacer clicable el nombre del circuito y actualizar DISTRIBUCIÓN con victorias (+Bots)
+5. Crear spec E2E con 5 tests y screenshots de evidencia
+6. Actualizar `features_list.json`, `PROGRESS.md` y `CHANGELOG.md`
+7. Verificar la suite completa sin regresiones
+
+#### Verificación final
+- `bash init.sh`: OK
+- `node --check src/app.js`: OK
+- `playwright test tests/HDH-15.spec.js` (Node 22, `CI=true`): 5/5 tests pasados
+- `playwright test` (suite completa): 110/110 tests pasados
+- Screenshots: `evidence/screenshots/HDH-15-{circuitos-custom,victorias-circuito,datos-reales,filtros-aplicados}.png`
+
+#### Notas / Riesgos
+- "Bots" en la explicación del requisito se interpreta como cualquier jugador no principal (bots y otros), tal y como dice la propia feature ("aquellos que no son considerados jugadores principales").
+- Runner de Playwright: se usa Node 22 (`C:/Users/robzo/AppData/Local/pi-node/current/node.exe`) porque con Node v24 se cuelga en este equipo; `CI=true` necesario.
+
+---
+
 ## Sesión 2026-10-09
 
 ### Feature trabajada: FIX-HDH-07 - Consentimiento explícito al importar partidas con jugadores no participantes

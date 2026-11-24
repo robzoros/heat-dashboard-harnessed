@@ -4,6 +4,10 @@ Todas las novedades relevantes del proyecto se documentan en este fichero.
 
 ## [Unreleased]
 
+### Changed
+
+- Circuitos: la tarjeta de cada circuito ya no muestra el dato "Pts Medio" (sin valor informativo); en su lugar muestra "Victorias de Bots", contando las victorias de todos los jugadores no principales (bots y otros). Además, al hacer clic en el nombre de un circuito, el panel DISTRIBUCIÓN muestra las victorias de cada jugador principal en ese circuito junto con una entrada agregada "Bots"; un segundo clic sobre el mismo circuito restaura la distribución de partidas.
+
 ### Fixed
 
 - Campeonatos: al importar partidas con jugadores que aún no son participantes, el modal ahora pide consentimiento explícito para añadirlos como participantes. Antes aparecía un error sin salida ("Añádelos al campeonato primero") porque no existía ninguna forma de añadirlos; la lista de participantes solo cambia cuando el propietario lo acepta en la casilla del modal.

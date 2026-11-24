@@ -26,8 +26,10 @@ const App = {
     championshipsUnsubscribe: null,
 
     init() {
+        this.selectedTrack = null;
         this.setupTabs();
         this.setupFilters();
+        this.setupTrackList();
         this.setupModal();
         this.setupChampionships();
         this.setupPlayerManager();
@@ -975,16 +977,8 @@ const App = {
         this.charts.avgPts.data.datasets[0].data = avgByPlayer.map(p => parseFloat(p.avg.toFixed(1)));
         this.charts.avgPts.update();
 
-        // Track distribution doughnut chart
-        const playsByTrack = {};
-        for (const play of filteredPlays) {
-            playsByTrack[play.board] = (playsByTrack[play.board] || 0) + 1;
-        }
-        const trackLabels = Object.keys(playsByTrack).sort();
-        const trackData = trackLabels.map(t => playsByTrack[t]);
-        this.charts.tracks.data.labels = trackLabels;
-        this.charts.tracks.data.datasets[0].data = trackData;
-        this.charts.tracks.update();
+        // Track chart: distribución de partidas o victorias del circuito seleccionado
+        this.updateTracksChart();
 
         // Wins evolution chart: cumulative wins by date per main player (max 10)
         const top10Players = mainPlayers.slice(0, 10);
@@ -1079,6 +1073,57 @@ const App = {
         `).join('');
     },
 
+    setupTrackList() {
+        // Delegación de eventos: el track-list se re-renderiza con cada filtro,
+        // por lo que el listener vive en el contenedor, no en cada tarjeta.
+        document.getElementById('track-list').addEventListener('click', (e) => {
+            const nameEl = e.target.closest('.track-name');
+            if (!nameEl) return;
+            const trackName = nameEl.dataset.track;
+            this.selectedTrack = this.selectedTrack === trackName ? null : trackName;
+            this.renderTrackList();
+            this.updateTracksChart();
+        });
+    },
+
+    // Actualiza el chart DISTRIBUCIÓN: por defecto reparto de partidas por
+    // circuito; con un circuito seleccionado, victorias de cada jugador (+Bots).
+    updateTracksChart() {
+        const filteredPlays = this.getFilteredPlays();
+        const titleEl = document.getElementById('tracks-chart-title');
+
+        if (this.selectedTrack) {
+            // Reset si el circuito seleccionado desaparece con un nuevo filtro
+            const exists = filteredPlays.some(p => p.board === this.selectedTrack);
+            if (!exists) this.selectedTrack = null;
+        }
+
+        if (this.selectedTrack) {
+            const wins = {};
+            for (const play of filteredPlays) {
+                if (play.board !== this.selectedTrack) continue;
+                for (const ps of play.playerScores) {
+                    if (!ps.winner) continue;
+                    const player = this.data.players.find(p => p.id === ps.playerRefId);
+                    const label = (player && player.isMain) ? player.name : 'Bots';
+                    wins[label] = (wins[label] || 0) + 1;
+                }
+            }
+            if (titleEl) titleEl.textContent = `Victorias — ${this.selectedTrack}`;
+            this.charts.tracks.data.labels = Object.keys(wins);
+            this.charts.tracks.data.datasets[0].data = Object.values(wins);
+        } else {
+            const playsByTrack = {};
+            for (const play of filteredPlays) {
+                playsByTrack[play.board] = (playsByTrack[play.board] || 0) + 1;
+            }
+            if (titleEl) titleEl.textContent = 'Distribución';
+            this.charts.tracks.data.labels = Object.keys(playsByTrack).sort();
+            this.charts.tracks.data.datasets[0].data = Object.keys(playsByTrack).sort().map(t => playsByTrack[t]);
+        }
+        this.charts.tracks.update();
+    },
+
     renderTrackList() {
         const filteredPlays = this.getFilteredPlays();
         const mainPlayers = this.data.players.filter(p => p.isMain);
@@ -1100,25 +1145,28 @@ const App = {
         }
 
         const trackList = Object.entries(trackStats).map(([name, stats]) => {
-            const avg = stats.scoresCount > 0 ? (stats.totalScore / stats.scoresCount).toFixed(1) : '0.0';
             let championName = '-';
             let maxWins = 0;
+            let botWins = 0;
             for (const [pid, wins] of Object.entries(stats.winsByPlayer)) {
                 if (wins > maxWins) {
                     maxWins = wins;
                     const player = this.data.players.find(p => p.id === parseInt(pid));
-                    championName = player ? player.name : '-';
+                    if (player) championName = player.name;
                 }
+                // Bots = cualquier ganador que no sea jugador principal
+                const player = this.data.players.find(p => p.id === parseInt(pid));
+                if (!player || !player.isMain) botWins += wins;
             }
-            return { name, plays: stats.plays, avg, champion: championName };
+            return { name, plays: stats.plays, champion: championName, botWins: botWins };
         })
         .sort((a, b) => b.plays - a.plays);
 
         document.getElementById('track-list').innerHTML = trackList.map(t => `
-            <div class="track-card">
-                <h4>${this.getTrackFlag(t.name)} ${t.name}</h4>
+            <div class="track-card${this.selectedTrack === t.name ? ' selected' : ''}">
+                <h4 class="track-name" data-track="${t.name}">${this.getTrackFlag(t.name)} ${t.name}</h4>
                 <p>Partidas: ${t.plays}</p>
-                <p>Pts Medio: ${t.avg}</p>
+                <p>Victorias de Bots: ${t.botWins}</p>
                 <p>Campeón: ${t.champion}</p>
             </div>
         `).join('');
