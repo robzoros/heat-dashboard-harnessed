@@ -160,12 +160,22 @@ test.describe('HDH-COL02 - Editor visual de colores', () => {
     await expect(page.locator('#dirty-badge')).toBeHidden();
   });
 
-  test('la config real muestra los 20 jugadores y bots sin conflictos y con evidencia', async ({ page }) => {
+  test('la config real muestra los 20 jugadores y bots, los 12 colores y los repetidos avisados', async ({ page }) => {
     await page.goto('/colors.html');
     await page.waitForLoadState('networkidle');
     await expect(page.locator('#color-groups .color-row')).toHaveCount(20);
-    await expect(page.locator('#issues-card')).toBeHidden();
-    await expect(page.locator('#palette-count')).toHaveText('20');
+    await expect(page.locator('#palette-count')).toHaveText('12');
+    // 20 entradas y 12 colores: los bots repiten color de su grupo y el
+    // panel de avisos lo lista (no bloquea nada).
+    await expect(page.locator('#issues-card')).toBeVisible();
+    const shared = new Set();
+    const seen = new Map();
+    for (const e of colorConfig.players) {
+      if (!e.primary) continue;
+      if (seen.has(e.primary)) shared.add(e.primary);
+      else seen.set(e.primary, e.name);
+    }
+    await expect(page.locator('#issues-count')).toHaveText(String(shared.size));
     await page.screenshot({ path: '../evidence/screenshots/HDH-COL02-editor-real.png', fullPage: true });
 
     await page.setViewportSize({ width: 390, height: 844 });

@@ -27,17 +27,23 @@ const ROOT = path.resolve(__dirname, '..');
 const DEFAULT_DATA = path.join(ROOT, 'src', 'data', 'heat-data.json');
 const DEFAULT_CONFIG = path.join(ROOT, 'src', 'data', 'player-colors.json');
 
-// Paleta de siembra: los 8 primeros son PLAYER_PALETTE de src/app.js
-// (validada para fondos oscuros con validate_palette.js). Los siguientes
-// completan hasta 20 entradas (jugadores + bots actuales).
-// Paleta del tema «Asfalto y brasa», validada con scripts/validate-palette.js:
-// contraste >= 3:1 sobre #14110f y #1d1916 y ΔE >= 12 (visión normal) / >= 10
-// (deuteranopia y protanopia) entre los 8 primeros, que son los que comparten
-// los jugadores principales en los gráficos.
+// Paleta de siembra: los 12 colores de los bots del juego Heat (Rojo, Azul,
+// Verde, Amarillo, Negro, Plata, Naranja, Morado, Blanco, Rosa, Marrón y Cian),
+// adaptados al tema «Asfalto y brasa»: los tonos puros de Negro (#1F2937), Azul
+// (#1D4ED8) y Morado (#7E22CE) no llegan al contraste 3:1 sobre los fondos
+// oscuros del tema, y Rojo/Marrón y Azul/Morado se confunden con daltonismo
+// (verificado con scripts/validate-palette.js: ΔE >= 12 normal, >= 10 CVD).
 const SEED_PALETTE = [
-  '#f4e3c4', '#f2c14e', '#e9913f', '#d1583c', '#86c8e3', '#2f8f76', '#7561ad', '#d67a9c',
-  '#c3aa79', '#b7d7d1', '#ab69a0', '#c8af9d', '#cdc570', '#83b0b9', '#aa79c3', '#b6825d',
-  '#d7d18e', '#d7ccb7', '#d0bc95', '#79c3b7'
+  '#d62828', '#2563eb', '#eab308', '#ec4899', '#06b6d4', '#1a9e50',
+  '#c084fc', '#f97316', '#c3cbd5', '#f3f4f6', '#b98a2e', '#64748b'
+];
+
+// Nombre del color oficial de cada entrada de SEED_PALETTE (etiquetas del editor
+// y comandos list/save). Rojo #d62828, Plata #c3cbd5 (el plata puro #9CA3AF no
+// llega al contraste), Blanco con borde distinto como en el juego, etc.
+const SEED_PALETTE_NAMES = [
+  'Rojo', 'Azul', 'Amarillo', 'Rosa', 'Cian', 'Verde',
+  'Morado', 'Naranja', 'Plata', 'Blanco', 'Marrón', 'Negro'
 ];
 
 function fail(msg) {
@@ -99,14 +105,26 @@ function loadConfigOrEmpty(file) {
   return readJson(file, 'Config de colores');
 }
 
-/** Ronda de siembra: primer color de SEED_PALETTE no ocupado por un primario. */
-function nextSeedColor(config) {
-  const used = new Set(
-    config.players
-      .map(e => normHex(e.primary))
-      .filter(Boolean)
-  );
-  return SEED_PALETTE.find(c => !used.has(c)) || SEED_PALETTE[config.players.length % SEED_PALETTE.length];
+/** Hex de SEED_PALETTE -> nombre oficial (Rojo, Azul...). */
+function paletteNameOf(hex) {
+  const idx = SEED_PALETTE.indexOf(hex);
+  return idx >= 0 ? SEED_PALETTE_NAMES[idx] : '';
+}
+
+/** Reparto de primarios del reseed: los jugadores van en orden (principales,
+ *  otros, bots — el mismo orden de playersFromData) y se les asigna
+ *  SEED_PALETTE[i % 12]. Los principales reciben así los 8 primeros colores
+ *  (el grupo estricto del validador) y los bots reparten los 12, repitiendo
+ *  color cuando se acaban (la app reutiliza el primario del grupo, nunca
+ *  grisea, y los principales resuelven antes que los bots).
+ *  Los secundarios quedan vacíos: los asigna el usuario a mano si quiere
+ *  distinguir dos bots que comparten color y hay colores libres. */
+function assignSeedPairs(players) {
+  return players.map((p, i) => ({
+    ...p,
+    primary: SEED_PALETTE[i % SEED_PALETTE.length],
+    secondary: ''
+  }));
 }
 
 function cmdInit(args) {
@@ -118,33 +136,46 @@ function cmdInit(args) {
 
   const players = playersFromData(data);
   const result = [];
+  const entries = [];
   const added = [];
   const reseeded = [];
-  for (const p of players) {
-    const prev = prevByName.get(p.name);
-    prevByName.delete(p.name);
-    if (prev && !args['--reseed']) {
-      result.push({
-        name: p.name,
-        type: p.type,
-        primary: prev.primary || '',
-        secondary: prev.secondary || ''
-      });
-    } else {
-      const primary = nextSeedColor({ players: result });
-      result.push({ name: p.name, type: p.type, primary, secondary: '' });
-      const line = `${p.name} (${TYPE_LABEL[p.type]}) -> ${primary}`;
-      if (prev) reseeded.push(line); else added.push(line);
+  if (args['--reseed']) {
+    // Una sola pasada: todos reasignados con la paleta de 12 (primarios
+    // en ciclo, ver assignSeedPairs).
+    for (const p of players) {
+      const prev = prevByName.get(p.name);
+      prevByName.delete(p.name);
+      entries.push({ name: p.name, type: p.type, _line: prev ? 'reseeded' : 'added' });
     }
+  } else {
+    for (const p of players) {
+      const prev = prevByName.get(p.name);
+      prevByName.delete(p.name);
+      if (prev) {
+        result.push({ name: p.name, type: p.type, primary: prev.primary || '', secondary: prev.secondary || '' });
+      } else {
+        entries.push({ name: p.name, type: p.type, _line: 'added' });
+        added.push(p.name);
+      }
+    }
+  }
+  const assigned = assignSeedPairs(entries);
+  for (const e of assigned) {
+    result.push({ name: e.name, type: e.type, primary: e.primary, secondary: e.secondary });
+    const line = `${e.name} -> ${e.primary}`;
+    if (e._line === 'added') added.push(line);
+    if (e._line === 'reseeded') reseeded.push(line);
   }
 
   const dropped = [...prevByName.keys()];
   const out = {
     version: 1,
     generatedFrom: path.relative(ROOT, dataFile).replace(/\\/g, '/'),
-    // Paleta de colores disponibles: la usa el editor visual (src/colors.html)
-    // y sirve de reserva a la app cuando primario y secundario estan ocupados.
+    // Paleta de colores disponibles (los 12 oficiales del juego) con sus
+    // nombres: la usa el editor visual (src/colors.html) y sirve de
+    // reserva a la app cuando primario y secundario están ocupados.
     palette: SEED_PALETTE,
+    paletteNames: SEED_PALETTE_NAMES,
     players: result
   };
   writeJson(configFile, out);
@@ -175,7 +206,11 @@ function cmdList(args) {
   for (const e of config.players) {
     const name = `${e.name}${' '.repeat(wName - e.name.length)}`;
     const type = `${TYPE_LABEL[e.type]}${' '.repeat(wType - TYPE_LABEL[e.type].length)}`;
-    console.log(`${name} | ${type} | ${e.primary || '-'}     | ${e.secondary || '-'}`);
+    const pname = paletteNameOf(e.primary);
+    const sname = paletteNameOf(e.secondary);
+    const primary = `${e.primary || '-'}${pname ? ` (${pname})` : ''}`;
+    const secondary = `${e.secondary || '-'}${sname ? ` (${sname})` : ''}`;
+    console.log(`${name} | ${type} | ${primary} | ${secondary}`);
   }
 }
 
@@ -237,8 +272,12 @@ function cmdCheck(args) {
   }
   for (const [color, names] of byPrimary) {
     if (names.length > 1) {
-      const resolution = [...names].sort((a, b) => a.localeCompare(b, 'es'))[0];
-      problems.push(`${color} compartido por: ${names.join(', ')} (la app usa el secundario a partir de "${resolution}" por orden alfabético)`);
+      // La app reparte primero a los principales (main -> other -> bot) y
+      // reutiliza el primario cuando la paleta se agota: compartir color es
+      // esperable con 20 entradas y 12 colores; solo avisa.
+      const group = config.players.filter(e => names.includes(e.name));
+      const types = group.map(e => TYPE_LABEL[e.type]);
+      warnings.push(`${color} (${paletteNameOf(color) || 'sin nombre'}) compartido por: ${names.join(', ')} (${types.join(', ')})`);
     }
   }
   const entries = config.players.map(e => ({ name: e.name, p: normHex(e.primary) })).filter(e => e.p);

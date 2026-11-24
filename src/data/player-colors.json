@@ -2,146 +2,152 @@
   "version": 1,
   "generatedFrom": "src/data/heat-data.json",
   "palette": [
-    "#f4e3c4",
-    "#f2c14e",
-    "#e9913f",
-    "#d1583c",
-    "#86c8e3",
-    "#2f8f76",
-    "#7561ad",
-    "#d67a9c",
-    "#c3aa79",
-    "#b7d7d1",
-    "#ab69a0",
-    "#c8af9d",
-    "#cdc570",
-    "#83b0b9",
-    "#aa79c3",
-    "#b6825d",
-    "#d7d18e",
-    "#d7ccb7",
-    "#d0bc95",
-    "#79c3b7"
+    "#d62828",
+    "#2563eb",
+    "#eab308",
+    "#ec4899",
+    "#06b6d4",
+    "#1a9e50",
+    "#c084fc",
+    "#f97316",
+    "#c3cbd5",
+    "#f3f4f6",
+    "#b98a2e",
+    "#64748b"
+  ],
+  "paletteNames": [
+    "Rojo",
+    "Azul",
+    "Amarillo",
+    "Rosa",
+    "Cian",
+    "Verde",
+    "Morado",
+    "Naranja",
+    "Plata",
+    "Blanco",
+    "Marrón",
+    "Negro"
   ],
   "players": [
     {
       "name": "Alfonso Daganzo",
       "type": "main",
-      "primary": "#f4e3c4",
+      "primary": "#d62828",
       "secondary": ""
     },
     {
       "name": "Calvo",
       "type": "main",
-      "primary": "#f2c14e",
+      "primary": "#2563eb",
       "secondary": ""
     },
     {
       "name": "Canales",
       "type": "main",
-      "primary": "#e9913f",
+      "primary": "#eab308",
       "secondary": ""
     },
     {
       "name": "Carte",
       "type": "main",
-      "primary": "#d1583c",
+      "primary": "#ec4899",
       "secondary": ""
     },
     {
       "name": "Korta",
       "type": "main",
-      "primary": "#86c8e3",
+      "primary": "#06b6d4",
       "secondary": ""
     },
     {
       "name": "Tabo",
       "type": "main",
-      "primary": "#2f8f76",
+      "primary": "#1a9e50",
       "secondary": ""
     },
     {
       "name": "Zoro",
       "type": "main",
-      "primary": "#7561ad",
+      "primary": "#c084fc",
       "secondary": ""
     },
     {
       "name": "fueramiseria",
       "type": "other",
-      "primary": "#d67a9c",
+      "primary": "#f97316",
       "secondary": ""
     },
     {
       "name": "Automa",
       "type": "bot",
-      "primary": "#c3aa79",
+      "primary": "#c3cbd5",
       "secondary": ""
     },
     {
       "name": "Automa Azul",
       "type": "bot",
-      "primary": "#b7d7d1",
+      "primary": "#f3f4f6",
       "secondary": ""
     },
     {
       "name": "Automa Rojo",
       "type": "bot",
-      "primary": "#ab69a0",
+      "primary": "#b98a2e",
       "secondary": ""
     },
     {
       "name": "Automa Verde",
       "type": "bot",
-      "primary": "#c8af9d",
+      "primary": "#64748b",
       "secondary": ""
     },
     {
       "name": "Automa2",
       "type": "bot",
-      "primary": "#cdc570",
+      "primary": "#d62828",
       "secondary": ""
     },
     {
       "name": "Automa3",
       "type": "bot",
-      "primary": "#83b0b9",
+      "primary": "#2563eb",
       "secondary": ""
     },
     {
       "name": "Automa4",
       "type": "bot",
-      "primary": "#aa79c3",
+      "primary": "#eab308",
       "secondary": ""
     },
     {
       "name": "Automa5",
       "type": "bot",
-      "primary": "#b6825d",
+      "primary": "#ec4899",
       "secondary": ""
     },
     {
       "name": "BGA Player",
       "type": "bot",
-      "primary": "#d7d18e",
+      "primary": "#06b6d4",
       "secondary": ""
     },
     {
       "name": "Fast1",
       "type": "bot",
-      "primary": "#d7ccb7",
+      "primary": "#1a9e50",
       "secondary": ""
     },
     {
       "name": "Fast2",
       "type": "bot",
-      "primary": "#d0bc95",
+      "primary": "#c084fc",
       "secondary": ""
     },
     {
       "name": "Jugador anónimo",
       "type": "bot",
-      "primary": "#79c3b7",
+      "primary": "#f97316",
       "secondary": ""
     }
   ]

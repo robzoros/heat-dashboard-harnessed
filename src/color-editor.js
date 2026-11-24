@@ -17,12 +17,18 @@
     const TYPE_ORDER = ['main', 'other', 'bot'];
 
     // Solo se usa si player-colors.json no trae "palette" (config antigua).
-    // Paleta del tema «Asfalto y brasa»; solo se usa si player-colors.json no
-    // trae el campo "palette" (config antigua).
+    // Los 12 colores de los bots del juego Heat adaptados al tema «Asfalto y
+    // brasa»; la misma lista que SEED_PALETTE de scripts/player-colors.js.
     const FALLBACK_PALETTE = [
-        '#f4e3c4', '#f2c14e', '#e9913f', '#d1583c', '#86c8e3', '#2f8f76', '#7561ad', '#d67a9c',
-        '#c3aa79', '#b7d7d1', '#ab69a0', '#c8af9d', '#cdc570', '#83b0b9', '#aa79c3', '#b6825d',
-        '#d7d18e', '#d7ccb7', '#d0bc95', '#79c3b7'
+        '#d62828', '#2563eb', '#eab308', '#ec4899', '#06b6d4', '#1a9e50',
+        '#c084fc', '#f97316', '#c3cbd5', '#f3f4f6', '#b98a2e', '#64748b'
+    ];
+
+    // Nombres oficiales de la paleta (Rojo, Azul...); por si la config no
+    // los trae, los del FALLBACK_PALETTE en el mismo orden.
+    const FALLBACK_PALETTE_NAMES = [
+        'Rojo', 'Azul', 'Amarillo', 'Rosa', 'Cian', 'Verde',
+        'Morado', 'Naranja', 'Plata', 'Blanco', 'Marrón', 'Negro'
     ];
 
     const state = {
@@ -70,6 +76,21 @@
         return list.map(normHex).filter(Boolean);
     }
 
+    // Nombre oficial de cada color de palette() (Rojo, Azul...), si la config
+    // trae paletteNames; vacío si el color no está en la lista.
+    function paletteNames() {
+        const names = state.config && Array.isArray(state.config.paletteNames)
+            ? state.config.paletteNames
+            : FALLBACK_PALETTE_NAMES;
+        const fromConfig = state.config && Array.isArray(state.config.palette)
+            ? state.config.palette.map(normHex).filter(Boolean)
+            : FALLBACK_PALETTE;
+        return palette().map((hex) => {
+            const idx = fromConfig.indexOf(hex);
+            return idx >= 0 ? (names[idx] || '') : '';
+        });
+    }
+
     function entries() {
         return state.config ? state.config.players : [];
     }
@@ -83,7 +104,11 @@
     function resolveColors() {
         const used = new Map();   // color -> nombre que lo usa
         const result = new Map();
-        const sorted = entries().slice().sort((a, b) => a.name.localeCompare(b.name));
+        // Igual que buildColorMap de src/app.js: principales primero
+        // (main -> other -> bot, alfabético dentro de cada grupo).
+        const sorted = entries().slice().sort((a, b) =>
+            (TYPE_ORDER.indexOf(a.type) + 1 || 1) - (TYPE_ORDER.indexOf(b.type) + 1 || 1)
+            || a.name.localeCompare(b.name));
 
         for (const entry of sorted) {
             const primary = normHex(entry.primary);
@@ -101,8 +126,8 @@
                 blockedBy = primary ? used.get(primary) || '' : '';
             } else {
                 const free = palette().find((c) => !used.has(c));
-                color = free || mutedColor();
-                source = free ? 'palette' : 'fallback';
+                color = free || primary || secondary || mutedColor();
+                source = free ? 'palette' : (primary || secondary) ? 'reused' : 'fallback';
                 blockedBy = primary ? used.get(primary) || '' : '';
             }
 
@@ -119,6 +144,7 @@
             version: 1,
             generatedFrom: state.config.generatedFrom || 'src/data/heat-data.json',
             palette: palette(),
+            paletteNames: paletteNames(),
             players: entries().map((e) => ({
                 name: e.name,
                 type: e.type,
@@ -182,23 +208,28 @@
     function renderPaletteStrip() {
         const usage = paletteUsage();
         const secondaryUsers = secondaryUsage();
+        const names = paletteNames();
         const container = el('palette-strip');
         const counter = el('palette-count');
         if (counter) counter.textContent = String(palette().length);
-        container.innerHTML = palette().map((hex) => {
+        container.innerHTML = palette().map((hex, i) => {
+            const label = names[i] || '';
             const primaries = usage.get(hex) || [];
             const secondaries = secondaryUsers.get(hex) || [];
             const parts = [];
             if (primaries.length) parts.push(`${primaries.length} prim.`);
             if (secondaries.length) parts.push(`${secondaries.length} sec.`);
-            const label = primaries.length
+            const use = primaries.length
                 ? `primario de ${primaries.join(', ')}`
                 : secondaries.length ? `secundario de ${secondaries.join(', ')}` : 'libre';
+            const full = label ? `${label} (${hex}): ${use}` : `${hex}: ${use}`;
             return `
                 <button type="button" class="palette-swatch" data-copy-hex="${hex}"
-                        title="Copiar ${hex} (${label})" aria-label="Color ${hex}, ${label}">
+                        title="Copiar ${hex}${label ? ` (${label})` : ''} (${use})"
+                        aria-label="Color ${hex}${label ? `, ${label}` : ''}, ${use}">
                     <span class="palette-chip" style="--c:${hex}"></span>
                     <span class="palette-hex">${hex}</span>
+                    <span class="palette-name">${escapeHtml(label)}</span>
                     <span class="palette-use ${parts.length ? 'taken' : 'free'}">${parts.length ? parts.join(' · ') : 'libre'}</span>
                 </button>
             `;
@@ -207,7 +238,7 @@
 
     function rowTemplate(entry, resolved) {
         const finalColor = resolved.color;
-        const isFallback = resolved.source === 'palette' || resolved.source === 'fallback';
+        const isFallback = resolved.source === 'palette' || resolved.source === 'reused' || resolved.source === 'fallback';
         const primary = normHex(entry.primary);
         const secondary = normHex(entry.secondary);
         const inRoster = !state.roster.length || state.roster.includes(entry.name);
@@ -219,6 +250,8 @@
             finalNote = `<span class="src src-secondary">secundario · primario ocupado por ${escapeHtml(resolved.blockedBy || 'otro')}</span>`;
         } else if (resolved.source === 'palette') {
             finalNote = `<span class="src src-palette">paleta libre · primario ocupado por ${escapeHtml(resolved.blockedBy || 'otro')}</span>`;
+        } else if (resolved.source === 'reused') {
+            finalNote = `<span class="src src-reused">repite su primario (paleta agotada · ocupado por ${escapeHtml(resolved.blockedBy || 'otro')})</span>`;
         } else {
             finalNote = '<span class="src src-fallback">sin color libre (gris)</span>';
         }
@@ -262,16 +295,19 @@
     function slotEditorTemplate(entry, slot) {
         const current = normHex(slot === 'primary' ? entry.primary : entry.secondary);
         const usage = paletteUsage();
-        const swatches = palette().map((hex) => {
+        const names = paletteNames();
+        const swatches = palette().map((hex, i) => {
+            const label = names[i] || '';
             const users = (usage.get(hex) || []).filter((n) => n !== entry.name);
             const taken = users.length ? users.join(', ') : '';
+            const withName = label ? `${label} ${hex}` : hex;
             return `
                 <button type="button" class="swatch ${hex === current ? 'selected' : ''}" data-pick-hex="${hex}"
                         data-name="${escapeAttr(entry.name)}" data-slot="${slot}"
                         aria-pressed="${hex === current}"
-                        aria-label="Usar ${hex} en ${escapeAttr(entry.name)}${taken ? ' (lo usa ' + taken + ')' : ''}">
+                        aria-label="Usar ${withName} en ${escapeAttr(entry.name)}${taken ? ' (lo usa ' + taken + ')' : ''}">
                     <span class="swatch-chip" style="--c:${hex}"></span>
-                    <span class="swatch-hex">${hex}</span>
+                    <span class="swatch-hex">${withName}</span>
                     ${taken ? `<span class="swatch-taken">${escapeHtml(taken)}</span>` : '<span class="swatch-taken free">libre</span>'}
                 </button>
             `;
@@ -281,7 +317,7 @@
             <div class="slot-editor" data-editor="${slot}">
                 <div class="slot-editor-head">
                     <strong>${slot === 'primary' ? 'Color primario' : 'Color secundario'} de ${escapeHtml(entry.name)}</strong>
-                    <span class="hint-inline">Puedes repetir un primario: el que llegue después por orden alfabético usará su secundario.</span>
+                    <span class="hint-inline">Los principales resuelven antes que los bots; si no queda color libre en la paleta, se reutiliza el primario del grupo.</span>
                     <button type="button" class="mini-btn" data-close-editor="1">Cerrar</button>
                 </div>
                 <div class="swatch-grid">${swatches}</div>
@@ -349,6 +385,9 @@
             }
             if (info && info.source === 'palette') {
                 problems.push({ name: entry.name, text: `primario y secundario ocupados; se mostrará con ${info.color} (primer color libre)` });
+            }
+            if (info && info.source === 'reused') {
+                problems.push({ name: entry.name, text: `primario y secundario ocupados; repite ${info.color} (paleta agotada)` });
             }
             if (info && info.source === 'fallback') {
                 problems.push({ name: entry.name, text: 'sin color disponible: se mostrará en gris' });
