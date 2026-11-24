@@ -1025,15 +1025,16 @@
         "Reasignación completa (reseed): los 20 jugadores/bots se reparten los 12 colores; los secundarios diferencian quien repite color con un jugador principal.",
         "Los swatches del editor muestran el nombre del color oficial (Rojo, Azul, ...)."
       ],
-      "status": "in_progress",
+      "status": "completed",
       "verification": {
         "checks": [
           "scripts/validate-palette.js acepta la paleta de 12 (contraste >= 3:1 sobre #14110f y #1d1916; DeltaE >= 12 normal y >= 10 en deuteranopia y protanopia): OK",
           "node scripts/player-colors.js init --reseed + list + check: 20 entradas con los 12 colores y nombres; check exit 0 con avisos de color compartido",
           "Resolucion de src/app.js verificada en puro Node (smoke): 20 entradas, 0 grises, principales con los 8 primeros colores, 8 colores reutilizados solo por su bot asociado",
-          "suite Playwright local: NO disponible (el runner se cuelga en este entorno incluso con un spec trivial y config minima, defecto preexistente); la suite completa corre en el Action de CI tras el push, que es donde el proyecto almacena la evidencia oficial (artifacts)"
+          "Suite completa en CI (Action auto-merge, run 45470308537 sobre c02ece8): 141 passed, 0 failed",
+          "PR #62 mergeado a main; main sincronizado"
         ],
-        "evidence": "Paleta de 12 colores oficiales (con nombres) en scripts/player-colors.js, src/data/player-colors.json (paletteNames) y fallback de src/color-editor.js; PLAYER_PALETTE de src/app.js = 8 primeros. init --reseed reparte primarios en ciclo de 12 (principales primero) y check avisa (sin bloquear) los colores compartidos. app.js colorPalette/buildColorMap: principales -> otros -> bots y reutiliza el primario en vez de grisear cuando la paleta se agota; editor replica la resolucion y muestra Rojo/Azul/... en tira y swatches. Gradiente de cabecera con la paleta nueva (styles.css). Specs actualizados: HDH-UI03.spec.js (12 colores, nombres, sin grises) y HDH-COL02.spec.js (config real con avisos). Local: validate-palette OK, player-colors list/check OK, smoke de resolucion OK, node --check OK. Suite Playwright no ejecutable en local (runner colgado preexistente); verificacion completa delegada al CI (artifacts de Actions)."
+        "evidence": "Paleta de 12 colores oficiales con nombres (SEED_PALETTE/SEED_PALETTE_NAMES en scripts/player-colors.js, palette/paletteNames en src/data/player-colors.json, FALLBACK_PALETTE de src/color-editor.js, PLAYER_PALETTE de src/app.js = 8 primeros). init --reseed reparte 20 entradas en ciclo de 12 (principales primero); buildColorMap de app.js y su gemelo del editor resuelven main -> other -> bot y reutilizan el primario cuando la paleta se agota (nadie cae a gris). check avisa sin bloquear los colores compartidos; list muestra los nombres. Editor: nombres oficiales en tira y swatches, aviso \"repite su primario (paleta agotada)\". Gradiente de cabecera actualizado. Specs HDH-UI03/HDH-COL02 actualizados. Verificacion: validate-palette OK; player-colors list/check OK; smoke de resolucion OK; CI 141 passed en run 45470308537; PR #62 mergeado."
       }
     }
   ]
