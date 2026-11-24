@@ -4,6 +4,11 @@ Todas las novedades relevantes del proyecto se documentan en este fichero.
 
 ## [Unreleased]
 
+### Fixed
+
+- CI: el despliegue en GitHub Pages fallaba de forma intermitente con «No artifacts named "github-pages" were found». El workflow subía el artefacto y desplegaba en el mismo job, de modo que `actions/deploy-pages` consultaba la API de artefactos antes de que estuviera indexado. Ahora `deploy-pages.yml` y `weekly-data.yml` separan los jobs `build` (sube el artefacto) y `deploy` (`needs: build`), y ambos comparten el grupo de concurrencia `github-pages-deploy` para que no haya dos despliegues de Pages a la vez.
+- CI: los tests E2E del merge automático se omiten cuando el cambio no toca código ejecutable (solo `PROGRESS.md`, `features_list.json`, `CHANGELOG.md`, `evidence/`, `.agents/`…). La detección está en `.github/scripts/detect-code-changes.sh` y el PR se sigue mergeando igual; antes cada cambio de documentación gastaba ~3 minutos de Playwright.
+
 ### Changed
 
 - Resumen: rediseño visual con dos variantes de color para comparar (`?variant=a` índigo y coral, `?variant=b` asfalto y brasa). Cabecera compacta, pestañas fijas, podio con peldaños por puesto, KPIs con etiquetas claras ("Circuito más jugado", "Mejor racha", "Última partida") y gráficos con estilo común. Cada jugador mantiene el mismo color en Victorias, Puntos medios y Evolución de victorias, y los gráficos de una sola serie ya no muestran leyenda. El resto de pestañas hereda la paleta y la tipografía. Un selector flotante temporal permite alternar entre variantes hasta elegir una.

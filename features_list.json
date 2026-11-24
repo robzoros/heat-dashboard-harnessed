@@ -1,6 +1,6 @@
 {
   "last_updated": "2026-11-24",
-  "active_feature": "HDH-COL02",
+  "active_feature": "HDH-INFRA01",
   "user": "Roberto Méndez",
   "rules": {
     "single_active_feature": true,
@@ -967,6 +967,29 @@
           "Suite completa de playwright pasa"
         ],
         "evidence": "Editor visual en src/colors.html + src/color-editor.js + src/color-editor.css: filas agrupadas (Principales / Otros / Bots) con chip del color final, selector en línea con los 20 colores de la paleta (indicando quién usa cada uno), hex manual, vaciar color, buscador, filtro por tipo, panel de conflictos, vista previa de barras y Descargar/Copiar JSON. player-colors.json incorpora el campo palette (scripts/player-colors.js init) y app.js usa esa paleta como reserva. Enlace '🎨 Colores' en la cabecera del dashboard. e2e/tests/HDH-COL02.spec.js: 9/9; suite completa 129/129; capture:evidence OK; screenshots evidence/screenshots/HDH-COL02-editor-{inicial,conflicto,real,real-movil}.png."
+      }
+    },
+    {
+      "id": "HDH-INFRA01",
+      "priority": 1,
+      "name": "CI: deploy fiable a Pages y tests solo cuando se toca código",
+      "description": [
+        "Bug: el workflow Deploy GitHub Pages falla de forma intermitente con 'Found 0 artifact(s)' porque sube el artefacto y despliega en el mismo job (carrera con la API de artefactos).",
+        "Arreglo: separar en jobs build (upload-pages-artifact) y deploy (deploy-pages, needs: build), patrón oficial de GitHub Pages; usar el mismo grupo de concurrencia en todos los workflows que publican en Pages (deploy-pages y weekly-data).",
+        "Nuevo: los tests E2E del auto-merge se omiten cuando el cambio no toca código ejecutable (solo docs, PROGRESS.md, features_list.json, evidence, .agents).",
+        "La detección vive en .github/scripts/detect-code-changes.sh (allowlist de rutas) para poder probarla en local."
+      ],
+      "status": "completed",
+      "verification": {
+        "checks": [
+          "detect-code-changes.sh devuelve false para cambios solo-docs y true para cambios en src/, e2e/, workflows o scripts",
+          "deploy-pages.yml usa jobs build+deploy separados y el grupo de concurrencia compartido",
+          "weekly-data.yml comparte el mismo grupo de concurrencia",
+          "auto-merge.yml ejecuta Playwright solo si hay cambios de código, y sigue mergeando en ambos casos",
+          "YAML válido y spec e2e/tests/HDH-INFRA01.spec.js pasando",
+          "Al hacer push: CI verde y deploy de Pages verde"
+        ],
+        "evidence": "Diagnóstico: run 45442641743 — el upload finalizó (Artifact ID 14943483171) y 0,4s después deploy-pages devolvió 'Found 0 artifact(s)': carrera entre actions/upload-pages-artifact y actions/deploy-pages en el mismo job. Fix: deploy-pages.yml y weekly-data.yml con jobs build + deploy (deploy: needs build) y grupo de concurrencia compartido github-pages-deploy. Nuevo .github/scripts/detect-code-changes.sh (allowlist de rutas) usado por auto-merge.yml: pasos de Playwright condicionados a code_changed=true, merge intacto, aviso en el log cuando se omiten. Verificación: detect-code-changes probado por CLI (docs→false, src/e2e/workflows/scripts→true, output GITHUB_OUTPUT correcto); YAML revisado; e2e/tests/HDH-INFRA01.spec.js 6/6; suite 135/135. Sin screenshots: el cambio es de infraestructura de CI, no hay UI que capturar. Pendiente de confirmar en remoto: CI verde y Deploy GitHub Pages verde tras el push de esta rama."
       }
     }
   ]
