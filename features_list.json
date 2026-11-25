@@ -1,6 +1,6 @@
 {
   "last_updated": "2026-11-24",
-  "active_feature": "HDH-UI04",
+  "active_feature": "HDH-UI05",
   "user": "Roberto Méndez",
   "rules": {
     "single_active_feature": true,
@@ -1088,6 +1088,20 @@
       ],
       "status": "completed",
       "verification": "e2e/tests/HDH-UI04.spec.js (5 tests) + suite completa 150/150 en Node 22 (Chromium headless local); screenshots en evidence/screenshots/HDH-UI04-*.png generados en local (no versionados; la evidencia oficial vive en artifacts de Actions)."
+    },
+    {
+      "id": "HDH-UI05",
+      "priority": 1,
+      "name": "Rediseño de la pestaña Circuitos",
+      "description": [
+        "Rail lateral de circuitos que sustituye a la cuadrícula de tarjetas: cada card muestra nombre, partidas, victorias de bots, barra de reparto sobre el total y campeón con victorias y color de jugador.",
+        "Detalle a la derecha: badges del circuito activo (campeón, partidas, % del total, bots, última visita), donut existente y pódio top 3 de jugadores principales; debajo, últimas 5 visitas al circuito con ganador y puntaje.",
+        "El toggle de selección de circuito y el chart DISTRIBUCIÓN/Victorias conservan el comportamiento previo.",
+        "Con el panel de filtros abierto, el contenido se desplaza 300px (>=721px) para no quedar debajo del drawer.",
+        "Responsive: el rail pasa a carrusel horizontal y el duo se apila en pantallas estrechas."
+      ],
+      "status": "completed",
+      "verification": "e2e/tests/HDH-UI05.spec.js (3 tests) + suite completa 153/153 en Node 22 (CI=true, Chromium local); screenshots evidence/screenshots/HDH-UI05-*.png."
     }
   ]
 }

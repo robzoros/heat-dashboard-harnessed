@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "chosen": "02-rail-detalle.html",
+  "handoffs": {
+    "02-rail-detalle.html": {
+      "status": "in_progress",
+      "queued": false,
+      "sentAt": "2026-11-25T13:43:48.362Z",
+      "startedAt": "2026-11-25T13:43:57.845Z",
+      "implementedAt": null
+    }
+  }
+}
