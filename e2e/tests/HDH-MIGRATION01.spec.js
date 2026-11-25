@@ -35,7 +35,7 @@ import { test, expect } from '@playwright/test';
     await page.reload();
     await page.waitForLoadState('networkidle');
     await expect.poll(() => page.evaluate(() => window.App.championships.list.length)).toBe(1);
-    await expect(page.locator('#campeonatos-select option')).toHaveCount(2);
+    await expect(page.locator('.champ-card')).toHaveCount(1);
     await page.screenshot({ path: '../evidence/screenshots/HDH-MIGRATION01-pagina-estatica.png', fullPage: true });
   });
 });

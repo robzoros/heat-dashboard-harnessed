@@ -83,8 +83,9 @@ test.describe('FIX-HDH-06 - Orden cronologico de carreras en campeonato', () => 
   test('la lista de partidas conserva el orden reciente -> antigua y el array no se muta', async ({ page }) => {
     await createChampWithPlaysInOrder(page, ['1', '2', '3', '4']);
 
-    const listDates = await page.locator('.campeonato-play-item span').evaluateAll(
-      spans => spans.map(s => s.textContent.trim().split(' | ')[0])
+    // La fecha vive al final del span .play-main (markup HDH-UI04).
+    const listDates = await page.locator('.campeonato-play-item .play-main').evaluateAll(
+      spans => spans.map(s => (s.textContent.match(/\d{4}-\d{2}-\d{2}/) || [''])[0])
     );
     expect(listDates).toEqual(['2024-04-05', '2024-03-10', '2024-02-20', '2024-01-15']);
 
