@@ -3,11 +3,13 @@
   "chosen": "01-rail-compact.html",
   "handoffs": {
     "01-rail-compact.html": {
-      "status": "in_progress",
+      "status": "implemented",
       "queued": false,
       "sentAt": "2026-11-25T12:28:21.089Z",
       "startedAt": "2026-11-25T12:28:33.323Z",
-      "implementedAt": null
+      "implementedAt": "2026-11-25T12:58:41.657Z",
+      "note": "Implementado en la app real: rail de tarjetas con líder/participantes/partidas, detalle con Clasificación+Evolución lado a lado y Partidas a todo lo ancho, chart acumulativo con escala adaptativa, badges en cabecera y responsive móvil. Suite e2e 150/150.",
+      "previewUrl": "http://localhost:8082/"
     }
   }
 }
