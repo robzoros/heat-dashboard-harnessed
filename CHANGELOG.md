@@ -6,6 +6,8 @@ Todas las novedades relevantes del proyecto se documentan en este fichero.
 
 ### Changed
 
+- Campeonatos: rediseño de la pestaña (HDH-UI04). El desplegable de selección se sustituye por un rail de tarjetas: cada campeonato muestra participantes, partidas, fecha y líder (nombre, puntos y color de jugador) sin abrir el detalle. El detalle se reorganiza con Clasificación y Evolución de puntos lado a lado arriba y Partidas a todo lo ancho debajo; la cabecera se reduce a badges (líder, partidas, participantes, fecha, propietario). Nuevo gráfico de línea acumulativo (siempre creciente) de la evolución de puntos por jugador con eje Y adaptado al máximo acumulado del campeonato y colores reales de cada jugador. En pantallas estrechas el rail se desplaza en horizontal, el duo se apila y la tabla mantiene scroll horizontal.
+
 - Circuitos: el gráfico de victorias de un circuito usa el color que cada jugador tiene definido en `src/data/player-colors.json` (el mismo del editor de colores). La entrada agregada «Bots» toma un color de la paleta de esa config que no esté ya presente en el gráfico, así siempre se distingue del resto.
 
 - Tema: se queda **Asfalto y brasa** como única piel. Desaparece la variante «Índigo y coral», el parámetro `?variant=`, el selector flotante y su código, así que ya no hay nada que elegir ni recordar en el navegador.

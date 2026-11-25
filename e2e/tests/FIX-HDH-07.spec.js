@@ -106,7 +106,7 @@ test.describe('FIX-HDH-07 - Consentimiento para añadir participantes al importa
     expect(await getParticipants(page)).toEqual(['1', '2', '4']);
 
     // El detalle refleja el nuevo numero de participantes.
-    await expect(page.locator('.campeonato-detail-header')).toContainText('Participantes: 3');
+    await expect(page.locator('.campeonato-detail-header')).toContainText('👥 3 participantes');
 
     await page.screenshot({ path: '../evidence/screenshots/FIX-HDH-07-con-consentimiento.png', fullPage: true });
   });

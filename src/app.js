@@ -316,14 +316,10 @@ PLAYER_PALETTE: ['#d62828', '#2563eb', '#eab308', '#ec4899', '#06b6d4', '#1a9e50
         document.getElementById('btn-load-campeonatos').addEventListener('click', () => {
             this.loadChampionships();
         });
-        document.getElementById('campeonatos-select').addEventListener('change', (e) => {
-            const id = e.target.value;
-            if (id) {
-                this.selectChampionship(id);
-            } else {
-                this.championships.selected = null;
-                this.renderChampionshipDetail();
-            }
+        // Rail de campeonatos: delegación de click en tarjetas (el rail se re-renderiza en cada snapshot).
+        document.getElementById('campeonatos-rail').addEventListener('click', (e) => {
+            const card = e.target.closest('.champ-card');
+            if (card) this.selectChampionship(card.dataset.champId);
         });
         document.getElementById('btn-save-campeonato').addEventListener('click', () => {
             this.saveChampionship();
@@ -348,7 +344,6 @@ PLAYER_PALETTE: ['#d62828', '#2563eb', '#eab308', '#ec4899', '#06b6d4', '#1a9e50
         });
         document.getElementById('btn-exit-campeonato').addEventListener('click', () => {
             this.championships.selected = null;
-            document.getElementById('campeonatos-select').value = '';
             this.renderChampionships();
         });
     },
@@ -389,19 +384,21 @@ PLAYER_PALETTE: ['#d62828', '#2563eb', '#eab308', '#ec4899', '#06b6d4', '#1a9e50
             if (this.championshipsUnsubscribe) this.championshipsUnsubscribe();
             this.championshipsUnsubscribe = collection.onSnapshot(snapshot => {
                 const championships = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                this.championships.list = championships
-                    .map(champ => this.championshipSummary(champ))
+                this.championships.raw = championships.slice()
                     .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                this.championships.list = this.championships.raw
+                    .map(champ => this.championshipSummary(champ));
                 this.championships.selected = null;
-                this.renderChampionshipsSelect();
+                this.renderChampionshipsRail();
                 this.renderChampionships();
             }, error => console.error('Error loading championships:', error));
             return;
         }
-        this.championships.list = this.getStoredChampionships()
-            .map(champ => this.championshipSummary(champ))
+        const stored = this.getStoredChampionships()
             .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-        this.renderChampionshipsSelect();
+        this.championships.raw = stored;
+        this.championships.list = stored.map(champ => this.championshipSummary(champ));
+        this.renderChampionshipsRail();
         this.renderChampionships();
     },
 
@@ -1452,99 +1449,198 @@ PLAYER_PALETTE: ['#d62828', '#2563eb', '#eab308', '#ec4899', '#06b6d4', '#1a9e50
         } else {
             detailEl.classList.add('hidden');
             document.getElementById('campeonato-detail-content').innerHTML = '';
+            // El canvas del chart vive dentro del detalle: al vaciar el DOM hay que destruir la instancia.
+            if (this.charts.champEvolution) {
+                this.charts.champEvolution.destroy();
+                this.charts.champEvolution = null;
+            }
         }
-        this.renderChampionshipsSelect();
+        this.renderChampionshipsRail();
     },
 
-    renderChampionshipsSelect() {
-        const selectEl = document.getElementById('campeonatos-select');
-        const currentValue = selectEl.value;
-        selectEl.innerHTML = '<option value="">Seleccionar campeonato...</option>';
-        this.championships.list.forEach(champ => {
-            const option = document.createElement('option');
-            option.value = champ.id;
-            option.textContent = champ.name;
-            selectEl.appendChild(option);
-        });
-        if (currentValue) {
-            selectEl.value = currentValue;
-        }
+    // Rail lateral: una tarjeta por campeonato con participantes, partidas,
+    // fecha de creación y líder (nombre + puntos + color de jugador).
+    renderChampionshipsRail() {
+        const rail = document.getElementById('campeonatos-rail');
+        if (!rail) return;
+        const raw = this.championships.raw || [];
+        const selectedId = this.championships.selected ? String(this.championships.selected.id) : null;
+        const count = raw.length;
+        const items = raw.map(champ => {
+            const isSelected = selectedId !== null && String(champ.id) === selectedId;
+            const date = new Date(champ.createdAt);
+            const created = Number.isNaN(date.getTime()) ? '' : date.toLocaleDateString('es-ES');
+            const participants = Array.isArray(champ.participants) ? champ.participants.length : (champ.participantCount || 0);
+            const plays = Array.isArray(champ.plays) ? champ.plays.length : (champ.playCount || 0);
+            let leaderHtml = '<span class="champ-leader">Sin partidas todavía</span>';
+            if (plays > 0) {
+                const leader = this.getChampionshipStandings(champ)[0] || null;
+                if (leader) {
+                    leaderHtml = `<span class="champ-leader"><span class="leader-dot" style="background:${this.playerColor(leader.name)};"></span>Líder: <b>${this.escapeHtml(leader.name)}</b> · ${Math.round(leader.totalScore)} pts</span>`;
+                }
+            }
+            return `
+                <button type="button" class="champ-card${isSelected ? ' is-selected' : ''}" data-champ-id="${this.escapeHtml(String(champ.id))}"${isSelected ? ' aria-current="true"' : ''}>
+                    <span class="champ-card-name">${this.escapeHtml(champ.name)}</span>
+                    <span class="champ-card-meta">
+                        <span>👥 <b>${participants}</b></span>
+                        <span>🏁 <b>${plays}</b></span>
+                        <span>📅 ${created}</span>
+                    </span>
+                    ${leaderHtml}
+                </button>`;
+        }).join('');
+        rail.innerHTML = `
+            <div class="rail-head"><span>${count} ${count === 1 ? 'campeonato' : 'campeonatos'}</span></div>
+            <div class="rail-list">${count === 0 ? '<div class="campeonato-rail-empty">No hay campeonatos todavía. Crea el primero con «+ Nuevo Campeonato».</div>' : items}</div>`;
     },
 
     renderChampionshipDetail() {
         const champ = this.championships.selected;
         if (!champ) return;
         const content = document.getElementById('campeonato-detail-content');
-        const date = new Date(champ.createdAt).toLocaleDateString('es-ES');
+        const date = new Date(champ.createdAt);
+        const created = Number.isNaN(date.getTime()) ? '' : date.toLocaleDateString('es-ES');
         const isOwner = champ.owner && this.bggUsername && champ.owner === this.bggUsername;
-        const ownerDisplay = champ.owner ? `👤 Propietario: ${champ.owner}` : '';
+        const canEdit = (isOwner || !champ.owner) && this.bggUsername;
 
         const standings = this.getChampionshipStandings(champ);
         const playTime = p => {
             const t = new Date(p && p.playDate).getTime();
             return Number.isNaN(t) ? 0 : t;
         };
-        // Las carreras se muestran de izquierda a derecha en orden cronológico (antigua -> reciente).
+        // Las carreras se muestran de izquierda a derecha en orden cronologico (antigua -> reciente).
         const champPlaysChrono = [...(champ.plays || [])]
             .sort((a, b) => playTime(a) - playTime(b) || String(a.id).localeCompare(String(b.id)));
-        // La lista de partidas mantiene la convención reciente -> antigua sin alterar el array original.
+        // La lista de partidas mantiene la convencion reciente -> antigua sin alterar el array original.
         const champPlaysList = [...champPlaysChrono].reverse();
+        const leader = standings[0] || null;
+
+        // Cabecera reducida a una linea de badges (nombre + metricas + avisos).
+        const badges = [
+            leader ? `<span class="detail-badge is-gold">🏆 Líder: ${this.escapeHtml(leader.name)} · ${Math.round(leader.totalScore)} pts</span>` : '',
+            `<span class="detail-badge">🏁 ${champPlaysChrono.length} ${champPlaysChrono.length === 1 ? 'partida' : 'partidas'}</span>`,
+            `<span class="detail-badge">👥 ${(champ.participants || []).length} participantes</span>`,
+            created ? `<span class="detail-badge">📅 desde ${created}</span>` : '',
+            champ.owner ? `<span class="detail-badge">👤 ${this.escapeHtml(champ.owner)}</span>` : ''
+        ].filter(Boolean).join('');
+        const warnings = [];
+        if (!isOwner && champ.owner) warnings.push('Solo lectura (no eres el propietario)');
+        if (!this.bggUsername) warnings.push('Inicia sesión en BGG para editar campeonatos');
+
+        // Clasificacion: mismas clases y data-play-date que la tabla anterior.
+        const standingsHtml = champPlaysChrono.length > 0 ? `
+                    <div class="standings-wrap">
+                        <table class="standings-table">
+                            <thead>
+                                <tr><th class="pos"></th><th>Jugador</th>${champPlaysChrono.map(p => `<th data-play-date="${p.playDate || ''}">${this.getTrackFlag(p.board)} ${p.board}</th>`).join('')}<th class="total-col">Total</th></tr>
+                            </thead>
+                            <tbody>
+                                ${standings.map((s, i) => `
+                                    <tr>
+                                        <td class="pos">${i === 0 ? '<span class="medal">🥇</span>' : i === 1 ? '<span class="medal">🥈</span>' : i === 2 ? '<span class="medal">🥉</span>' : i + 1}</td>
+                                        <td><span class="standings-name"><span class="name-dot" style="background:${this.playerColor(s.name)};"></span>${this.escapeHtml(s.name)}</span></td>
+                                        ${champPlaysChrono.map(p => {
+                                            const playerScore = p.playerScores.find(ps => String(ps.playerRefId) === String(s.id));
+                                            return `<td>${playerScore ? playerScore.scoreNum : '-'}</td>`;
+                                        }).join('')}
+                                        <td class="total-col"><strong>${Math.round(s.totalScore)}</strong></td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>` : '<div class="campeonato-empty">No hay partidas en este campeonato. Importa o añade partidas para ver la clasificación.</div>';
+
+        // Lista de partidas (reciente -> antigua) con ganador y accion de borrado.
+        const playsHtml = champPlaysList.map(p => {
+            const winnerPs = p.playerScores.find(ps => ps.winner);
+            const winnerName = winnerPs ? (this.data.players.find(pl => pl.id === winnerPs.playerRefId)?.name || '-') : '-';
+            const flag = this.getTrackFlag(p.board);
+            return `
+                        <div class="campeonato-play-item">
+                            <span class="play-main"><b>${this.escapeHtml(p.board)}</b> · ${flag} · ${p.playDate || ''}</span>
+                            <span class="play-winner">🏆 ${this.escapeHtml(winnerName)}</span>
+                            ${isOwner || !champ.owner ? `<button class="remove-play btn-secondary" data-play-id="${p.id}" title="Eliminar esta partida del campeonato">✕</button>` : ''}
+                        </div>
+            `;
+        }).join('') || '<div class="campeonato-empty">No hay partidas registradas.</div>';
 
         content.innerHTML = `
             <div class="campeonato-detail-header">
-                <h2>${this.escapeHtml(champ.name)}</h2>
-                <p>${champ.description ? this.escapeHtml(champ.description) : 'Sin descripción'}</p>
-                <p style="color:var(--text-muted);margin-top:8px;">Creado: ${date} | Participantes: ${(champ.participants || []).length} | Partidas: ${(champ.playIds || []).length}</p>
-                ${ownerDisplay ? `<p style="color:var(--text-muted);margin-top:4px;">${ownerDisplay}</p>` : ''}
-                ${!isOwner && champ.owner ? '<p style="color:var(--accent);margin-top:4px;font-size:0.9rem;">⚠ Solo lectura (no eres el propietario)</p>' : ''}
-                ${!this.bggUsername ? '<p style="color:var(--accent);margin-top:4px;font-size:0.9rem;">⚠ Inicia sesión en BGG para editar campeonatos</p>' : ''}
+                <div class="detail-title-row">
+                    <h2>${this.escapeHtml(champ.name)}</h2>
+                    ${warnings.map(w => `<span class="warn-inline">⚠ ${w}</span>`).join(' ')}
+                    ${canEdit ? `
+                    <div class="campeonato-actions">
+                        <button id="btn-import-plays-campeonato" class="btn-primary btn-narrow">+ Importar Partidas</button>
+                        <button id="btn-add-manual-play" class="btn-secondary btn-narrow">+ Añadir Partida Manual</button>
+                        <button id="btn-delete-campeonato" class="btn-danger btn-narrow">✕ Borrar Campeonato</button>
+                    </div>` : ''}
+                </div>
+                <div class="detail-badges">${badges}</div>
+                ${champ.description ? `<p class="detail-desc">${this.escapeHtml(champ.description)}</p>` : ''}
             </div>
-            <div class="campeonato-section">
-                <h3>Clasificación</h3>
-                ${champPlaysChrono.length > 0 ? `
-                <table class="standings-table">
-                    <thead>
-                        <tr><th class="pos"></th><th>Jugador</th>${champPlaysChrono.map(p => `<th data-play-date="${p.playDate || ''}">${this.getTrackFlag(p.board)} ${p.board}</th>`).join('')}<th>Total</th></tr>
-                    </thead>
-                    <tbody>
-                        ${standings.map((s, i) => `
-                            <tr>
-                                <td class="pos">${i === 0 ? '<span class="medal">🥇</span>' : i === 1 ? '<span class="medal">🥈</span>' : i === 2 ? '<span class="medal">🥉</span>' : i + 1}</td>
-                                <td>${s.name}</td>
-                                ${champPlaysChrono.map(p => {
-                                    const playerScore = p.playerScores.find(ps => String(ps.playerRefId) === String(s.id));
-                                    return `<td>${playerScore ? playerScore.scoreNum : '-'}</td>`;
-                                }).join('')}
-                                <td><strong>${Math.round(s.totalScore)}</strong></td>
-                            </tr>
-                        `).join('')}
-                    </tbody>
-                </table>` : '<div class="campeonato-empty">No hay partidas en este campeonato. Importa o añade partidas para ver la clasificación.</div>'}
+            <div class="campeonato-duo">
+                <section class="campeonato-section">
+                    <h3>Clasificación</h3>
+                    ${standingsHtml}
+                </section>
+                <section class="campeonato-section champ-chart-section">
+                    <h3>Evolución de puntos</h3>
+                    ${champPlaysChrono.length > 0 ? `
+                    <div class="champ-chart-wrap"><canvas id="chart-champ-evolution"></canvas></div>` : '<div class="campeonato-empty">Con la primera partida verás aquí la evolución acumulada.</div>'}
+                </section>
             </div>
-            <div class="campeonato-section">
+            <section class="campeonato-section campeonato-plays-panel">
                 <h3>Partidas (${champPlaysChrono.length})</h3>
-                ${(isOwner || !champ.owner) && this.bggUsername ? `
-                <div class="campeonato-actions">
-                    <button id="btn-import-plays-campeonato" class="btn-primary btn-narrow">+ Importar Partidas</button>
-                    <button id="btn-add-manual-play" class="btn-secondary btn-narrow">+ Añadir Partida Manual</button>
-                    <button id="btn-delete-campeonato" class="btn-danger btn-narrow">✕ Borrar Campeonato</button>
-                </div>
-                ` : ''}
-                <div style="margin-top:15px;" class="campeonato-plays-list">
-                    ${champPlaysList.map(p => {
-                        const winnerPs = p.playerScores.find(ps => ps.winner);
-                        const winnerName = winnerPs ? (this.data.players.find(pl => pl.id === winnerPs.playerRefId)?.name || '-') : '-';
-                        const flag = this.getTrackFlag(p.board);
-                        return `
-                            <div class="campeonato-play-item">
-                                <span>${p.playDate} | ${flag} ${p.board} | Ganador: ${winnerName}</span>
-                                ${isOwner || !champ.owner ? `<button class="remove-play" data-play-id="${p.id}">✕</button>` : ''}
-                            </div>
-                        `;
-                    }).join('')}
-                </div>
-            </div>
+                <div class="campeonato-plays-list">${playsHtml}</div>
+            </section>
         `;
+
+        // Chart de evolucion acumulada: cada punto suma los puntos (0-11) de esa carrera
+        // al total del jugador; eje Y adaptado al maximo acumulado del campeonato.
+        const canvas = document.getElementById('chart-champ-evolution');
+        if (canvas && champPlaysChrono.length > 0) {
+            const labels = champPlaysChrono.map(p => `${this.getTrackFlag(p.board)} ${p.board}`);
+            const tracked = standings.slice(0, 8);
+            const datasets = tracked.map(s => {
+                let cumulative = 0;
+                const data = champPlaysChrono.map(p => {
+                    const ps = p.playerScores.find(item => String(item.playerRefId) === String(s.id));
+                    cumulative += ps ? (ps.scoreNum || 0) : 0;
+                    return cumulative;
+                });
+                return {
+                    label: s.name,
+                    data,
+                    borderColor: this.playerColor(s.name),
+                    borderWidth: 2,
+                    pointRadius: 0,
+                    pointHoverRadius: 4,
+                    tension: 0.1,
+                    fill: false
+                };
+            });
+            const maxTotal = Math.max(...standings.map(s => Math.round(s.totalScore)), 1);
+            // Escala: empieza en 0 y el tope se adapta al maximo acumulado del campeonato.
+            const niceMax = m => Math.max(10, Math.ceil(m / 5) * 5);
+            if (this.charts.champEvolution) this.charts.champEvolution.destroy();
+            this.charts.champEvolution = new Chart(canvas, {
+                type: 'line',
+                data: { labels, datasets },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: { mode: 'index', intersect: false },
+                    plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, boxWidth: 8, boxHeight: 8 } } },
+                    scales: {
+                        x: { grid: { display: false }, ticks: { maxRotation: 0, autoSkip: false } },
+                        y: { beginAtZero: true, suggestedMax: niceMax(maxTotal), ticks: { precision: 0, maxTicksLimit: 5 } }
+                    }
+                }
+            });
+        }
+
         const importBtn = document.getElementById('btn-import-plays-campeonato');
         if (importBtn) {
             importBtn.addEventListener('click', () => {

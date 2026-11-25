@@ -1,0 +1,53 @@
+{
+  "version": 1,
+  "comments": [
+    {
+      "id": "iiz1r2c4",
+      "file": "01-rail-compact.html",
+      "selector": "body > header",
+      "excerpt": "🏁 Heat Dashboard Temporada 2025 · 317 partidas registradas",
+      "comment": "Este me gusta con los siguientes cambios,\nFalta botón para conectarse como Administrador.\nPrefiero que la distribución de paneles sea distinta, arriba paneles de Clasificación y Evolución y debajo partidas.\nLos campeonatos de momento son generalmente de 4 carreras (los primeros de 3).\nEn móvil se ve fatal",
+      "createdAt": "2026-11-25T12:21:00.891Z",
+      "status": "resolved",
+      "sentAt": "2026-11-25T12:21:01.454Z",
+      "resolvedAt": "2026-11-25T12:22:17.124Z",
+      "resolution": "Añadido botón «Acceso administrador» + badge de modo en la cabecera; layout cambiado a Clasificación+Evolución arriba y Partidas a todo lo ancho debajo; rondas de 2025 actualizadas a 4 carreras (anteriores de 3); móvil corregido con breakpoints a 1050px y 720px (rail scrollable, tablas con scroll horizontal, botones ≥38px)."
+    },
+    {
+      "id": "6blf2c39",
+      "file": "01-rail-compact.html",
+      "selector": "body > main > section > div:nth-of-type(2) > div:nth-of-type(2)",
+      "excerpt": "Evolución de puntos diferencia entre 1.º y 2.º: +27 pts 250 200 150 100 50 🇮🇹 Monza 🇺🇸 Nevada 🇲🇦 Marrakech 🇪🇸 Jerez Ana Torres Mario Vega Carlos Ruiz Laura Pin Sofía Marín",
+      "comment": "La escala tiene que ir de 0 a 40 más o menos; o mejor, si se puede adaptarse a los puntos del campeonato.",
+      "createdAt": "2026-11-25T12:24:38.885Z",
+      "status": "resolved",
+      "sentAt": null,
+      "resolvedAt": "2026-11-25T12:25:51.891Z",
+      "resolution": "Chart cambiado a puntos por partida (no acumulados) con eje Y que arranca en 0 y escala adaptable al máximo del campeonato (0–45 en el ejemplo); datos de muestra ajustados a puntuación realista de Heat (~36–42 pts) y totales coherentes table/partidas/rail."
+    },
+    {
+      "id": "uscpsvvk",
+      "file": "01-rail-compact.html",
+      "selector": "body > main > section > div:nth-of-type(2) > div:nth-of-type(1)",
+      "excerpt": "Clasificación 4 de 4 rondas disputadas Pos Piloto 🇮🇹 Monza 🇺🇸 Nevada 🇲🇦 Marrakech 🇪🇸 Jerez Total 🥇 Ana Torres 52 53 53 56 214 🥈 Mario Vega 46 54 45 42 187 🥉 Carlos Ruiz 44 44 40 42 170 4 Laura Pin 41 44 42 43 170 5 Sofía Marín 38 39 34 38 149",
+      "comment": "Los puntos por carrrera van entre 0 y 11",
+      "createdAt": "2026-11-25T12:25:04.148Z",
+      "status": "resolved",
+      "sentAt": "2026-11-25T12:25:04.174Z",
+      "resolvedAt": "2026-11-25T12:26:36.266Z",
+      "resolution": "Puntuación corregida a la real de Heat: 0–11 por carrera. Tabla con valores 5–11, chart con escala adaptativa 0–12 (marcas 0/4/8/12), ganadores por partida en la lista y totales recalculados (Ana 36, Mario 34, Carlos 30, Laura 29, Sofía 27)."
+    },
+    {
+      "id": "2vtrcxi7",
+      "file": "01-rail-compact.html",
+      "selector": "body > main > section > div:nth-of-type(2) > div:nth-of-type(2)",
+      "excerpt": "Evolución de puntos top 5 de 7 pilotos · puntos por carrera 0–11 · escala adaptable: 0–12 12 8 4 0 🇮🇹 Monza 🇺🇸 Nevada 🇲🇦 Marrakech 🇪🇸 Jerez Ana Torres Mario Vega Carlos Ruiz Laura Pin Sofía Marín",
+      "comment": "El chart tiene que ser acumulativo como antes, es decir siempre creciente.",
+      "createdAt": "2026-11-25T12:27:35.354Z",
+      "status": "resolved",
+      "sentAt": "2026-11-25T12:27:35.887Z",
+      "resolvedAt": "2026-11-25T12:27:57.001Z",
+      "resolution": "Chart vuelto a acumulativo siempre creciente: cada línea suma los puntos 0–11 de cada carrera; escala adaptativa recalculada al máximo del campeonato (36 pts → 0–40, marcas 0/10/20/30/40); hint y aria-label actualizados."
+    }
+  ]
+}

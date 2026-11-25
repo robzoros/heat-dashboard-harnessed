@@ -4,6 +4,12 @@
     box-sizing: border-box;
 }
 
+/* Utilidad genérica de ocultación; los componentes con estado oculto propio
+   (modals, banner de cookies, import-consent) ya tienen su regla específica. */
+.hidden {
+    display: none;
+}
+
 /* ── Tokens ───────────────────────────────────────────────────────────────
    Tema único «Asfalto y brasa»: fondos cálidos casi negros, texto marfil y
    acento de brasa. La paleta de jugadores (src/data/player-colors.json) está
@@ -839,8 +845,116 @@ th {
 .campeonatos-toolbar {
     display: flex;
     gap: 12px;
-    margin-bottom: 20px;
+    margin-bottom: 16px;
     align-items: center;
+}
+
+/* ── Rail de campeonatos (HDH-UI04) ────────────────────────────────────
+   Sustituye al desplegable: tarjeta por campeonato con líder, participantes
+   y partidas visibles sin abrir el detalle. */
+.campeonatos-rail {
+    margin-bottom: 20px;
+}
+
+.rail-head span {
+    display: block;
+    padding: 0 2px 6px;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.rail-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 10px;
+}
+
+.campeonato-rail-empty {
+    color: var(--text-muted);
+    padding: 14px 16px;
+    font-style: italic;
+    background: var(--surface);
+    border: 1px dashed var(--line);
+    border-radius: 10px;
+}
+
+.champ-card {
+    display: grid;
+    gap: 4px;
+    text-align: left;
+    width: 100%;
+    padding: 12px 14px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: border-color 0.2s;
+}
+
+.champ-card:hover {
+    border-color: var(--accent);
+}
+
+.champ-card:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
+.champ-card.is-selected {
+    border-color: var(--accent);
+    background: linear-gradient(180deg, var(--accent-soft), var(--surface) 70%);
+}
+
+.champ-card-name {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.15rem;
+    line-height: 1.1;
+    overflow-wrap: anywhere;
+}
+
+.champ-card-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+}
+
+.champ-card-meta b {
+    color: var(--text);
+    font-weight: 600;
+}
+
+.champ-leader {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    flex-wrap: wrap;
+    margin-top: 2px;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.champ-leader b {
+    color: var(--text);
+}
+
+.leader-dot,
+.name-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex: none;
+}
+
+.campeonato-detail {
+    margin-top: 20px;
 }
 
 .campeonatos-select {
@@ -911,9 +1025,109 @@ th {
 
 .campeonato-detail-header {
     background: var(--surface);
-    padding: 20px;
+    padding: 16px 20px;
     border-radius: 10px;
-    margin-bottom: 20px;
+    margin-bottom: 16px;
+}
+
+.detail-title-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.detail-title-row h2 {
+    color: var(--accent);
+    margin-bottom: 0;
+    font-size: 1.6rem;
+}
+
+.warn-inline {
+    color: var(--accent);
+    font-size: 0.82rem;
+}
+
+.campeonato-detail-header .campeonato-actions {
+    margin-left: auto;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.detail-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.detail-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 10px;
+    border-radius: 999px;
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+
+.detail-badge.is-gold {
+    color: var(--accent);
+    border-color: var(--accent);
+    font-weight: 600;
+}
+
+.detail-desc {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-top: 8px;
+    margin-bottom: 0;
+}
+
+/* Duo superior: Clasificación + Evolución lado a lado; Partidas debajo a todo lo ancho. */
+.campeonato-duo {
+    display: grid;
+    grid-template-columns: minmax(0, 6fr) minmax(0, 6fr);
+    gap: 16px;
+    align-items: stretch;
+}
+
+.campeonato-duo .campeonato-section {
+    margin-bottom: 0;
+}
+
+.champ-chart-section {
+    min-width: 0;
+}
+
+.champ-chart-wrap {
+    position: relative;
+    height: 300px;
+}
+
+.standings-wrap {
+    overflow-x: auto;
+}
+
+.standings-table .total-col {
+    text-align: right;
+}
+
+.standings-name {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    min-width: 0;
+}
+
+.campeonato-plays-panel .campeonato-plays-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 8px;
 }
 
 .campeonato-detail-header h2 {
@@ -927,9 +1141,10 @@ th {
 
 .campeonato-section {
     background: var(--surface);
-    padding: 20px;
+    padding: 16px 20px 20px;
     border-radius: 10px;
-    margin-bottom: 20px;
+    margin-bottom: 16px;
+    min-width: 0;
 }
 
 .campeonato-section h3 {
@@ -980,10 +1195,20 @@ th {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
     background: var(--surface-2);
-    padding: 10px 14px;
-    border-radius: 5px;
-    font-size: 0.9rem;
+    padding: 9px 12px;
+    border-radius: 8px;
+    font-size: 0.88rem;
+}
+
+.campeonato-play-item .play-main b {
+    font-weight: 700;
+}
+
+.campeonato-play-item .play-winner {
+    color: var(--text-muted);
 }
 
 .campeonato-play-item .remove-play {
@@ -994,6 +1219,7 @@ th {
     border-radius: 4px;
     cursor: pointer;
     font-size: 0.8rem;
+    margin-left: auto;
 }
 
 .campeonato-play-item .remove-play:hover {
@@ -1216,3 +1442,36 @@ th {
     margin-top: 0;
 }
 
+
+/* ── Responsive campeonatos (HDH-UI04) ─────────────────────────────────
+   ≤1050px: el duo se apila y la lista pasa a carrusel horizontal.
+   ≤720px: gutters compactos, partidas en una columna y botones ≥38px. */
+@media (max-width: 1050px) {
+    .campeonato-duo {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 720px) {
+    .rail-list {
+        grid-template-columns: none;
+        grid-auto-flow: column;
+        grid-auto-columns: minmax(230px, 1fr);
+        overflow-x: auto;
+        padding-bottom: 6px;
+        scroll-snap-type: x proximity;
+    }
+
+    .champ-card {
+        scroll-snap-align: start;
+        padding: 10px 12px;
+    }
+
+    .btn {
+        min-height: 38px;
+    }
+
+    .campeonato-play-item .remove-play {
+        margin-left: auto;
+    }
+}
