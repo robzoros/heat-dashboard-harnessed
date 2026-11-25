@@ -977,7 +977,8 @@ PLAYER_PALETTE: ['#d62828', '#2563eb', '#eab308', '#ec4899', '#06b6d4', '#1a9e50
         this.charts.tracks = new Chart(document.getElementById('chart-tracks'), {
             type: 'doughnut',
             data: { labels: [], datasets: [{ data: [], backgroundColor: [accent, this.cssVar('--surface-3'), this.cssVar('--text-muted')], borderColor: surface, borderWidth: 2 }] },
-            options: { responsive: true }
+            // Altura fija vía .donut-wrap: el donut no escala con el ancho de la columna.
+            options: { responsive: true, maintainAspectRatio: false }
         });
 
         this.charts.winsEvolution = new Chart(document.getElementById('chart-wins-evolution'), {
