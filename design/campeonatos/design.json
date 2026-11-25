@@ -1,0 +1,9 @@
+{
+  "title": "Rediseño de la pestaña Campeonatos",
+  "brief": "Rediseñar la pestaña de campeonatos: que la parte de campeonatos ocupe menos espacio para dar más espacio al chart, y que cada campeonato muestre más información (líder, puntos, nº de partidas, podio). Tema «Asfalto y brasa», tokens de src/styles.css.",
+  "artboards": [
+    { "file": "01-rail-compact.html", "title": "Rail compacto + chart protagonista", "tradeoff": "Lista lateral fija de 300px con líder y avance por campeonato; arriba Clasificación y Evolución lado a lado y debajo Partidas a todo lo ancho. Menos desplazamiento, pero la lista roba ancho horizontal.", "width": 1440, "height": 900 },
+    { "file": "02-grid-minicards.html", "title": "Mini-cards densas + chart hero", "tradeoff": "Máxima información por campeonato en la lista (podio en chips + sparkline) en una fila compacta; debajo, chart hero y detalle densificado. Más densidad = más carga visual.", "width": 1440, "height": 900 },
+    { "file": "03-strip-split.html", "title": "Tira de pestañas + split chart/clasificación", "tradeoff": "Los campeonatos se reducen a una tira de una línea (mínimo espacio posible) y el resto es un split 50/50 tabla/charts; menos jerarquía comparativa entre campeonatos.", "width": 1440, "height": 900 }
+  ]
+}

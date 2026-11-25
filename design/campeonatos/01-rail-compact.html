@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Dirección 1 — Rail de campeonatos + chart protagonista</title>
+<style>
+    :root {
+        --bg:#14110f; --surface:#1d1916; --surface-2:#28221f; --surface-3:#342d29;
+        --line:#39322d; --text:#f2ece5; --muted:#a99f95; --accent:#ff7a2f;
+        --accent-soft:rgba(255,122,47,.14); --good:#46c98b;
+        --grid:rgba(255,255,255,.06);
+        --font-display:'Arial Narrow','Bahnschrift',sans-serif;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:'Barlow','Segoe UI',system-ui,sans-serif; background:var(--bg); color:var(--text); font-variant-numeric:tabular-nums; }
+    h2 { font-family:var(--font-display); font-weight:700; letter-spacing:.01em; }
+
+    .topbar { position:relative; display:flex; align-items:center; flex-wrap:wrap; gap:10px 24px; padding:18px 28px 16px; background:var(--bg); }
+    .topbar::after { content:''; position:absolute; left:0; right:0; bottom:0; height:3px; background:linear-gradient(90deg,#ffb52e,#ff6a2b 45%,#e5392f); }
+    .topbar h1 { font-family:var(--font-display); font-size:2rem; }
+    .season { color:var(--muted); font-size:.85rem; margin-right:auto; }
+    .badge { display:inline-flex; align-items:center; gap:5px; padding:3px 10px; border-radius:999px; background:var(--surface-2); border:1px solid var(--line); font-size:.78rem; color:var(--muted); white-space:nowrap; }
+    .badge.gold { color:var(--accent); border-color:var(--accent); font-weight:600; }
+    .btn { border-radius:8px; padding:7px 12px; font:600 .85rem/1 'Barlow',sans-serif; cursor:pointer; }
+    .btn-primary { background:var(--accent); color:#1d0d03; border:0; }
+    .btn-ghost { background:var(--surface); color:var(--muted); border:1px solid var(--line); }
+    .btn-ghost:hover { color:var(--text); border-color:var(--accent); }
+    :focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+
+    .tabbar { display:flex; gap:8px; flex-wrap:wrap; padding:10px 28px; background:var(--surface); border-bottom:1px solid var(--line); }
+    .tab { padding:7px 16px; border-radius:8px; font-size:.9rem; color:var(--muted); border:1px solid transparent; }
+    .tab[aria-current] { color:var(--accent); background:var(--accent-soft); border-color:var(--accent); font-weight:600; }
+
+    /* Layout principal: rail estrecho + detalle; los campeonatos ocupan ~300px fijos */
+    .layout { display:grid; grid-template-columns:300px 1fr; gap:20px; padding:20px 28px 40px; min-height:780px; align-items:start; }
+
+    .rail { display:flex; flex-direction:column; gap:8px; }
+    .rail-head { display:flex; justify-content:space-between; align-items:center; padding:2px 4px 4px; }
+    .rail-head span { font-size:.8rem; color:var(--muted); letter-spacing:.06em; text-transform:uppercase; }
+    .champ { text-align:left; width:100%; background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:12px 14px; cursor:pointer; color:var(--text); display:grid; gap:3px; }
+    .champ:hover { border-color:var(--accent); }
+    .champ[aria-current] { border-color:var(--accent); background:linear-gradient(180deg,var(--accent-soft),var(--surface)); }
+    .champ-name { font-family:var(--font-display); font-weight:700; font-size:1.15rem; line-height:1.1; }
+    .champ-meta { display:flex; gap:10px; flex-wrap:wrap; font-size:.78rem; color:var(--muted); }
+    .champ-meta b { color:var(--text); font-weight:600; }
+    .champ-leader { display:flex; align-items:center; gap:7px; margin-top:3px; font-size:.8rem; color:var(--muted); flex-wrap:wrap; }
+    .dot { width:10px; height:10px; border-radius:50%; flex:none; }
+
+    .detail { display:flex; flex-direction:column; gap:16px; min-width:0; }
+    .detail-head { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+    .detail-head h2 { font-size:1.7rem; }
+    .detail-head .left { display:flex; align-items:center; gap:12px; flex-wrap:wrap; flex:1; }
+    .warn { font-size:.82rem; color:var(--accent); }
+
+    .panel { background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:18px 20px; min-width:0; }
+    .panel-head { display:flex; align-items:baseline; justify-content:space-between; gap:12px; margin-bottom:10px; flex-wrap:wrap; }
+    .panel-head h3 { font-family:var(--font-display); font-size:1.3rem; color:var(--accent); }
+    .panel-head .hint { font-size:.8rem; color:var(--muted); }
+
+    /* Arriba: Clasificación y Evolución lado a lado */
+    .duo { display:grid; grid-template-columns:minmax(420px,6fr) minmax(340px,6fr); gap:16px; align-items:stretch; }
+    .chart svg { display:block; width:100%; height:auto; aspect-ratio:760/280; }
+    .legend-row { display:flex; gap:14px; flex-wrap:wrap; margin-top:6px; }
+    .legend-row span { display:inline-flex; align-items:center; gap:6px; font-size:.82rem; color:var(--muted); }
+
+    .tablewrap { overflow-x:auto; }
+    table.standings { width:100%; border-collapse:collapse; min-width:430px; }
+    .standings th, .standings td { padding:7px 10px; text-align:left; border-bottom:1px solid var(--surface-2); font-size:.88rem; white-space:nowrap; }
+    .standings th { background:var(--surface-2); color:var(--muted); font-weight:600; font-size:.78rem; }
+    .standings .pos { width:34px; text-align:center; color:var(--accent); font-weight:600; }
+    .standings .total { font-weight:700; text-align:right; }
+    .standings tr.first td.name { font-weight:700; }
+
+    /* Debajo: partidas a todo lo ancho */
+    .plays-panel { width:100%; }
+    .plays-actions { display:flex; gap:8px; flex-wrap:wrap; }
+    .plays { display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:8px; }
+    .play { display:flex; justify-content:space-between; align-items:center; gap:10px; background:var(--surface-2); border-radius:8px; padding:9px 12px; font-size:.85rem; }
+    .play .who { color:var(--muted); }
+    .play .who b { color:var(--text); }
+    .play .rm { margin-left:auto; }
+    .btn-danger { background:transparent; color:#e5392f; border:1px solid #e5392f; }
+
+    @media (max-width:1050px) {
+        .layout { grid-template-columns:1fr; }
+        .rail { flex-direction:row; overflow-x:auto; padding-bottom:6px; }
+        .champ { min-width:250px; flex:none; }
+        .duo { grid-template-columns:1fr; }
+    }
+    @media (max-width:720px) {
+        .topbar { padding:14px 16px 12px; gap:8px 12px; }
+        .topbar h1 { font-size:1.5rem; }
+        .season { width:100%; }
+        .tabbar { padding:8px 12px; flex-wrap:nowrap; overflow-x:auto; }
+        .tab { white-space:nowrap; }
+        .layout { grid-template-columns:1fr; padding:14px 16px 32px; gap:14px; }
+        .rail { flex-direction:row; overflow-x:auto; }
+        .champ { min-width:230px; }
+        .detail-head h2 { font-size:1.35rem; }
+        .detail-head { align-items:flex-start; }
+        .btn { min-height:38px; }
+        .panel { padding:14px; }
+        .standings { min-width:430px; }
+        .plays { grid-template-columns:1fr; }
+        .plays-actions .btn { flex:1; }
+    }
+    @media (prefers-reduced-motion:reduce) { * { transition:none !important; animation:none !important; } }
+</style>
+</head>
+<body>
+    <header class="topbar">
+        <h1>🏁 Heat Dashboard</h1>
+        <span class="season">Temporada 2025 · 317 partidas registradas</span>
+        <span class="badge" id="admin-status">Modo lectura</span>
+        <button class="btn btn-primary" id="btn-admin">🔐 Acceso administrador</button>
+    </header>
+
+    <nav class="tabbar" aria-label="Secciones">
+        <a class="tab" href="#">Clasificación</a>
+        <a class="tab" href="#">Partidas</a>
+        <a class="tab" href="#">Jugadores</a>
+        <a class="tab" aria-current="page" href="#">Campeonatos</a>
+        <a class="tab" href="#">Colores</a>
+    </nav>
+
+    <main class="layout">
+        <!-- Rail: cada campeonato muestra líder y avance sin abrir el detalle -->
+        <aside class="rail" aria-label="Lista de campeonatos">
+            <div class="rail-head"><span>3 campeonatos</span><button class="btn btn-primary">+ Nuevo</button></div>
+
+            <button class="champ" aria-current="true">
+                <span class="champ-name">Torneo Invierno 2025</span>
+                <span class="champ-meta"><span>👥 <b>7</b></span><span>🏁 <b>4/4</b> partidas</span><span>📅 desde 12/09</span></span>
+                <span class="champ-leader"><span class="dot" style="background:#dc2626;"></span>Líder <b>Ana Torres</b> · 36 pts</span>
+            </button>
+
+            <button class="champ">
+                <span class="champ-name">Copa Asfalto &amp; Brasa</span>
+                <span class="champ-meta"><span>👥 <b>5</b></span><span>🏁 <b>3/3</b> partidas</span><span>📅 desde 03/10</span></span>
+                <span class="champ-leader"><span class="dot" style="background:#2563eb;"></span>Líder <b>Mario Vega</b> · 26 pts</span>
+            </button>
+
+            <button class="champ">
+                <span class="champ-name">GP Maratón 24h</span>
+                <span class="champ-meta"><span>👥 <b>8</b></span><span>🏁 <b>3/6</b> partidas</span><span>📅 desde 18/11</span></span>
+                <span class="champ-leader"><span class="dot" style="background:#16a34a;"></span>Líder <b>Laura Pin</b> · 21 pts</span>
+            </button>
+        </aside>
+
+        <!-- Detalle: arriba Clasificación y Evolución; debajo, partidas a todo lo ancho -->
+        <section class="detail" aria-label="Detalle del campeonato">
+            <div class="detail-head">
+                <div class="left">
+                    <h2>Torneo Invierno 2025</h2>
+                    <span class="badge gold">🏆 Líder: Ana Torres</span>
+                    <span class="badge">🏁 4/4 partidas</span>
+                    <span class="badge">👥 7 pilotos</span>
+                    <span class="badge">📅 desde 12/09/2025</span>
+                    <span class="badge">👤 propietario: bgg_robzo</span>
+                </div>
+                <span class="warn">⚠ Solo lectura</span>
+                <button class="btn btn-ghost">← Volver</button>
+            </div>
+
+            <div class="duo">
+                <div class="panel">
+                    <div class="panel-head"><h3>Clasificación</h3><span class="hint">4 de 4 rondas disputadas</span></div>
+                    <div class="tablewrap">
+                        <table class="standings">
+                            <thead><tr><th class="pos">Pos</th><th>Piloto</th><th>🇮🇹 Monza</th><th>🇺🇸 Nevada</th><th>🇲🇦 Marrakech</th><th>🇪🇸 Jerez</th><th style="text-align:right;">Total</th></tr></thead>
+                            <tbody>
+                                <tr class="first"><td class="pos">🥇</td><td class="name">Ana Torres</td><td>8</td><td>10</td><td>7</td><td>11</td><td class="total">36</td></tr>
+                                <tr><td class="pos">🥈</td><td>Mario Vega</td><td>10</td><td>6</td><td>11</td><td>7</td><td class="total">34</td></tr>
+                                <tr><td class="pos">🥉</td><td>Carlos Ruiz</td><td>9</td><td>7</td><td>8</td><td>6</td><td class="total">30</td></tr>
+                                <tr><td class="pos">4</td><td>Laura Pin</td><td>7</td><td>8</td><td>6</td><td>8</td><td class="total">29</td></tr>
+                                <tr><td class="pos">5</td><td>Sofía Marín</td><td>5</td><td>6</td><td>7</td><td>9</td><td class="total">27</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="panel chart">
+                    <div class="panel-head">
+                        <h3>Evolución de puntos</h3>
+                        <span class="hint">acumulado · top 5 de 7 pilotos · escala adaptable: 0–40 según máx. del campeonato (carreras 0–11 c/u)</span>
+                    </div>
+                    <svg viewBox="0 0 760 280" role="img" aria-label="Evolución acumulada de puntos tras cada una de las 4 partidas, de los 5 primeros clasificados; curvas siempre crecientes y eje Y adaptable al máximo del campeonato (36 pts, escala 0–40)">
+                        <g stroke="rgba(255,255,255,.06)"><line x1="40" y1="30" x2="750" y2="30"/><line x1="40" y1="85" x2="750" y2="85"/><line x1="40" y1="140" x2="750" y2="140"/><line x1="40" y1="195" x2="750" y2="195"/><line x1="40" y1="250" x2="750" y2="250"/></g>
+                        <g fill="#a99f95" font-size="11" font-family="sans-serif" text-anchor="end">
+                            <text x="34" y="34">40</text><text x="34" y="89">30</text><text x="34" y="144">20</text><text x="34" y="199">10</text><text x="34" y="254">0</text>
+                        </g>
+                        <g fill="#a99f95" font-size="11" font-family="sans-serif" text-anchor="middle">
+                            <text x="110" y="268">🇮🇹 Monza</text><text x="340" y="268">🇺🇸 Nevada</text><text x="570" y="268">🇲🇦 Marrakech</text><text x="722" y="268">🇪🇸 Jerez</text>
+                        </g>
+                        <g fill="none" stroke-width="2.5" stroke-linecap="round">
+                            <path stroke="#dc2626" d="M110,206 L340,151 L570,113 L718,52"/>
+                            <path stroke="#2563eb" d="M110,195 L340,162 L570,102 L718,63"/>
+                            <path stroke="#f59e0b" d="M110,201 L340,162 L570,118 L718,85"/>
+                            <path stroke="#16a34a" d="M110,212 L340,168 L570,135 L718,91"/>
+                            <path stroke="#0891b2" d="M110,223 L340,190 L570,151 L718,102"/>
+                        </g>
+                        <g fill="#dc2626"><circle cx="110" cy="206" r="3"/><circle cx="340" cy="151" r="3"/><circle cx="570" cy="113" r="3"/><circle cx="718" cy="52" r="4.5"/></g>
+                        <g fill="#2563eb"><circle cx="718" cy="63" r="3"/></g>
+                    </svg>
+                    <div class="legend-row">
+                        <span><span class="dot" style="background:#dc2626;"></span>Ana Torres</span>
+                        <span><span class="dot" style="background:#2563eb;"></span>Mario Vega</span>
+                        <span><span class="dot" style="background:#f59e0b;"></span>Carlos Ruiz</span>
+                        <span><span class="dot" style="background:#16a34a;"></span>Laura Pin</span>
+                        <span><span class="dot" style="background:#0891b2;"></span>Sofía Marín</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel plays-panel">
+                <div class="panel-head">
+                    <h3>Partidas (4)</h3>
+                    <span class="plays-actions">
+                        <button class="btn btn-primary">+ Importar partidas</button>
+                        <button class="btn btn-ghost">+ Partida manual</button>
+                        <button class="btn btn-danger">✕ Borrar campeonato</button>
+                        <button class="btn btn-ghost">✎ Editar</button>
+                    </span>
+                </div>
+                <div class="plays">
+                    <div class="play"><span><b>🇪🇸 Jerez</b> · 26/10</span><span class="who">🏆 <b>Ana Torres</b> · 11 pts</span><button class="btn btn-ghost rm" style="padding:3px 9px;">✕</button></div>
+                    <div class="play"><span><b>🇲🇦 Marrakech</b> · 11/10</span><span class="who">🏆 <b>Mario Vega</b> · 11 pts</span><button class="btn btn-ghost rm" style="padding:3px 9px;">✕</button></div>
+                    <div class="play"><span><b>🇺🇸 Nevada</b> · 04/10</span><span class="who">🏆 <b>Ana Torres</b> · 10 pts</span><button class="btn btn-ghost rm" style="padding:3px 9px;">✕</button></div>
+                    <div class="play"><span><b>🇮🇹 Monza</b> · 12/09</span><span class="who">🏆 <b>Mario Vega</b> · 10 pts</span><button class="btn btn-ghost rm" style="padding:3px 9px;">✕</button></div>
+                </div>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

@@ -1,5 +1,35 @@
 # PROGRESS.md
 
+## Sesión 2026-11-24 (HDH-UI04)
+
+### Feature trabajada: HDH-UI04 - Rediseño de la pestaña Campeonatos
+
+**Estado**: Completada
+
+#### Qué se hizo
+- **Rail de campeonatos**: el desplegable `#campeonatos-select` se sustituye por `#campeonatos-rail`, una lista de tarjetas (`.champ-card`) con nombre, participantes, nº de partidas, fecha de creación y líder (nombre + puntos + punto de color del jugador vía `playerColor`). Selección por clic (delegación en el contenedor), tarjeta seleccionada con `is-selected` + `aria-current`.
+- **Detalle reorganizado** (según `design/campeonatos/01-rail-compact.html`, comentarios de canvas aplicados): cabecera reducida a línea de badges (🏆 líder · 🏁 partidas · 👥 participantes · 📅 fecha · 👤 propietario, avisos de solo lectura como `.warn-inline`), acciones de edición a la derecha del título; grid `.campeonato-duo` con Clasificación y Evolución lado a lado; Partidas a todo lo ancho en grid auto-fill.
+- **Chart de evolución acumulativa** (`#chart-champ-evolution`, Chart.js line): cada punto suma los puntos de la carrera (0–11) al total del jugador → siempre creciente; top 8 clasificados, colores de jugador reales; eje Y desde 0 con `suggestedMax` adaptado al máximo acumulado del campeonato (redondeo a múltiplos de 5). Instancia gestionada en `this.charts.champEvolution` con `destroy()` al re-renderizar y al vaciar el detalle.
+- **Fix latente incluido**: regla genérica `.hidden { display: none; }` en `src/styles.css`. No existía, así que «← Salir» ocultaba el detalle vía clase pero el bloque quedaba visible (los demás estados ocultos tenían reglas por componente). Los tests de detalle funcionaban porque comprobaban contenido, no visibilidad.
+- **Responsive**: ≤1050px el duo se apila; ≤720px gutters 16px, rail en carrusel horizontal con scroll-snap, partidas en una columna, botones con `min-height: 38px`.
+- **Diseño**: artboard `design/campeonatos/01-rail-compact.html` elegido de `/gentle:design` (slug `campeonatos`, 3 direcciones); tokens de `design/system.md` (sincronizado desde `src/styles.css`).
+
+#### Verificación
+- `node --check src/app.js`: OK.
+- `e2e/tests/HDH-UI04.spec.js` (nuevo, 5 tests): rail con líder y tarjeta seleccionada, clic selecciona campeonato, duo Clasificación+Evolución arriba con Partidas debajo, chart acumulativo no-decreciente con series exactas por jugador, móvil: rail scrollable + duo apilado. **5/5 OK** con Node 22.
+- Specs actualizados al nuevo markup: `HDH-09.spec.js` y `HDH-MIGRATION01.spec.js` (opciones del select → tarjetas `.champ-card`), `FIX-HDH-06.spec.js` (parseo de fecha desde `.play-main`), `FIX-HDH-07.spec.js` («Participantes: 3» → «👥 3 participantes»).
+- **Suite completa Playwright: 150/150 pasados** (Node v22, `CI=true` chromium headless local).
+- Screenshots de evidencia generados en local (`evidence/screenshots/HDH-UI04-*.png`, no versionados; evidencia oficial en artifacts de Actions).
+
+#### Notas / Riesgos
+- El runner de Playwright sigue colgándose con Node v24 en este equipo; ejecutado con `C:/Users/robzo/AppData/Local/pi-node/current/node.exe node_modules/@playwright/test/cli.js test` (Node 22) y `CI=true`, como documentaba la sesión de HDH-14.
+- `getChampionshipStandings` se usa ahora también desde el rail (por tarjeta): operativo con hasta decenas de campeonatos; si el número creciera mucho convendría cachear el líder por campeonato.
+- `championships.raw` guarda los campeonatos completos (con `plays`) para alimentar el rail; en Firestore llega por snapshot, en local desde localStorage.
+
+---
+
+# PROGRESS.md
+
 ## Sesión 2026-11-24 (HDH-COL04)
 
 ### Feature trabajada: HDH-COL04 - Colores de la pestaña Circuitos desde player-colors.json
