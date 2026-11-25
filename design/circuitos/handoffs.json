@@ -3,11 +3,13 @@
   "chosen": "02-rail-detalle.html",
   "handoffs": {
     "02-rail-detalle.html": {
-      "status": "in_progress",
+      "status": "implemented",
       "queued": false,
       "sentAt": "2026-11-25T13:43:48.362Z",
       "startedAt": "2026-11-25T13:43:57.845Z",
-      "implementedAt": null
+      "implementedAt": "2026-11-25T14:11:14.874Z",
+      "note": "Implementado en la app real: rail de circuitos (partidas, bots, reparto, campeón con color), detalle con badges, donut intacto, pódio top 3 de principales y últimas 5 visitas; drawer de filtros ya no tapa el rail; suite 153/153.",
+      "previewUrl": "http://localhost:8082/"
     }
   }
 }
