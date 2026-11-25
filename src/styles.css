@@ -927,11 +927,12 @@ th {
     align-items: stretch;
 }
 
-/* Donut de Circuitos con altura fija: 25% menor para que el detalle quede
-   entero en una pantalla 1080p (antes crecía por el ancho de la columna). */
+/* Donut de Circuitos: responsivo con tope. Antes el doughnut crecía con el
+   ancho de la columna (ratio 1 → ~750px). El contenedor limita el ancho a
+   75% (562px) y se centra; el canvas mantiene su ratio cuadrado. */
 .donut-wrap {
-    position: relative;
-    height: 240px;
+    max-width: 562px;
+    margin-inline: auto;
 }
 
 .track-chart-card,
