@@ -80,15 +80,16 @@ test.describe('HDH-06b - Pestaña Circuitos', () => {
     const trackCards = page.locator('.track-card');
     await expect(trackCards).toHaveCount(2);
 
-    // USA: 2 plays, avg 22.5, champion Alice (2 wins)
+    // USA: 2 plays, champion Alice (2 wins) -- markup HDH-UI05: meta con partidas y bots.
     const usaCard = trackCards.first();
     await expect(usaCard.locator('h4')).toContainText('USA');
-    await expect(usaCard.locator('p').first()).toContainText('2');
+    await expect(usaCard.locator('.track-meta')).toContainText('2');
+    await expect(usaCard.locator('.track-champ')).toContainText('Alice');
 
-    // Italy: 1 play, avg 25.0, champion Bob (1 win)
+    // Italy: 1 play, champion Bob (1 win)
     const italyCard = trackCards.last();
     await expect(italyCard.locator('h4')).toContainText('Italy');
-    await expect(italyCard.locator('p').first()).toContainText('1');
+    await expect(italyCard.locator('.track-meta')).toContainText('1');
 
     await page.screenshot({ path: '../evidence/screenshots/HDH-06b-circuitos-custom.png', fullPage: true });
   });

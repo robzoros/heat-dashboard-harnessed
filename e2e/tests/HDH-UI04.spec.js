@@ -139,7 +139,7 @@ test.describe('HDH-UI04 - Rail de campeonatos y detalle con chart', () => {
     await expect(page.locator('.champ-card')).toHaveCount(2);
     await page.setViewportSize({ width: 390, height: 844 });
     await page.waitForTimeout(300);
-    const railOverflow = await page.locator('.rail-list').evaluate(el => el.scrollWidth > el.clientWidth);
+    const railOverflow = await page.locator('#campeonatos-rail .rail-list').evaluate(el => el.scrollWidth > el.clientWidth);
     expect(railOverflow).toBe(true);
     // Reseleccionar para medir el duo apilado con el detalle abierto.
     await page.evaluate((id) => window.App.selectChampionship(id), first.id);
