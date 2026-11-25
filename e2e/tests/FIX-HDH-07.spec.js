@@ -102,7 +102,8 @@ test.describe('FIX-HDH-07 - Consentimiento para añadir participantes al importa
     );
     await expect(page.locator('#import-plays-modal')).toBeHidden();
     await expect(page.locator('.campeonato-play-item')).toHaveCount(2);
-    // Bot1 (id 4) pasa a ser participante del campeonato.
+    // FIX-HDH-08: campeonato creado por API con ids planos => legacy congelado (S5);
+    // la importación expande participantes con los ids tal cual, como antes.
     expect(await getParticipants(page)).toEqual(['1', '2', '4']);
 
     // El detalle refleja el nuevo numero de participantes.
@@ -131,6 +132,7 @@ test.describe('FIX-HDH-07 - Consentimiento para añadir participantes al importa
       document.querySelectorAll('.campeonato-play-item').length >= 3,
       { timeout: 5000 }
     );
+    // FIX-HDH-08: la lista declarada legacy se respeta tal cual al importar (S5).
     expect(await getParticipants(page)).toEqual(['1', '2', '3', '4']);
   });
 
@@ -150,6 +152,7 @@ test.describe('FIX-HDH-07 - Consentimiento para añadir participantes al importa
       { timeout: 5000 }
     );
     // addPlaysToChampionship sigue expandiendo participantes a partir de las partidas.
+    // FIX-HDH-08: campeonato legacy (creado con ids planos) queda congelado (S5).
     expect(await getParticipants(page)).toEqual(['1', '2', '4']);
   });
 });

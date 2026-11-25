@@ -13,6 +13,12 @@ const RETRY_BASE_MS = Math.max(250, parseInt(process.env.BGG_RETRY_BASE_MS || '2
 const REQUEST_TIMEOUT_MS = Math.max(5000, parseInt(process.env.BGG_REQUEST_TIMEOUT_MS || '30000', 10));
 const RETRYABLE_STATUS_CODES = new Set([403, 408, 425, 429, 500, 502, 503, 504]);
 
+// FIX-HDH-08: userid ficticio determinista para bots y jugadores sin cuenta BGG;
+// se serializa en el JSON y se conserva entre sesiones y semanas.
+function syntheticUserid(name) {
+    return `local-${String(name || '').trim().toLocaleLowerCase('es-ES').replace(/[^a-z0-9]+/g, '-')}`;
+}
+
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -157,11 +163,18 @@ function normalizeData(rawPlays) {
     const boardIds = new Map();
 
     function getPlayerId(name, username, userid) {
-        const key = `${name}|${userid}`;
+        // FIX-HDH-08: identidad estable. Los usuarios BGG traen userid en el XML (no
+        // rota entre exportaciones). Los bots y jugadores sin cuenta BGG reciben un
+        // userid ficticio determinista derivado del nombre, que se serializa en el
+        // JSON y por tanto se conserva entre sesiones y semanas.
+        const effectiveUserid = (userid && userid !== '0')
+            ? userid
+            : syntheticUserid(name);
+        const key = `${name}|${effectiveUserid}`;
         if (playerIds.has(key)) return playerIds.get(key);
         const id = players.length + 1;
         playerIds.set(key, id);
-        players.push({ id, name, username: username || '', userid: userid || '' });
+        players.push({ id, name, username: username || '', userid: effectiveUserid });
         return id;
     }
 
@@ -248,5 +261,6 @@ if (require.main === module) {
 module.exports = {
     RETRYABLE_STATUS_CODES,
     getRetryDelay,
-    makeRequestWithRetry
+    makeRequestWithRetry,
+    syntheticUserid
 };

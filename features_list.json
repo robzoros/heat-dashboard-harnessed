@@ -1102,6 +1102,30 @@
       ],
       "status": "completed",
       "verification": "e2e/tests/HDH-UI05.spec.js (3 tests) + suite completa 153/153 en Node 22 (CI=true, Chromium local); screenshots evidence/screenshots/HDH-UI05-*.png."
+    },
+    {
+      "id": "FIX-HDH-08",
+      "priority": 1,
+      "name": "Identidad estable de participantes en Campeonatos",
+      "description": [
+        "Identidad estable de participantes: userid de BGG para cuentas BGG (viaja en el XML de cada partida), clave sintética determinista persistente para bots y jugadores sin cuenta BGG.",
+        "El exportador semanal (generate-bgg-data.js) serializa el userid (real o sintético) en heat-data.json; el id numérico deja de ser la identidad.",
+        "Al crear un campeonato con selección de jugadores se guarda un snapshot de identidad (nombre, tipo y color congelado) por participante (schemaVersion 2 + participantRefs).",
+        "Las carreras importadas o manuales en campeonatos v2 se canonicalizan a la identidad (copia; el histórico global queda intacto); la clasificación y los colores del detalle salen del snapshot.",
+        "Campeonatos legacy (1961/1962 Daganzo, Boadilla Cup): quedan congelados tal cual con aviso visible; su migración será guiada por el usuario (feature aparte)."
+      ],
+      "status": "completed",
+      "verification": {
+        "checks": [
+          "Campeonato nuevo v2 guarda participantes por identidad (bgg:<userid> / nonbgg:<nombre>) con snapshot de color y tipo",
+          "La identidad por userid sobrevive a una reordenación de ids del exportador: mismos jugadores y totales",
+          "Campeonatos legacy: carga, detalle e importación de partidas no reescriben sus ids ni inventan nombres (aviso visible)",
+          "El color del participante sale del snapshot congelado, no de la paleta actual",
+          "userid sintético determinista y persistente para bots y no-BGG (syntheticUserid, tests offline)",
+          "Suite completa Playwright en verde"
+        ],
+        "evidence": "e2e/tests/FIX-HDH-08.spec.js (5 tests) 5/5 + suite completa 158/158 en Node 22 (CI=true, Chromium local); proxy tests offline OK; screenshots evidence/screenshots/FIX-HDH-08-*.png (oficial en artifacts de Actions)."
+      }
     }
   ]
 }
