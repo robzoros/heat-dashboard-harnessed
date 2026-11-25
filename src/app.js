@@ -402,22 +402,30 @@ PLAYER_PALETTE: ['#d62828', '#2563eb', '#eab308', '#ec4899', '#06b6d4', '#1a9e50
         this.renderChampionships();
     },
 
-    async createChampionship(name, description, participants, owner) {
+    async createChampionship(name, description, participants, owner, participantMetaList) {
+        // FIX-HDH-08: con snapshot de identidad (participantMetaList) el campeonato es
+        // v2 y los participants son claves de identidad. Sin snapshot queda en formato
+        // legacy congelado (S5): ids tal cual, sin reinterpretación posterior.
+        const hasMeta = participantMetaList && Object.keys(participantMetaList).length > 0;
+        const base = {
+            name, description: description || '', createdAt: new Date().toISOString(),
+            participants: participants || [], playIds: [], plays: []
+        };
+        if (hasMeta) {
+            base.schemaVersion = 2;
+            base.participantRefs = { ...participantMetaList };
+        }
         if (this.isFirestoreMode()) {
             if (!this.isAdmin()) return { success: false, error: 'Sólo el administrador puede crear campeonatos' };
             const doc = this.firebaseDb.collection('championships').doc();
-            const championship = {
-                id: doc.id, name, description: description || '', createdAt: new Date().toISOString(),
-                owner: owner || this.bggUsername || 'local', participants: participants || [], playIds: [], plays: []
-            };
+            const championship = { id: doc.id, ...base, owner: owner || this.bggUsername || 'local' };
             await doc.set(championship);
             return { success: true, data: championship };
         }
         const championships = this.getStoredChampionships();
         const championship = {
             id: `local_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
-            name, description: description || '', createdAt: new Date().toISOString(),
-            owner: owner || 'local', participants: participants || [], playIds: [], plays: []
+            ...base, owner: owner || 'local'
         };
         championships.push(championship);
         this.saveStoredChampionships(championships);
@@ -458,17 +466,58 @@ PLAYER_PALETTE: ['#d62828', '#2563eb', '#eab308', '#ec4899', '#06b6d4', '#1a9e50
             ? await this.firebaseDb.collection('championships').doc(championshipId).get().then(s => s.data())
             : this.getStoredChampionships().find(item => item.id === championshipId);
         if (!current) return;
+        // FIX-HDH-08: en legacy las partidas se guardan con sus ids tal cual
+        // (identidad sin definir, S5); en v2 se canonicalizan a identidades estables.
         const championship = { ...current, plays: current.plays || [] };
         const existingIds = new Set(championship.plays.map(play => String(play.id)));
-        const participants = new Set((championship.participants || []).map(id => String(id)));
+        // FIX-HDH-08: en legacy, las partidas importadas se conservan tal cual sin
+        // transformar el formato del campeonato con derivas no vividas; cuando
+        // reciba identidades asignadas manualmente se marcará v2.
+        const isLegacy = this.isLegacyChampionship(championship);
         for (const playId of playIds) {
             const play = this.data.plays.find(item => String(item.id) === String(playId));
             if (!play || existingIds.has(String(play.id))) continue;
-            championship.plays.push(play);
+            championship.plays.push(isLegacy ? play : this.canonicalizePlay(championship, play));
             existingIds.add(String(play.id));
-            for (const playerScore of play.playerScores) participants.add(String(playerScore.playerRefId));
         }
-        championship.participants = [...participants];
+        if (isLegacy) {
+            // Legacy congelado: misma conducta previa (expandir participantes con los
+            // ids tal cual) y solo se actualiza el índice de partidas.
+            const seen = new Set((championship.participants || []).map(id => String(id)));
+            const expanded = [...(championship.participants || [])];
+            for (const play of championship.plays) {
+                for (const ps of play.playerScores) {
+                    const pid = String(ps.playerRefId);
+                    if (!seen.has(pid)) { seen.add(pid); expanded.push(pid); }
+                }
+            }
+            championship.participants = expanded;
+            championship.playIds = championship.plays.map(play => play.id);
+            await this.saveChampionshipToServer(championship);
+            this.renderChampionships();
+            return;
+        }
+        // FIX-HDH-08: participantes por identidad estable; se añaden con snapshot
+        // los que aparecen en las partidas importadas.
+        const withMeta = {};
+        for (const key of new Set((championship.participants || []).map(k => String(k)))) {
+            const player = this.data.players.find(p => this.identityKey(p) === String(key));
+            withMeta[key] = player ? this.participantMeta(player)
+                : { name: this.playerNameByKey(championship, key), isMain: false, isBot: false, isOther: false, color: null, verified: false };
+        }
+        const resolver = this.championshipKeyResolver(championship);
+        for (const play of championship.plays) {
+            for (const ps of play.playerScores) {
+                const key = resolver(ps.playerRefId);
+                if (withMeta[key]) continue;
+                const player = this.data.players.find(p => this.identityKey(p) === key);
+                withMeta[key] = player ? this.participantMeta(player)
+                    : { name: `Jugador ${ps.playerRefId}`, isMain: false, isBot: false, isOther: false, color: null, verified: false };
+            }
+        }
+        championship.participants = Object.keys(withMeta);
+        championship.participantRefs = withMeta;
+        championship.schemaVersion = 2;
         championship.playIds = championship.plays.map(play => play.id);
         await this.saveChampionshipToServer(championship);
         this.renderChampionships();
@@ -498,9 +547,11 @@ PLAYER_PALETTE: ['#d62828', '#2563eb', '#eab308', '#ec4899', '#06b6d4', '#1a9e50
 
     showCreateChampionshipModal() {
         if (!this.isAdmin()) return;
+        // FIX-HDH-08: el checkbox guarda la clave de identidad (nombre normalizado),
+        // no el id de BGG; data-player-name conserva el nombre para el snapshot.
         const playerList = document.getElementById('new-campeonato-players');
         playerList.innerHTML = this.data.players.map(p =>
-            `<label><input type="checkbox" value="${p.id}"> ${p.name}${p.isBot ? ' (Bot)' : ''}${p.isMain ? ' (Principal)' : ''}${p.isOther ? ' (Otro)' : ''}</label>`
+            `<label><input type="checkbox" value="${this.escapeHtml(this.identityKey(p))}" data-player-key="${this.escapeHtml(this.identityKey(p))}"> ${this.escapeHtml(p.name)}${p.isBot ? ' (Bot)' : ''}${p.isMain ? ' (Principal)' : ''}${p.isOther ? ' (Otro)' : ''}</label>`
         ).join('');
         document.getElementById('new-campeonato-name').value = '';
         document.getElementById('new-campeonato-description').value = '';
@@ -512,12 +563,21 @@ PLAYER_PALETTE: ['#d62828', '#2563eb', '#eab308', '#ec4899', '#06b6d4', '#1a9e50
         const description = document.getElementById('new-campeonato-description').value.trim();
         const selectedPlayers = Array.from(
             document.querySelectorAll('#new-campeonato-players input:checked')
-        ).map(i => i.value);
+        ).map(input => {
+            const player = this.data.players.find(p => this.identityKey(p) === String(input.dataset.playerKey));
+            return player ? this.participantMeta(player) : null;
+        }).filter(Boolean);
+        const participantMetaList = {};
+        for (const p0 of selectedPlayers) {
+            const player = this.data.players.find(q => q.name === p0.name);
+            const key = this.identityKey(player || p0);
+            participantMetaList[key] = { ...this.participantMeta(player || p0) };
+        }
         if (!name) {
             alert('El nombre es obligatorio');
             return;
         }
-        this.createChampionship(name, description, selectedPlayers, this.bggUsername).then(result => {
+        this.createChampionship(name, description, Object.keys(participantMetaList), this.bggUsername, participantMetaList).then(result => {
             if (result.success) {
                 document.getElementById('create-campeonato-modal').classList.add('hidden');
                 this.loadChampionships().then(() => {
@@ -537,7 +597,7 @@ PLAYER_PALETTE: ['#d62828', '#2563eb', '#eab308', '#ec4899', '#06b6d4', '#1a9e50
         const list = document.getElementById('import-plays-list');
         list.innerHTML = availablePlays.map(p => {
             const winnerPs = p.playerScores.find(ps => ps.winner);
-            const winnerName = winnerPs ? (this.data.players.find(pl => pl.id === winnerPs.playerRefId)?.name || '-') : '-';
+            const winnerName = winnerPs ? this.playerNameByRef(champ, winnerPs.playerRefId) : '-';
             return `<label><input type="checkbox" value="${p.id}"> ${p.playDate} | ${p.board} | Ganador: ${winnerName}</label>`;
         }).join('');
         if (availablePlays.length === 0) {
@@ -558,24 +618,25 @@ PLAYER_PALETTE: ['#d62828', '#2563eb', '#eab308', '#ec4899', '#06b6d4', '#1a9e50
             if (block) block.classList.add('hidden');
             return;
         }
-        const participantIds = new Set((champ.participants || []).map(id => String(id)));
+        const participantKeys = this.effectiveParticipantKeys(champ);
         // Sin participantes declarados la importacion es libre (comportamiento previo):
         // no hace falta consentimiento.
-        if (participantIds.size === 0) {
+        if (participantKeys.size === 0) {
             block.classList.add('hidden');
             return;
         }
         const selected = Array.from(
             document.querySelectorAll('#import-plays-list input:checked')
         ).map(i => i.value);
+        const resolver = this.championshipKeyResolver(champ);
         const newNames = [];
         for (const playId of selected) {
             const play = this.data.plays.find(p => String(p.id) === String(playId));
             if (!play) continue;
             for (const ps of play.playerScores) {
-                if (!participantIds.has(String(ps.playerRefId))) {
-                    const player = this.data.players.find(pl => String(pl.id) === String(ps.playerRefId));
-                    const name = player ? player.name : `Jugador ${ps.playerRefId}`;
+                const key = resolver(ps.playerRefId);
+                if (!participantKeys.has(key)) {
+                    const name = this.playerNameByKey(champ, key);
                     if (!newNames.includes(name)) newNames.push(name);
                 }
             }
@@ -593,20 +654,22 @@ PLAYER_PALETTE: ['#d62828', '#2563eb', '#eab308', '#ec4899', '#06b6d4', '#1a9e50
         ).map(i => i.value);
         if (selected.length === 0) return;
 
-        const participantIds = new Set((champ.participants || []).map(id => String(id)));
-        const hasParticipants = participantIds.size > 0;
+        const participantKeys = this.effectiveParticipantKeys(champ);
+        const hasParticipants = participantKeys.size > 0;
         // FIX-HDH-07: el propietario puede aceptar añadir los jugadores no participantes
         // marcando la casilla de consentimiento del modal.
         const consentGiven = document.getElementById('import-consent-checkbox')?.checked || false;
 
         if (hasParticipants) {
             const invalidPlays = [];
+            const resolver = this.championshipKeyResolver(champ);
             for (const playId of selected) {
                 const play = this.data.plays.find(p => String(p.id) === String(playId));
                 if (play) {
                     for (const ps of play.playerScores) {
-                        if (!participantIds.has(String(ps.playerRefId))) {
-                            const playerName = this.data.players.find(pl => String(pl.id) === String(ps.playerRefId))?.name || ps.playerRefId;
+                        const key = resolver(ps.playerRefId);
+                        if (!participantKeys.has(key)) {
+                            const playerName = this.playerNameByKey(champ, key);
                             invalidPlays.push({ playId, playerName });
                         }
                     }
@@ -619,22 +682,8 @@ PLAYER_PALETTE: ['#d62828', '#2563eb', '#eab308', '#ec4899', '#06b6d4', '#1a9e50
             }
         }
 
-        // FIX-HDH-07: con consentimiento, registrar los nuevos jugadores como participantes
-        // tambien en memoria para que el detalle del campeonato sea consistente.
-        if (consentGiven) {
-            for (const playId of selected) {
-                const play = this.data.plays.find(p => String(p.id) === String(playId));
-                if (!play) continue;
-                for (const ps of play.playerScores) {
-                    const pid = String(ps.playerRefId);
-                    if (!participantIds.has(pid)) {
-                        champ.participants = [...(champ.participants || []), pid];
-                        participantIds.add(pid);
-                    }
-                }
-            }
-        }
-
+        // FIX-HDH-07/08: con consentimiento, los nuevos jugadores se registran en el
+        // campeonato dentro de addPlaysToChampionship (con snapshot de identidad).
         this.addPlaysToChampionship(champ.id, selected);
         document.getElementById('import-plays-modal').classList.add('hidden');
     },
@@ -648,16 +697,21 @@ PLAYER_PALETTE: ['#d62828', '#2563eb', '#eab308', '#ec4899', '#06b6d4', '#1a9e50
         ).join('');
         document.getElementById('manual-play-date').value = new Date().toISOString().split('T')[0];
         const playersDiv = document.getElementById('manual-play-players');
+        // FIX-HDH-08: participants son claves de identidad; el nombre sale del snapshot
+        // o de la tabla actual.
         const participants = champ.participants || [];
-        playersDiv.innerHTML = participants.map(pid => {
-            const player = this.data.players.find(p => String(p.id) === String(pid));
-            if (!player) return '';
+        playersDiv.innerHTML = participants.map(pkey => {
+            const meta = this.participantRefsOf(champ)[pkey];
+            const player = this.data.players.find(p => this.identityKey(p) === String(pkey));
+            const displayName = (meta && meta.name) || (player && player.name) || pkey;
+            const color = this.participantColor(champ, pkey);
+            if (!displayName) return '';
             return `
                 <div class="manual-player-row">
-                    <span class="manual-player-name">${player.name}</span>
-                    <input type="number" class="manual-player-score" data-player-id="${pid}" placeholder="Pts" min="0">
+                    <span class="manual-player-name">${color ? `<span class="name-dot" style="background:${color};"></span> ` : ''}${this.escapeHtml(displayName)}</span>
+                    <input type="number" class="manual-player-score" data-player-id="${this.escapeHtml(pkey)}" data-player-name="${this.escapeHtml(displayName)}" placeholder="Pts" min="0">
                     <label class="manual-player-winner">
-                        <input type="radio" name="manual-winner" value="${pid}"> Ganador
+                        <input type="radio" name="manual-winner" value="${this.escapeHtml(pkey)}"> Ganador
                     </label>
                 </div>
             `;
@@ -680,6 +734,8 @@ PLAYER_PALETTE: ['#d62828', '#2563eb', '#eab308', '#ec4899', '#06b6d4', '#1a9e50
         }
         const winnerId = winnerRadio.value;
         const playerScores = Array.from(document.querySelectorAll('.manual-player-score')).map(input => ({
+            // FIX-HDH-08: la clave del participante viaja en playerRefId; el resolver
+            // de claves la reconoce porque no es un id numérico conocido.
             playerRefId: input.dataset.playerId,
             score: parseInt(input.value) || 0,
             scoreNum: parseInt(input.value) || 0,
@@ -692,7 +748,9 @@ PLAYER_PALETTE: ['#d62828', '#2563eb', '#eab308', '#ec4899', '#06b6d4', '#1a9e50
             playerScores: playerScores
         };
         if (!champ.plays) champ.plays = [];
-        champ.plays.push(newPlay);
+        // FIX-HDH-08: los playerRefId de la partida manual ya son claves de
+        // participantes; se canonicalizan igualmente por si el formato cambia.
+        champ.plays.push(this.canonicalizePlay(champ, newPlay));
         this.saveChampionshipToServer(champ);
         document.getElementById('add-manual-play-modal').classList.add('hidden');
         this.renderChampionshipDetail();
@@ -1632,6 +1690,9 @@ PLAYER_PALETTE: ['#d62828', '#2563eb', '#eab308', '#ec4899', '#06b6d4', '#1a9e50
         const warnings = [];
         if (!isOwner && champ.owner) warnings.push('Solo lectura (no eres el propietario)');
         if (!this.bggUsername) warnings.push('Inicia sesión en BGG para editar campeonatos');
+        if (this.isLegacyChampionship(champ)) {
+            warnings.push('FIX-HDH-08 · Participantes sin identidad estable (campeonato antiguo): los nombres mostrados pueden no corresponder. Pendiente de identificación guiada.');
+        }
 
         // Clasificacion: mismas clases y data-play-date que la tabla anterior.
         const standingsHtml = champPlaysChrono.length > 0 ? `
@@ -1644,9 +1705,9 @@ PLAYER_PALETTE: ['#d62828', '#2563eb', '#eab308', '#ec4899', '#06b6d4', '#1a9e50
                                 ${standings.map((s, i) => `
                                     <tr>
                                         <td class="pos">${i === 0 ? '<span class="medal">🥇</span>' : i === 1 ? '<span class="medal">🥈</span>' : i === 2 ? '<span class="medal">🥉</span>' : i + 1}</td>
-                                        <td><span class="standings-name"><span class="name-dot" style="background:${this.playerColor(s.name)};"></span>${this.escapeHtml(s.name)}</span></td>
+                                        <td><span class="standings-name"><span class="name-dot" style="background:${this.participantColor(champ, s.id)};"></span>${this.escapeHtml(s.name)}</span></td>
                                         ${champPlaysChrono.map(p => {
-                                            const playerScore = p.playerScores.find(ps => String(ps.playerRefId) === String(s.id));
+                                            const playerScore = p.playerScores.find(ps => String(this.championshipKeyResolver(champ)(ps.playerRefId)) === String(s.id));
                                             return `<td>${playerScore ? playerScore.scoreNum : '-'}</td>`;
                                         }).join('')}
                                         <td class="total-col"><strong>${Math.round(s.totalScore)}</strong></td>
@@ -1659,7 +1720,7 @@ PLAYER_PALETTE: ['#d62828', '#2563eb', '#eab308', '#ec4899', '#06b6d4', '#1a9e50
         // Lista de partidas (reciente -> antigua) con ganador y accion de borrado.
         const playsHtml = champPlaysList.map(p => {
             const winnerPs = p.playerScores.find(ps => ps.winner);
-            const winnerName = winnerPs ? (this.data.players.find(pl => pl.id === winnerPs.playerRefId)?.name || '-') : '-';
+            const winnerName = winnerPs ? this.playerNameByRef(champ, winnerPs.playerRefId) : '-';
             const flag = this.getTrackFlag(p.board);
             return `
                         <div class="campeonato-play-item">
@@ -1711,14 +1772,14 @@ PLAYER_PALETTE: ['#d62828', '#2563eb', '#eab308', '#ec4899', '#06b6d4', '#1a9e50
             const datasets = tracked.map(s => {
                 let cumulative = 0;
                 const data = champPlaysChrono.map(p => {
-                    const ps = p.playerScores.find(item => String(item.playerRefId) === String(s.id));
+                    const ps = p.playerScores.find(item => String(this.championshipKeyResolver(champ)(item.playerRefId)) === String(s.id));
                     cumulative += ps ? (ps.scoreNum || 0) : 0;
                     return cumulative;
                 });
                 return {
                     label: s.name,
                     data,
-                    borderColor: this.playerColor(s.name),
+                    borderColor: this.participantColor(champ, s.id),
                     borderWidth: 2,
                     pointRadius: 0,
                     pointHoverRadius: 4,
@@ -1775,6 +1836,115 @@ PLAYER_PALETTE: ['#d62828', '#2563eb', '#eab308', '#ec4899', '#06b6d4', '#1a9e50
         });
     },
 
+    // FIX-HDH-08: identidad estable de participantes. Los usuarios BGG se identifican
+    // por su userid (viaja en el XML de cada partida y no rota entre exportaciones);
+    // bots y jugadores sin cuenta BGG usan una clave sintética persistente basada en
+    // su nombre (el exportador mantiene el registro entre sesiones).
+    identityKey(player) {
+        if (!player) return null;
+        const uid = String(player.userid || '').trim();
+        if (uid && uid !== '0') return `bgg:${uid}`;
+        return `nonbgg:${this.playerKey(player.name)}`;
+    },
+
+    playerKey(name) {
+        return String(name || '').trim().toLocaleLowerCase('es-ES');
+    },
+
+    participantRefsOf(champ) {
+        return (champ && champ.participantRefs && typeof champ.participantRefs === 'object')
+            ? champ.participantRefs
+            : {};
+    },
+
+    participantMeta(player) {
+        return {
+            name: player.name,
+            isMain: !!player.isMain,
+            isBot: !!player.isBot,
+            isOther: !!player.isOther,
+            color: this.playerColor(player.name) || null,
+            verified: true
+        };
+    },
+
+    // Resuelve la clave de identidad de un playerRefId de una partida. En formato v2
+    // las partidas guardadas ya llevan la clave; los ids numéricos de BGG se resuelven
+    // contra la tabla de la exportación en curso en el momento de importar. Los
+    // campeonatos legacy (sin formato) conservan el comportamiento previo tal cual:
+    // sus ids no identifican a nadie y su migración se hará aparte, guiada (S5).
+    championshipKeyResolver(champ) {
+        const refs = this.participantRefsOf(champ);
+        const declared = new Set(((champ && champ.participants) || []).map(k => String(k)));
+        return (refId) => {
+            const raw = String(refId);
+            const isV2 = Object.keys(refs).length > 0 || (champ && champ.schemaVersion >= 2);
+            if (!isV2) return raw; // legacy: sin identificar, tal como hoy.
+            if (refs[raw] || declared.has(raw)) return raw;
+            const player = this.data.players.find(p => String(p.id) === raw);
+            if (player) return this.identityKey(player);
+            const byIdentity = this.data.players.find(p => this.identityKey(p) === raw);
+            if (byIdentity) return raw;
+            return `id-${raw}`;
+        };
+    },
+
+    // Reescribe los playerRefId de una partida a claves de identidad (copia; no
+    // muta la partida original del histórico global).
+    canonicalizePlay(champ, play) {
+        const resolver = this.championshipKeyResolver(champ);
+        return {
+            ...play,
+            playerScores: (play.playerScores || []).map(ps => ({ ...ps, playerRefId: resolver(ps.playerRefId) }))
+        };
+    },
+
+    // Nombre de un participante a partir de cualquier ref (id BGG o clave).
+    playerNameByRef(champ, refId) {
+        return this.playerNameByKey(champ, this.championshipKeyResolver(champ)(refId));
+    },
+
+    // Claves efectivas de participantes: del formato v2 tal cual; legacy devuelve
+    // sus ids sin interpretar (S5: congelado hasta migración guiada).
+    effectiveParticipantKeys(champ) {
+        const refs = this.participantRefsOf(champ);
+        if (Object.keys(refs).length > 0 || champ.schemaVersion >= 2) {
+            return new Set(((champ && champ.participants) || []).map(k => String(k)));
+        }
+        const keys = new Set();
+        for (const pid of (champ && champ.participants) || []) keys.add(String(pid));
+        if (keys.size === 0) {
+            for (const play of (champ && champ.plays) || []) {
+                for (const ps of play.playerScores || []) keys.add(String(ps.playerRefId));
+            }
+        }
+        return keys;
+    },
+
+    isLegacyChampionship(champ) {
+        return !!champ && !champ.schemaVersion && Object.keys(this.participantRefsOf(champ)).length === 0;
+    },
+
+    // Color del participante: congelado en el snapshot del campeonato (S4); si no
+    // hay snapshot, cae a la config de colores por nombre.
+    participantColor(champ, key) {
+        const meta = this.participantRefsOf(champ)[key];
+        if (meta && meta.color) return meta.color;
+        return this.playerColor(this.playerNameByKey(champ, key));
+    },
+
+    playerNameByKey(champ, key) {
+        const meta = this.participantRefsOf(champ)[key];
+        if (meta && meta.name) return meta.name;
+        const player = this.data.players.find(p => this.identityKey(p) === String(key));
+        if (player) return player.name;
+        // Legacy: ids sin identificar resueltos contra la tabla actual (comportamiento
+        // congelado hasta la migración guiada; es el defecto original reportado).
+        const byId = this.data.players.find(p => String(p.id) === String(key));
+        if (byId) return byId.name;
+        return key.startsWith('id-') ? `Jugador ${key.slice(3)}` : key;
+    },
+
     getChampionshipStandings(champ) {
         if (!champ) return [];
         const allPlays = champ.plays || [];
@@ -1787,40 +1957,43 @@ PLAYER_PALETTE: ['#d62828', '#2563eb', '#eab308', '#ec4899', '#06b6d4', '#1a9e50
         // Carrera mas reciente del campeonato (criterio de desempate).
         const latestPlay = allPlays.slice()
             .sort((a, b) => playTime(b) - playTime(a) || String(b.id).localeCompare(String(a.id)))[0] || null;
-        // Puesto de un jugador en una carrera (1 = mejor puesto).
-        const positionInPlay = (play, pid) => {
+        // Puesto de un jugador en una carrera (1 = mejor puesto). FIX-HDH-08: se
+        // compara por clave de identidad, no por id.
+        const resolver = this.championshipKeyResolver(champ);
+        const positionInPlay = (play, key) => {
             if (!play) return null;
             const ranked = (play.playerScores || [])
-                .map(ps => ({ pid: String(ps.playerRefId), scoreNum: ps.scoreNum || 0 }))
+                .map(ps => ({ key: resolver(ps.playerRefId), scoreNum: ps.scoreNum || 0 }))
                 .sort((a, b) => b.scoreNum - a.scoreNum);
-            const idx = ranked.findIndex(s => s.pid === String(pid));
+            const idx = ranked.findIndex(s => s.key === String(key));
             return idx === -1 ? null : idx + 1;
         };
 
-        const allPlayerIds = new Set();
+        const allPlayerKeys = new Set();
         for (const play of allPlays) {
             for (const ps of play.playerScores) {
-                allPlayerIds.add(String(ps.playerRefId));
+                allPlayerKeys.add(resolver(ps.playerRefId));
             }
         }
 
-        const declaredParticipantIds = new Set((champ.participants || []).map(id => String(id)));
-        const effectiveParticipantIds = declaredParticipantIds.size > 0 ? declaredParticipantIds : allPlayerIds;
+        // FIX-HDH-08: los participantes se declaran por clave, no por id.
+        const declaredKeys = this.effectiveParticipantKeys(champ);
+        const effectiveKeys = declaredKeys.size > 0 ? declaredKeys : allPlayerKeys;
+        const refs = this.participantRefsOf(champ);
 
         const stats = {};
-        for (const pid of effectiveParticipantIds) {
-            const player = this.data.players.find(p => String(p.id) === String(pid));
-            const playerName = player ? player.name : `Jugador ${pid}`;
-            stats[pid] = { id: pid, name: playerName, plays: 0, wins: 0, totalScore: 0 };
+        for (const key of effectiveKeys) {
+            const playerName = (refs[key] && refs[key].name) || this.playerNameByKey(champ, key);
+            stats[key] = { id: key, name: playerName, plays: 0, wins: 0, totalScore: 0 };
         }
 
         for (const play of allPlays) {
             for (const ps of play.playerScores) {
-                const pid = String(ps.playerRefId);
-                if (effectiveParticipantIds.has(pid) && stats[pid]) {
-                    stats[pid].plays++;
-                    if (ps.winner) stats[pid].wins++;
-                    stats[pid].totalScore += ps.scoreNum || 0;
+                const key = resolver(ps.playerRefId);
+                if (effectiveKeys.has(key) && stats[key]) {
+                    stats[key].plays++;
+                    if (ps.winner) stats[key].wins++;
+                    stats[key].totalScore += ps.scoreNum || 0;
                 }
             }
         }

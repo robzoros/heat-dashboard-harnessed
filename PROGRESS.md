@@ -1,5 +1,41 @@
 # PROGRESS.md
 
+## Sesion 2026-11-25 (FIX-HDH-08)
+
+### Feature trabajada: FIX-HDH-08 - Identidad estable de participantes en Campeonatos
+
+**Estado**: Completada
+
+#### Motivo y diseño corregido con el usuario
+- **Problema original:** al recuperar un campeonato aparecian otros jugadores: los participantes se guardaban por `id` numerico y el exportador de BGG asigna esos ids **por orden de primera aparicion en cada exportacion semanal** (`generate-bgg-data.js`, getPlayerId), asi que el mismo id apuntaba a jugadores distintos en semanas distintas.
+- **Intento descartado:** migrar automaticamente los campeonatos legacy (1961/1962 Daganzo, Boadilla Cup, en Firestore). El usuario lo corrigio: los numeros 1-10 de esos campeonatos **no identifican a ningun jugador** y las carreras importadas tampoco guardan identidad; no hay evidencia contra la que cotejar. **Migración automática retirada por imposible.**
+- **Decisiones del usuario:** identidad = `userid` de BGG (viaja en el XML de cada partida); color/tipo congelados por campeonato (`participantRefs` snapshot); primero el diseño nuevo, la migración guiada mas adelante.
+
+#### Que se hizo
+- **`src/app.js`**:
+  - `identityKey()`: identidad estable = `bgg:<userid>` para cuentas BGG, `nonbgg:<nombre-normalizado>` para bots y otros.
+  - Resoluciíon por claves: `championshipKeyResolver()`, `effectiveParticipantKeys()`, `playerNameByKey()`, `playerNameByRef()`, `participantColor()`.
+  - `createChampionship()`: nueva firma con snapshot `participantMetaList` → campeonatos **v2** (`schemaVersion: 2`, `participantRefs` con nombre/tipo/color congelados). Sin snapshot → formato legacy tal cual (compatibilidad con specs por API).
+  - `addPlaysToChampionship()`: en v2 canonicaliza las carreras importadas a claves de identidad con `canonicalizePlay()` (copia; la partida del historico global queda intacta); en legacy conserva el comportamiento previo (ids tal cual y expansion de participantes).
+  - `getChampionshipStandings()`, importación con consentimiento, partidas manuales y clasificación: todo por claves de identidad; color de participante salido del snapshot congelado.
+  - Campeonatos legacy: aviso visible en el detalle («Participantes sin identidad estable… pendiente de identificación guiada») y datos congelados (no se reescribe nada).
+- **`proxy/scripts/generate-bgg-data.js`**: `syntheticUserid(name)` — userid ficticio determinista (`local-<nombre-normalizado>`) para bots y jugadores sin cuenta BGG, serializado en `heat-data.json` y por tanto persistente entre sesiones/semanas; los ids numéricos ya no pueden rotar la identidad.
+
+#### Verificación
+- `node --check src/app.js` y `generate-bgg-data.js`: OK.
+- `node proxy/test-classify.js`, `node proxy/test-generate-bgg-data.js`, `syntheticUserid` offline: OK.
+- **e2e/tests/FIX-HDH-08.spec.js (nuevo, 5 tests): 5/5** — snapshot de identidad en campeonato nuevo, legacy congelado sin reescritura, userid sobrevive a reordenación de ids, color congelado del snapshot, persistencia entre recargas.
+- **Suite completa Playwright: 158/158** (Node 22, CI=true, Chromium local; 153 previos + 5 nuevos).
+- **Specs afectados y actualizados al formato v2**: HDH-09 (checkboxes por identidad), FIX-HDH-07 (aserciones: legacy por API con ids tal cual).
+- Screenshots: `evidence/screenshots/FIX-HDH-08-*.png` (no versionados; oficial en artifacts de Actions).
+
+#### Notas / Riesgos
+- Los 3 campeonatos legacy de Firestore **no se han tocado**; siguen mostrando nombres resueltos contra la tabla actual (defecto original visible) hasta la migración guiada (próxima feature).
+- `createChampionship()` añade un parámetro opcional de snapshot (sin impacto en llamadas existentes).
+- Si BGG devolviera userid vacío para alguien con cuenta, el fallback sintético cambiaría su identidad — vigilable en la exportación weekly.
+
+---
+
 ## Sesion 2026-11-25 (HDH-UI05)
 
 ### Feature trabajada: HDH-UI05 - Rediseño de la pestaña Circuitos
