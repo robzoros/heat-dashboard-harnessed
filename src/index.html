@@ -191,11 +191,24 @@
         <section id="tab-circuitos" class="tab-content">
             <h2>Circuitos</h2>
             <div class="circuitos-layout">
-                <div class="chart-card donut-card">
-                    <h3 id="tracks-chart-title">Distribución</h3>
-                    <canvas id="chart-tracks"></canvas>
+                <aside id="track-list" class="track-rail" aria-label="Lista de circuitos"></aside>
+                <div class="track-detail">
+                    <div id="track-detail-head" class="track-detail-head"></div>
+                    <div class="circuitos-duo">
+                        <div class="chart-card track-chart-card">
+                            <h3 id="tracks-chart-title">Distribución</h3>
+                            <canvas id="chart-tracks"></canvas>
+                        </div>
+                        <section class="chart-card track-podium-card">
+                            <h3>Pódio del circuito</h3>
+                            <div id="track-podium" class="track-podium"></div>
+                        </section>
+                    </div>
+                    <section class="chart-card track-recents-card">
+                        <h3 id="track-recents-title">Últimas visitas</h3>
+                        <div id="track-recents" class="track-recents"></div>
+                    </section>
                 </div>
-                <div id="track-list" class="track-list"></div>
             </div>
         </section>
 

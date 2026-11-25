@@ -1298,9 +1298,9 @@ PLAYER_PALETTE: ['#d62828', '#2563eb', '#eab308', '#ec4899', '#06b6d4', '#1a9e50
         // Delegación de eventos: el track-list se re-renderiza con cada filtro,
         // por lo que el listener vive en el contenedor, no en cada tarjeta.
         document.getElementById('track-list').addEventListener('click', (e) => {
-            const nameEl = e.target.closest('.track-name');
-            if (!nameEl) return;
-            const trackName = nameEl.dataset.track;
+            const card = e.target.closest('.track-card');
+            if (!card) return;
+            const trackName = card.dataset.track;
             this.selectedTrack = this.selectedTrack === trackName ? null : trackName;
             this.renderTrackList();
             this.updateTracksChart();
@@ -1359,9 +1359,39 @@ PLAYER_PALETTE: ['#d62828', '#2563eb', '#eab308', '#ec4899', '#06b6d4', '#1a9e50
     },
 
     renderTrackList() {
-        const filteredPlays = this.getFilteredPlays();
-        const mainPlayers = this.data.players.filter(p => p.isMain);
+        const { trackList, trackStats, filteredPlays } = this.computeTrackStats();
+        const totalPlays = filteredPlays.length;
+        const selected = this.selectedTrack;
 
+        const cards = trackList.map(t => {
+            const isSelected = selected === t.name;
+            const share = totalPlays > 0 ? Math.round((t.plays * 100) / totalPlays) : 0;
+            let champHtml;
+            if (t.championName && t.championWins > 0) {
+                champHtml = `<p class="track-champ"><span class="name-dot" style="background:${this.playerColor(t.championName)};"></span>Campeón: <b>${this.escapeHtml(t.championName)}</b> · ${t.championWins} W</p>`;
+            } else {
+                champHtml = '<p class="track-champ">🤖 Sin victorias de jugadores principales</p>';
+            }
+            const flag = this.getTrackFlag(t.name);
+            return `
+            <article class="track-card${isSelected ? ' selected' : ''}" data-track="${this.escapeHtml(t.name)}">
+                <h4 class="track-name" data-track="${this.escapeHtml(t.name)}">${flag} ${this.escapeHtml(t.name)}</h4>
+                <p class="track-meta"><span>🏁 <b>${t.plays}</b> partidas</span><span>🤖 <b>${t.botWins}</b> W</span></p>
+                <p class="track-share"><span class="sharebar" title="${share}% de todas las partidas"><i style="width:${share}%;"></i></span><span class="share-pct">${share}%</span></p>
+                ${champHtml}
+            </article>`;
+        }).join('');
+
+        document.getElementById('track-list').innerHTML = `
+            <div class="rail-head"><span>${trackList.length} ${trackList.length === 1 ? 'circuito' : 'circuitos'}${totalPlays > 0 ? ` · ${totalPlays} partidas` : ''}</span></div>
+            <div class="rail-list">${trackList.length === 0 ? '<div class="campeonato-empty">No hay circuitos con las partidas filtradas.</div>' : cards}</div>`;
+
+        this.renderTrackDetail(trackStats, totalPlays, filteredPlays);
+    },
+
+    // Estadisticas por circuito compartidas entre el rail, el podio y las visitas.
+    computeTrackStats() {
+        const filteredPlays = this.getFilteredPlays();
         const trackStats = {};
         for (const play of filteredPlays) {
             if (!trackStats[play.board]) {
@@ -1379,31 +1409,105 @@ PLAYER_PALETTE: ['#d62828', '#2563eb', '#eab308', '#ec4899', '#06b6d4', '#1a9e50
         }
 
         const trackList = Object.entries(trackStats).map(([name, stats]) => {
-            let championName = '-';
-            let maxWins = 0;
+            let championName = '';
+            let championWins = 0;
             let botWins = 0;
             for (const [pid, wins] of Object.entries(stats.winsByPlayer)) {
-                if (wins > maxWins) {
-                    maxWins = wins;
-                    const player = this.data.players.find(p => p.id === parseInt(pid));
-                    if (player) championName = player.name;
-                }
-                // Bots = cualquier ganador que no sea jugador principal
                 const player = this.data.players.find(p => p.id === parseInt(pid));
-                if (!player || !player.isMain) botWins += wins;
+                if (!player || !player.isMain) {
+                    botWins += wins;
+                    continue;
+                }
+                if (wins > championWins) {
+                    championWins = wins;
+                    championName = player.name;
+                }
             }
-            return { name, plays: stats.plays, champion: championName, botWins: botWins };
+            return { name, plays: stats.plays, championName, championWins, botWins };
         })
         .sort((a, b) => b.plays - a.plays);
 
-        document.getElementById('track-list').innerHTML = trackList.map(t => `
-            <div class="track-card${this.selectedTrack === t.name ? ' selected' : ''}">
-                <h4 class="track-name" data-track="${t.name}">${this.getTrackFlag(t.name)} ${t.name}</h4>
-                <p>Partidas: ${t.plays}</p>
-                <p>Victorias de Bots: ${t.botWins}</p>
-                <p>Campeón: ${t.champion}</p>
-            </div>
-        `).join('');
+        return { trackList, trackStats, filteredPlays };
+    },
+
+    // Detalle a la derecha: badges del circuito activo (o guia para elegir uno),
+    // podio top 3 de jugadores principales y ultimas visitas al circuito.
+    renderTrackDetail(trackStats, totalPlays, filteredPlays) {
+        const headEl = document.getElementById('track-detail-head');
+        const podiumEl = document.getElementById('track-podium');
+        const recentsEl = document.getElementById('track-recents');
+        const recentsTitle = document.getElementById('track-recents-title');
+        if (!headEl || !podiumEl || !recentsEl) return;
+
+        const selected = this.selectedTrack;
+        const stats = selected ? trackStats[selected] : null;
+
+        if (!selected || !stats) {
+            headEl.innerHTML = '';
+            podiumEl.innerHTML = '<div class="campeonato-empty">Haz clic en un circuito del rail para ver su pódio.</div>';
+            recentsEl.innerHTML = '<div class="campeonato-empty">Haz clic en un circuito para ver sus últimas partidas.</div>';
+            recentsTitle.textContent = 'Últimas visitas';
+            return;
+        }
+
+        const playsOfTrack = (filteredPlays || []).filter(pl => pl.board === selected);
+
+        const share = totalPlays > 0 ? Math.round((stats.plays * 100) / totalPlays) : 0;
+        const timeOf = p => {
+            const t = new Date(p && p.playDate).getTime();
+            return Number.isNaN(t) ? 0 : t;
+        };
+        const withDate = playsOfTrack.filter(p => !Number.isNaN(new Date(p.playDate).getTime()));
+        const lastVisit = withDate.reduce((acc, p) => (!acc || timeOf(p) > timeOf(acc) ? p : acc), null);
+        const lastVisitText = lastVisit ? new Date(lastVisit.playDate).toLocaleDateString('es-ES') : '-';
+
+        const botWinsCount = Object.entries(stats.winsByPlayer).reduce((acc, [pid, wins]) => {
+            const player = this.data.players.find(p => p.id === parseInt(pid));
+            return (!player || !player.isMain) ? acc + wins : acc;
+        }, 0);
+
+        headEl.innerHTML = `
+            <h2>${this.getTrackFlag(selected)} ${this.escapeHtml(selected)}</h2>
+            <div class="detail-badges">
+                <span class="badge-gold">🏆 ${stats.championName ? `${this.escapeHtml(stats.championName)} · ${stats.championWins} W` : 'sin campeón'}</span>
+                <span class="detail-badge">🏁 ${stats.plays} partidas · ${share}% del total</span>
+                <span class="detail-badge">🤖 ${botWinsCount} W de bots</span>
+                <span class="detail-badge">📅 última: ${lastVisitText}</span>
+            </div>`;
+
+        // Podio: top 3 de jugadores principales por victorias en este circuito.
+        const mainWins = Object.entries(stats.winsByPlayer)
+            .map(([pid, wins]) => ({ player: this.data.players.find(p => p.id === parseInt(pid)), wins }))
+            .filter(e => e.player && e.player.isMain)
+            .sort((a, b) => b.wins - a.wins || a.player.name.localeCompare(b.player.name))
+            .slice(0, 3);
+        if (mainWins.length === 0) {
+            podiumEl.innerHTML = '<div class="campeonato-empty">Todavía no ha ganado ningún jugador principal en este circuito: solo se imponen los bots.</div>';
+        } else {
+            const medals = ['🥇', '🥈', '🥉'];
+            const maxWins = mainWins[0].wins || 1;
+            podiumEl.innerHTML = '<div class="podium-steps">' + mainWins.map((e, i) => `
+                <div class="podium-place" style="--pc:${this.playerColor(e.player.name)};--share:${(e.wins / maxWins).toFixed(3)}">
+                    <div class="podium-medal">${medals[i]}</div>
+                    <div class="podium-name">${this.escapeHtml(e.player.name)}</div>
+                    <div class="podium-wins">${e.wins} victoria${e.wins !== 1 ? 's' : ''}</div>
+                </div>
+            `).join('') + '</div>';
+        }
+
+        // Ultimas visitas: hasta 5 partidas mas recientes del circuito.
+        recentsTitle.textContent = `Últimas visitas a ${selected}`;
+        const recents = [...playsOfTrack].sort((a, b) => timeOf(b) - timeOf(a)).slice(0, 5);
+        recentsEl.innerHTML = recents.map(play => {
+            const winnerPs = play.playerScores.find(ps => ps.winner);
+            const winnerName = winnerPs ? (this.data.players.find(p => p.id === winnerPs.playerRefId)?.name || '-') : '-';
+            return `
+                <div class="track-recent">
+                    <span class="recent-main"><b>${this.escapeHtml(play.playDate || '-')}</b> · ${play.playerScores.length} jugadores</span>
+                    <span class="recent-winner">🏆 ${this.escapeHtml(winnerName)}${winnerPs ? ` · ${winnerPs.score}` : ''}</span>
+                </div>
+            `;
+        }).join('') || '<div class="campeonato-empty">Sin partidas registradas.</div>';
     },
 
     renderPlaysHistory() {

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Dirección 1 — Tira compacta + chart protagonista</title>
+<style>
+    :root {
+        --bg:#14110f; --surface:#1d1916; --surface-2:#28221f; --surface-3:#342d29;
+        --line:#39322d; --text:#f2ece5; --muted:#a99f95; --accent:#ff7a2f;
+        --accent-soft:rgba(255,122,47,.14); --good:#46c98b;
+        --font-display:'Arial Narrow','Bahnschrift',sans-serif;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:'Barlow','Segoe UI',system-ui,sans-serif; background:var(--bg); color:var(--text); font-variant-numeric:tabular-nums; }
+
+    .topbar { position:relative; display:flex; align-items:center; flex-wrap:wrap; gap:10px 24px; padding:18px 28px 16px; }
+    .topbar::after { content:''; position:absolute; left:0; right:0; bottom:0; height:3px; background:linear-gradient(90deg,#ffb52e,#ff6a2b 45%,#e5392f); }
+    .topbar h1 { font-family:var(--font-display); font-size:2rem; }
+    .season { color:var(--muted); font-size:.85rem; }
+    .tabbar { display:flex; gap:8px; padding:10px 28px; background:var(--surface); border-bottom:1px solid var(--line); }
+    .tab { padding:7px 16px; border-radius:8px; font-size:.9rem; color:var(--muted); }
+    .tab[aria-current] { color:var(--accent); background:var(--accent-soft); border:1px solid var(--accent); font-weight:600; }
+    :focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+
+    .page { padding:18px 28px 40px; }
+
+    /* Tira de circuitos: una sola banda horizontal, la lista ocupa ~120px */
+    .strip { display:flex; align-items:stretch; gap:8px; overflow-x:auto; padding:2px 2px 8px; scroll-snap-type:x proximity; }
+    .t-chip { flex:none; scroll-snap-align:start; width:210px; text-align:left; background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:10px 12px; cursor:pointer; color:var(--text); display:grid; gap:4px; font-family:'Barlow',system-ui,sans-serif; }
+    .t-chip:hover { border-color:var(--accent); }
+    .t-chip[aria-current] { border-color:var(--accent); background:linear-gradient(180deg,var(--accent-soft),var(--surface)); }
+    .t-chip .nm { font-family:var(--font-display); font-weight:700; font-size:1.15rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .t-chip .meta { display:flex; gap:10px; font-size:.76rem; color:var(--muted); }
+    .t-chip .meta b { color:var(--text); font-weight:600; }
+    .t-chip .champ { display:flex; align-items:center; gap:6px; font-size:.8rem; color:var(--muted); }
+    .dot { width:9px; height:9px; border-radius:50%; flex:none; }
+    .strip-info { color:var(--muted); font-size:.78rem; padding:0 2px 6px; }
+
+    /* Hero: chart grande + panel del circuito activo */
+    .hero { display:grid; grid-template-columns:minmax(380px,5fr) minmax(380px,7fr); gap:16px; align-items:stretch; margin-top:10px; }
+    .panel { background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:16px 20px; min-width:0; }
+    .panel-head { display:flex; align-items:baseline; justify-content:space-between; gap:12px; margin-bottom:10px; flex-wrap:wrap; }
+    .panel-head h3 { font-family:var(--font-display); font-size:1.3rem; color:var(--accent); }
+    .hint { font-size:.8rem; color:var(--muted); }
+
+    .donut { display:flex; align-items:center; justify-content:center; min-height:320px; }
+    .bars { display:flex; flex-direction:column; gap:9px; }
+    .brow { display:grid; grid-template-columns:130px 1fr 56px; gap:10px; align-items:center; font-size:.86rem; }
+    .brow .who { display:flex; align-items:center; gap:7px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
+    .bbar { height:20px; background:var(--surface-2); border-radius:6px; overflow:hidden; }
+    .bbar i { display:block; height:100%; border-radius:6px; }
+    .brow .val { text-align:right; color:var(--muted); }
+    .brow .val b { color:var(--text); }
+
+    .facts { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:14px; }
+    .fact { background:var(--surface-2); border-radius:8px; padding:8px 12px; }
+    .fact .k { font-size:.72rem; color:var(--muted); }
+    .fact .v { font-family:var(--font-display); font-weight:700; font-size:1.3rem; }
+    .fact .v small { font-size:.8rem; color:var(--muted); font-weight:400; }
+
+    @media (max-width:1050px) {
+        .hero { grid-template-columns:1fr; }
+    }
+    @media (max-width:720px) {
+        .topbar { padding:14px 16px 12px; }
+        .topbar h1 { font-size:1.5rem; }
+        .page { padding:14px 16px 32px; }
+        .facts { grid-template-columns:repeat(2,1fr); }
+    }
+    @media (prefers-reduced-motion:reduce) { * { transition:none !important; animation:none !important; } }
+</style>
+</head>
+<body>
+    <header class="topbar">
+        <h1>🏁 Heat Dashboard</h1>
+        <span class="season">Temporada 2025 · 317 partidas registradas</span>
+    </header>
+    <nav class="tabbar" aria-label="Secciones">
+        <a class="tab" href="#">Clasificación</a>
+        <a class="tab" href="#">Partidas</a>
+        <a class="tab" href="#">Jugadores</a>
+        <a class="tab" href="#">Campeonatos</a>
+        <a class="tab" aria-current="page" href="#">Circuitos</a>
+        <a class="tab" href="#">Colores</a>
+    </nav>
+
+    <main class="page">
+        <!-- Tira: cada circuito en un chip con partidas, campeón y bots; la lista pesa poco -->
+        <div class="strip-info">12 circuitos (y pueden llegar a 14&ndash;16) · la tira se desplaza en horizontal · clic en un circuito para su desglose · doble clic vuelve a &laquo;Distribuci&oacute;n&raquo;</div>
+        <div class="strip" role="tablist" aria-label="Circuitos">
+            <button class="t-chip" aria-current="true">
+                <span class="nm">🇮🇹 Monza</span>
+                <span class="meta"><span>🏁 <b>98</b></span><span>🤖 <b>21</b></span></span>
+                <span class="champ"><span class="dot" style="background:#dc2626;"></span>Ana Torres · 32 W</span>
+            </button>
+            <button class="t-chip">
+                <span class="nm">🇺🇸 Nevada</span>
+                <span class="meta"><span>🏁 <b>76</b></span><span>🤖 <b>18</b></span></span>
+                <span class="champ"><span class="dot" style="background:#2563eb;"></span>Mario Vega · 27 W</span>
+            </button>
+            <button class="t-chip">
+                <span class="nm">🇲🇦 Marrakech</span>
+                <span class="meta"><span>🏁 <b>61</b></span><span>🤖 <b>14</b></span></span>
+                <span class="champ"><span class="dot" style="background:#f59e0b;"></span>Carlos Ruiz · 19 W</span>
+            </button>
+            <button class="t-chip">
+                <span class="nm">🇪🇸 Jerez</span>
+                <span class="meta"><span>🏁 <b>44</b></span><span>🤖 <b>9</b></span></span>
+                <span class="champ"><span class="dot" style="background:#16a34a;"></span>Laura Pin · 15 W</span>
+            </button>
+            <button class="t-chip">
+                <span class="nm">🇧🇷 Interlagos</span>
+                <span class="meta"><span>🏁 <b>33</b></span><span>🤖 <b>11</b></span></span>
+                <span class="champ"><span class="dot" style="background:#0891b2;"></span>Sofía Marín · 12 W</span>
+            </button>
+            <button class="t-chip">
+                <span class="nm">🇵🇹 Estoril</span>
+                <span class="meta"><span>🏁 <b>22</b></span><span>🤖 <b>7</b></span></span>
+                <span class="champ"><span class="dot" style="background:#2563eb;"></span>Mario Vega · 6 W</span>
+            </button>
+            <button class="t-chip">
+                <span class="nm">🇮🇹 Imola</span>
+                <span class="meta"><span>🏁 <b>16</b></span><span>🤖 <b>4</b></span></span>
+                <span class="champ"><span class="dot" style="background:#dc2626;"></span>Ana Torres · 5 W</span>
+            </button>
+            <button class="t-chip">
+                <span class="nm">🇧🇪 Spa</span>
+                <span class="meta"><span>🏁 <b>14</b></span><span>🤖 <b>5</b></span></span>
+                <span class="champ"><span class="dot" style="background:#16a34a;"></span>Laura Pin · 6 W</span>
+            </button>
+            <button class="t-chip">
+                <span class="nm">🇬🇧 Silverstone</span>
+                <span class="meta"><span>🏁 <b>12</b></span><span>🤖 <b>3</b></span></span>
+                <span class="champ"><span class="dot" style="background:#f59e0b;"></span>Carlos Ruiz · 5 W</span>
+            </button>
+            <button class="t-chip">
+                <span class="nm">🇩🇪 Nürburgring</span>
+                <span class="meta"><span>🏁 <b>10</b></span><span>🤖 <b>4</b></span></span>
+                <span class="champ"><span class="dot" style="background:#dc2626;"></span>Ana Torres · 4 W</span>
+            </button>
+            <button class="t-chip">
+                <span class="nm">🇯🇵 Suzuka</span>
+                <span class="meta"><span>🏁 <b>8</b></span><span>🤖 <b>2</b></span></span>
+                <span class="champ"><span class="dot" style="background:#2563eb;"></span>Mario Vega · 3 W</span>
+            </button>
+            <button class="t-chip">
+                <span class="nm">🇺🇸 Watkins Glen</span>
+                <span class="meta"><span>🏁 <b>8</b></span><span>🤖 <b>3</b></span></span>
+                <span class="champ">🤖 Solo ganan bots</span>
+            </button>
+        </div>
+
+        <!-- Hero: donut grande + desglose del circuito activo -->
+        <div class="hero">
+            <section class="panel" aria-label="Distribución">
+                <div class="panel-head">
+                    <h3>Victorias — Monza</h3>
+                    <span class="hint">98 partidas · por ganador</span>
+                </div>
+                <div class="donut">
+                    <svg viewBox="0 0 240 240" width="300" height="300" role="img" aria-label="Victorias en Monza por ganador">
+                        <g transform="translate(120,120)">
+                            <circle r="90" fill="none" stroke="#28221f" stroke-width="34"/>
+                            <circle r="90" fill="none" stroke="#dc2626" stroke-width="34" stroke-dasharray="176 390" transform="rotate(-90)"/>
+                            <circle r="90" fill="none" stroke="#2563eb" stroke-width="34" stroke-dasharray="102 464" transform="rotate(62)"/>
+                            <circle r="90" fill="none" stroke="#f59e0b" stroke-width="34" stroke-dasharray="79 487" transform="rotate(156)"/>
+                            <circle r="90" fill="none" stroke="#16a34a" stroke-width="34" stroke-dasharray="60 506" transform="rotate(214)"/>
+                            <circle r="90" fill="none" stroke="#0891b2" stroke-width="34" stroke-dasharray="25 541" transform="rotate(258)"/>
+                            <text y="-4" text-anchor="middle" fill="#f2ece5" font-size="30" font-weight="700" font-family="sans-serif">77</text>
+                            <text y="18" text-anchor="middle" fill="#a99f95" font-size="11" font-family="sans-serif">victorias de</text>
+                            <text y="32" text-anchor="middle" fill="#a99f95" font-size="11" font-family="sans-serif">jugadores</text>
+                        </g>
+                    </svg>
+                </div>
+                <div class="hint" style="text-align:center;">🤖 21 victorias de bots (21% de las partidas del circuito)</div>
+            </section>
+
+            <section class="panel" aria-label="Desglose de Monza">
+                <div class="panel-head">
+                    <h3>Monza</h3>
+                    <span class="hint">24% de todas las partidas (402 en total) · campeón actual: Ana Torres</span>
+                </div>
+                <div class="facts">
+                    <div class="fact"><div class="k">Partidas</div><div class="v">98</div></div>
+                    <div class="fact"><div class="k">Reparto</div><div class="v">24<small>%</small></div></div>
+                    <div class="fact"><div class="k">Victorias bots</div><div class="v">21<small>· 21%</small></div></div>
+                    <div class="fact"><div class="k">Última visita</div><div class="v" style="font-size:1rem;">22/11</div></div>
+                </div>
+                <div class="panel-head"><h3 style="font-size:1.05rem;">Victorias por piloto</h3><span class="hint">jugadores principales + agregado «Bots»</span></div>
+                <div class="bars">
+                    <div class="brow"><span class="who"><span class="dot" style="background:#dc2626;"></span>Ana Torres</span><span class="bbar"><i style="width:100%;background:#dc2626;"></i></span><span class="val"><b>32</b></span></div>
+                    <div class="brow"><span class="who"><span class="dot" style="background:#2563eb;"></span>Mario Vega</span><span class="bbar"><i style="width:53%;background:#2563eb;"></i></span><span class="val"><b>17</b></span></div>
+                    <div class="brow"><span class="who"><span class="dot" style="background:#f59e0b;"></span>Carlos Ruiz</span><span class="bbar"><i style="width:41%;background:#f59e0b;"></i></span><span class="val"><b>13</b></span></div>
+                    <div class="brow"><span class="who"><span class="dot" style="background:#16a34a;"></span>Laura Pin</span><span class="bbar"><i style="width:28%;background:#16a34a;"></i></span><span class="val"><b>9</b></span></div>
+                    <div class="brow"><span class="who"><span class="dot" style="background:#342d29;"></span>Bots (agregado)</span><span class="bbar"><i style="width:66%;background:#6b5546;"></i></span><span class="val"><b>21</b></span></div>
+                </div>
+            </section>
+        </div>
+    </main>
+</body>
+</html>

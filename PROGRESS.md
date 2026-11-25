@@ -1,5 +1,34 @@
 # PROGRESS.md
 
+## Sesion 2026-11-25 (HDH-UI05)
+
+### Feature trabajada: HDH-UI05 - Rediseño de la pestaña Circuitos
+
+**Estado**: Completada
+
+#### Que se hizo
+- **Rail de circuitos**: la cuadrícula de tarjetas sueltas se sustituye por un rail lateral (300px) con scroll interno (`#track-list` conserva el id, contenedor `.track-rail`). Cada `article.track-card` muestra nombre (`h4.track-name` con `data-track`), partidas, victorias de bots, barra de reparto sobre el total con % y campeón (nombre + W + punto de color vía `playerColor`). Selección por clic en la tarjeta completa (delegación), toggle intacto.
+- **Detalle a la derecha**: cabecera con badges del circuito activo (🏆 campeón · 🏁 partidas · 📊 % del total · 🤖 W de bots · 📅 última visita), donut existente (`#tracks-chart-title`, `#chart-tracks` sin cambios de comportamiento), nuevo **pódio top 3 de jugadores principales** (reutiliza `.podium-place` con `--pc`/`--share`) y **últimas 5 visitas** al circuito con ganador y puntaje. Estados vacíos con guía al rail.
+- **Refactor**: estadísticas por circuito extraídas a `computeTrackStats()` (compartidas por rail, pódio y visitas); campeón ahora solo considera jugadores principales y expone `championWins`.
+- **Fix de soporte (fuera del diff visual pero forzado por él)**: con el drawer de filtros abierto (`body.panel-open`), `main` se desplaza 300px en >=721px; antes el panel tapaba al donut (no interactivo) y ahora tapaba al rail clicable (`#filter-panel` intercepta pointer events). En <=720px sigue siendo overlay.
+- **Fix de layout móvil**: `min-width: 0` en los hijos de `.circuitos-layout` (grid item crecía con el contenido y el carrusel nunca desbordaba).
+- **Diseño**: artboard `design/circuitos/02-rail-detalle.html` elegido de /gentle:design (3 direcciones con 12 circuitos modelados; escala prevista 10 → 12-16).
+- Specs actualizados: HDH-06b (markup de tarjeta), HDH-15 (aserción de bots al nuevo `.track-meta`), HDH-UI04 (selector escopado a `#campeonatos-rail .rail-list`).
+
+#### Verificación
+- `node --check src/app.js`: OK.
+- `e2e/tests/HDH-UI05.spec.js` (nuevo, 3 tests): rail rico, clic activa badges+pódio+visitas y segundo clic vuelve a Distribución con estados vacíos, responsive. **3/3 OK**.
+- **Suite completa Playwright: 153/153 pasados** (Node v22, `CI=true`).
+- Screenshots: `evidence/screenshots/HDH-UI05-*.png` (no versionados; oficial en Actions).
+
+#### Notas / Riesgos
+- El desplazamiento de `main` con el panel de filtros afecta a todas las pestañas >=721px (cambio compartido, cubierto por la suite completa en verde).
+- El pódio usa `color-mix` (ya usado por `.podium-place` desde HDH-UI02): sin soporte en navegadores muy antiguos, igual que el resto del dashboard.
+
+---
+
+# PROGRESS.md
+
 ## Sesión 2026-11-24 (HDH-UI04)
 
 ### Feature trabajada: HDH-UI04 - Rediseño de la pestaña Campeonatos

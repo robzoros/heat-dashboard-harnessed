@@ -296,6 +296,15 @@ body.panel-open .btn-toggle {
     left: 316px;
 }
 
+/* Con el drawer de filtros abierto el contenido se desplaza para no quedar
+   debajo (en móvil sigue siendo overlay: 300px no caben junto al contenido). */
+@media (min-width: 721px) {
+    body.panel-open main {
+        padding-left: 300px;
+        transition: padding-left 0.3s;
+    }
+}
+
 #filter-panel {
     position: fixed;
     left: 0;
@@ -741,37 +750,68 @@ th {
     border-radius: 5px;
 }
 
+/* Circuitos (HDH-UI05): rail lateral + detalle con donut, pódio y visitas. */
 .circuitos-layout {
     display: grid;
-    grid-template-columns: 1fr 2fr;
+    grid-template-columns: 300px 1fr;
     gap: 20px;
     align-items: start;
 }
 
-.donut-card {
-    max-width: 400px;
+.circuitos-layout > * {
+    min-width: 0;
 }
 
-.donut-card canvas {
-    max-height: 300px;
+.track-rail {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: 74vh;
+    overflow-y: auto;
+    padding-right: 4px;
 }
 
-.track-list {
+.rail-head span {
+    display: block;
+    padding: 0 2px 4px;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.track-rail .rail-list {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
+    gap: 8px;
 }
 
 .track-card {
+    display: grid;
+    gap: 4px;
+    padding: 12px 14px;
     background: var(--surface);
-    padding: 15px;
+    border: 1px solid var(--line);
     border-radius: 10px;
+    cursor: pointer;
+    transition: border-color 0.2s;
+}
+
+.track-card:hover {
+    border-color: var(--accent);
+}
+
+.track-card:focus-within,
+.track-card:has(.track-name:focus-visible) {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
 }
 
 .track-card h4.track-name {
     color: var(--accent);
-    margin-bottom: 10px;
-    font-family: 'Barlow Condensed', sans-serif;
+    margin-bottom: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    letter-spacing: 0.01em;
     font-size: 1.2rem;
     cursor: pointer;
     transition: color 0.2s;
@@ -782,12 +822,177 @@ th {
 }
 
 .track-card.selected {
-    outline: 2px solid var(--accent);
+    border-color: var(--accent);
+    background: linear-gradient(180deg, var(--accent-soft), var(--surface) 70%);
 }
 
 .track-card p {
-    margin: 5px 0;
-    font-size: 0.9rem;
+    margin: 0;
+    font-size: 0.85rem;
+}
+
+.track-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    color: var(--text-muted);
+    font-size: 0.78rem !important;
+}
+
+.track-meta b {
+    color: var(--text);
+    font-weight: 600;
+}
+
+.track-share {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.sharebar {
+    flex: 1;
+    height: 5px;
+    border-radius: 3px;
+    background: var(--surface-2);
+    overflow: hidden;
+}
+
+.sharebar i {
+    display: block;
+    height: 100%;
+    background: var(--accent);
+    border-radius: 3px;
+}
+
+.share-pct {
+    min-width: 34px;
+    text-align: right;
+    color: var(--text-muted);
+    font-size: 0.76rem;
+}
+
+.track-champ {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    flex-wrap: wrap;
+    color: var(--text-muted);
+}
+
+.track-champ b {
+    color: var(--text);
+}
+
+/* Detalle */
+.track-detail {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    min-width: 0;
+}
+
+.track-detail-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    min-height: 40px;
+}
+
+.track-detail-head h2 {
+    font-size: 1.6rem;
+    margin: 0;
+    color: var(--text);
+}
+
+.badge-gold {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 10px;
+    border-radius: 999px;
+    background: var(--surface-2);
+    border: 1px solid var(--accent);
+    font-size: 0.78rem;
+    color: var(--accent);
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.circuitos-duo {
+    display: grid;
+    grid-template-columns: minmax(0, 6fr) minmax(0, 6fr);
+    gap: 16px;
+    align-items: stretch;
+}
+
+.donut-card {
+    max-width: none;
+}
+
+.donut-card canvas {
+    max-height: 320px;
+}
+
+.track-chart-card,
+.track-podium-card,
+.track-recents-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 16px 20px;
+    min-width: 0;
+}
+
+.track-chart-card h3,
+.track-podium-card h3,
+.track-recents-card h3 {
+    color: var(--accent);
+    margin-bottom: 12px;
+    font-size: 1.3rem;
+}
+
+.track-podium {
+    min-height: 240px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+}
+
+.podium-steps {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    max-width: 520px;
+}
+
+.track-recents {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 8px;
+}
+
+.track-recent {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    background: var(--surface-2);
+    padding: 9px 12px;
+    border-radius: 8px;
+    font-size: 0.86rem;
+}
+
+.track-recent .recent-main b {
+    font-weight: 700;
+}
+
+.track-recent .recent-winner {
+    color: var(--text-muted);
 }
 
 .win-pct-bar {
@@ -1473,5 +1678,47 @@ th {
 
     .campeonato-play-item .remove-play {
         margin-left: auto;
+    }
+}
+
+/* ── Responsive circuitos (HDH-UI05) ───────────────────────────────────
+   ≤1050px: rail arriba en carrusel horizontal y duo apilado.
+   ≤720px: compacto, visitas en una columna. */
+@media (max-width: 1050px) {
+    .circuitos-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .track-rail {
+        max-height: none;
+        overflow-y: visible;
+        padding-right: 0;
+    }
+
+    .track-rail .rail-list {
+        grid-template-columns: none;
+        grid-auto-flow: column;
+        grid-auto-columns: minmax(240px, 1fr);
+        overflow-x: auto;
+        padding-bottom: 6px;
+        scroll-snap-type: x proximity;
+    }
+
+    .track-card {
+        scroll-snap-align: start;
+    }
+
+    .circuitos-duo {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 720px) {
+    .track-recents {
+        grid-template-columns: 1fr;
+    }
+
+    .track-detail-head h2 {
+        font-size: 1.35rem;
     }
 }

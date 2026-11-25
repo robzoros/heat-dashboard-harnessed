@@ -2,6 +2,8 @@
 
 Fuente única leída: `src/styles.css` (tema «Asfalto y brasa»). No se inventaron valores: solo tokens presentes en las fuentes.
 
+RefreSco 25/11/2025: `src/styles.css` cambió con HDH-UI04 (rail de campeonatos, duos, responsive), pero solo añadió clases de componentes: los tokens de `:root` y las fuentes son idénticos; no hubo que re-capturar valores.
+
 ## Colores
 
 | Token | Valor |

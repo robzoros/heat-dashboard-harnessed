@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Dirección 2 — Rail de circuitos + panel de detalle</title>
+<style>
+    :root {
+        --bg:#14110f; --surface:#1d1916; --surface-2:#28221f; --surface-3:#342d29;
+        --line:#39322d; --text:#f2ece5; --muted:#a99f95; --accent:#ff7a2f;
+        --accent-soft:rgba(255,122,47,.14); --good:#46c98b;
+        --font-display:'Arial Narrow','Bahnschrift',sans-serif;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:'Barlow','Segoe UI',system-ui,sans-serif; background:var(--bg); color:var(--text); font-variant-numeric:tabular-nums; }
+
+    .topbar { position:relative; display:flex; align-items:center; flex-wrap:wrap; gap:10px 24px; padding:18px 28px 16px; }
+    .topbar::after { content:''; position:absolute; left:0; right:0; bottom:0; height:3px; background:linear-gradient(90deg,#ffb52e,#ff6a2b 45%,#e5392f); }
+    .topbar h1 { font-family:var(--font-display); font-size:2rem; }
+    .tabbar { display:flex; gap:8px; padding:10px 28px; background:var(--surface); border-bottom:1px solid var(--line); }
+    .tab { padding:7px 16px; border-radius:8px; font-size:.9rem; color:var(--muted); }
+    .tab[aria-current] { color:var(--accent); background:var(--accent-soft); border:1px solid var(--accent); font-weight:600; }
+    :focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+
+    /* Rail a la izquierda (coherente con Campeonatos), detalle a la derecha */
+    .layout { display:grid; grid-template-columns:300px 1fr; gap:20px; padding:20px 28px 40px; align-items:start; }
+
+    .rail { display:flex; flex-direction:column; gap:8px; max-height:760px; overflow-y:auto; padding-right:4px; }
+    .rail-head span { display:block; padding:0 2px 4px; color:var(--muted); font-size:.8rem; letter-spacing:.06em; text-transform:uppercase; }
+    .t-card { text-align:left; width:100%; background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:12px 14px; cursor:pointer; color:var(--text); display:grid; gap:4px; font-family:'Barlow',system-ui,sans-serif; }
+    .t-card:hover { border-color:var(--accent); }
+    .t-card[aria-current] { border-color:var(--accent); background:linear-gradient(180deg,var(--accent-soft),var(--surface)); }
+    .t-card .nm { font-family:var(--font-display); font-weight:700; font-size:1.15rem; }
+    .t-card .meta { display:flex; gap:12px; font-size:.78rem; color:var(--muted); }
+    .t-card .meta b { color:var(--text); font-weight:600; }
+    .sharebar { height:5px; border-radius:3px; background:var(--surface-2); overflow:hidden; }
+    .sharebar i { display:block; height:100%; background:var(--accent); border-radius:3px; }
+    .t-card .champs { display:flex; align-items:center; gap:6px; font-size:.8rem; color:var(--muted); flex-wrap:wrap; }
+    .dot { width:9px; height:9px; border-radius:50%; flex:none; }
+    .t-card .champs b { color:var(--text); }
+
+    .detail { display:flex; flex-direction:column; gap:16px; min-width:0; }
+    .detail-head { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+    .detail-head h2 { font-family:var(--font-display); font-weight:700; font-size:1.7rem; }
+    .badge { display:inline-flex; align-items:center; gap:5px; padding:3px 10px; border-radius:999px; background:var(--surface-2); border:1px solid var(--line); font-size:.78rem; color:var(--muted); white-space:nowrap; }
+    .badge.gold { color:var(--accent); border-color:var(--accent); font-weight:600; }
+
+    .panel { background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:16px 20px; min-width:0; }
+    .panel-head { display:flex; align-items:baseline; justify-content:space-between; gap:12px; margin-bottom:10px; flex-wrap:wrap; }
+    .panel-head h3 { font-family:var(--font-display); font-size:1.3rem; color:var(--accent); }
+    .hint { font-size:.8rem; color:var(--muted); }
+
+    .duo { display:grid; grid-template-columns:minmax(360px,6fr) minmax(360px,6fr); gap:16px; align-items:stretch; }
+    .donutwrap { display:flex; align-items:center; justify-content:center; min-height:280px; }
+    .podium { display:flex; align-items:flex-end; justify-content:center; gap:10px; min-height:250px; padding-top:10px; }
+    .step { --pc:#dc2626; flex:1 1 0; max-width:150px; display:flex; flex-direction:column; align-items:center; gap:2px; padding:12px 8px 10px; border-top:4px solid var(--pc); border-radius:10px 10px 0 0; background:linear-gradient(180deg,color-mix(in srgb,var(--pc) 24%,var(--surface-2)),var(--surface-2) 88%); }
+    .step .medal { font-size:1.3rem; }
+    .step .nm { font-family:var(--font-display); font-weight:700; font-size:1.25rem; }
+    .step .wins { font-size:.85rem; color:var(--muted); }
+    .step.s1 { min-height:210px; }
+    .step.s2 { min-height:160px; --pc:#2563eb; }
+    .step.s3 { min-height:125px; --pc:#f59e0b; }
+    .step.sbots { min-height:95px; --pc:#6b5546; }
+
+    .recents { display:flex; flex-direction:column; gap:8px; }
+    .recent { display:flex; justify-content:space-between; gap:10px; align-items:center; background:var(--surface-2); border-radius:8px; padding:9px 12px; font-size:.85rem; }
+    .recent .dt { color:var(--muted); }
+
+    @media (max-width:1050px) {
+        .layout { grid-template-columns:1fr; }
+        .rail { flex-direction:row; overflow-x:auto; padding-bottom:6px; }
+        .t-card { min-width:240px; flex:none; }
+        .duo { grid-template-columns:1fr; }
+    }
+    @media (max-width:720px) {
+        .topbar { padding:14px 16px 12px; }
+        .layout { padding:14px 16px 32px; }
+    }
+    @media (prefers-reduced-motion:reduce) { * { transition:none !important; animation:none !important; } }
+</style>
+</head>
+<body>
+    <header class="topbar"><h1>🏁 Heat Dashboard</h1></header>
+    <nav class="tabbar" aria-label="Secciones">
+        <a class="tab" href="#">Clasificación</a>
+        <a class="tab" href="#">Partidas</a>
+        <a class="tab" href="#">Jugadores</a>
+        <a class="tab" href="#">Campeonatos</a>
+        <a class="tab" aria-current="page" href="#">Circuitos</a>
+        <a class="tab" href="#">Colores</a>
+    </nav>
+
+    <main class="layout">
+        <!-- Rail: tarjetas ricas con reparto de partidas y doble podio (campeón y bots) -->
+        <aside class="rail" aria-label="Lista de circuitos">
+            <div class="rail-head"><span>12 circuitos · la lista hace scroll</span></div>
+
+            <button class="t-card" aria-current="true">
+                <span class="nm">🇮🇹 Monza</span>
+                <span class="meta"><span>🏁 <b>98</b></span><span>🤖 <b>21</b> W</span></span>
+                <span class="sharebar" title="24% de todas las partidas"><i style="width:24%;"></i></span>
+                <span class="champs"><span class="dot" style="background:#dc2626;"></span>Campeón: <b>Ana Torres</b> · 32 W</span>
+            </button>
+
+            <button class="t-card">
+                <span class="nm">🇺🇸 Nevada</span>
+                <span class="meta"><span>🏁 <b>76</b></span><span>🤖 <b>18</b> W</span></span>
+                <span class="sharebar" title="19% de todas las partidas"><i style="width:19%;"></i></span>
+                <span class="champs"><span class="dot" style="background:#2563eb;"></span>Campeón: <b>Mario Vega</b> · 27 W</span>
+            </button>
+
+            <button class="t-card">
+                <span class="nm">🇲🇦 Marrakech</span>
+                <span class="meta"><span>🏁 <b>61</b></span><span>🤖 <b>14</b> W</span></span>
+                <span class="sharebar" title="15% de todas las partidas"><i style="width:15%;"></i></span>
+                <span class="champs"><span class="dot" style="background:#f59e0b;"></span>Campeón: <b>Carlos Ruiz</b> · 19 W</span>
+            </button>
+
+            <button class="t-card">
+                <span class="nm">🇪🇸 Jerez</span>
+                <span class="meta"><span>🏁 <b>44</b></span><span>🤖 <b>9</b> W</span></span>
+                <span class="sharebar" title="11% de todas las partidas"><i style="width:11%;"></i></span>
+                <span class="champs"><span class="dot" style="background:#16a34a;"></span>Campeón: <b>Laura Pin</b> · 15 W</span>
+            </button>
+
+            <button class="t-card">
+                <span class="nm">🇧🇷 Interlagos</span>
+                <span class="meta"><span>🏁 <b>33</b></span><span>🤖 <b>11</b> W</span></span>
+                <span class="sharebar" title="8% de todas las partidas"><i style="width:8%;"></i></span>
+                <span class="champs"><span class="dot" style="background:#0891b2;"></span>Campeón: <b>Sofía Marín</b> · 12 W</span>
+            </button>
+
+            <button class="t-card">
+                <span class="nm">🇵🇹 Estoril</span>
+                <span class="meta"><span>🏁 <b>22</b></span><span>🤖 <b>7</b> W</span></span>
+                <span class="sharebar" title="5% de todas las partidas"><i style="width:5%;"></i></span>
+                <span class="champs"><span class="dot" style="background:#2563eb;"></span>Campeón: <b>Mario Vega</b> · 6 W</span>
+            </button>
+
+            <button class="t-card">
+                <span class="nm">🇮🇹 Imola</span>
+                <span class="meta"><span>🏁 <b>16</b></span><span>🤖 <b>4</b> W</span></span>
+                <span class="sharebar" title="4% de todas las partidas"><i style="width:4%;"></i></span>
+                <span class="champs"><span class="dot" style="background:#dc2626;"></span>Campeón: <b>Ana Torres</b> · 5 W</span>
+            </button>
+
+            <button class="t-card">
+                <span class="nm">🇧🇪 Spa</span>
+                <span class="meta"><span>🏁 <b>14</b></span><span>🤖 <b>5</b> W</span></span>
+                <span class="sharebar" title="3% de todas las partidas"><i style="width:3%;"></i></span>
+                <span class="champs"><span class="dot" style="background:#16a34a;"></span>Campeón: <b>Laura Pin</b> · 6 W</span>
+            </button>
+
+            <button class="t-card">
+                <span class="nm">🇬🇧 Silverstone</span>
+                <span class="meta"><span>🏁 <b>12</b></span><span>🤖 <b>3</b> W</span></span>
+                <span class="sharebar" title="3% de todas las partidas"><i style="width:3%;"></i></span>
+                <span class="champs"><span class="dot" style="background:#f59e0b;"></span>Campeón: <b>Carlos Ruiz</b> · 5 W</span>
+            </button>
+
+            <button class="t-card">
+                <span class="nm">🇩🇪 Nürburgring</span>
+                <span class="meta"><span>🏁 <b>10</b></span><span>🤖 <b>4</b> W</span></span>
+                <span class="sharebar" title="2% de todas las partidas"><i style="width:2%;"></i></span>
+                <span class="champs"><span class="dot" style="background:#dc2626;"></span>Campeón: <b>Ana Torres</b> · 4 W</span>
+            </button>
+
+            <button class="t-card">
+                <span class="nm">🇯🇵 Suzuka</span>
+                <span class="meta"><span>🏁 <b>8</b></span><span>🤖 <b>2</b> W</span></span>
+                <span class="sharebar" title="2% de todas las partidas"><i style="width:2%;"></i></span>
+                <span class="champs"><span class="dot" style="background:#2563eb;"></span>Campeón: <b>Mario Vega</b> · 3 W</span>
+            </button>
+
+            <button class="t-card">
+                <span class="nm">🇺🇸 Watkins Glen</span>
+                <span class="meta"><span>🏁 <b>8</b></span><span>🤖 <b>3</b> W</span></span>
+                <span class="sharebar" title="2% de todas las partidas"><i style="width:2%;"></i></span>
+                <span class="champs">🤖 Sin victoria de ningún jugador principal</span>
+            </button>
+
+        </aside>
+
+        <!-- Detalle: donut del circuito + pódio; debajo, últimas visitas -->
+        <section class="detail" aria-label="Detalle del circuito">
+            <div class="detail-head">
+                <h2>🇮🇹 Monza</h2>
+                <span class="badge gold">🏆 Ana Torres · 32 W</span>
+                <span class="badge">🏁 98 partidas</span>
+                <span class="badge">📊 24% del total</span>
+                <span class="badge">🤖 21 W bots</span>
+                <span class="badge">📅 última: 22/11/2025</span>
+            </div>
+
+            <div class="duo">
+                <div class="panel">
+                    <div class="panel-head"><h3>Reparto de victorias</h3><span class="hint">por ganador, incluido «Bots»</span></div>
+                    <div class="donutwrap">
+                        <svg viewBox="0 0 240 240" width="280" height="280" role="img" aria-label="Reparto de victorias en Monza">
+                            <g transform="translate(120,120)">
+                                <circle r="90" fill="none" stroke="#28221f" stroke-width="34"/>
+                                <circle r="90" fill="none" stroke="#dc2626" stroke-width="34" stroke-dasharray="169 397" transform="rotate(-90)"/>
+                                <circle r="90" fill="none" stroke="#2563eb" stroke-width="34" stroke-dasharray="90 476" transform="rotate(53)"/>
+                                <circle r="90" fill="none" stroke="#f59e0b" stroke-width="34" stroke-dasharray="69 497" transform="rotate(141)"/>
+                                <circle r="90" fill="none" stroke="#16a34a" stroke-width="34" stroke-dasharray="48 518" transform="rotate(208)"/>
+                                <circle r="90" fill="none" stroke="#6b5546" stroke-width="34" stroke-dasharray="106 460" transform="rotate(245)"/>
+                                <text y="6" text-anchor="middle" fill="#f2ece5" font-size="28" font-weight="700" font-family="sans-serif">98</text>
+                            </g>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-head"><h3>Pódio del circuito</h3><span class="hint">victorias de jugadores principales</span></div>
+                    <div class="podium">
+                        <div class="step s3"><span class="medal">🥉</span><span class="nm">Carlos</span><span class="wins">13 victorias</span></div>
+                        <div class="step s1"><span class="medal">🥇</span><span class="nm">Ana</span><span class="wins">32 victorias</span></div>
+                        <div class="step s2"><span class="medal">🥈</span><span class="nm">Mario</span><span class="wins">17 victorias</span></div>
+                    </div>
+                    <p class="hint" style="text-align:center;margin-top:10px;">🤖 Bots: 21 victorias ( fuera del pódio, se cuentan aparte )</p>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-head"><h3>Últimas visitas a Monza</h3><span class="hint">5 más recientes</span></div>
+                <div class="recents">
+                    <div class="recent"><span><b>22/11/2025</b> · 4 jugadores</span><span>🏆 Ana Torres · 11 pts</span></div>
+                    <div class="recent"><span><b>08/11/2025</b> · 5 jugadores</span><span>🏆 Mario Vega · 10 pts</span></div>
+                    <div class="recent"><span><b>25/10/2025</b> · 4 jugadores</span><span>🏆 Ana Torres · 9 pts</span></div>
+                    <div class="recent"><span><b>11/10/2025</b> · 6 jugadores</span><span>🏆 Bot1 · 8 pts</span></div>
+                    <div class="recent"><span><b>27/09/2025</b> · 4 jugadores</span><span>🏆 Laura Pin · 11 pts</span></div>
+                </div>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

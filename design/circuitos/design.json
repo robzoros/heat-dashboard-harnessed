@@ -1,0 +1,27 @@
+{
+  "title": "Rediseño de la pestaña Circuitos",
+  "brief": "Rediseñar la pestaña Circuitos: que la parte de la lista de circuitos ocupe menos espacio para darle espacio al chart, y que cada circuito muestre más información (partidas, campeón con victorias, bots, reparto del total). Mismo lenguaje visual que la pestaña Campeonatos (tokens de design/system.md). Escala: hoy hay 10 circuitos y se prevé 12–16; los artboards modelan 12.",
+  "artboards": [
+    {
+      "file": "01-strip-hero.html",
+      "title": "Tira compacta + chart protagonista",
+      "tradeoff": "La lista es una banda horizontal de ~120px con scroll (escala a 16 sin crecer); el resto es donut grande + desglose del circuito activo. Máximo espacio para el chart, comparación entre circuitos más débil.",
+      "width": 1440,
+      "height": 900
+    },
+    {
+      "file": "02-rail-detalle.html",
+      "title": "Rail de circuitos + panel de detalle",
+      "tradeoff": "Rail lateral de 300px coherente con Campeonatos, con scroll interno para 12–16 circuitos; a la derecha donut, pódio y últimas visitas. Más rico por circuito, pero roba ancho horizontal.",
+      "width": 1440,
+      "height": 900
+    },
+    {
+      "file": "03-tabla-densa.html",
+      "title": "Tabla densa + split de detalle",
+      "tradeoff": "Tabla comparativa de una fila por circuito (~30px por fila; 16 filas siguen cabiendo con scroll corto); debajo, barras + ficha rápida. Mejor comparación a escala, sin pódio visual.",
+      "width": 1440,
+      "height": 900
+    }
+  ]
+}

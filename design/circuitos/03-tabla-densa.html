@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Dirección 3 — Tabla densa de circuitos + split</title>
+<style>
+    :root {
+        --bg:#14110f; --surface:#1d1916; --surface-2:#28221f; --surface-3:#342d29;
+        --line:#39322d; --text:#f2ece5; --muted:#a99f95; --accent:#ff7a2f;
+        --accent-soft:rgba(255,122,47,.14); --good:#46c98b;
+        --font-display:'Arial Narrow','Bahnschrift',sans-serif;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:'Barlow','Segoe UI',system-ui,sans-serif; background:var(--bg); color:var(--text); font-variant-numeric:tabular-nums; }
+
+    .topbar { position:relative; display:flex; align-items:center; flex-wrap:wrap; gap:10px 24px; padding:18px 28px 16px; }
+    .topbar::after { content:''; position:absolute; left:0; right:0; bottom:0; height:3px; background:linear-gradient(90deg,#ffb52e,#ff6a2b 45%,#e5392f); }
+    .topbar h1 { font-family:var(--font-display); font-size:2rem; }
+    .tabbar { display:flex; gap:8px; padding:10px 28px; background:var(--surface); border-bottom:1px solid var(--line); }
+    .tab { padding:7px 16px; border-radius:8px; font-size:.9rem; color:var(--muted); }
+    .tab[aria-current] { color:var(--accent); background:var(--accent-soft); border:1px solid var(--accent); font-weight:600; }
+    :focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+
+    .page { padding:18px 28px 40px; }
+
+    /* Tabla densa: una fila por circuito, la lista entera cabe en ~260px */
+    .panel { background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:16px 20px; min-width:0; }
+    .panel-head { display:flex; align-items:baseline; justify-content:space-between; gap:12px; margin-bottom:10px; flex-wrap:wrap; }
+    .panel-head h3 { font-family:var(--font-display); font-size:1.3rem; color:var(--accent); }
+    .hint { font-size:.8rem; color:var(--muted); }
+
+    .tablewrap { overflow-x:auto; }
+    table.tracks { width:100%; border-collapse:collapse; }
+    .tracks th, .tracks td { padding:9px 12px; text-align:left; border-bottom:1px solid var(--surface-2); font-size:.88rem; white-space:nowrap; }
+    .tracks th { background:var(--surface-2); color:var(--muted); font-weight:600; font-size:.76rem; }
+    .tracks .tn { font-family:var(--font-display); font-weight:700; font-size:1.05rem; }
+    .tracks tbody tr { cursor:pointer; }
+    .tracks tbody tr:hover td { background:var(--surface-2); }
+    .tracks tbody tr.active td { background:var(--accent-soft); }
+    .tracks tbody tr.active .tn { color:var(--accent); }
+    .num { text-align:right; font-variant-numeric:tabular-nums; }
+    .champ { display:flex; align-items:center; gap:7px; }
+    .dot { width:9px; height:9px; border-radius:50%; flex:none; }
+    .share { display:inline-flex; align-items:center; gap:8px; }
+    .share .bar { width:90px; height:6px; border-radius:3px; background:var(--surface-2); overflow:hidden; }
+    .share .bar i { display:block; height:100%; background:var(--accent); }
+    .pill { padding:2px 9px; border-radius:999px; background:var(--surface-3); font-size:.76rem; color:var(--muted); }
+    .pill.hi { background:var(--accent-soft); color:var(--accent); font-weight:600; }
+
+    /* Debajo: split 50/50 — chart del circuito activo y ficha rápida */
+    .split { display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:stretch; margin-top:16px; }
+    .split .panel { display:flex; flex-direction:column; }
+    .bars { display:flex; flex-direction:column; gap:8px; }
+    .brow { display:grid; grid-template-columns:120px 1fr 44px; gap:10px; align-items:center; font-size:.85rem; }
+    .bbar { height:18px; background:var(--surface-2); border-radius:5px; overflow:hidden; }
+    .bbar i { display:block; height:100%; border-radius:5px; }
+    .val { text-align:right; color:var(--muted); }
+    .facts { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+    .fact { background:var(--surface-2); border-radius:8px; padding:8px 12px; }
+    .fact .k { font-size:.72rem; color:var(--muted); }
+    .fact .v { font-family:var(--font-display); font-weight:700; font-size:1.25rem; }
+
+    @media (max-width:1000px) { .split { grid-template-columns:1fr; } }
+    @media (max-width:720px) { .topbar { padding:14px 16px 12px; } .page { padding:14px 16px 32px; } .tracks .share .bar { width:56px; } }
+    @media (prefers-reduced-motion:reduce) { * { transition:none !important; animation:none !important; } }
+</style>
+</head>
+<body>
+    <header class="topbar"><h1>🏁 Heat Dashboard</h1></header>
+    <nav class="tabbar" aria-label="Secciones">
+        <a class="tab" href="#">Clasificación</a>
+        <a class="tab" href="#">Partidas</a>
+        <a class="tab" href="#">Jugadores</a>
+        <a class="tab" href="#">Campeonatos</a>
+        <a class="tab" aria-current="page" href="#">Circuitos</a>
+        <a class="tab" href="#">Colores</a>
+    </nav>
+
+    <main class="page">
+        <!-- Tabla densa de circuitos: toda la info comparativa en una pantalla -->
+        <section class="panel" aria-label="Circuitos">
+            <div class="panel-head">
+                <h3>Circuitos</h3>
+                <span class="hint">12 circuitos (escala bien a 16) · clic en una fila activa su desglose · doble clic vuelve a «Distribución»</span>
+            </div>
+            <div class="tablewrap">
+                <table class="tracks">
+                    <thead>
+                        <tr><th>Circuito</th><th class="num">Partidas</th><th>Reparto</th><th>Campeón</th><th class="num">Sus W</th><th class="num">Bots W</th><th>% bots</th><th>Última</th></tr>
+                    </thead>
+                    <tbody>
+
+                        <tr class="active">
+                            <td class="tn">🇮🇹 Monza</td><td class="num">98</td>
+                            <td><span class="share"><span class="bar"><i style="width:24%;"></i></span><span class="pill hi">24%</span></span></td>
+                            <td><span class="champ"><span class="dot" style="background:#dc2626;"></span>Ana Torres</span></td>
+                            <td class="num">32</td><td class="num">21</td><td><span class="pill pill">21%</span></td><td>22/11</td>
+                        </tr>
+                        <tr>
+                            <td class="tn">🇺🇸 Nevada</td><td class="num">76</td>
+                            <td><span class="share"><span class="bar"><i style="width:19%;"></i></span><span class="pill pill">19%</span></span></td>
+                            <td><span class="champ"><span class="dot" style="background:#2563eb;"></span>Mario Vega</span></td>
+                            <td class="num">27</td><td class="num">18</td><td><span class="pill pill">23%</span></td><td>22/11</td>
+                        </tr>
+                        <tr>
+                            <td class="tn">🇲🇦 Marrakech</td><td class="num">61</td>
+                            <td><span class="share"><span class="bar"><i style="width:15%;"></i></span><span class="pill pill">15%</span></span></td>
+                            <td><span class="champ"><span class="dot" style="background:#f59e0b;"></span>Carlos Ruiz</span></td>
+                            <td class="num">19</td><td class="num">14</td><td><span class="pill pill">22%</span></td><td>22/11</td>
+                        </tr>
+                        <tr>
+                            <td class="tn">🇪🇸 Jerez</td><td class="num">44</td>
+                            <td><span class="share"><span class="bar"><i style="width:11%;"></i></span><span class="pill pill">11%</span></span></td>
+                            <td><span class="champ"><span class="dot" style="background:#16a34a;"></span>Laura Pin</span></td>
+                            <td class="num">15</td><td class="num">9</td><td><span class="pill pill">20%</span></td><td>22/11</td>
+                        </tr>
+                        <tr>
+                            <td class="tn">🇧🇷 Interlagos</td><td class="num">33</td>
+                            <td><span class="share"><span class="bar"><i style="width:8%;"></i></span><span class="pill pill">8%</span></span></td>
+                            <td><span class="champ"><span class="dot" style="background:#0891b2;"></span>Sofía Marín</span></td>
+                            <td class="num">12</td><td class="num">11</td><td><span class="pill hi">33%</span></td><td>22/11</td>
+                        </tr>
+                        <tr>
+                            <td class="tn">🇵🇹 Estoril</td><td class="num">22</td>
+                            <td><span class="share"><span class="bar"><i style="width:5%;"></i></span><span class="pill pill">5%</span></span></td>
+                            <td><span class="champ"><span class="dot" style="background:#2563eb;"></span>Mario Vega</span></td>
+                            <td class="num">6</td><td class="num">7</td><td><span class="pill hi">31%</span></td><td>22/11</td>
+                        </tr>
+                        <tr>
+                            <td class="tn">🇮🇹 Imola</td><td class="num">16</td>
+                            <td><span class="share"><span class="bar"><i style="width:4%;"></i></span><span class="pill pill">4%</span></span></td>
+                            <td><span class="champ"><span class="dot" style="background:#dc2626;"></span>Ana Torres</span></td>
+                            <td class="num">5</td><td class="num">4</td><td><span class="pill hi">25%</span></td><td>22/11</td>
+                        </tr>
+                        <tr>
+                            <td class="tn">🇧🇪 Spa</td><td class="num">14</td>
+                            <td><span class="share"><span class="bar"><i style="width:3%;"></i></span><span class="pill pill">3%</span></span></td>
+                            <td><span class="champ"><span class="dot" style="background:#16a34a;"></span>Laura Pin</span></td>
+                            <td class="num">6</td><td class="num">5</td><td><span class="pill hi">35%</span></td><td>22/11</td>
+                        </tr>
+                        <tr>
+                            <td class="tn">🇬🇧 Silverstone</td><td class="num">12</td>
+                            <td><span class="share"><span class="bar"><i style="width:3%;"></i></span><span class="pill pill">3%</span></span></td>
+                            <td><span class="champ"><span class="dot" style="background:#f59e0b;"></span>Carlos Ruiz</span></td>
+                            <td class="num">5</td><td class="num">3</td><td><span class="pill hi">25%</span></td><td>22/11</td>
+                        </tr>
+                        <tr>
+                            <td class="tn">🇩🇪 Nürburgring</td><td class="num">10</td>
+                            <td><span class="share"><span class="bar"><i style="width:2%;"></i></span><span class="pill pill">2%</span></span></td>
+                            <td><span class="champ"><span class="dot" style="background:#dc2626;"></span>Ana Torres</span></td>
+                            <td class="num">4</td><td class="num">4</td><td><span class="pill hi">40%</span></td><td>22/11</td>
+                        </tr>
+                        <tr>
+                            <td class="tn">🇯🇵 Suzuka</td><td class="num">8</td>
+                            <td><span class="share"><span class="bar"><i style="width:2%;"></i></span><span class="pill pill">2%</span></span></td>
+                            <td><span class="champ"><span class="dot" style="background:#2563eb;"></span>Mario Vega</span></td>
+                            <td class="num">3</td><td class="num">2</td><td><span class="pill hi">25%</span></td><td>22/11</td>
+                        </tr>
+                        <tr>
+                            <td class="tn">🇺🇸 Watkins Glen</td><td class="num">8</td>
+                            <td><span class="share"><span class="bar"><i style="width:2%;"></i></span><span class="pill pill">2%</span></span></td>
+                            <td><span class="champ">🤖 Solo bots</span></td>
+                            <td class="num">0</td><td class="num">3</td><td><span class="pill hi">37%</span></td><td>22/11</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="hint" style="margin-top:8px;">«% bots» destaca en naranja cuando los bots ganan más de una de cada cuatro partidas del circuito; en Watkins Glen ningún jugador principal ha ganado todavía.</p>
+        </section>
+
+        <!-- Split: chart del activo + ficha rápida -->
+        <div class="split">
+            <section class="panel" aria-label="Victorias en Monza">
+                <div class="panel-head"><h3>Victorias — Monza</h3><span class="hint">98 partidas · 31% del total</span></div>
+                <div class="bars">
+                    <div class="brow"><span class="champ"><span class="dot" style="background:#dc2626;"></span>Ana Torres</span><span class="bbar"><i style="width:100%;background:#dc2626;"></i></span><span class="val">32</span></div>
+                    <div class="brow"><span class="champ"><span class="dot" style="background:#6b5546;"></span>Bots</span><span class="bbar"><i style="width:66%;background:#6b5546;"></i></span><span class="val">21</span></div>
+                    <div class="brow"><span class="champ"><span class="dot" style="background:#2563eb;"></span>Mario Vega</span><span class="bbar"><i style="width:53%;background:#2563eb;"></i></span><span class="val">17</span></div>
+                    <div class="brow"><span class="champ"><span class="dot" style="background:#f59e0b;"></span>Carlos Ruiz</span><span class="bbar"><i style="width:41%;background:#f59e0b;"></i></span><span class="val">13</span></div>
+                    <div class="brow"><span class="champ"><span class="dot" style="background:#16a34a;"></span>Laura Pin</span><span class="bbar"><i style="width:28%;background:#16a34a;"></i></span><span class="val">9</span></div>
+                    <div class="brow"><span class="champ"><span class="dot" style="background:#0891b2;"></span>Sofía Marín</span><span class="bbar"><i style="width:19%;background:#0891b2;"></i></span><span class="val">6</span></div>
+                </div>
+            </section>
+
+            <section class="panel" aria-label="Ficha de Monza">
+                <div class="panel-head"><h3>Ficha rápida</h3><span class="hint">Monza</span></div>
+                <div class="facts">
+                    <div class="fact"><div class="k">Campeón</div><div class="v" style="font-size:1rem;">Ana Torres</div></div>
+                    <div class="fact"><div class="k">Victorias</div><div class="v">32<small style="font-size:.8rem;"> de 77 jug.</small></div></div>
+                    <div class="fact"><div class="k">Dominio</div><div class="v">42<small>%</small></div></div>
+                </div>
+                <div class="panel-head" style="margin-top:14px;"><h3 style="font-size:1.05rem;">Últimas visitas</h3></div>
+                <div class="bars">
+                    <div class="brow" style="grid-template-columns:1fr auto;"><span><b>22/11</b> · 🏆 Ana Torres (11 pts)</span><span class="val">4 jug.</span></div>
+                    <div class="brow" style="grid-template-columns:1fr auto;"><span><b>08/11</b> · 🏆 Mario Vega (10 pts)</span><span class="val">5 jug.</span></div>
+                    <div class="brow" style="grid-template-columns:1fr auto;"><span><b>25/10</b> · 🏆 Ana Torres (9 pts)</span><span class="val">4 jug.</span></div>
+                </div>
+            </section>
+        </div>
+    </main>
+</body>
+</html>

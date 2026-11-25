@@ -74,11 +74,11 @@ test.describe('HDH-15 - Modificar pestaña Circuitos', () => {
     const usaCard = page.locator('.track-card').first();
     await expect(usaCard.locator('h4')).toContainText('USA');
     await expect(usaCard).not.toContainText('Pts Medio');
-    await expect(usaCard.locator('p', { hasText: 'Victorias de Bots' })).toContainText('2');
+    await expect(usaCard.locator('.track-meta span', { hasText: '🤖' })).toContainText('2');
 
     const italyCard = page.locator('.track-card').last();
     await expect(italyCard.locator('h4')).toContainText('Italy');
-    await expect(italyCard.locator('p', { hasText: 'Victorias de Bots' })).toContainText('0');
+    await expect(italyCard.locator('.track-meta span', { hasText: '🤖' })).toContainText('0');
 
     await page.screenshot({ path: '../evidence/screenshots/HDH-15-circuitos-custom.png', fullPage: true });
   });
