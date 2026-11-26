@@ -1546,9 +1546,13 @@ PLAYER_PALETTE: ['#d62828', '#2563eb', '#eab308', '#ec4899', '#06b6d4', '#1a9e50
         } else {
             const medals = ['🥇', '🥈', '🥉'];
             const maxWins = mainWins[0].wins || 1;
-            podiumEl.innerHTML = '<div class="podium-steps">' + mainWins.map((e, i) => `
+            // Orden clásico de podio: 2º a la izquierda, ganador en el centro y
+            // 3º a la derecha (igual que renderPodium de Resumen).
+            const ranked = mainWins.slice(0, 3).map((e, i) => ({ e, medal: medals[i] }));
+            const displayOrder = [ranked[1], ranked[0], ranked[2]].filter(Boolean);
+            podiumEl.innerHTML = '<div class="podium-steps">' + displayOrder.map(({ e, medal }) => `
                 <div class="podium-place" style="--pc:${this.playerColor(e.player.name)};--share:${(e.wins / maxWins).toFixed(3)}">
-                    <div class="podium-medal">${medals[i]}</div>
+                    <div class="podium-medal">${medal}</div>
                     <div class="podium-name">${this.escapeHtml(e.player.name)}</div>
                     <div class="podium-wins">${e.wins} victoria${e.wins !== 1 ? 's' : ''}</div>
                 </div>
@@ -1723,22 +1727,25 @@ PLAYER_PALETTE: ['#d62828', '#2563eb', '#eab308', '#ec4899', '#06b6d4', '#1a9e50
 
         // Pódio en escalones: alturas a la escala de puntos (como el artboard 02
         // y .podium-place de Resumen); 1º con resplandor; solo los 3 primeros.
+        // Orden clásico: 2º a la izquierda, ganador en el centro y 3º a la derecha.
         const podiumEl = document.getElementById('race-modal-podium');
         if (sorted.length > 0) {
             const maxPts = sorted[0].ps.scoreNum || 0;
             const medals = ['🏆', '🥈', '🥉'];
-            podiumEl.innerHTML = sorted.slice(0, 3).map((entry, i) => {
+            const ranked = sorted.slice(0, 3).map((entry, i) => {
                 const pts = entry.ps.scoreNum || 0;
                 const share = maxPts > 0 ? pts / maxPts : (i === 0 ? 0.8 : 0.4);
                 const h = Math.round(60 + 80 * share);
-                return `
-                    <div class="race-step${i === 0 ? ' first' : ''}" style="--pc:${entry.color || 'var(--accent)'};--h:${h}px">
-                        <span class="race-step-medal">${medals[i]}</span>
-                        <span class="race-step-name">${this.escapeHtml(entry.name)}</span>
-                        <span class="race-step-n">${pts} pts</span>
-                    </div>
-                `;
-            }).join('');
+                return { entry, h, medal: medals[i], first: i === 0 };
+            });
+            const displayOrder = [ranked[1], ranked[0], ranked[2]].filter(Boolean);
+            podiumEl.innerHTML = displayOrder.map(({ entry, h, medal, first }) => `
+                <div class="race-step${first ? ' first' : ''}" style="--pc:${entry.color || 'var(--accent)'};--h:${h}px">
+                    <span class="race-step-medal">${medal}</span>
+                    <span class="race-step-name">${this.escapeHtml(entry.name)}</span>
+                    <span class="race-step-n">${entry.ps.scoreNum || 0} pts</span>
+                </div>
+            `).join('');
         } else {
             podiumEl.innerHTML = '<div class="campeonato-empty">Sin resultados.</div>';
         }

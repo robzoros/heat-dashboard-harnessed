@@ -1211,6 +1211,24 @@
         "suite": "playwright",
         "suiteResult": "168/168"
       }
+    },
+    {
+      "id": "FIX-HDH-12",
+      "priority": 1,
+      "name": "FIX: Podios en orden clásico (2º-1º-3º) en Circuitos y modal de carrera",
+      "description": [
+        "El podio del detalle de Circuitos y el de la modal de carrera pintaban al ganador primero a la izquierda en lugar del centro.",
+        "Se igualan al orden clásico de renderPodium de Resumen: 2º izquierda, 1º centro, 3º derecha."
+      ],
+      "status": "completed",
+      "verification": {
+        "checks": [
+          "Specs HDH-UI05/HDH-UI06/HDH-05b/HDH-UI02/HDH-UI03: 24/24",
+          "Suite completa Playwright: 168/168 (Node 22, CI=true)"
+        ],
+        "suite": "playwright",
+        "suiteResult": "168/168"
+      }
     }
   ]
 }
