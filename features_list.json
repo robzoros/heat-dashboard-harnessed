@@ -1126,6 +1126,29 @@
         ],
         "evidence": "e2e/tests/FIX-HDH-08.spec.js (5 tests) 5/5 + suite completa 158/158 en Node 22 (CI=true, Chromium local); proxy tests offline OK; screenshots evidence/screenshots/FIX-HDH-08-*.png (oficial en artifacts de Actions)."
       }
+    },
+    {
+      "id": "FIX-HDH-09",
+      "priority": 1,
+      "name": "Migración guiada de participantes legacy por matching de partidas (circuito + fecha)",
+      "description": [
+        "Las partidas guardadas en campeonatos legacy se casan contra el histórico global por (circuito, fecha); el alineamiento es posicional (mismo orden de jugadores del XML original) y se verifica que los puntajes coinciden posición a posición.",
+        "De cada emparejamiento se deduce la identidad estable de cada id legacy (userid de BGG o userid sintético para bots/no-BGG) y se construye el snapshot congelado de nombre/tipo/color.",
+        "Duplicados (circuito, fecha) en el histórico se desambiguan comparando los puntajes paralelos; si siguen empatados, la resolución se marca inválida para revisión.",
+        "La UI del campeonato legacy muestra un botón que calcula la resolución, presenta el informe (id legacy -> jugador identificado) y pide confirmación antes de aplicar; al aplicar, el campeonato se convierte a v2 (participantes por identidad, carreras canonicalizadas) y se persiste.",
+        "Verificado con los datos reales de Firestore: 1961 y 1962 Daganzo (9/9 resueltos, sin conflictos) y Boadilla Cup (9/9): los dos primeros comparten participantes distintos a los de Boadilla, como indica el usuario."
+      ],
+      "status": "completed",
+      "verification": {
+        "checks": [
+          "Resolución automática empareja 8/8 partidas y 27 participantes con cero conflictos (datos reales Firestore + heat-data.json)",
+          "La UI presenta el informe de resolución con nombre, userid y tipo por participante antes de aplicar",
+          "Al aplicar, el campeonato queda v2: participantes por identidad, snapshot y carreras canonicalizadas; la clasificación muestra los jugadores identificados",
+          "Partidas sin match o ambigüedad marcan la resolución como inválida y no aplican nada",
+          "La suite completa de Playwright sigue en verde"
+        ],
+        "evidence": "Chequeo previo con datos reales (Firestore + heat-data.json): 8/8 partidas casan por (circuito, fecha), 27/27 participantes resueltos sin conflictos; e2e/tests/FIX-HDH-09.spec.js 3/3 + suite completa 161/161 en Node 22 (CI=true, Chromium local); screenshots evidence/screenshots/FIX-HDH-09-*.png (oficial en artifacts de Actions)."
+      }
     }
   ]
 }
