@@ -1149,6 +1149,25 @@
         ],
         "evidence": "Chequeo previo con datos reales (Firestore + heat-data.json): 8/8 partidas casan por (circuito, fecha), 27/27 participantes resueltos sin conflictos; e2e/tests/FIX-HDH-09.spec.js 3/3 + suite completa 161/161 en Node 22 (CI=true, Chromium local); screenshots evidence/screenshots/FIX-HDH-09-*.png (oficial en artifacts de Actions)."
       }
+    },
+    {
+      "id": "FIX-HDH-10",
+      "priority": 1,
+      "name": "Regresión: bots clasificados como principales tras userid sintético",
+      "description": [
+        "Causa: classifyPlayers() decidía isBot = userid === '0', pero FIX-HDH-08 hace que el exportador escriba un userid sintético local-<slug> para bots y no-BGG, así que dejaban de detectarse como bots.",
+        "Fix: isBot = (userid === '0' || userid empieza por 'local-'); la identidad persistente se mantiene y el clasificador vuelve a reconocer bots.",
+        "Detectado tras un update_bgg real: los bots aparecían como jugadores principales."
+      ],
+      "status": "in_progress",
+      "verification": {
+        "checks": [
+          "classifyPlayers marca isBot para userids '0' y 'local-*' (tests extendidos en verde)",
+          "Regenerar datos con el exportador fija bots como bot y principales/otros según partidas",
+          "Suite de tests del proxy en verde"
+        ],
+        "evidence": "node proxy/test-classify.js (extendido con userid sintético) + test-generate-bgg-data.js + reproducción del bug con el JSON real de 2026-11-26: OK. Evidencia oficial tras regenerar datos en Actions."
+      }
     }
   ]
 }

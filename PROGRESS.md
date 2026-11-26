@@ -1872,3 +1872,21 @@
 - Los enlaces de `e2e/node_modules/.bin` están rotos (ficheros de 0 bytes), por eso hay que invocar el CLI de Node directamente.
 
 <!-- verificación HDH-INFRA01: cambio solo de documentación para comprobar que CI omite Playwright -->
+
+## Sesion 2026-11-26 (FIX-HDH-10)
+
+### Feature trabajada: FIX-HDH-10 - Regresión bots como principales tras userid sintético
+
+**Estado**: Completada (pendiente regenerar datos para evidencia oficial)
+
+#### Causa y fix
+- Un update_bgg real mostró los bots como principales. Causa raíz: `classifyPlayers()` (`proxy/classify.js`) decidía `isBot = userid === '0'`, pero FIX-HDH-08 hace que el exportador escriba userid sintético `local-<slug>` para bots y no-BGG → dejaban de clasificarse como bots.
+- Fix: `isBot = userid '0' o 'local-*'`; documentado en el clasificador y en test-classify (caso nuevo).
+
+#### Verificación
+- `node proxy/test-classify.js` (extendido): OK. `node proxy/test-generate-bgg-data.js`: OK.
+- Reproducción del bug con el JSON real de 2026-11-26 (Automa/BGA Player con userid local- → bot; Canales 125535 → main): OK.
+- Pendiente: regenerar datos (workflow Actualizar datos BGG) para evidencia oficial del JSON corregido.
+
+#### Notas / Riesgos
+- Risk: item 5/6 — afecta a la cadena de generación de datos; cubierto por tests del proxy. Los campeonatos ya migrados no se ven afectados (guardan identidad propia; la clase bot/main del snapshot no se re-clasifica).
