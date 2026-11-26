@@ -19,6 +19,24 @@ function syntheticUserid(name) {
     return `local-${String(name || '').trim().toLocaleLowerCase('es-ES').replace(/[^a-z0-9]+/g, '-')}`;
 }
 
+// FIX-HDH-11: alias de visualización. El usuario renombra al jugador en BG Stats,
+// pero las partidas ya enviadas a BGG conservan el nombre antiguo en el XML; sin
+// canonificar, la tabla «name|userid» del exportador crearía dos entradas para el
+// mismo jugador. La tabla mapea nombre (normalizado) -> nombre canónico y solo
+// afecta al texto mostrado: la identidad sigue siendo bgg:<userid> si tiene cuenta.
+// IMPORTANTE: usar aliases SOLO con jugadores con userid real de BGG; para bots y
+// jugadores sin cuenta el userid sintético se deriva del nombre ORIGINAL del XML
+// (ver getPlayerId), así que su identidad no depende de esta tabla.
+const PLAYER_NAME_ALIASES = {
+    'alfonso daganzo': 'Alfonso'
+};
+
+function canonicalPlayerName(name) {
+    const raw = String(name || '').trim();
+    const key = raw.toLocaleLowerCase('es-ES');
+    return PLAYER_NAME_ALIASES[key] || raw;
+}
+
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -163,18 +181,25 @@ function normalizeData(rawPlays) {
     const boardIds = new Map();
 
     function getPlayerId(name, username, userid) {
+        // FIX-HDH-11: el nombre mostrado se canonifica con la tabla de alias para que
+        // las partidas enviadas a BGG con el nombre antiguo (o el nuevo, tras el
+        // rename en BG Stats) converjan en una única entrada de jugador.
+        const displayName = canonicalPlayerName(name);
         // FIX-HDH-08: identidad estable. Los usuarios BGG traen userid en el XML (no
         // rota entre exportaciones). Los bots y jugadores sin cuenta BGG reciben un
         // userid ficticio determinista derivado del nombre, que se serializa en el
         // JSON y por tanto se conserva entre sesiones y semanas.
+        // FIX-HDH-11: el userid sintético se deriva del nombre ORIGINAL del XML (no
+        // del alias), de modo que un rename no rompe las identidades ya guardadas en
+        // campeonatos (local-<slug> del nombre histórico).
         const effectiveUserid = (userid && userid !== '0')
             ? userid
             : syntheticUserid(name);
-        const key = `${name}|${effectiveUserid}`;
+        const key = `${displayName}|${effectiveUserid}`;
         if (playerIds.has(key)) return playerIds.get(key);
         const id = players.length + 1;
         playerIds.set(key, id);
-        players.push({ id, name, username: username || '', userid: effectiveUserid });
+        players.push({ id, name: displayName, username: username || '', userid: effectiveUserid });
         return id;
     }
 
@@ -262,5 +287,7 @@ module.exports = {
     RETRYABLE_STATUS_CODES,
     getRetryDelay,
     makeRequestWithRetry,
-    syntheticUserid
+    syntheticUserid,
+    canonicalPlayerName,
+    normalizeData
 };
