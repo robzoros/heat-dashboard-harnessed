@@ -1,5 +1,28 @@
 # PROGRESS.md
 
+## Sesion 2026-11-26 (FIX-HDH-12)
+
+### Feature trabajada: FIX-HDH-12 - Podios en orden clásico (2º-1º-3º)
+
+**Estado**: Completada
+
+#### Contexto
+- Reporte del usuario: «El podio de la pestaña no se ve como un podio, está primero el ganador y después el segundo en vez de al revés».
+- Resumen ya usaba el orden clásico (renderPodium: 2º izquierda, 1º centro, 3º derecha); el defecto estaba en el podio del detalle de Circuitos (podium-steps) y en el de la modal de carrera (race-step).
+
+#### Que se hizo
+- **src/app.js**: los dos podios reordenan su display a [2º, 1º, 3º] con las medallas asignadas por puesto (no por posición en pantalla); alturas y resplandor del ganador intactos.
+
+#### Verificacion
+- `node --check src/app.js`: OK.
+- Specs HDH-UI05 + HDH-UI06 + HDH-05b + HDH-UI02 + HDH-UI03: **24/24**.
+- **Suite completa Playwright: 168/168** (Node 22, CI=true).
+
+#### Notas / Riesgos
+- Sin capturas nuevas: cambio de orden de elementos ya verificados por los specs (HDH-05b fija el orden de Resumen).
+
+---
+
 ## Sesion 2026-11-26 (HDH-UI06)
 
 ### Feature trabajada: HDH-UI06 - Modal de carrera (Circuito + fecha) desde Circuitos/Historial/Campeonatos
