@@ -1,5 +1,34 @@
 # PROGRESS.md
 
+## Sesion 2026-11-26 (FIX-HDH-11)
+
+### Feature trabajada: FIX-HDH-11 - Alias de nombre de jugador en el exportador BGG
+
+**Estado**: Completada
+
+#### Contexto
+- El usuario renombra al jugador en BG Stats (fuente de verdad); las partidas ya enviadas a BGG conservan "Alfonso Daganzo" en el XML, asi que sin canonificar el exportador crearia dos entradas (mismo userid 1428263, dos nombres) y el detalle del jugador se partiria.
+- Decision con el usuario: regla de canonificacion en el generador (tabla de alias simple), no Firestore ni logica en el cliente.
+
+#### Que se hizo
+- **proxy/scripts/generate-bgg-data.js**: `PLAYER_NAME_ALIASES` (`{'alfonso daganzo': 'Alfonso'}`) + `canonicalPlayerName()`; `getPlayerId()` canonifica el nombre mostrado. El userid sintetico de bots sigue derivandose del nombre ORIGINAL del XML (un alias no debe rotar identidades `local-<slug>`); documentado con advertencia: usar alias solo con jugadores con userid real de BGG.
+- **Regeneracion real** con credenciales locales (secrets.json): `src/data/heat-data.json` -> una sola entrada `Alfonso` (id 10, userid 1428263) con sus 9 partidas; cero apariciones de "Alfonso Daganzo". De paso sirve de evidencia de FIX-HDH-10: 12 bots detectados como bot tras el fix del clasificador.
+- **src/data/player-colors.json**: entrada renombrada a "Alfonso" conservando color (primario #2563eb); `player-colors.js init`: 0 nuevas, 0 reasignadas.
+- **e2e**: spec nuevo `FIX-HDH-11` (3 tests) y test proxy extendido (`testCanonicalPlayerName`, `testNormalizeDataAliasConverges`).
+- **Campeonatos**: sin cambios de codigo necesario. Los ya migrados identifican al participante por `bgg:1428263` (no por nombre); el nombre congelado en `participantRefs` de snapshots antiguos es solo display y seguira mostrando "Alfonso Daganzo" en Firestore (por diseno congelado); los snapshots nuevos congelan "Alfonso". Riesgo documentado, no bloqueo.
+
+#### Verificacion
+- `node --check proxy/scripts/generate-bgg-data.js`: OK. `node proxy/test-generate-bgg-data.js` (alias + retry): OK. `node proxy/test-classify.js`: OK.
+- **Spec FIX-HDH-11: 3/3** (entrada unica de Alfonso, pestaña Jugadores sin "Daganzo", Resumen/podio sin "Daganzo").
+- **Suite completa Playwright: 164/164** (Node 22, CI=true, Chromium local).
+- Screenshots: evidence/screenshots/FIX-HDH-11-*.png (oficial en artifacts; local no se versiona).
+
+#### Notas / Riesgos
+- El alias solo afecta al texto mostrado; si el usuario renombra en BG Stats a un jugador SIN cuenta BGG, su identityKey `local-<slug>` cambia de todos modos (no lo cubre esta feature; avisar).
+- Los snapshots congelados de campeonatos antiguos en Firestore mantienen "Alfonso Daganzo" como display; cambiarlos exigiria reescribir Firestore (fuera de alcance).
+
+---
+
 ## Sesion 2026-11-26 (FIX-HDH-09)
 
 ### Feature trabajada: FIX-HDH-09 - Migración guiada de participantes legacy por matching de partidas

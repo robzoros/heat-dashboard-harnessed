@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-26T07:49:25.270Z",
+  "generatedAt": "2026-11-26T10:45:56.294Z",
   "source": "GitHub Actions weekly export",
   "players": [
     {
@@ -85,7 +85,7 @@
     },
     {
       "id": 10,
-      "name": "Alfonso Daganzo",
+      "name": "Alfonso",
       "username": "alfongmr",
       "userid": "1428263",
       "isBot": false,

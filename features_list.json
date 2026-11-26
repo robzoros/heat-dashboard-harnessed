@@ -1,7 +1,7 @@
 {
-  "last_updated": "2026-11-24",
-  "active_feature": "HDH-UI05",
-  "user": "Roberto Méndez",
+  "last_updated": "2026-11-26",
+  "active_feature": "",
+  "user": "Roberto MÃ©ndez",
   "rules": {
     "single_active_feature": true,
     "not_started_requires_evidence": true,
@@ -20,7 +20,7 @@
       "name": "FIX: Filtros no muestran jugadores principales",
       "description": [
         "Bug detectado: En el panel de filtros no aparecen los jugadores principales (main players), por lo que no se puede filtrar por ellos.",
-        "Investigar si el problema está en populateFilters() de app.js o en classifyPlayers() del proxy.",
+        "Investigar si el problema estÃ¡ en populateFilters() de app.js o en classifyPlayers() del proxy.",
         "Aplicar fix para que los main players aparezcan en el filtro de jugadores.",
         "Verificar que el fix funciona con mock data y con datos reales de BGG."
       ],
@@ -31,7 +31,7 @@
           "Se pueden seleccionar y aplicar filtros por jugador principal",
           "Tests E2E pasan si existen"
         ],
-        "evidence": "Fix: contenedor del proxy usaba código antiguo en caché. Añadido nodemon a proxy/package.json y modificado docker-compose.yml para reiniciar automáticamente el servidor Node ante cambios. Tests: 15/15 pasados. Proxy verificado: players incluyen isBot/isMain/isOther."
+        "evidence": "Fix: contenedor del proxy usaba cÃ³digo antiguo en cachÃ©. AÃ±adido nodemon a proxy/package.json y modificado docker-compose.yml para reiniciar automÃ¡ticamente el servidor Node ante cambios. Tests: 15/15 pasados. Proxy verificado: players incluyen isBot/isMain/isOther."
       }
     },
     {
@@ -40,29 +40,29 @@
       "name": "Crear Github Action",
       "description": [
         "Crea un github action para automatizar el despliegue.",
-        "Después de un push a una rama que no sea main se ejecuta un pull request, se hace un merge con main y se hace un checkout a main."
+        "DespuÃ©s de un push a una rama que no sea main se ejecuta un pull request, se hace un merge con main y se hace un checkout a main."
       ],
       "status": "completed",
       "verification": {
         "checks": [
           "Se ha creado la action y funciona correctamente"
         ],
-        "evidence": "Action creada en .github/workflows/auto-merge.yml. Funcionando: PR #1 creado y mergeado a main (commit e20739b). Configuración de permisos aplicada en Settings > Actions > General > Workflow permissions."
+        "evidence": "Action creada en .github/workflows/auto-merge.yml. Funcionando: PR #1 creado y mergeado a main (commit e20739b). ConfiguraciÃ³n de permisos aplicada en Settings > Actions > General > Workflow permissions."
       }
     },
     {
       "id": "HDH-01",
       "priority": 1,
-      "name": "Crear Esqueleto de la aplicación",
+      "name": "Crear Esqueleto de la aplicaciÃ³n",
       "description": [
         "HTML/CSS/JS inicial sin datos.",
         "Crear src/index.html con estructura HTML, CSS base y JavaScript mock (sin datos reales)",
         "Contiene 4 tabs: Resumen, Jugadores, Circuitos, Historial",
         "Incluye Chart.js via CDN (cdn.jsdelivr.net/npm/chart.js@<version>)",
         "Incluye Google Fonts: Bebas Neue, Barlow Condensed, Barlow",
-        "Incluye un panel de filtros con jugadores, circuitos y localización",
-        "En el head de la página hay una sección c on #filtrados/#totales para partidas, jugadores, circuitos y localizaciones",
-        "Habrá un botón para lanzar la petición de query a BGG donde habrá que poner usuario y contraseña."
+        "Incluye un panel de filtros con jugadores, circuitos y localizaciÃ³n",
+        "En el head de la pÃ¡gina hay una secciÃ³n c on #filtrados/#totales para partidas, jugadores, circuitos y localizaciones",
+        "HabrÃ¡ un botÃ³n para lanzar la peticiÃ³n de query a BGG donde habrÃ¡ que poner usuario y contraseÃ±a."
       ],
       "status": "completed",
       "verification": {
@@ -76,7 +76,7 @@
           "index.html tiene etiquetas meta charset, viewport, title",
           "Contiene placeholder canvas para charts",
           "docker compose up -d --build acaba sin errores",
-          "http://localhost:8082 responde con código 200",
+          "http://localhost:8082 responde con cÃ³digo 200",
           "La respuesta contiene '<!DOCTYPE html>'"
         ],
         "evidence": "Build exitoso. HTTP 200 en localhost:8082. DOCTYPE html presente. Servicios game-dashboard y bgg-proxy corriendo."
@@ -85,12 +85,12 @@
     {
       "id": "HDH-02",
       "priority": 2,
-      "name": "Conexión con BGG",
+      "name": "ConexiÃ³n con BGG",
       "description": [
-        "Implementar el flujo completo de carga de datos desde BoardGameGeek: login, paginación, parsing XML y normalización.",
-        "Documentación a tener en cuenta para login a BGG en 'documents.HDH-02.md'",
-        "Tras login exitoso, se cargan TODAS las páginas sin perder datos",
-        "Detecta fin de paginación cuando la respuesta tiene < 100 elementos",
+        "Implementar el flujo completo de carga de datos desde BoardGameGeek: login, paginaciÃ³n, parsing XML y normalizaciÃ³n.",
+        "DocumentaciÃ³n a tener en cuenta para login a BGG en 'documents.HDH-02.md'",
+        "Tras login exitoso, se cargan TODAS las pÃ¡ginas sin perder datos",
+        "Detecta fin de paginaciÃ³n cuando la respuesta tiene < 100 elementos",
         "Parsea cada <play> del XML extrayendo: id, date, location, comments",
         "Parsea cada <player> extrayendo: name, userid, score, win",
         "Extrae el circuito del campo comments usando regex: /^([^#\\[]+?)(?:\\s*#|\\s*\\[)/",
@@ -103,27 +103,27 @@
         "checks": [
           "Se han creado los arrays de players, locations, boards(circuitos) y plays"
         ],
-        "evidence": "Proxy implementado con login BGG, paginación y parseo XML. Arrays verificados: Players=19, Locations=7, Boards=11, Plays=102. Game ID Heat: 366013."
+        "evidence": "Proxy implementado con login BGG, paginaciÃ³n y parseo XML. Arrays verificados: Players=19, Locations=7, Boards=11, Plays=102. Game ID Heat: 366013."
       }
     },
     {
       "id": "HDH-H03",
       "priority": 3,
-      "name": "Clasificación datos",
+      "name": "ClasificaciÃ³n datos",
       "description": [
         "Clasificar jugadores en bots, main players, other players",
-        "userid='0' en XML → isNpc=1 → bot",
+        "userid='0' en XML â†’ isNpc=1 â†’ bot",
         "Umbral: menos de tres partidas",
-        "Jugadores por debajo del umbral → other player",
-        "Resto → main player",
-        "Crea un juego tests para poder verificar clasificación"
+        "Jugadores por debajo del umbral â†’ other player",
+        "Resto â†’ main player",
+        "Crea un juego tests para poder verificar clasificaciÃ³n"
       ],
       "status": "completed",
       "verification": {
         "checks": [
           "Tests pasados"
         ],
-        "evidence": "Creado proxy/classify.js con classifyPlayers. Reglas: userid='0'→bot, <3 partidas→other, resto→main. Bug fix: userid='0' ya no se pierde por || ''. Tests: 4/4 pasados (testBots, testMainPlayers, testOtherPlayers, testThresholdExactlyThree). Verificado en docker compose y local."
+        "evidence": "Creado proxy/classify.js con classifyPlayers. Reglas: userid='0'â†’bot, <3 partidasâ†’other, restoâ†’main. Bug fix: userid='0' ya no se pierde por || ''. Tests: 4/4 pasados (testBots, testMainPlayers, testOtherPlayers, testThresholdExactlyThree). Verificado en docker compose y local."
       }
     },
     {
@@ -132,14 +132,14 @@
       "name": "Poblamiento de filtros",
       "description": [
         "Implementar panel de filtros",
-        "El Dashboard mostrará datos solo las partidas que pasen el filtro definido.",
-        "El panel se despliega y se puede volver a plegar con una acción del usuario.",
-        "El filtro se puede activar o desactivar con una opción del usuario.",
+        "El Dashboard mostrarÃ¡ datos solo las partidas que pasen el filtro definido.",
+        "El panel se despliega y se puede volver a plegar con una acciÃ³n del usuario.",
+        "El filtro se puede activar o desactivar con una opciÃ³n del usuario.",
         "Aparece la lista de main players y pudiendo elegir varios.",
         "El filtro por jugadores tiene 3 posibilidades:",
-        "- partidas en las que está alguno de los jugadores",
-        "- partidas en las que están todos los jugadores",
-        "- partidas en las que están todos los jugadores, y ningún otro jugador más.",
+        "- partidas en las que estÃ¡ alguno de los jugadores",
+        "- partidas en las que estÃ¡n todos los jugadores",
+        "- partidas en las que estÃ¡n todos los jugadores, y ningÃºn otro jugador mÃ¡s.",
         "Filtro por circuito (board), pudiendo elegir varios entre todos los de la lista.",
         "Filtro por localizacion (location), pudiendo elegir varios entre todos los de la lista.",
         "Crea un juego tests para poder verificar filtros"
@@ -148,12 +148,12 @@
       "verification": {
         "checks": [
           "Pasa los tests",
-          "Ejecuta desde docker-compose hasta llamada a localhost conexión bgg y aplicación de filtros. ",
+          "Ejecuta desde docker-compose hasta llamada a localhost conexiÃ³n bgg y aplicaciÃ³n de filtros. ",
           "Panel de filtros se pliega y se despliega.",
           "El filtro se activa y desactiva",
           "Actualiza header-stats con conteo de partidas/jugadores/circuitos/localizaciones"
         ],
-        "evidence": "Lógica de filtros implementada en app.js con 3 modos de jugadores (any/all/exact), filtros por circuito y localización. Mock data mejorado. Tests E2E: 9/9 pasados. Playwright total: 15/15. Screenshot generado."
+        "evidence": "LÃ³gica de filtros implementada en app.js con 3 modos de jugadores (any/all/exact), filtros por circuito y localizaciÃ³n. Mock data mejorado. Tests E2E: 9/9 pasados. Playwright total: 15/15. Screenshot generado."
       }
     },
     {
@@ -161,36 +161,36 @@
       "priority": 5,
       "name": "Resumen KPIs",
       "description": [
-        "Crea Panel de KPIs. Debajo de las pestañas cuatro cajas cada una con un KPI",
-        "KPI Líder muestra el nombre del main player con más victorias",
-        "KPI Track muestra flag emoji + nombre del circuito más frecuente",
+        "Crea Panel de KPIs. Debajo de las pestaÃ±as cuatro cajas cada una con un KPI",
+        "KPI LÃ­der muestra el nombre del main player con mÃ¡s victorias",
+        "KPI Track muestra flag emoji + nombre del circuito mÃ¡s frecuente",
         "KPI Streak muestra 'nombre (n)' donde n es la mejor racha de victorias de un main player)",
-        "KPI Last muestra la fecha de la partida más reciente en formato YYYY-MM-DD con vencedor",
+        "KPI Last muestra la fecha de la partida mÃ¡s reciente en formato YYYY-MM-DD con vencedor",
         "Crea un juego tests para poder verificar KPIs"
       ],
       "status": "completed",
       "verification": {
         "checks": [
           "Pasa los tests",
-          "Ejecuta desde docker-compose hasta llamada a localhost conexión bgg, KPIs mostradas",
-          "Aplicación de filtros cambia resultado y al dejar de aplicar filtros se ve resultado inicial."
+          "Ejecuta desde docker-compose hasta llamada a localhost conexiÃ³n bgg, KPIs mostradas",
+          "AplicaciÃ³n de filtros cambia resultado y al dejar de aplicar filtros se ve resultado inicial."
         ],
-        "evidence": "Implementados 4 KPIs en app.js: Leader (main player con más victorias), Track (circuito más frecuente + flag emoji), Streak (mejor racha consecutiva de victorias), Last (fecha + vencedor de partida más reciente). getTrackFlag soporta 13 países. Tests E2E: 4/4 pasados (mock data, custom data, filtros, sin datos). Total Playwright: 19/19 pasados."
+        "evidence": "Implementados 4 KPIs en app.js: Leader (main player con mÃ¡s victorias), Track (circuito mÃ¡s frecuente + flag emoji), Streak (mejor racha consecutiva de victorias), Last (fecha + vencedor de partida mÃ¡s reciente). getTrackFlag soporta 13 paÃ­ses. Tests E2E: 4/4 pasados (mock data, custom data, filtros, sin datos). Total Playwright: 19/19 pasados."
       }
     },
     {
       "id": "HDH-05b",
       "name": "Panel podio",
       "description": [
-        "Podio top 3 (oro centrado, 15% más grande que 2º plata y 3º bronce)",
+        "Podio top 3 (oro centrado, 15% mÃ¡s grande que 2Âº plata y 3Âº bronce)",
         "Solo jugadores principales",
         "Orden visual: #2 | #1 | #3 "
       ],
       "status": "completed",
       "verification": {
         "checks": [
-          "Ejecuta desde docker-compose hasta llamada a localhost conexión bgg, Podio mostrado",
-          "Aplicación de filtros cambia resultado y al dejar de aplicar filtros se ve resultado inicial."
+          "Ejecuta desde docker-compose hasta llamada a localhost conexiÃ³n bgg, Podio mostrado",
+          "AplicaciÃ³n de filtros cambia resultado y al dejar de aplicar filtros se ve resultado inicial."
         ],
         "evidence": "Implementado renderPodium() en app.js: top 3 main players por victorias, orden visual #2|#1|#3, oro centrado con scale(1.15). CSS actualizado con clases .first/.second/.third y estilos para .podium-medal, .podium-name, .podium-wins. Solo muestra jugadores con al menos 1 victoria. Tests E2E: 4/4 pasados. Total Playwright: 26/26."
       }
@@ -199,40 +199,40 @@
       "id": "HDH-05c",
       "name": "Panel victorias",
       "description": [
-        "Gráfico de barras: victorias por jugador"
+        "GrÃ¡fico de barras: victorias por jugador"
       ],
       "status": "completed",
       "verification": {
         "checks": [
-          "Ejecuta desde docker-compose hasta llamada a localhost conexión bgg, gráfico mostrado",
-          "Aplicación de filtros cambia resultado y al dejar de aplicar filtros se ve resultado inicial."
+          "Ejecuta desde docker-compose hasta llamada a localhost conexiÃ³n bgg, grÃ¡fico mostrado",
+          "AplicaciÃ³n de filtros cambia resultado y al dejar de aplicar filtros se ve resultado inicial."
         ],
-        "evidence": "Implementado renderCharts() en app.js con gráfico de barras de victorias por main player. Ordenado por victorias descendente. Responde dinámicamente a filtros activos. Tests E2E: 4/4 pasados (mock data, custom data, filtros, sin victorias). Total Playwright: 30/30 pasados."
+        "evidence": "Implementado renderCharts() en app.js con grÃ¡fico de barras de victorias por main player. Ordenado por victorias descendente. Responde dinÃ¡micamente a filtros activos. Tests E2E: 4/4 pasados (mock data, custom data, filtros, sin victorias). Total Playwright: 30/30 pasados."
       }
     },
     {
       "id": "HDH-05d",
       "name": "Panel partidas por mes",
       "description": [
-        "Gráfico de línea: partidas por mes",
+        "GrÃ¡fico de lÃ­nea: partidas por mes",
         "Chart tipo 'line'",
-        "Eje X: meses (YYYY-MM), ordenado cronológicamente",
+        "Eje X: meses (YYYY-MM), ordenado cronolÃ³gicamente",
         "Eje Y: conteo de partidas por mes, stepSize=1"
       ],
       "status": "completed",
       "verification": {
         "checks": [
-          "Ejecuta desde docker-compose hasta llamada a localhost conexión bgg, gráfico mostrado",
-          "Aplicación de filtros cambia resultado y al dejar de aplicar filtros se ve resultado inicial."
+          "Ejecuta desde docker-compose hasta llamada a localhost conexiÃ³n bgg, grÃ¡fico mostrado",
+          "AplicaciÃ³n de filtros cambia resultado y al dejar de aplicar filtros se ve resultado inicial."
         ],
-        "evidence": "Implementado renderPlaysMonth en renderCharts() en app.js: agrupa partidas filtradas por mes (YYYY-MM), ordena cronológicamente, actualiza chart playsMonth. Tests E2E: 4/4 pasados (mock data, custom data, filtros, sin datos). Total Playwright: 34/34 pasados."
+        "evidence": "Implementado renderPlaysMonth en renderCharts() en app.js: agrupa partidas filtradas por mes (YYYY-MM), ordena cronolÃ³gicamente, actualiza chart playsMonth. Tests E2E: 4/4 pasados (mock data, custom data, filtros, sin datos). Total Playwright: 34/34 pasados."
       }
     },
     {
       "id": "HDH-05e",
       "name": "Panel puntos medios por jugador",
       "description": [
-        "Gráfico de barras horizontal: puntos medios por jugador",
+        "GrÃ¡fico de barras horizontal: puntos medios por jugador",
         "Chart tipo 'bar' en canvas#chart-avgpts con indexAxis='y'",
         "Media = suma scores / partidas jugadas",
         "Cada barra muestra un decimal (toFixed(1))"
@@ -240,30 +240,30 @@
       "status": "completed",
       "verification": {
         "checks": [
-          "Ejecuta desde docker-compose hasta llamada a localhost conexión bgg, gráfico mostrado",
-          "Aplicación de filtros cambia resultado y al dejar de aplicar filtros se ve resultado inicial."
+          "Ejecuta desde docker-compose hasta llamada a localhost conexiÃ³n bgg, grÃ¡fico mostrado",
+          "AplicaciÃ³n de filtros cambia resultado y al dejar de aplicar filtros se ve resultado inicial."
         ],
-        "evidence": "Implementado avgPts en renderCharts() en app.js: calcula media de scores por main player (suma scores / partidas jugadas), ordena descendente, muestra 1 decimal con toFixed(1). Chart horizontal bar con indexAxis='y'. Tests E2E: 4/4 pasados (mock, custom, filtros, vacío). Total Playwright: 38/38 pasados."
+        "evidence": "Implementado avgPts en renderCharts() en app.js: calcula media de scores por main player (suma scores / partidas jugadas), ordena descendente, muestra 1 decimal con toFixed(1). Chart horizontal bar con indexAxis='y'. Tests E2E: 4/4 pasados (mock, custom, filtros, vacÃ­o). Total Playwright: 38/38 pasados."
       }
     },
     {
       "id": "HDH-06a",
       "priority": 6,
-      "name": "Pestaña Jugadores",
+      "name": "PestaÃ±a Jugadores",
       "description": [
-        "Tabla de clasificación completa con estadísticas, win rate, media y últimas 10 partidas.",
-        "Columnas: #, Jugador, Partidas, Victorias, Win %, Media, Máx, Últimas 10",
+        "Tabla de clasificaciÃ³n completa con estadÃ­sticas, win rate, media y Ãºltimas 10 partidas.",
+        "Columnas: #, Jugador, Partidas, Victorias, Win %, Media, MÃ¡x, Ãšltimas 10",
         "Solo mainPlayerIds (bots y otros excluidos)",
         "Ordenados por victorias descendente",
         "Win % con barra de porcentaje visual",
-        "Para Calcular racha de últimas 10 partidas",
-        "- Se muestran 10 puntos con las últimas diez partidas: verde=win, gris=loss"
+        "Para Calcular racha de Ãºltimas 10 partidas",
+        "- Se muestran 10 puntos con las Ãºltimas diez partidas: verde=win, gris=loss"
       ],
       "status": "completed",
       "verification": {
         "checks": [
-          "Ejecuta desde docker-compose hasta llamada a localhost conexión bgg, pestaña mostrada",
-          "Aplicación de filtros cambia resultado y al dejar de aplicar filtros se ve resultado inicial."
+          "Ejecuta desde docker-compose hasta llamada a localhost conexiÃ³n bgg, pestaÃ±a mostrada",
+          "AplicaciÃ³n de filtros cambia resultado y al dejar de aplicar filtros se ve resultado inicial."
         ],
         "evidence": "Implementado renderPlayersTable() en app.js: calcula plays, wins, win%, avg, max, last10 por main player. Ordena por wins descendente. Excluye bots y others. Win% con barra visual. Last 10 con dots verdes(gris)=loss. Tests E2E: 5/5 pasados. Total Playwright: 43/43."
       }
@@ -271,52 +271,52 @@
     {
       "id": "HDH-06b",
       "priority": 6,
-      "name": "Pestaña Circuitos",
+      "name": "PestaÃ±a Circuitos",
       "description": [
-        "Donut chart de distribución, tarjetas con dominador y stats detalladas de cada circuito.",
+        "Donut chart de distribuciÃ³n, tarjetas con dominador y stats detalladas de cada circuito.",
         "Chart doughnut en canvas#chart-tracks",
         "Track Winners: nombre con flag emoji + mejor jugador",
         "Track List: nombre, partidas, pts medio, campeon",
-        "Cada track muestra el jugador con más victorias en ese circuito"
+        "Cada track muestra el jugador con mÃ¡s victorias en ese circuito"
       ],
       "status": "completed",
       "verification": {
         "checks": [
-          "Ejecuta desde docker-compose hasta llamada a localhost conexión bgg, pestaña mostrada",
-          "Aplicación de filtros cambia resultado y al dejar de aplicar filtros se ve resultado inicial."
+          "Ejecuta desde docker-compose hasta llamada a localhost conexiÃ³n bgg, pestaÃ±a mostrada",
+          "AplicaciÃ³n de filtros cambia resultado y al dejar de aplicar filtros se ve resultado inicial."
         ],
-        "evidence": "Implementado doughnut chart en renderCharts() con distribución de partidas por circuito. Implementado renderTrackList() con tarjetas por track: nombre con flag emoji, partidas, pts medio, campeón (main player con más victorias). CSS para track-card. Tests E2E: 4/4 pasados. Total Playwright: 47/47."
+        "evidence": "Implementado doughnut chart en renderCharts() con distribuciÃ³n de partidas por circuito. Implementado renderTrackList() con tarjetas por track: nombre con flag emoji, partidas, pts medio, campeÃ³n (main player con mÃ¡s victorias). CSS para track-card. Tests E2E: 4/4 pasados. Total Playwright: 47/47."
       }
     },
     {
       "id": "HDH-07",
       "priority": 7,
-      "name": "Pestaña Historial",
+      "name": "PestaÃ±a Historial",
       "description": [
-        "Cronología de partidas y gráfico de evolución acumulada de victorias.",
-        "Partidas ordenadas de más reciente a más antigua.",
+        "CronologÃ­a de partidas y grÃ¡fico de evoluciÃ³n acumulada de victorias.",
+        "Partidas ordenadas de mÃ¡s reciente a mÃ¡s antigua.",
         "Cada entrada muestra: fecha, circuito (con flag), ganador, puntos.",
         "Al pulsar en cada entrada despliega un panel con detalles de partida.",
         "- Ganador destacado con borde verde",
-        "- Muestra puntuación de cada jugador",
+        "- Muestra puntuaciÃ³n de cada jugador",
         "- Cierre de panel pulsando la entrada",
-        "Otro panel muestra chart line con evolución de victorias",
-        "- Un dataset por main player (máx 10 primeros)",
+        "Otro panel muestra chart line con evoluciÃ³n de victorias",
+        "- Un dataset por main player (mÃ¡x 10 primeros)",
         "- Data: victoria acumulada por fecha"
       ],
       "status": "completed",
       "verification": {
         "checks": [
-          "Ejecuta desde docker-compose hasta llamada a localhost conexión bgg, pestaña mostrada",
-          "Aplicación de filtros cambia resultado y al dejar de aplicar filtros se ve resultado inicial."
+          "Ejecuta desde docker-compose hasta llamada a localhost conexiÃ³n bgg, pestaÃ±a mostrada",
+          "AplicaciÃ³n de filtros cambia resultado y al dejar de aplicar filtros se ve resultado inicial."
         ],
-        "evidence": "Implementado renderPlaysHistory() con lista de partidas ordenadas por fecha descendente, expandible con detalles y winner destacado. Implementado winsEvolution chart en renderCharts() con evolución acumulada de victorias por main player (máx 10). Tests E2E: 5/5 pasados. Total Playwright: 52/52."
+        "evidence": "Implementado renderPlaysHistory() con lista de partidas ordenadas por fecha descendente, expandible con detalles y winner destacado. Implementado winsEvolution chart en renderCharts() con evoluciÃ³n acumulada de victorias por main player (mÃ¡x 10). Tests E2E: 5/5 pasados. Total Playwright: 52/52."
       }
     },
     {
       "id": "HDH-08",
       "priority": 8,
-      "name": "Tests unitarios + integración con XML",
+      "name": "Tests unitarios + integraciÃ³n con XML",
       "description": [
         "Modificar todos los juegos de pruebas para que:",
         "- Hagan tests unitarios con la funcionalidad que hacen ahora",
@@ -331,7 +331,7 @@
           "Se generan screenshots con filtros aplicados",
           "Total de tests aumenta significativamente"
         ],
-        "evidence": "Canvas #chart-wins-evolution añadido a index.html (faltaba tras HDH-BUG05). Tests actualizados (filtro exacto compara solo main players) y HDH-BUG03 (KPIs incluyen contadores). 70/70 tests E2E pasados. Docker compose build OK."
+        "evidence": "Canvas #chart-wins-evolution aÃ±adido a index.html (faltaba tras HDH-BUG05). Tests actualizados (filtro exacto compara solo main players) y HDH-BUG03 (KPIs incluyen contadores). 70/70 tests E2E pasados. Docker compose build OK."
       }
     },
     {
@@ -339,8 +339,8 @@
       "priority": 1,
       "name": "FIX: Filtros comportamiento Solo estos y UI",
       "description": [
-        "Filtro Solo estos debe filtrar partidas donde los jugadores seleccionados son los únicos jugadores PRINCIPALES (el resto pueden ser no principales).",
-        "UI: eliminar barra de desplazamiento en panel de filtros moviendo check Filtro Activo a la misma altura que el botón Filtros.",
+        "Filtro Solo estos debe filtrar partidas donde los jugadores seleccionados son los Ãºnicos jugadores PRINCIPALES (el resto pueden ser no principales).",
+        "UI: eliminar barra de desplazamiento en panel de filtros moviendo check Filtro Activo a la misma altura que el botÃ³n Filtros.",
         "Explorar poner selector Algunos/Todos/Solo estos a la derecha de los nombres de jugadores."
       ],
       "status": "completed",
@@ -348,28 +348,28 @@
         "checks": [
           "Filtro Solo estos solo considera main players para la coincidencia exacta",
           "UI no muestra barra de desplazamiento innecesaria en panel de filtros",
-          "Check Filtro Activo está alineado con el botón Filtros",
+          "Check Filtro Activo estÃ¡ alineado con el botÃ³n Filtros",
           "Tests E2E pasan"
         ],
-        "evidence": "Modificado app.js: getFilteredPlays filtra exact comparando solo mainPlayerIds. Modificado index.html: header del panel con botón Filtros y checkbox Activo en la misma línea. Selector de modo al lado del título Jugadores. Modificado styles.css: filter-header, filter-toggle-header, filter-section-title, filter-mode-select."
+        "evidence": "Modificado app.js: getFilteredPlays filtra exact comparando solo mainPlayerIds. Modificado index.html: header del panel con botÃ³n Filtros y checkbox Activo en la misma lÃ­nea. Selector de modo al lado del tÃ­tulo Jugadores. Modificado styles.css: filter-header, filter-toggle-header, filter-section-title, filter-mode-select."
       }
     },
     {
       "id": "HDH-BUG03",
       "priority": 1,
-      "name": "FIX: KPIs Líder y Track añadir contadores",
+      "name": "FIX: KPIs LÃ­der y Track aÃ±adir contadores",
       "description": [
-        "KPI Líder debe mostrar también el número de partidas ganadas (victorias).",
-        "KPI Track debe mostrar también el número de partidas jugadas en ese circuito."
+        "KPI LÃ­der debe mostrar tambiÃ©n el nÃºmero de partidas ganadas (victorias).",
+        "KPI Track debe mostrar tambiÃ©n el nÃºmero de partidas jugadas en ese circuito."
       ],
       "status": "completed",
       "verification": {
         "checks": [
-          "KPI Líder muestra nombre y número de victorias",
-          "KPI Track muestra flag + nombre y número de partidas",
+          "KPI LÃ­der muestra nombre y nÃºmero de victorias",
+          "KPI Track muestra flag + nombre y nÃºmero de partidas",
           "Tests E2E pasan"
         ],
-        "evidence": "Modificado app.js: leaderDisplay incluye maxWins entre paréntesis. trackDisplay incluye trackMax entre paréntesis."
+        "evidence": "Modificado app.js: leaderDisplay incluye maxWins entre parÃ©ntesis. trackDisplay incluye trackMax entre parÃ©ntesis."
       }
     },
     {
@@ -377,13 +377,13 @@
       "priority": 1,
       "name": "FIX: Panel Circuitos layout donut y stats",
       "description": [
-        "El panel de distribución con el gráfico donut es demasiado grande. Se debería ver el donut entero.",
-        "Los paneles con estadísticas de circuitos deben aparecer a la derecha del panel del donut."
+        "El panel de distribuciÃ³n con el grÃ¡fico donut es demasiado grande. Se deberÃ­a ver el donut entero.",
+        "Los paneles con estadÃ­sticas de circuitos deben aparecer a la derecha del panel del donut."
       ],
       "status": "completed",
       "verification": {
         "checks": [
-          "Gráfico donut se ve completo sin cortarse",
+          "GrÃ¡fico donut se ve completo sin cortarse",
           "Track list aparece a la derecha del donut",
           "Tests E2E pasan"
         ]
@@ -394,16 +394,16 @@
       "priority": 1,
       "name": "FIX: Historial paneles y banderas",
       "description": [
-        "Hacer dos paneles en la pestaña Historial.",
-        "Panel 1: partidas ordenadas de más reciente a menos reciente con banderas de países como flags.",
-        "Panel 2: gráfico lineal de partidas por mes."
+        "Hacer dos paneles en la pestaÃ±a Historial.",
+        "Panel 1: partidas ordenadas de mÃ¡s reciente a menos reciente con banderas de paÃ­ses como flags.",
+        "Panel 2: grÃ¡fico lineal de partidas por mes."
       ],
       "status": "completed",
       "verification": {
         "checks": [
           "Historial tiene dos paneles visibles",
-          "Panel de partidas muestra banderas de países",
-          "Panel de gráfico lineal de partidas por mes se ve correctamente",
+          "Panel de partidas muestra banderas de paÃ­ses",
+          "Panel de grÃ¡fico lineal de partidas por mes se ve correctamente",
           "Tests E2E pasan"
         ]
       }
@@ -414,9 +414,9 @@
       "name": "FIX: Tests HDH-09 fallan en CI por estado compartido",
       "description": [
         "Tests HDH-09 fallan en CI porque los campeonatos creados en cada run se persisten en proxy/championships/ y se acumulan entre ejecuciones del Action.",
-        "Síntomas: 'Received: 3' en toHaveCount(1) tras varios runs, y 'SyntaxError: Unexpected token <' en addPlaysViaAPI cuando el proxy queda inaccesible tras fallos en cascada.",
-        "Causa raíz: el refactor de HDH-09 (commit 2622abf) reemplazó el cleanup en beforeEach (que usaba page.request) por llamadas http nativas en loadData/loadChampsIntoApp, pero NO incluyó lógica de limpieza antes de cada test.",
-        "Fix: añadir helper cleanupChampionships() en el spec que lista y borra todos los campeonatos vía API antes de cada test, y añadir proxy/championships/*.json a .gitignore para que los archivos JSON generados durante tests no se versionen."
+        "SÃ­ntomas: 'Received: 3' en toHaveCount(1) tras varios runs, y 'SyntaxError: Unexpected token <' en addPlaysViaAPI cuando el proxy queda inaccesible tras fallos en cascada.",
+        "Causa raÃ­z: el refactor de HDH-09 (commit 2622abf) reemplazÃ³ el cleanup en beforeEach (que usaba page.request) por llamadas http nativas en loadData/loadChampsIntoApp, pero NO incluyÃ³ lÃ³gica de limpieza antes de cada test.",
+        "Fix: aÃ±adir helper cleanupChampionships() en el spec que lista y borra todos los campeonatos vÃ­a API antes de cada test, y aÃ±adir proxy/championships/*.json a .gitignore para que los archivos JSON generados durante tests no se versionen."
       ],
       "status": "completed",
       "verification": {
@@ -426,33 +426,33 @@
           "Cleanup deja el disco en 0 championships antes de cada test",
           "proxy/championships/*.json ignorados por git"
         ],
-        "evidence": "Helper cleanupChampionships() añadido en beforeEach (usa http nativo, mismo patrón que loadData/createChampViaAPI). .gitignore actualizado con proxy/championships/*.json (+ excepción .gitkeep). Verificado localmente: 5 ejecuciones consecutivas de tests/HDH-09.spec.js pasan 6/6 y dejan 0 championships en disco. Suite completa: 76/76 pasan."
+        "evidence": "Helper cleanupChampionships() aÃ±adido en beforeEach (usa http nativo, mismo patrÃ³n que loadData/createChampViaAPI). .gitignore actualizado con proxy/championships/*.json (+ excepciÃ³n .gitkeep). Verificado localmente: 5 ejecuciones consecutivas de tests/HDH-09.spec.js pasan 6/6 y dejan 0 championships en disco. Suite completa: 76/76 pasan."
       }
     },
     {
       "id": "HDH-09",
       "priority": 1,
-      "name": "Pestaña Campeonatos",
+      "name": "PestaÃ±a Campeonatos",
       "description": [
         "Nuevo panel para Gestionar Campeonatos.",
-        "Cada campeonato se creará en un fichero json dentro de proxy/championships/",
+        "Cada campeonato se crearÃ¡ en un fichero json dentro de proxy/championships/",
         "Al crear un campeonato se eligen los jugadores participantes (main, bot u other)",
         "Se pueden importar partidas desde los datos cargados de BGG",
-        "El panel muestra la clasificación con: partidas, victorias, puntos totales y media",
+        "El panel muestra la clasificaciÃ³n con: partidas, victorias, puntos totales y media",
         "Panel lista campeonatos disponibles leyendo los ficheros JSON de la carpeta championships/",
-        "Al seleccionar un campeonato se muestra: nombre, descripción, participantes, clasificación y partidas asociadas"
+        "Al seleccionar un campeonato se muestra: nombre, descripciÃ³n, participantes, clasificaciÃ³n y partidas asociadas"
       ],
       "status": "completed",
       "verification": {
         "checks": [
           "Se guardan los ficheros JSON y se leen correctamente para mostrar la lista de campeonatos",
           "Al seleccionar un campeonato se muestran sus detalles correctamente",
-          "La clasificación (partidas, victorias, puntos, media) se calcula correctamente",
+          "La clasificaciÃ³n (partidas, victorias, puntos, media) se calcula correctamente",
           "Se pueden importar y eliminar partidas del campeonato",
-          "Creación desde UI con selección de participantes",
+          "CreaciÃ³n desde UI con selecciÃ³n de participantes",
           "76/76 tests E2E pasan (6 nuevos + 70 existentes)"
         ],
-        "evidence": "Proxy: endpoints GET/POST/DELETE para championships con persistencia JSON. Frontend: 5o tab 'Campeonatos' con lista de tarjetas, detalle con clasificación y partidas. Modal creación con selección de participantes. Modal importación de partidas. CSS con estilos de tarjetas, tabla de clasificación, items de partida. 6 tests E2E creados con screenshots de evidencia. 76/76 tests pasan."
+        "evidence": "Proxy: endpoints GET/POST/DELETE para championships con persistencia JSON. Frontend: 5o tab 'Campeonatos' con lista de tarjetas, detalle con clasificaciÃ³n y partidas. Modal creaciÃ³n con selecciÃ³n de participantes. Modal importaciÃ³n de partidas. CSS con estilos de tarjetas, tabla de clasificaciÃ³n, items de partida. 6 tests E2E creados con screenshots de evidencia. 76/76 tests pasan."
       }
     },
     {
@@ -461,9 +461,9 @@
       "name": "Jugadores no registrados en bgg",
       "description": [
         "En los datos que bajamos de BGG no se pueden distinguir los bots de jugadores no registrados en BGG.",
-        "La solución es dar al usuario la posibilidad de marcar jugadores como no bots y guardar ese dato en una cookie para futuras cargas de datos.",
-        "Después de un login se leerán las cookies y se marcarán los jugadores que según las cookies son jugadorees principales y a partir de ahí se generarán los filtros etc.",
-        "Debe existir algún sitio donde podamos marcar que un bot no es bot si no jugador principal y viceversa, que esa marca se guarde en una cookie y que después de marcarlo se vuelvan a a aplicar los filtros"
+        "La soluciÃ³n es dar al usuario la posibilidad de marcar jugadores como no bots y guardar ese dato en una cookie para futuras cargas de datos.",
+        "DespuÃ©s de un login se leerÃ¡n las cookies y se marcarÃ¡n los jugadores que segÃºn las cookies son jugadorees principales y a partir de ahÃ­ se generarÃ¡n los filtros etc.",
+        "Debe existir algÃºn sitio donde podamos marcar que un bot no es bot si no jugador principal y viceversa, que esa marca se guarde en una cookie y que despuÃ©s de marcarlo se vuelvan a a aplicar los filtros"
       ],
       "status": "completed",
       "verification": {
@@ -471,11 +471,11 @@
           "Se guardan los datos en cookies y se recuperan correctamente",
           "El usuario puede marcar jugadores como bot, principal u otro",
           "Los cambios se persisten en cookies entre recargas",
-          "La opción 'Auto (BGG)' restaura la clasificación original",
-          "Los filtros se actualizan al cambiar clasificación",
+          "La opciÃ³n 'Auto (BGG)' restaura la clasificaciÃ³n original",
+          "Los filtros se actualizan al cambiar clasificaciÃ³n",
           "Tests E2E pasan"
         ],
-        "evidence": "Implementado en src/app.js: cookie helpers (setCookie/getCookie), getPlayerOverrides, applyPlayerOverrides, togglePlayerClassification, setupPlayerManager, renderPlayerManager. Modal con selectors por jugador (Principal/Bot/Otro/Auto). originalPlayers almacena clasificación BGG para restaurar en modo auto. CSS en styles.css. 5 tests E2E en e2e/tests/HDH-10.spec.js. Total Playwright: 81/81 pasados."
+        "evidence": "Implementado en src/app.js: cookie helpers (setCookie/getCookie), getPlayerOverrides, applyPlayerOverrides, togglePlayerClassification, setupPlayerManager, renderPlayerManager. Modal con selectors por jugador (Principal/Bot/Otro/Auto). originalPlayers almacena clasificaciÃ³n BGG para restaurar en modo auto. CSS en styles.css. 5 tests E2E en e2e/tests/HDH-10.spec.js. Total Playwright: 81/81 pasados."
       }
     },
     {
@@ -483,18 +483,18 @@
       "priority": 1,
       "name": "Aceptar Cookies",
       "description": [
-        "Gestionar cookies según normativa de privacidad: mostrar banner de aceptación de cookies al usuario en la primera visita, con opciones para aceptar o rechazar cookies no esenciales.",
-        "Guardar la elección del usuario en una cookie para no mostrar el banner en visitas futuras.",
+        "Gestionar cookies segÃºn normativa de privacidad: mostrar banner de aceptaciÃ³n de cookies al usuario en la primera visita, con opciones para aceptar o rechazar cookies no esenciales.",
+        "Guardar la elecciÃ³n del usuario en una cookie para no mostrar el banner en visitas futuras.",
         "Si el usuario acepta, se pueden usar cookies para funcionalidades como marcar jugadores como bots o principales.",
-        "Si el usuario rechaza, no se deben usar cookies y se debe informar que algunas funcionalidades podrían no estar disponibles.",
-        "El banner debe ser accesible y cumplir con las mejores prácticas de UX."
+        "Si el usuario rechaza, no se deben usar cookies y se debe informar que algunas funcionalidades podrÃ­an no estar disponibles.",
+        "El banner debe ser accesible y cumplir con las mejores prÃ¡cticas de UX."
       ],
       "status": "completed",
       "verification": {
         "checks": [
-          "El banner de aceptación de cookies se muestra en la primera visita",
+          "El banner de aceptaciÃ³n de cookies se muestra en la primera visita",
           "Los usuarios pueden aceptar o rechazar cookies no esenciales",
-          "La elección del usuario se persiste en cookies entre recargas",
+          "La elecciÃ³n del usuario se persiste en cookies entre recargas",
           "Los overrides de jugadores solo se guardan si se aceptan las cookies",
           "Al rechazar se borran los overrides existentes",
           "Tests E2E pasan"
@@ -507,15 +507,15 @@
       "priority": 2,
       "name": "Mejoras UI",
       "description": [
-        "En la ventana modal para guardar cookies con modificación de clasificación de jugadores la barra de scroll vertical tapa un poco los combo boxes",
-        "Mover los combo boxes para que no estén tapados por la barra de scrolll vertical",
-        "En la ventana modal de creación de campeoonatos, los checkboxes no están bien alineados con los nombres de los jugadores"
+        "En la ventana modal para guardar cookies con modificaciÃ³n de clasificaciÃ³n de jugadores la barra de scroll vertical tapa un poco los combo boxes",
+        "Mover los combo boxes para que no estÃ©n tapados por la barra de scrolll vertical",
+        "En la ventana modal de creaciÃ³n de campeoonatos, los checkboxes no estÃ¡n bien alineados con los nombres de los jugadores"
       ],
       "status": "completed",
       "verification": {
         "checks": [
-          "Barra de scroll no tapa combo boxes en modal de gestión de jugadores",
-          "Checkboxes bien alineados con nombres en modal de creación de campeonatos",
+          "Barra de scroll no tapa combo boxes en modal de gestiÃ³n de jugadores",
+          "Checkboxes bien alineados con nombres en modal de creaciÃ³n de campeonatos",
           "Tests existentes pasan"
         ],
         "evidence": "CSS actualizado: player-manager-list con padding-right, player-manager-name con flex:1, player-manager-select con flex-shrink:0. new-campeonato-players con padding-right, labels con display:flex align-items:center, inputs con flex-shrink:0. filter-list mejorado para consistencia. Tests HDH-10 (5/5), HDH-11 (6/6), HDH-09 (6/6), app base (6/6) pasan."
@@ -526,12 +526,12 @@
       "priority": 3,
       "name": "Mantenimiento de Campeonatos",
       "description": [
-        "El propietario de un campeonato es el usuario que hizo login en BGG cuando se creó.",
-        "Solo el propietario puede modificar su campeonato: importar partidas, eliminar partidas, editar nombre/descripción.",
+        "El propietario de un campeonato es el usuario que hizo login en BGG cuando se creÃ³.",
+        "Solo el propietario puede modificar su campeonato: importar partidas, eliminar partidas, editar nombre/descripciÃ³n.",
         "Si se cargan datos con un usuario BGG distinto, los campeonatos del usuario anterior se muestran como solo lectura.",
         "Si no se han cargado datos (sin login), todos los campeonatos se muestran como solo lectura.",
         "El nombre del propietario se muestra en la tarjeta y detalle del campeonato.",
-        "Botones de acción (importar, eliminar) se ocultan si no eres propietario."
+        "Botones de acciÃ³n (importar, eliminar) se ocultan si no eres propietario."
       ],
       "status": "completed",
       "verification": {
@@ -541,7 +541,7 @@
           "Los botones de modificar se ocultan si el usuario actual no es el propietario",
           "Si no hay login, los campeonatos son editables (compatibilidad)"
         ],
-        "evidence": "Backend: POST /championships acepta campo owner. Frontend: bggUsername se guarda tras loadData(), se pasa como owner al crear. renderChampionshipsList() muestra 👤 owner. renderChampionshipDetail() muestra owner, aviso solo lectura, y oculta botones si no eres propietario. Tests HDH-09: 6/6 pasados."
+        "evidence": "Backend: POST /championships acepta campo owner. Frontend: bggUsername se guarda tras loadData(), se pasa como owner al crear. renderChampionshipsList() muestra ðŸ‘¤ owner. renderChampionshipDetail() muestra owner, aviso solo lectura, y oculta botones si no eres propietario. Tests HDH-09: 6/6 pasados."
       }
     },
     {
@@ -549,13 +549,13 @@
       "priority": 3,
       "name": "Correcciones en Campeonatos",
       "description": [
-        "Al crear un campeonato dar la posibilidad de crearlo sin jugadores (en caso de querer crear un campeonato vacío para luego importar partidas manualmente).",
-        "Después de crear un campeonato este no se ve hasta que no se pulsa botón volver, debería verse inmediatamente.",
-        "Cambiar nombre de botón VOLVER por SALIR con texttooltip 'Salir del detalle del campeonato y volver a la lista de campeonatos'.",
-        "Cambiar botón RECARGAR por CARGAR con tooltip 'Cargar campeonatos'",
+        "Al crear un campeonato dar la posibilidad de crearlo sin jugadores (en caso de querer crear un campeonato vacÃ­o para luego importar partidas manualmente).",
+        "DespuÃ©s de crear un campeonato este no se ve hasta que no se pulsa botÃ³n volver, deberÃ­a verse inmediatamente.",
+        "Cambiar nombre de botÃ³n VOLVER por SALIR con texttooltip 'Salir del detalle del campeonato y volver a la lista de campeonatos'.",
+        "Cambiar botÃ³n RECARGAR por CARGAR con tooltip 'Cargar campeonatos'",
         "En vez de paneles con los campeonatos cargados cargar combo box con los campeonatos.",
         "Panel del campeonato. Columnas deben ser, las partidas del campeonato, victorias y puntos totales. Todo sin decimales.",
-        "Debe existir además de un botón para cargar partidas un botón para añadir partida manualmente (saldrá una modal con los participantes del campeonato para elegir el ganador y los puntos, y se añadirá esa partida al campeonato).",
+        "Debe existir ademÃ¡s de un botÃ³n para cargar partidas un botÃ³n para aÃ±adir partida manualmente (saldrÃ¡ una modal con los participantes del campeonato para elegir el ganador y los puntos, y se aÃ±adirÃ¡ esa partida al campeonato).",
         "Las partidas incluidas manualmente se deben poder sustituir por partidas importadas."
       ],
       "status": "completed",
@@ -564,11 +564,11 @@
           "Combo box muestra campeonatos disponibles",
           "Permite crear campeonatos sin jugadores",
           "Muestra detalle inmediatamente tras crear",
-          "Tabla clasificación sin decimales (Partidas, Victorias, Puntos)",
-          "Botón 'Añadir Partida Manual' funciona correctamente",
+          "Tabla clasificaciÃ³n sin decimales (Partidas, Victorias, Puntos)",
+          "BotÃ³n 'AÃ±adir Partida Manual' funciona correctamente",
           "Endpoint PUT para actualizar campeonatos funciona"
         ],
-        "evidence": "HTML: combo box reemplaza tarjetas, eliminado botón Volver, añadido modal partida manual. CSS: estilos para combo box, acciones y formulario manual. JS: renderChampionshipsSelect, openAddManualPlayModal, saveManualPlay, saveChampionshipToServer. Backend: PUT /championships/:id. Tests HDH-09: 6/6 pasados."
+        "evidence": "HTML: combo box reemplaza tarjetas, eliminado botÃ³n Volver, aÃ±adido modal partida manual. CSS: estilos para combo box, acciones y formulario manual. JS: renderChampionshipsSelect, openAddManualPlayModal, saveManualPlay, saveChampionshipToServer. Backend: PUT /championships/:id. Tests HDH-09: 6/6 pasados."
       }
     },
     {
@@ -576,19 +576,19 @@
       "priority": 1,
       "name": "Correcciones en Tabla de Campeonatos",
       "description": [
-        "La tabla de clasificación del campeonato muestra una columna 'Partidas' con el número de partidas jugadas. En lugar de esto, se quiere una columna por cada partida mostrando los puntos conseguidos en la misma.",
+        "La tabla de clasificaciÃ³n del campeonato muestra una columna 'Partidas' con el nÃºmero de partidas jugadas. En lugar de esto, se quiere una columna por cada partida mostrando los puntos conseguidos en la misma.",
         "La cabecera de cada columna de partidas debe ser el nombre del circuito (con flag emoji).",
         "Cuando no se ha conectado con BGG (usando mock data), los campeonatos no se cargan porque loadMockData() no llama a loadChampionships()."
       ],
       "status": "completed",
       "verification": {
         "checks": [
-          "La tabla de clasificación tiene una columna por cada partida",
+          "La tabla de clasificaciÃ³n tiene una columna por cada partida",
           "Las cabeceras de las columnas son el nombre del circuito con flag emoji",
-          "Los campeonatos se cargan automáticamente al usar mock data (sin BGG)",
+          "Los campeonatos se cargan automÃ¡ticamente al usar mock data (sin BGG)",
           "Tests E2E pasan (87/87)"
         ],
-        "evidence": "Modificado renderChampionshipDetail(): tabla ahora muestra columnas por partida en lugar de Partidas/Victorias/Puntos. Cabeceras muestran flag emoji + nombre del circuito. Añadido loadChampionships() en loadData() y loadMockData() para cargar campeonatos incluso sin login BGG. Tests: 87/87 pasan."
+        "evidence": "Modificado renderChampionshipDetail(): tabla ahora muestra columnas por partida en lugar de Partidas/Victorias/Puntos. Cabeceras muestran flag emoji + nombre del circuito. AÃ±adido loadChampionships() en loadData() y loadMockData() para cargar campeonatos incluso sin login BGG. Tests: 87/87 pasan."
       }
     },
     {
@@ -596,32 +596,32 @@
       "priority": 1,
       "name": "Mejoras en consulta de Campeonatos",
       "description": [
-        "Al consultar un campeonato (sin haber cargado datos desde BGG), la clasificación aparecía vacía porque getChampionshipStandings() buscaba los jugadores en this.data.players, que estaba vacío.",
-        "Añadir columna 'Total' a la tabla de clasificación del campeonato.",
+        "Al consultar un campeonato (sin haber cargado datos desde BGG), la clasificaciÃ³n aparecÃ­a vacÃ­a porque getChampionshipStandings() buscaba los jugadores en this.data.players, que estaba vacÃ­o.",
+        "AÃ±adir columna 'Total' a la tabla de clasificaciÃ³n del campeonato.",
         "Mock data SOLO debe usarse para tests, nunca para consulta de campeonatos reales."
       ],
       "status": "completed",
       "verification": {
         "checks": [
-          "Consultar campeonato sin datos BGG cargados muestra la clasificación correcta",
-          "Tabla de clasificación tiene columna Total",
+          "Consultar campeonato sin datos BGG cargados muestra la clasificaciÃ³n correcta",
+          "Tabla de clasificaciÃ³n tiene columna Total",
           "Tests E2E pasan (87/87)"
         ],
-        "evidence": "Modificado getChampionshipStandings(): ahora no depende de this.data.players para funcionar. Si el jugador no existe localmente, usa 'Jugador ${pid}'. Añadida columna Total en la tabla. Mock data solo para tests."
+        "evidence": "Modificado getChampionshipStandings(): ahora no depende de this.data.players para funcionar. Si el jugador no existe localmente, usa 'Jugador ${pid}'. AÃ±adida columna Total en la tabla. Mock data solo para tests."
       }
     },
     {
       "id": "HDH-13",
       "priority": 1,
-      "name": "Despliegue monolítico en Railway",
+      "name": "Despliegue monolÃ­tico en Railway",
       "description": [
-        "Preparar el proyecto para despliegue productivo en Railway.com como un solo servicio monolítico.",
+        "Preparar el proyecto para despliegue productivo en Railway.com como un solo servicio monolÃ­tico.",
         "Crear Dockerfile.railway que combine nginx + proxy Node.js en un solo contenedor.",
         "Crear entrypoint.sh que arranque ambos procesos (nginx escuchando en $PORT, node en 3001 interno).",
         "Crear nginx.railway.conf: proxy_pass apunta a http://localhost:3001/ en vez de http://bgg-proxy:3001/.",
         "Crear .dockerignore para excluir e2e/, .git/, documents/, evidence/, node_modules/, etc.",
         "Configurar CHAMPIONSHIPS_DIR=/data/championships para persistencia con Railway Volume montado en /data.",
-        "secrets.json se mantiene para desarrollo local (ya está en .gitignore), en Railway el usuario hace login vía UI.",
+        "secrets.json se mantiene para desarrollo local (ya estÃ¡ en .gitignore), en Railway el usuario hace login vÃ­a UI.",
         "docker-compose.yml y Dockerfile root se mantienen sin cambios para desarrollo local."
       ],
       "status": "completed",
@@ -644,69 +644,69 @@
       "name": "Rate limiting en endpoints del proxy",
       "description": [
         "Implementar rate limiting en el proxy para prevenir abuso de endpoints.",
-        "Crear módulo rate-limiter.js con lógica de ventana deslizante por IP.",
-        "Aplicar rate limiting a POST /login (máx 5 requests por minuto).",
-        "Aplicar rate limiting a POST /test-login (máx 10 requests por minuto).",
-        "Aplicar rate limiting a endpoints de championships (máx 30 requests por minuto).",
-        "Respuesta 429 Too Many Requests cuando se excede el límite.",
+        "Crear mÃ³dulo rate-limiter.js con lÃ³gica de ventana deslizante por IP.",
+        "Aplicar rate limiting a POST /login (mÃ¡x 5 requests por minuto).",
+        "Aplicar rate limiting a POST /test-login (mÃ¡x 10 requests por minuto).",
+        "Aplicar rate limiting a endpoints de championships (mÃ¡x 30 requests por minuto).",
+        "Respuesta 429 Too Many Requests cuando se excede el lÃ­mite.",
         "Header Retry-After con segundos hasta que se puede reintentar.",
-        "Sin dependencias externas — implementación vanilla.",
+        "Sin dependencias externas â€” implementaciÃ³n vanilla.",
         "Configurable via variables de entorno: RATE_LIMIT_LOGIN, RATE_LIMIT_CHAMPIONSHIPS."
       ],
       "status": "completed",
       "verification": {
         "checks": [
           "POST /login bloqueado tras 5 requests en menos de 1 minuto",
-          "Respuesta 429 con header Retry-After al exceder límite",
-          "Los límites se resetean tras pasar la ventana de tiempo",
+          "Respuesta 429 con header Retry-After al exceder lÃ­mite",
+          "Los lÃ­mites se resetean tras pasar la ventana de tiempo",
           "Tests E2E existentes siguen pasando",
           "Sin dependencias nuevas en package.json"
         ],
-        "evidence": "Creado proxy/rate-limiter.js: módulo vanilla con ventana deslizante de 60s por IP. Tres buckets: login (5/min), test-login (10/min), championships (30/min). Configurable via RATE_LIMIT_LOGIN, RATE_LIMIT_TEST_LOGIN, RATE_LIMIT_CHAMPIONSHIPS. RATE_LIMIT_DISABLED=true para desarrollo/tests. Respuesta 429 con header Retry-After. Soporte X-Forwarded-For para proxies. proxy/test-rate-limiter.js: 6 tests unitarios. docker-compose.yml: RATE_LIMIT_DISABLED=true para dev. 87/87 tests E2E pasan."
+        "evidence": "Creado proxy/rate-limiter.js: mÃ³dulo vanilla con ventana deslizante de 60s por IP. Tres buckets: login (5/min), test-login (10/min), championships (30/min). Configurable via RATE_LIMIT_LOGIN, RATE_LIMIT_TEST_LOGIN, RATE_LIMIT_CHAMPIONSHIPS. RATE_LIMIT_DISABLED=true para desarrollo/tests. Respuesta 429 con header Retry-After. Soporte X-Forwarded-For para proxies. proxy/test-rate-limiter.js: 6 tests unitarios. docker-compose.yml: RATE_LIMIT_DISABLED=true para dev. 87/87 tests E2E pasan."
       }
     },
     {
       "id": "HDH-MIGRATION01",
       "priority": 1,
-      "name": "Migración a GitHub Pages con datos estáticos semanales",
+      "name": "MigraciÃ³n a GitHub Pages con datos estÃ¡ticos semanales",
       "description": [
         "Publicar el frontend directamente desde GitHub Pages sin depender de Docker ni de un servidor web en runtime.",
         "Generar src/data/heat-data.json mediante GitHub Actions usando secrets de BGG.",
-        "Ejecutar la exportación automáticamente una vez por semana y desplegar el resultado a GitHub Pages.",
-        "Migrar la persistencia de campeonatos a localStorage para el sitio estático.",
-        "Actualizar los tests E2E para validar el sitio mediante un servidor HTTP estático."
+        "Ejecutar la exportaciÃ³n automÃ¡ticamente una vez por semana y desplegar el resultado a GitHub Pages.",
+        "Migrar la persistencia de campeonatos a localStorage para el sitio estÃ¡tico.",
+        "Actualizar los tests E2E para validar el sitio mediante un servidor HTTP estÃ¡tico."
       ],
       "status": "completed",
       "verification": {
         "checks": [
           "El frontend carga src/data/heat-data.json sin llamadas a /bgg-api",
           "El workflow semanal genera el JSON usando secrets de BGG",
-          "GitHub Pages recibe un artifact estático desde src/",
+          "GitHub Pages recibe un artifact estÃ¡tico desde src/",
           "Los campeonatos se guardan en localStorage",
-          "Las pruebas E2E pasan con servidor HTTP estático y sin Docker"
+          "Las pruebas E2E pasan con servidor HTTP estÃ¡tico y sin Docker"
         ],
-        "evidence": "Generador BGG verificado con 129 partidas y 19 jugadores usando credenciales locales, sin publicar el JSON real; 90/90 tests E2E y captura de evidencias pasaron con servidor HTTP estático, sin Docker. Workflows semanales y de Pages añadidos; falta únicamente configurar secrets y Pages en GitHub."
+        "evidence": "Generador BGG verificado con 129 partidas y 19 jugadores usando credenciales locales, sin publicar el JSON real; 90/90 tests E2E y captura de evidencias pasaron con servidor HTTP estÃ¡tico, sin Docker. Workflows semanales y de Pages aÃ±adidos; falta Ãºnicamente configurar secrets y Pages en GitHub."
       }
     },
     {
       "id": "HDH-MIGRATION-BUG01",
       "priority": 1,
-      "name": "Reintentos y timeout para errores BGG en exportación estática",
+      "name": "Reintentos y timeout para errores BGG en exportaciÃ³n estÃ¡tica",
       "description": [
-        "Añadir reintentos para errores transitorios de BGG durante el workflow semanal.",
+        "AÃ±adir reintentos para errores transitorios de BGG durante el workflow semanal.",
         "Reintentar 403, 408, 425, 429, 5xx y errores de red con backoff exponencial.",
-        "Respetar la cabecera Retry-After y añadir timeout de petición.",
-        "Añadir User-Agent al cliente de exportación."
+        "Respetar la cabecera Retry-After y aÃ±adir timeout de peticiÃ³n.",
+        "AÃ±adir User-Agent al cliente de exportaciÃ³n."
       ],
       "status": "completed",
       "verification": {
         "checks": [
           "El login BGG reintenta errores transitorios",
-          "La descarga de páginas BGG reintenta errores transitorios",
+          "La descarga de pÃ¡ginas BGG reintenta errores transitorios",
           "Las peticiones tienen timeout",
           "El workflow usa seis intentos con backoff de tres segundos"
         ],
-        "evidence": "Implementado en proxy/scripts/generate-bgg-data.js y configurado en weekly-data.yml. La generación local con salida temporal volvió a producir 129 partidas y 19 jugadores; los tests de retry simulan dos 403 seguidos y verifican que un 401 no se reintenta."
+        "evidence": "Implementado en proxy/scripts/generate-bgg-data.js y configurado en weekly-data.yml. La generaciÃ³n local con salida temporal volviÃ³ a producir 129 partidas y 19 jugadores; los tests de retry simulan dos 403 seguidos y verifican que un 401 no se reintenta."
       }
     },
     {
@@ -715,8 +715,8 @@
       "name": "Script local para generar y publicar JSON BGG",
       "description": [
         "Crear un script local que ejecute el exportador BGG.",
-        "Crear un commit sólo cuando heat-data.json cambie.",
-        "Hacer push a la rama actual después de la generación.",
+        "Crear un commit sÃ³lo cuando heat-data.json cambie.",
+        "Hacer push a la rama actual despuÃ©s de la generaciÃ³n.",
         "Mantener el script fuera de Git mediante .gitignore.",
         "Permitir un modo DRY_RUN para verificar sin commit ni push."
       ],
@@ -725,12 +725,12 @@
         "checks": [
           "El script lee credenciales del entorno o secrets.json",
           "El script aborta si el repositorio tiene cambios previos",
-          "El script genera el JSON y hace commit sólo si hay cambios",
+          "El script genera el JSON y hace commit sÃ³lo si hay cambios",
           "El script hace push a la rama actual",
-          "El script está ignorado por Git",
+          "El script estÃ¡ ignorado por Git",
           "El modo DRY_RUN funciona"
         ],
-        "evidence": "scripts/update-bgg-data-local.sh creado localmente y añadido a .gitignore. Dry run verificado en un worktree temporal: 129 partidas y 19 jugadores, sin commit ni push."
+        "evidence": "scripts/update-bgg-data-local.sh creado localmente y aÃ±adido a .gitignore. Dry run verificado en un worktree temporal: 129 partidas y 19 jugadores, sin commit ni push."
       }
     },
     {
@@ -739,30 +739,30 @@
       "name": "Campeonatos compartidos con Firebase Authentication y Firestore",
       "description": [
         "Conectar GitHub Pages con Firebase Authentication.",
-        "Migrar campeonatos desde localStorage a la colección Firestore championships.",
-        "Permitir lectura pública y escritura sólo al administrador.",
+        "Migrar campeonatos desde localStorage a la colecciÃ³n Firestore championships.",
+        "Permitir lectura pÃºblica y escritura sÃ³lo al administrador.",
         "Mantener heat-data.json como fuente exclusiva de partidas BGG."
       ],
       "status": "completed",
       "verification": {
         "checks": [
-          "Firebase se inicializa en producción",
-          "Usuarios anónimos pueden leer campeonatos",
+          "Firebase se inicializa en producciÃ³n",
+          "Usuarios anÃ³nimos pueden leer campeonatos",
           "El administrador puede escribir con su UID",
           "La persistencia local de desarrollo se mantiene para tests",
           "Los tests E2E pasan"
         ],
-        "evidence": "La aplicación publicada se probó correctamente como administrador y como usuario de lectura. El administrador puede crear y modificar campeonatos; los usuarios anónimos pueden leerlos. Las reglas de Firestore están desplegadas en heat-dashboard-511cf."
+        "evidence": "La aplicaciÃ³n publicada se probÃ³ correctamente como administrador y como usuario de lectura. El administrador puede crear y modificar campeonatos; los usuarios anÃ³nimos pueden leerlos. Las reglas de Firestore estÃ¡n desplegadas en heat-dashboard-511cf."
       }
     },
     {
       "id": "HDH-PAGES01",
       "priority": 1,
-      "name": "Desplegar GitHub Pages tras merges automáticos",
+      "name": "Desplegar GitHub Pages tras merges automÃ¡ticos",
       "description": [
-        "Añadir workflow_run como disparador alternativo de Deploy GitHub Pages.",
-        "Desplegar después de que CI y merge automático termine correctamente.",
-        "Conservar el disparador push y la ejecución manual."
+        "AÃ±adir workflow_run como disparador alternativo de Deploy GitHub Pages.",
+        "Desplegar despuÃ©s de que CI y merge automÃ¡tico termine correctamente.",
+        "Conservar el disparador push y la ejecuciÃ³n manual."
       ],
       "status": "in_progress",
       "verification": {
@@ -771,7 +771,7 @@
           "El workflow se dispara tras workflow_run exitoso",
           "No despliega cuando auto-merge falla",
           "El workflow manual sigue disponible",
-          "El YAML es válido"
+          "El YAML es vÃ¡lido"
         ],
         "evidence": "Pendiente de verificar en GitHub Actions"
       }
@@ -781,33 +781,33 @@
       "priority": 1,
       "name": "Deshabilitar controles de Campeonatos sin administrador",
       "description": [
-        "Mostrar Nuevo Campeonato y Cerrar sesión deshabilitados sin administrador.",
-        "Habilitarlos cuando el administrador esté identificado.",
-        "Volver a deshabilitarlos después de cerrar sesión.",
-        "Mantener las protecciones reales de autorización en la UI."
+        "Mostrar Nuevo Campeonato y Cerrar sesiÃ³n deshabilitados sin administrador.",
+        "Habilitarlos cuando el administrador estÃ© identificado.",
+        "Volver a deshabilitarlos despuÃ©s de cerrar sesiÃ³n.",
+        "Mantener las protecciones reales de autorizaciÃ³n en la UI."
       ],
       "status": "completed",
       "verification": {
         "checks": [
-          "Ambos botones están visibles y deshabilitados sin administrador",
+          "Ambos botones estÃ¡n visibles y deshabilitados sin administrador",
           "Ambos botones se habilitan con administrador",
           "Ambos botones se deshabilitan tras logout",
-          "El modal de creación rechaza usuarios no autorizados",
+          "El modal de creaciÃ³n rechaza usuarios no autorizados",
           "Los tests E2E pasan"
         ],
-        "evidence": "La spec HDH-FIREBASE01 verifica los estados no identificado, administrador y logout: 3/3 pasan. La suite HDH-09 de Campeonatos pasa 6/6. Los botones permanecen visibles y alternan disabled; las guardas de creación y logout también están verificadas."
+        "evidence": "La spec HDH-FIREBASE01 verifica los estados no identificado, administrador y logout: 3/3 pasan. La suite HDH-09 de Campeonatos pasa 6/6. Los botones permanecen visibles y alternan disabled; las guardas de creaciÃ³n y logout tambiÃ©n estÃ¡n verificadas."
       }
     },
     {
       "id": "FIX-HDH-05",
       "priority": 1,
-      "name": "Tests HDH-09 usan directorio separado para evitar interferencia con producción",
+      "name": "Tests HDH-09 usan directorio separado para evitar interferencia con producciÃ³n",
       "description": [
-        "Los tests HDH-09 (Campeonatos) estaban escribiendo y borrando ficheros en proxy/championships/ que es el directorio de producción.",
-        "Esto causaba fallos en CI donde los tests de diferentes branches interferían entre sí.",
-        "Fix: El proxy ahora usa la variable de entorno CHAMPIONSHIPS_DIR para determinar dónde guardar los JSON de campeonatos.",
+        "Los tests HDH-09 (Campeonatos) estaban escribiendo y borrando ficheros en proxy/championships/ que es el directorio de producciÃ³n.",
+        "Esto causaba fallos en CI donde los tests de diferentes branches interferÃ­an entre sÃ­.",
+        "Fix: El proxy ahora usa la variable de entorno CHAMPIONSHIPS_DIR para determinar dÃ³nde guardar los JSON de campeonatos.",
         "En docker-compose.yml se monta un volumen dedicado proxy/test-championships:/app/championships para los tests.",
-        "Los tests ahora usan un entorno completamente separado sin tocar datos de producción."
+        "Los tests ahora usan un entorno completamente separado sin tocar datos de producciÃ³n."
       ],
       "status": "in_progress",
       "verification": {
@@ -868,7 +868,7 @@
       "priority": 1,
       "name": "Desempate en campeonatos por carrera mas reciente",
       "description": [
-        "En la pestaña Campeonatos, en caso de empate en puntos en la clasificacion, el orden de los jugadores era ambiguo: solo se deshacia por numero de victorias.",
+        "En la pestaÃ±a Campeonatos, en caso de empate en puntos en la clasificacion, el orden de los jugadores era ambiguo: solo se deshacia por numero de victorias.",
         "Nuevo criterio de desempate: en caso de empate, va por delante el jugador que quedo mejor en la carrera mas reciente del campeonato.",
         "Si la ultima carrera tampoco deshace el empate (misma posicion), se mantiene el respaldo por victorias y un orden deterministico por nombre."
       ],
@@ -888,10 +888,10 @@
       "priority": 1,
       "name": "Modificar pesta Circuitos",
       "description": [
-        "En la pestaña Circuitos, ahora se muestran un dato que no aporta nada (Pts medio), hay que quitar ese dato y añadir otro: Victorias de bots.",
+        "En la pestaÃ±a Circuitos, ahora se muestran un dato que no aporta nada (Pts medio), hay que quitar ese dato y aÃ±adir otro: Victorias de bots.",
         "Bots son aquellos que no son considerados jugadores principales.",
-        "Además debe permitir pulsar en el nombre del circuito, entonces el panel DISTRIBUCIÓN a la izquierda de la pantalla debe mostrar un chart ",
-        "con el número de victorias de cada jugador más el dato de las victorias de bots."
+        "AdemÃ¡s debe permitir pulsar en el nombre del circuito, entonces el panel DISTRIBUCIÃ“N a la izquierda de la pantalla debe mostrar un chart ",
+        "con el nÃºmero de victorias de cada jugador mÃ¡s el dato de las victorias de bots."
       ],
       "status": "completed",
       "verification": {
@@ -906,11 +906,11 @@
     {
       "id": "HDH-UI02",
       "priority": 1,
-      "name": "Rediseño visual de Resumen (tema Asfalto y brasa)",
+      "name": "RediseÃ±o visual de Resumen (tema Asfalto y brasa)",
       "description": [
-        "Rediseño visual de la pestaña Resumen y del chrome compartido (cabecera, pestañas, botones, tarjetas, banner de cookies) sin cambiar lógica ni datos.",
-        "Colores en variables CSS con dos variantes seleccionables con ?variant=a|b: A (índigo y coral) y B (asfalto y brasa). Selector flotante TEMPORAL (.variant-switch) para compararlas; al elegir una se borra la otra.",
-        "Color fijo por jugador (paleta categórica validada) en los gráficos de Resumen y en la evolución de victorias; podio con peldaños por puesto; KPIs con etiquetas claras.",
+        "RediseÃ±o visual de la pestaÃ±a Resumen y del chrome compartido (cabecera, pestaÃ±as, botones, tarjetas, banner de cookies) sin cambiar lÃ³gica ni datos.",
+        "Colores en variables CSS con dos variantes seleccionables con ?variant=a|b: A (Ã­ndigo y coral) y B (asfalto y brasa). Selector flotante TEMPORAL (.variant-switch) para compararlas; al elegir una se borra la otra.",
+        "Color fijo por jugador (paleta categÃ³rica validada) en los grÃ¡ficos de Resumen y en la evoluciÃ³n de victorias; podio con peldaÃ±os por puesto; KPIs con etiquetas claras.",
         "El marcado y los textos que usan los tests E2E se mantienen."
       ],
       "status": "completed",
@@ -918,20 +918,20 @@
         "checks": [
           "Paleta de jugadores validada con validate_palette.js sobre ambas superficies",
           "Suite E2E completa sin regresiones",
-          "Screenshots de Resumen en las dos variantes (escritorio y móvil)"
+          "Screenshots de Resumen en las dos variantes (escritorio y mÃ³vil)"
         ],
-        "evidence": "Paleta de jugadores validada con validate_palette.js (modo dark) sobre las superficies de ambas variantes. Spec HDH-UI02: 7/7 tests pasados (variantes, KPIs, podio, colores fijos por jugador con filtros, gráficos y screenshots). Suite completa: 110/110 tests previos pasados sin regresiones (copia de pruebas con Chart.js y fuentes servidos en local). Screenshots: evidence/screenshots/HDH-UI02-resumen-{a,b}-{escritorio,movil}.png. (Variante A índigo y coral eliminada en HDH-UI03; el spec se actualizó a tema único.)"
+        "evidence": "Paleta de jugadores validada con validate_palette.js (modo dark) sobre las superficies de ambas variantes. Spec HDH-UI02: 7/7 tests pasados (variantes, KPIs, podio, colores fijos por jugador con filtros, grÃ¡ficos y screenshots). Suite completa: 110/110 tests previos pasados sin regresiones (copia de pruebas con Chart.js y fuentes servidos en local). Screenshots: evidence/screenshots/HDH-UI02-resumen-{a,b}-{escritorio,movil}.png. (Variante A Ã­ndigo y coral eliminada en HDH-UI03; el spec se actualizÃ³ a tema Ãºnico.)"
       }
     },
     {
       "id": "HDH-COL01",
       "priority": 2,
-      "name": "Configuración de colores por jugador y bot",
+      "name": "ConfiguraciÃ³n de colores por jugador y bot",
       "description": [
-        "Crear un JSON de configuración (src/data/player-colors.json) que defina color primario y secundario de cada jugador y bot.",
+        "Crear un JSON de configuraciÃ³n (src/data/player-colors.json) que defina color primario y secundario de cada jugador y bot.",
         "Script CLI (scripts/player-colors.js) ejecutable cuando se quiera: init (genera/actualiza el JSON desde heat-data.json), list (tabla nombre/tipo/colores), set (cambiar primario/secundario de un jugador), check (detectar conflictos de color).",
         "src/app.js usa el JSON como fuente de verdad para playerColor(); si dos jugadores comparten color primario, el conflicto se resuelve con el secundario.",
-        "Fallback: jugadores sin entrada en la config conservan el comportamiento actual (paleta alfabética para principales, gris para el resto)."
+        "Fallback: jugadores sin entrada en la config conservan el comportamiento actual (paleta alfabÃ©tica para principales, gris para el resto)."
       ],
       "status": "completed",
       "verification": {
@@ -941,43 +941,43 @@
           "e2e/tests/HDH-COL01.spec.js pasando con screenshots de evidencia",
           "Suite completa de playwright pasa"
         ],
-        "evidence": "Script scripts/player-colors.js verificado: init genera src/data/player-colors.json (20 entradas: 7 principales, 1 otro, 12 bots; los 7 principales mantienen el color alfabético anterior), list, set (naves inválidas y secondary none/auto) y check detecta primarios compartidos, primario==secundario y hex inválidos. src/app.js: loadColorConfig()+buildColorMap()+playerColor() con resolución de conflictos (primario -> secundario -> paleta -> gris); carga suave si falta el JSON. e2e: tests/HDH-COL01.spec.js 3/3; suite completa 120/120; capture:evidence OK; screenshots evidence/screenshots/HDH-COL01-resumen-{conflicto,config-real}.png. Soporte: e2e/playwright.config.js usa el chromium de snap solo si existe (compatible con Windows); e2e/scripts/capture-evidence.sh acepta PLAYWRIGHT_NODE porque Playwright 1.52 se cuelga con Node 24 en Windows (la suite se ejecuta con Node 22)."
+        "evidence": "Script scripts/player-colors.js verificado: init genera src/data/player-colors.json (20 entradas: 7 principales, 1 otro, 12 bots; los 7 principales mantienen el color alfabÃ©tico anterior), list, set (naves invÃ¡lidas y secondary none/auto) y check detecta primarios compartidos, primario==secundario y hex invÃ¡lidos. src/app.js: loadColorConfig()+buildColorMap()+playerColor() con resoluciÃ³n de conflictos (primario -> secundario -> paleta -> gris); carga suave si falta el JSON. e2e: tests/HDH-COL01.spec.js 3/3; suite completa 120/120; capture:evidence OK; screenshots evidence/screenshots/HDH-COL01-resumen-{conflicto,config-real}.png. Soporte: e2e/playwright.config.js usa el chromium de snap solo si existe (compatible con Windows); e2e/scripts/capture-evidence.sh acepta PLAYWRIGHT_NODE porque Playwright 1.52 se cuelga con Node 24 en Windows (la suite se ejecuta con Node 22)."
       }
     },
     {
       "id": "HDH-COL02",
       "priority": 2,
-      "name": "Editor visual de colores (app pequeña)",
+      "name": "Editor visual de colores (app pequeÃ±a)",
       "description": [
-        "Página src/colors.html con editor visual de los colores primario y secundario de cada jugador y bot.",
-        "Muestra los colores reales (chip del color final resuelto) y la paleta de colores disponibles con quién usa cada uno.",
+        "PÃ¡gina src/colors.html con editor visual de los colores primario y secundario de cada jugador y bot.",
+        "Muestra los colores reales (chip del color final resuelto) y la paleta de colores disponibles con quiÃ©n usa cada uno.",
         "Paleta disponible se guarda en player-colors.json (campo palette) para que editor y script compartan la misma fuente.",
-        "Resolución de conflictos en vivo igual que la app: primario -> secundario -> siguiente color libre de la paleta -> gris.",
+        "ResoluciÃ³n de conflictos en vivo igual que la app: primario -> secundario -> siguiente color libre de la paleta -> gris.",
         "Descargar player-colors.json y copiar al portapapeles; descartar cambios; buscador y filtro por tipo.",
         "Enlace al editor desde la cabecera del dashboard."
       ],
       "status": "completed",
       "verification": {
         "checks": [
-          "La página carga los 20 jugadores/bots agrupados por tipo desde player-colors.json",
+          "La pÃ¡gina carga los 20 jugadores/bots agrupados por tipo desde player-colors.json",
           "Seleccionar un color actualiza el chip, el color final y marca cambios sin guardar",
           "Conflicto de primario resuelto con el secundario, visible en la interfaz",
           "Descarga de player-colors.json con los cambios (evento download real)",
           "e2e/tests/HDH-COL02.spec.js pasando con screenshots de evidencia",
           "Suite completa de playwright pasa"
         ],
-        "evidence": "Editor visual en src/colors.html + src/color-editor.js + src/color-editor.css: filas agrupadas (Principales / Otros / Bots) con chip del color final, selector en línea con los 20 colores de la paleta (indicando quién usa cada uno), hex manual, vaciar color, buscador, filtro por tipo, panel de conflictos, vista previa de barras y Descargar/Copiar JSON. player-colors.json incorpora el campo palette (scripts/player-colors.js init) y app.js usa esa paleta como reserva. Enlace '🎨 Colores' en la cabecera del dashboard. e2e/tests/HDH-COL02.spec.js: 9/9; suite completa 129/129; capture:evidence OK; screenshots evidence/screenshots/HDH-COL02-editor-{inicial,conflicto,real,real-movil}.png."
+        "evidence": "Editor visual en src/colors.html + src/color-editor.js + src/color-editor.css: filas agrupadas (Principales / Otros / Bots) con chip del color final, selector en lÃ­nea con los 20 colores de la paleta (indicando quiÃ©n usa cada uno), hex manual, vaciar color, buscador, filtro por tipo, panel de conflictos, vista previa de barras y Descargar/Copiar JSON. player-colors.json incorpora el campo palette (scripts/player-colors.js init) y app.js usa esa paleta como reserva. Enlace 'ðŸŽ¨ Colores' en la cabecera del dashboard. e2e/tests/HDH-COL02.spec.js: 9/9; suite completa 129/129; capture:evidence OK; screenshots evidence/screenshots/HDH-COL02-editor-{inicial,conflicto,real,real-movil}.png."
       }
     },
     {
       "id": "HDH-INFRA01",
       "priority": 1,
-      "name": "CI: deploy fiable a Pages y tests solo cuando se toca código",
+      "name": "CI: deploy fiable a Pages y tests solo cuando se toca cÃ³digo",
       "description": [
         "Bug: el workflow Deploy GitHub Pages falla de forma intermitente con 'Found 0 artifact(s)' porque sube el artefacto y despliega en el mismo job (carrera con la API de artefactos).",
-        "Arreglo: separar en jobs build (upload-pages-artifact) y deploy (deploy-pages, needs: build), patrón oficial de GitHub Pages; usar el mismo grupo de concurrencia en todos los workflows que publican en Pages (deploy-pages y weekly-data).",
-        "Nuevo: los tests E2E del auto-merge se omiten cuando el cambio no toca código ejecutable (solo docs, PROGRESS.md, features_list.json, evidence, .agents).",
-        "La detección vive en .github/scripts/detect-code-changes.sh (allowlist de rutas) para poder probarla en local."
+        "Arreglo: separar en jobs build (upload-pages-artifact) y deploy (deploy-pages, needs: build), patrÃ³n oficial de GitHub Pages; usar el mismo grupo de concurrencia en todos los workflows que publican en Pages (deploy-pages y weekly-data).",
+        "Nuevo: los tests E2E del auto-merge se omiten cuando el cambio no toca cÃ³digo ejecutable (solo docs, PROGRESS.md, features_list.json, evidence, .agents).",
+        "La detecciÃ³n vive en .github/scripts/detect-code-changes.sh (allowlist de rutas) para poder probarla en local."
       ],
       "status": "completed",
       "verification": {
@@ -985,24 +985,24 @@
           "detect-code-changes.sh devuelve false para cambios solo-docs y true para cambios en src/, e2e/, workflows o scripts",
           "deploy-pages.yml usa jobs build+deploy separados y el grupo de concurrencia compartido",
           "weekly-data.yml comparte el mismo grupo de concurrencia",
-          "auto-merge.yml ejecuta Playwright solo si hay cambios de código, y sigue mergeando en ambos casos",
-          "YAML válido y spec e2e/tests/HDH-INFRA01.spec.js pasando",
+          "auto-merge.yml ejecuta Playwright solo si hay cambios de cÃ³digo, y sigue mergeando en ambos casos",
+          "YAML vÃ¡lido y spec e2e/tests/HDH-INFRA01.spec.js pasando",
           "Al hacer push: CI verde y deploy de Pages verde"
         ],
-        "evidence": "Diagnóstico: run 45442641743 — el upload finalizó (Artifact ID 14943483171) y 0,4s después deploy-pages devolvió 'Found 0 artifact(s)': carrera entre actions/upload-pages-artifact y actions/deploy-pages en el mismo job. Fix: deploy-pages.yml y weekly-data.yml con jobs build + deploy (deploy: needs build) y grupo de concurrencia compartido github-pages-deploy. Nuevo .github/scripts/detect-code-changes.sh (allowlist de rutas) usado por auto-merge.yml: pasos de Playwright condicionados a code_changed=true, merge intacto, aviso en el log cuando se omiten. Verificación: detect-code-changes probado por CLI (docs→false, src/e2e/workflows/scripts→true, output GITHUB_OUTPUT correcto); YAML revisado; e2e/tests/HDH-INFRA01.spec.js 6/6; suite 135/135. Sin screenshots: el cambio es de infraestructura de CI, no hay UI que capturar. Pendiente de confirmar en remoto: CI verde y Deploy GitHub Pages verde tras el push de esta rama. Verificado en remoto: run 45445248521 (Deploy GitHub Pages tras el merge) -> success con jobs build+deploy; rama docs-only HDH-INFRA01-check (run 45445420805): pasos 6-10 y 12 (setup node, npm ci, navegadores, servidor, tests, evidencias) skipped, paso 'Tests skipped (no code changes)' success con code_changed=false y merge del PR #59 completado; su deploy de Pages también en success."
+        "evidence": "DiagnÃ³stico: run 45442641743 â€” el upload finalizÃ³ (Artifact ID 14943483171) y 0,4s despuÃ©s deploy-pages devolviÃ³ 'Found 0 artifact(s)': carrera entre actions/upload-pages-artifact y actions/deploy-pages en el mismo job. Fix: deploy-pages.yml y weekly-data.yml con jobs build + deploy (deploy: needs build) y grupo de concurrencia compartido github-pages-deploy. Nuevo .github/scripts/detect-code-changes.sh (allowlist de rutas) usado por auto-merge.yml: pasos de Playwright condicionados a code_changed=true, merge intacto, aviso en el log cuando se omiten. VerificaciÃ³n: detect-code-changes probado por CLI (docsâ†’false, src/e2e/workflows/scriptsâ†’true, output GITHUB_OUTPUT correcto); YAML revisado; e2e/tests/HDH-INFRA01.spec.js 6/6; suite 135/135. Sin screenshots: el cambio es de infraestructura de CI, no hay UI que capturar. Pendiente de confirmar en remoto: CI verde y Deploy GitHub Pages verde tras el push de esta rama. Verificado en remoto: run 45445248521 (Deploy GitHub Pages tras el merge) -> success con jobs build+deploy; rama docs-only HDH-INFRA01-check (run 45445420805): pasos 6-10 y 12 (setup node, npm ci, navegadores, servidor, tests, evidencias) skipped, paso 'Tests skipped (no code changes)' success con code_changed=false y merge del PR #59 completado; su deploy de Pages tambiÃ©n en success."
       }
     },
     {
       "id": "HDH-UI03",
       "priority": 1,
-      "name": "Tema único Asfalto y brasa y paleta de jugadores a juego",
+      "name": "Tema Ãºnico Asfalto y brasa y paleta de jugadores a juego",
       "description": [
-        "Eliminar la variante A (índigo y coral): tokens, script ?variant=, selector flotante .variant-switch y su código en app.js.",
-        "Dejar Asfalto y brasa como único tema (fondos cálidos oscuros, acento brasa).",
-        "Rediseñar la paleta de jugadores/bots para ese perfil: contraste suficiente sobre los fondos cálidos y separación para daltonismo.",
-        "Añadir scripts/validate-palette.js para verificar contraste WCAG y distancia en color percibido (normal, deuteranopia, protanopia).",
+        "Eliminar la variante A (Ã­ndigo y coral): tokens, script ?variant=, selector flotante .variant-switch y su cÃ³digo en app.js.",
+        "Dejar Asfalto y brasa como Ãºnico tema (fondos cÃ¡lidos oscuros, acento brasa).",
+        "RediseÃ±ar la paleta de jugadores/bots para ese perfil: contraste suficiente sobre los fondos cÃ¡lidos y separaciÃ³n para daltonismo.",
+        "AÃ±adir scripts/validate-palette.js para verificar contraste WCAG y distancia en color percibido (normal, deuteranopia, protanopia).",
         "Actualizar la paleta en app.js, scripts/player-colors.js (con --reseed), player-colors.json y el editor visual.",
-        "Actualizar el spec HDH-UI02 (ya no hay variantes) y añadir el de HDH-UI03."
+        "Actualizar el spec HDH-UI02 (ya no hay variantes) y aÃ±adir el de HDH-UI03."
       ],
       "status": "completed",
       "verification": {
@@ -1013,7 +1013,7 @@
           "Suite Playwright completa en verde con screenshots del tema nuevo",
           "Deploy de Pages en verde"
         ],
-        "evidence": "Eliminada la variante A: styles.css con un único juego de tokens (bg #14110f, surface #1d1916, text #f2ece5, accent #ff7a2f), sin bloque [data-variant], sin script ?variant= en index.html, sin .variant-switch ni .variant-switch CSS y sin código de variante en app.js. Nueva paleta de 20 colores para el perfil asfalto/brasa en app.js (PLAYER_PALETTE, 8 primeros), scripts/player-colors.js (SEED_PALETTE), src/data/player-colors.json (campo palette, primarios reasignados con init --reseed) y src/color-editor.js (FALLBACK_PALETTE). Nuevo scripts/validate-palette.js: contraste WCAG >= 3:1 sobre #14110f y #1d1916 para los 20 colores y ΔE76 >= 12 (normal) / >= 10 (deuteranopia y protanopia) entre los 8 principales; peor par resultante #f2c14e/#e9913f con ΔE 25.2 / 12.3 / 18.0 → OK. Spec HDH-UI03 6/6; HDH-UI02 actualizado (test de variantes eliminado) 5/5; suite completa 140/140; capture:evidence OK con HDH-UI03-resumen-asfalto-{escritorio,movil}.png y HDH-UI03-paleta-asfalto.png."
+        "evidence": "Eliminada la variante A: styles.css con un Ãºnico juego de tokens (bg #14110f, surface #1d1916, text #f2ece5, accent #ff7a2f), sin bloque [data-variant], sin script ?variant= en index.html, sin .variant-switch ni .variant-switch CSS y sin cÃ³digo de variante en app.js. Nueva paleta de 20 colores para el perfil asfalto/brasa en app.js (PLAYER_PALETTE, 8 primeros), scripts/player-colors.js (SEED_PALETTE), src/data/player-colors.json (campo palette, primarios reasignados con init --reseed) y src/color-editor.js (FALLBACK_PALETTE). Nuevo scripts/validate-palette.js: contraste WCAG >= 3:1 sobre #14110f y #1d1916 para los 20 colores y Î”E76 >= 12 (normal) / >= 10 (deuteranopia y protanopia) entre los 8 principales; peor par resultante #f2c14e/#e9913f con Î”E 25.2 / 12.3 / 18.0 â†’ OK. Spec HDH-UI03 6/6; HDH-UI02 actualizado (test de variantes eliminado) 5/5; suite completa 140/140; capture:evidence OK con HDH-UI03-resumen-asfalto-{escritorio,movil}.png y HDH-UI03-paleta-asfalto.png."
       }
     },
     {
@@ -1021,8 +1021,8 @@
       "priority": 2,
       "name": "Paleta de 12 colores oficiales de Heat",
       "description": [
-        "La paleta de opciones del editor pasa a ser los 12 colores de los bots del juego Heat (Rojo, Azul, Verde, Amarillo, Negro, Plata, Naranja, Morado, Blanco, Rosa, Marrón y Cian), adaptados al tema Asfalto y brasa para cumplir contraste y separación (daltonismo incluido).",
-        "Reasignación completa (reseed): los 20 jugadores/bots se reparten los 12 colores; los secundarios diferencian quien repite color con un jugador principal.",
+        "La paleta de opciones del editor pasa a ser los 12 colores de los bots del juego Heat (Rojo, Azul, Verde, Amarillo, Negro, Plata, Naranja, Morado, Blanco, Rosa, MarrÃ³n y Cian), adaptados al tema Asfalto y brasa para cumplir contraste y separaciÃ³n (daltonismo incluido).",
+        "ReasignaciÃ³n completa (reseed): los 20 jugadores/bots se reparten los 12 colores; los secundarios diferencian quien repite color con un jugador principal.",
         "Los swatches del editor muestran el nombre del color oficial (Rojo, Azul, ...)."
       ],
       "status": "completed",
@@ -1040,11 +1040,11 @@
     {
       "id": "HDH-COL04",
       "priority": 1,
-      "name": "Colores de la pestaña Circuitos desde player-colors.json",
+      "name": "Colores de la pestaÃ±a Circuitos desde player-colors.json",
       "description": [
-        "En la pestaña Circuitos, el chart DISTRIBUCIÓN/Victorias usa los colores definidos en src/data/player-colors.json para cada jugador principal.",
-        "La entrada agregada 'Bots' usa un color de la paleta de la config que no esté presente en el chart en ese momento.",
-        "La vista por defecto (Distribución de partidas por circuito) no muestra jugadores y conserva su comportamiento."
+        "En la pestaÃ±a Circuitos, el chart DISTRIBUCIÃ“N/Victorias usa los colores definidos en src/data/player-colors.json para cada jugador principal.",
+        "La entrada agregada 'Bots' usa un color de la paleta de la config que no estÃ© presente en el chart en ese momento.",
+        "La vista por defecto (DistribuciÃ³n de partidas por circuito) no muestra jugadores y conserva su comportamiento."
       ],
       "tasks": [
         {
@@ -1066,25 +1066,25 @@
       "status": "completed",
       "verification": {
         "checks": [
-          "En la pestaña Circuitos, el chart de victorias del circuito pinta cada jugador con su color de src/data/player-colors.json",
-          "La entrada agregada 'Bots' usa un color de la paleta de la config que no está presente en el chart",
-          "La vista Distribución (sin circuito seleccionado) conserva sus colores por defecto",
+          "En la pestaÃ±a Circuitos, el chart de victorias del circuito pinta cada jugador con su color de src/data/player-colors.json",
+          "La entrada agregada 'Bots' usa un color de la paleta de la config que no estÃ¡ presente en el chart",
+          "La vista DistribuciÃ³n (sin circuito seleccionado) conserva sus colores por defecto",
           "e2e/tests/HDH-COL04.spec.js pasando (4/4) con screenshots de evidencia",
           "Specs relacionadas verde (HDH-COL01/COL02/COL04/HDH-15: 21/21)",
-          "HDH-UI03 (soporte): el test de colores en podio/gráficos valida contra App.colorPalette() (12) en vez de los 8 de reserva"
+          "HDH-UI03 (soporte): el test de colores en podio/grÃ¡ficos valida contra App.colorPalette() (12) en vez de los 8 de reserva"
         ],
-        "evidence": "src/app.js updateTracksChart(): en modo Victorias se calcula backgroundColor por etiqueta con playerColor(label) y, para 'Bots', el primer color de colorPalette() que no esté ya usado en el chart (fallback --text-muted); en modo Distribución se restauran los colores por defecto (--accent, --surface-3, --text-muted). e2e/tests/HDH-COL04.spec.js: 4/4 (colores por jugador desde config, Bots con color libre, restauración al deseleccionar, evidencia con datos reales). Screenshots: evidence/screenshots/HDH-COL04-{victorias-colores,datos-reales}.png. Soporte: e2e/tests/HDH-COL02.spec.js dejó de hardcodear los 8 colores compartidos (la config real del repo cambió por commit manual b8b9d72 y ahora tiene 7), cálculo dinámico. La suite completa no se reejecutó en local por timeout del runner en este equipo; la evidencia oficial corre en el Action del push. Soporte adicional: e2e/tests/HDH-UI03.spec.js cambia App.PLAYER_PALETTE por App.colorPalette() en el test de podio/gráficos, porque el commit manual b8b9d72 asignó a algunos jugadores colores de los índices 9-12 y ese test (preexistente en main) fallaba en CI; verificado 8/8."
+        "evidence": "src/app.js updateTracksChart(): en modo Victorias se calcula backgroundColor por etiqueta con playerColor(label) y, para 'Bots', el primer color de colorPalette() que no estÃ© ya usado en el chart (fallback --text-muted); en modo DistribuciÃ³n se restauran los colores por defecto (--accent, --surface-3, --text-muted). e2e/tests/HDH-COL04.spec.js: 4/4 (colores por jugador desde config, Bots con color libre, restauraciÃ³n al deseleccionar, evidencia con datos reales). Screenshots: evidence/screenshots/HDH-COL04-{victorias-colores,datos-reales}.png. Soporte: e2e/tests/HDH-COL02.spec.js dejÃ³ de hardcodear los 8 colores compartidos (la config real del repo cambiÃ³ por commit manual b8b9d72 y ahora tiene 7), cÃ¡lculo dinÃ¡mico. La suite completa no se reejecutÃ³ en local por timeout del runner en este equipo; la evidencia oficial corre en el Action del push. Soporte adicional: e2e/tests/HDH-UI03.spec.js cambia App.PLAYER_PALETTE por App.colorPalette() en el test de podio/grÃ¡ficos, porque el commit manual b8b9d72 asignÃ³ a algunos jugadores colores de los Ã­ndices 9-12 y ese test (preexistente en main) fallaba en CI; verificado 8/8."
       }
     },
     {
       "id": "HDH-UI04",
       "priority": 1,
-      "name": "Rediseño de la pestaña Campeonatos",
+      "name": "RediseÃ±o de la pestaÃ±a Campeonatos",
       "description": [
-        "Rail de tarjetas de campeonatos que sustituye al desplegable: cada tarjeta muestra nombre, participantes, partidas, fecha de creación y líder con su color de jugador y puntos.",
-        "Detalle del campeonato reorganizado: Clasificación y Evolución de puntos lado a lado arriba, Partidas a todo lo ancho debajo, cabecera reducida a badges (líder, partidas, participantes, fecha, propietario).",
-        "Nuevo chart de línea acumulativo siempre creciente de la evolución de puntos por jugador, con eje Y adaptado al máximo acumulado del campeonato (empezando en 0) y colores de jugador reales.",
-        "Responsive: en pantallas estrechas el rail se desplaza en horizontal, el duo se apila, la tabla se desplaza en horizontal y los botones cumplen target táctil >= 38px."
+        "Rail de tarjetas de campeonatos que sustituye al desplegable: cada tarjeta muestra nombre, participantes, partidas, fecha de creaciÃ³n y lÃ­der con su color de jugador y puntos.",
+        "Detalle del campeonato reorganizado: ClasificaciÃ³n y EvoluciÃ³n de puntos lado a lado arriba, Partidas a todo lo ancho debajo, cabecera reducida a badges (lÃ­der, partidas, participantes, fecha, propietario).",
+        "Nuevo chart de lÃ­nea acumulativo siempre creciente de la evoluciÃ³n de puntos por jugador, con eje Y adaptado al mÃ¡ximo acumulado del campeonato (empezando en 0) y colores de jugador reales.",
+        "Responsive: en pantallas estrechas el rail se desplaza en horizontal, el duo se apila, la tabla se desplaza en horizontal y los botones cumplen target tÃ¡ctil >= 38px."
       ],
       "status": "completed",
       "verification": "e2e/tests/HDH-UI04.spec.js (5 tests) + suite completa 150/150 en Node 22 (Chromium headless local); screenshots en evidence/screenshots/HDH-UI04-*.png generados en local (no versionados; la evidencia oficial vive en artifacts de Actions)."
@@ -1092,11 +1092,11 @@
     {
       "id": "HDH-UI05",
       "priority": 1,
-      "name": "Rediseño de la pestaña Circuitos",
+      "name": "RediseÃ±o de la pestaÃ±a Circuitos",
       "description": [
-        "Rail lateral de circuitos que sustituye a la cuadrícula de tarjetas: cada card muestra nombre, partidas, victorias de bots, barra de reparto sobre el total y campeón con victorias y color de jugador.",
-        "Detalle a la derecha: badges del circuito activo (campeón, partidas, % del total, bots, última visita), donut existente y pódio top 3 de jugadores principales; debajo, últimas 5 visitas al circuito con ganador y puntaje.",
-        "El toggle de selección de circuito y el chart DISTRIBUCIÓN/Victorias conservan el comportamiento previo.",
+        "Rail lateral de circuitos que sustituye a la cuadrÃ­cula de tarjetas: cada card muestra nombre, partidas, victorias de bots, barra de reparto sobre el total y campeÃ³n con victorias y color de jugador.",
+        "Detalle a la derecha: badges del circuito activo (campeÃ³n, partidas, % del total, bots, Ãºltima visita), donut existente y pÃ³dio top 3 de jugadores principales; debajo, Ãºltimas 5 visitas al circuito con ganador y puntaje.",
+        "El toggle de selecciÃ³n de circuito y el chart DISTRIBUCIÃ“N/Victorias conservan el comportamiento previo.",
         "Con el panel de filtros abierto, el contenido se desplaza 300px (>=721px) para no quedar debajo del drawer.",
         "Responsive: el rail pasa a carrusel horizontal y el duo se apila en pantallas estrechas."
       ],
@@ -1108,20 +1108,20 @@
       "priority": 1,
       "name": "Identidad estable de participantes en Campeonatos",
       "description": [
-        "Identidad estable de participantes: userid de BGG para cuentas BGG (viaja en el XML de cada partida), clave sintética determinista persistente para bots y jugadores sin cuenta BGG.",
-        "El exportador semanal (generate-bgg-data.js) serializa el userid (real o sintético) en heat-data.json; el id numérico deja de ser la identidad.",
-        "Al crear un campeonato con selección de jugadores se guarda un snapshot de identidad (nombre, tipo y color congelado) por participante (schemaVersion 2 + participantRefs).",
-        "Las carreras importadas o manuales en campeonatos v2 se canonicalizan a la identidad (copia; el histórico global queda intacto); la clasificación y los colores del detalle salen del snapshot.",
-        "Campeonatos legacy (1961/1962 Daganzo, Boadilla Cup): quedan congelados tal cual con aviso visible; su migración será guiada por el usuario (feature aparte)."
+        "Identidad estable de participantes: userid de BGG para cuentas BGG (viaja en el XML de cada partida), clave sintÃ©tica determinista persistente para bots y jugadores sin cuenta BGG.",
+        "El exportador semanal (generate-bgg-data.js) serializa el userid (real o sintÃ©tico) en heat-data.json; el id numÃ©rico deja de ser la identidad.",
+        "Al crear un campeonato con selecciÃ³n de jugadores se guarda un snapshot de identidad (nombre, tipo y color congelado) por participante (schemaVersion 2 + participantRefs).",
+        "Las carreras importadas o manuales en campeonatos v2 se canonicalizan a la identidad (copia; el histÃ³rico global queda intacto); la clasificaciÃ³n y los colores del detalle salen del snapshot.",
+        "Campeonatos legacy (1961/1962 Daganzo, Boadilla Cup): quedan congelados tal cual con aviso visible; su migraciÃ³n serÃ¡ guiada por el usuario (feature aparte)."
       ],
       "status": "completed",
       "verification": {
         "checks": [
           "Campeonato nuevo v2 guarda participantes por identidad (bgg:<userid> / nonbgg:<nombre>) con snapshot de color y tipo",
-          "La identidad por userid sobrevive a una reordenación de ids del exportador: mismos jugadores y totales",
-          "Campeonatos legacy: carga, detalle e importación de partidas no reescriben sus ids ni inventan nombres (aviso visible)",
+          "La identidad por userid sobrevive a una reordenaciÃ³n de ids del exportador: mismos jugadores y totales",
+          "Campeonatos legacy: carga, detalle e importaciÃ³n de partidas no reescriben sus ids ni inventan nombres (aviso visible)",
           "El color del participante sale del snapshot congelado, no de la paleta actual",
-          "userid sintético determinista y persistente para bots y no-BGG (syntheticUserid, tests offline)",
+          "userid sintÃ©tico determinista y persistente para bots y no-BGG (syntheticUserid, tests offline)",
           "Suite completa Playwright en verde"
         ],
         "evidence": "e2e/tests/FIX-HDH-08.spec.js (5 tests) 5/5 + suite completa 158/158 en Node 22 (CI=true, Chromium local); proxy tests offline OK; screenshots evidence/screenshots/FIX-HDH-08-*.png (oficial en artifacts de Actions)."
@@ -1130,21 +1130,21 @@
     {
       "id": "FIX-HDH-09",
       "priority": 1,
-      "name": "Migración guiada de participantes legacy por matching de partidas (circuito + fecha)",
+      "name": "MigraciÃ³n guiada de participantes legacy por matching de partidas (circuito + fecha)",
       "description": [
-        "Las partidas guardadas en campeonatos legacy se casan contra el histórico global por (circuito, fecha); el alineamiento es posicional (mismo orden de jugadores del XML original) y se verifica que los puntajes coinciden posición a posición.",
-        "De cada emparejamiento se deduce la identidad estable de cada id legacy (userid de BGG o userid sintético para bots/no-BGG) y se construye el snapshot congelado de nombre/tipo/color.",
-        "Duplicados (circuito, fecha) en el histórico se desambiguan comparando los puntajes paralelos; si siguen empatados, la resolución se marca inválida para revisión.",
-        "La UI del campeonato legacy muestra un botón que calcula la resolución, presenta el informe (id legacy -> jugador identificado) y pide confirmación antes de aplicar; al aplicar, el campeonato se convierte a v2 (participantes por identidad, carreras canonicalizadas) y se persiste.",
+        "Las partidas guardadas en campeonatos legacy se casan contra el histÃ³rico global por (circuito, fecha); el alineamiento es posicional (mismo orden de jugadores del XML original) y se verifica que los puntajes coinciden posiciÃ³n a posiciÃ³n.",
+        "De cada emparejamiento se deduce la identidad estable de cada id legacy (userid de BGG o userid sintÃ©tico para bots/no-BGG) y se construye el snapshot congelado de nombre/tipo/color.",
+        "Duplicados (circuito, fecha) en el histÃ³rico se desambiguan comparando los puntajes paralelos; si siguen empatados, la resoluciÃ³n se marca invÃ¡lida para revisiÃ³n.",
+        "La UI del campeonato legacy muestra un botÃ³n que calcula la resoluciÃ³n, presenta el informe (id legacy -> jugador identificado) y pide confirmaciÃ³n antes de aplicar; al aplicar, el campeonato se convierte a v2 (participantes por identidad, carreras canonicalizadas) y se persiste.",
         "Verificado con los datos reales de Firestore: 1961 y 1962 Daganzo (9/9 resueltos, sin conflictos) y Boadilla Cup (9/9): los dos primeros comparten participantes distintos a los de Boadilla, como indica el usuario."
       ],
       "status": "completed",
       "verification": {
         "checks": [
-          "Resolución automática empareja 8/8 partidas y 27 participantes con cero conflictos (datos reales Firestore + heat-data.json)",
-          "La UI presenta el informe de resolución con nombre, userid y tipo por participante antes de aplicar",
-          "Al aplicar, el campeonato queda v2: participantes por identidad, snapshot y carreras canonicalizadas; la clasificación muestra los jugadores identificados",
-          "Partidas sin match o ambigüedad marcan la resolución como inválida y no aplican nada",
+          "ResoluciÃ³n automÃ¡tica empareja 8/8 partidas y 27 participantes con cero conflictos (datos reales Firestore + heat-data.json)",
+          "La UI presenta el informe de resoluciÃ³n con nombre, userid y tipo por participante antes de aplicar",
+          "Al aplicar, el campeonato queda v2: participantes por identidad, snapshot y carreras canonicalizadas; la clasificaciÃ³n muestra los jugadores identificados",
+          "Partidas sin match o ambigÃ¼edad marcan la resoluciÃ³n como invÃ¡lida y no aplican nada",
           "La suite completa de Playwright sigue en verde"
         ],
         "evidence": "Chequeo previo con datos reales (Firestore + heat-data.json): 8/8 partidas casan por (circuito, fecha), 27/27 participantes resueltos sin conflictos; e2e/tests/FIX-HDH-09.spec.js 3/3 + suite completa 161/161 en Node 22 (CI=true, Chromium local); screenshots evidence/screenshots/FIX-HDH-09-*.png (oficial en artifacts de Actions)."
@@ -1153,20 +1153,40 @@
     {
       "id": "FIX-HDH-10",
       "priority": 1,
-      "name": "Regresión: bots clasificados como principales tras userid sintético",
+      "name": "RegresiÃ³n: bots clasificados como principales tras userid sintÃ©tico",
       "description": [
-        "Causa: classifyPlayers() decidía isBot = userid === '0', pero FIX-HDH-08 hace que el exportador escriba un userid sintético local-<slug> para bots y no-BGG, así que dejaban de detectarse como bots.",
+        "Causa: classifyPlayers() decidÃ­a isBot = userid === '0', pero FIX-HDH-08 hace que el exportador escriba un userid sintÃ©tico local-<slug> para bots y no-BGG, asÃ­ que dejaban de detectarse como bots.",
         "Fix: isBot = (userid === '0' || userid empieza por 'local-'); la identidad persistente se mantiene y el clasificador vuelve a reconocer bots.",
-        "Detectado tras un update_bgg real: los bots aparecían como jugadores principales."
+        "Detectado tras un update_bgg real: los bots aparecÃ­an como jugadores principales."
       ],
-      "status": "in_progress",
+      "status": "completed",
       "verification": {
         "checks": [
           "classifyPlayers marca isBot para userids '0' y 'local-*' (tests extendidos en verde)",
-          "Regenerar datos con el exportador fija bots como bot y principales/otros según partidas",
+          "Regenerar datos con el exportador fija bots como bot y principales/otros segun partidas",
           "Suite de tests del proxy en verde"
         ],
-        "evidence": "node proxy/test-classify.js (extendido con userid sintético) + test-generate-bgg-data.js + reproducción del bug con el JSON real de 2026-11-26: OK. Evidencia oficial tras regenerar datos en Actions."
+        "evidence": "node proxy/test-classify.js (extendido) + node proxy/test-generate-bgg-data.js OK. Regeneracion real 2026-11-26 (durante FIX-HDH-11): heat-data.json con 12 bots detectados como bot y 7 principales; spec FIX-HDH-11 3/3 y suite completa 164/164 sobre ese JSON; oficial en artifacts de Actions"
+      }
+    },
+    {
+      "id": "FIX-HDH-11",
+      "priority": 1,
+      "name": "Alias de nombre de jugador en el exportador BGG (Alfonso Daganzo -> Alfonso)",
+      "description": [
+        "El usuario renombra al jugador en BG Stats; las partidas ya enviadas a BGG conservan el nombre antiguo en el XML, con lo que sin canonificar aparecerian dos jugadores (mismo userid, dos nombres).",
+        "El exportador (generate-bgg-data.js) aplica una tabla de alias de visualizacion sobre el nombre del XML antes de construir la tabla de players: una sola entrada, todas las partidas muestran el nombre canonico.",
+        "La identidad no cambia: para cuentas BGG es bgg:<userid>; los userid sinteticos local-<slug> siguen derivandose del nombre original del XML, asi que los snapshots de campeonatos ya guardados resuelven igual.",
+        "Regenerar heat-data.json y player-colors.json con el alias aplicado; los campeonatos ya migrados no se ven afectados (participante bgg:1428263, nombre congelado es solo display)."
+      ],
+      "status": "completed",
+      "verification": {
+        "checks": [
+          "canonicalPlayerName canonifica 'Alfonso Daganzo' a 'Alfonso'; normalizeData converge viejas/nuevas en una entrada con userid 1428263 (tests proxy en verde)",
+          "heat-data.json regenerado con datos reales BGG: una unica entrada 'Alfonso', cero apariciones de 'Daganzo', 9 partidas agregadas",
+          "Dashboard: pestaña Jugadores y podio de Resumen muestran 'Alfonso' sin 'Daganzo' (spec e2e FIX-HDH-11 3/3); suite completa 164/164"
+        ],
+        "evidence": "node proxy/test-generate-bgg-data.js + node proxy/test-classify.js OK; e2e/tests/FIX-HDH-11.spec.js 3/3; suite completa 164/164 (Node 22, CI=true); screenshots evidence/screenshots/FIX-HDH-11-*.png; datos reales regenerados localmente (secrets.json local; evidencia oficial en artifacts de Actions)"
       }
     }
   ]

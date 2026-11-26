@@ -6,6 +6,10 @@ Todas las novedades relevantes del proyecto se documentan en este fichero.
 
 ### Changed
 
+- Jugadores: el exportador BGG aplica una tabla de alias de nombre (FIX-HDH-11). «Alfonso Daganzo» pasa a «Alfonso»: las partidas ya subidas a BGG con el nombre antiguo y las nuevas (tras el rename en BG Stats) convergen en una única entrada de jugador; la identidad sigue siendo `bgg:<userid>` y los userid sintéticos de bots siguen derivándose del nombre original del XML, así que los campeonatos ya guardados no se ven afectados. `heat-data.json` y `player-colors.json` regenerados.
+
+### Changed
+
 - Circuitos: rediseño de la pestaña (HDH-UI05). La cuadrícula de tarjetas se sustituye por un rail lateral con scroll interno: cada circuito muestra partidas, victorias de bots, su reparto sobre el total (barra + %) y el campeón con sus victorias y color de jugador. A la derecha, badges del circuito activo, el donut de siempre (Distribución / Victorias siguen igual), un pódio top 3 de jugadores principales y las últimas 5 visitas al circuito con ganador y puntaje. Con el panel de filtros abierto el contenido se desplaza para no quedar debajo del drawer (en móvil sigue siendo overlay). En pantallas estrechas el rail pasa a carrusel horizontal y el detalle se apila.
 
 - Campeonatos: rediseño de la pestaña (HDH-UI04). El desplegable de selección se sustituye por un rail de tarjetas: cada campeonato muestra participantes, partidas, fecha y líder (nombre, puntos y color de jugador) sin abrir el detalle. El detalle se reorganiza con Clasificación y Evolución de puntos lado a lado arriba y Partidas a todo lo ancho debajo; la cabecera se reduce a badges (líder, partidas, participantes, fecha, propietario). Nuevo gráfico de línea acumulativo (siempre creciente) de la evolución de puntos por jugador con eje Y adaptado al máximo acumulado del campeonato y colores reales de cada jugador. En pantallas estrechas el rail se desplaza en horizontal, el duo se apila y la tabla mantiene scroll horizontal.
