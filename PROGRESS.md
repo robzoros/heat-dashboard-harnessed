@@ -1,5 +1,35 @@
 # PROGRESS.md
 
+## Sesion 2026-11-26 (HDH-UI06)
+
+### Feature trabajada: HDH-UI06 - Modal de carrera (Circuito + fecha) desde Circuitos/Historial/Campeonatos
+
+**Estado**: Completada
+
+#### Contexto
+- Diseño del artboard 02 elegido de /gentle:design (design/carrera-modal/02-dos-columnas.html) tras comentarios del canvas: tabla sin columnas «Jugador»/«Dif.» y pódio visual en escalones.
+- El título de la ventana es «Carrera · <circuito>» junto a la fecha, localización y nº de pilotos.
+
+#### Que se hizo
+- **src/index.html**: modal `#race-modal` con hero del ganador, tabla, pódio en escalones y ficha de detalles; botón «Ver campeonato» oculto salvo que la partida pertenezca a un campeonato.
+- **src/app.js**: `openRaceModal()`, `findChampionshipForPlay()` (por id conservado, fallback circuito+fecha como FIX-HDH-09), `formatRaceDate()` (desglose manual de ISO para evitar desfase de zona), `setupRaceModal()`.
+- **Apertura desde los 3 puntos**: últimas visitas del circuito (delegación en `#track-recents`, contenedor estático), historial (click en play-entry abre la modal; se retira el expandir inline de HDH-07) y campeonatos (click en la partida, ignorando el botón de borrar).
+- **src/styles.css**: estilos de la modal con tokens del tema; fila de visita y partida de campeonato clicables; responsive ≤720px.
+- **e2e**: nuevo spec HDH-UI06 (4 tests) y HDH-07 actualizado al nuevo comportamiento.
+
+#### Verificacion
+- `node --check src/app.js`: OK.
+- **Spec HDH-UI06: 4/4** (visitas, historial, campeonatos con «Ver campeonato» + fecha ISO).
+- **Suite completa Playwright: 168/168** (Node 22, CI=true, Chromium local).
+- `capture:evidence`: OK; screenshots HDH-UI06-desde-circuitos/desde-historial/ver-campeonato (oficial en artifacts).
+
+#### Notas / Riesgos
+- Las partidas manuales de un campeonato (fuera del histórico global) se resuelven buscando en champ.plays.
+- El click de visita no altera la selección del circuito ni el chart DISTRIBUCIÓN.
+- Nota de soporte: defecto de mem_judge_many documentado (pending_ids e-j001-p1..p4 no reconocidos, obs 319) — no bloquea la feature.
+
+---
+
 ## Sesion 2026-11-26 (FIX-HDH-11)
 
 ### Feature trabajada: FIX-HDH-11 - Alias de nombre de jugador en el exportador BGG

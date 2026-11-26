@@ -1,0 +1,27 @@
+{
+  "title": "Modal de carrera",
+  "brief": "Modal «Carrera» que se abre desde Circuitos (últimas visitas), Historial y Campeonatos (clic en una carrera). Título con el nombre del circuito y la fecha; muestra ganador, clasificación con puntos por piloto y metadatos de la partida. Tema «Asfalto y brasa» (design/system.md, tokens de src/styles.css).",
+  "artboards": [
+    {
+      "file": "01-hero-victoria.html",
+      "title": "Hero de victoria",
+      "tradeoff": "Fuerte tirón emocional: el ganador protagoniza la apertura; la tabla queda en segundo plano",
+      "width": 1440,
+      "height": 900
+    },
+    {
+      "file": "02-dos-columnas.html",
+      "title": "Dos columnas",
+      "tradeoff": "Clasificación completa + pódio y ficha lateral; más densidad informativa, con botón hacia el campeonato",
+      "width": 1440,
+      "height": 900
+    },
+    {
+      "file": "03-cronica-barras.html",
+      "title": "Crónica en barras",
+      "tradeoff": "Comparación visual inmediata de puntos a escala; más compacta pero sin tabla exhaustiva",
+      "width": 1440,
+      "height": 900
+    }
+  ]
+}
