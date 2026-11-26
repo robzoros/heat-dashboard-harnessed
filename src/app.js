@@ -164,6 +164,7 @@ PLAYER_PALETTE: ['#d62828', '#2563eb', '#eab308', '#ec4899', '#06b6d4', '#1a9e50
         this.setupFilters();
         this.setupTrackList();
         this.setupModal();
+        this.setupRaceModal();
         this.setupChampionships();
         this.setupPlayerManager();
         this.setupAdminAuth();
@@ -1561,7 +1562,7 @@ PLAYER_PALETTE: ['#d62828', '#2563eb', '#eab308', '#ec4899', '#06b6d4', '#1a9e50
             const winnerPs = play.playerScores.find(ps => ps.winner);
             const winnerName = winnerPs ? (this.data.players.find(p => p.id === winnerPs.playerRefId)?.name || '-') : '-';
             return `
-                <div class="track-recent">
+                <div class="track-recent" data-play-id="${play.id}" role="button" tabindex="0" title="Abrir la carrera">
                     <span class="recent-main"><b>${this.escapeHtml(play.playDate || '-')}</b> · ${play.playerScores.length} jugadores</span>
                     <span class="recent-winner">🏆 ${this.escapeHtml(winnerName)}${winnerPs ? ` · ${winnerPs.score}` : ''}</span>
                 </div>
@@ -1597,10 +1598,196 @@ PLAYER_PALETTE: ['#d62828', '#2563eb', '#eab308', '#ec4899', '#06b6d4', '#1a9e50
 
         document.querySelectorAll('.play-entry').forEach(entry => {
             entry.addEventListener('click', () => {
-                const playId = entry.dataset.playId;
-                const details = document.getElementById(`details-${playId}`);
-                details.classList.toggle('expanded');
+                // HDH-UI06: la partida abre la modal de carrera (el expandir inline
+                // de HDH-07 se retira: el detalle completo vive en la modal).
+                this.openRaceModal(entry.dataset.playId);
             });
+        });
+    },
+
+    /* ── HDH-UI06: modal de carrera ──────────────────────────────
+       Se abre desde Circuitos (últimas visitas), Historial (play-entry) y
+       Campeonatos (listado de partidas del campeonato). Título «Carrera ·
+       <circuito>» con la fecha; hero del ganador, tabla Pos/Piloto/Puntos,
+       pódio en escalones y ficha de detalles. Si la partida pertenece a un
+       campeonato, botón «Ver campeonato» que navega a su detalle. */
+
+    // Localiza el campeonato al que pertenece una partida del histórico global:
+    // primero por id conservado, y si no, por (circuito, fecha), como hace la
+    // resolución guiada FIX-HDH-09. Devuelve null si pertenece a ninguno.
+    findChampionshipForPlay(play) {
+        if (!play) return null;
+        for (const champ of this.championships.raw) {
+            for (const stored of (champ.plays || [])) {
+                if ((play.id && String(stored.id) === String(play.id)) ||
+                    (stored.board === play.board && stored.playDate === play.playDate)) {
+                    return champ;
+                }
+            }
+        }
+        return null;
+    },
+
+    // Fecha ISO yyyy-mm-dd en display es-ES sin desfase de zona (los ISO se
+    // parsean a UTC y en zonas negativas desplazan el día).
+    formatRaceDate(iso) {
+        const m = /^\d{4}-\d{2}-\d{2}$/.exec(String(iso || ''));
+        if (!m) return iso || '-';
+        const [y, mo, d] = iso.split('-').map(Number);
+        return new Date(y, mo - 1, d).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' });
+    },
+
+    // Abre la modal por id de partida en el histórico global (visitas e historial)
+    // o por objeto de partida de un campeonato (el clic del campeonato pasa champ).
+    openRaceModal(playIdOrPlay, champOverride = null) {
+        let play = playIdOrPlay;
+        if (typeof playIdOrPlay === 'string' || typeof playIdOrPlay === 'number') {
+            play = (this.data.plays || []).find(p => String(p.id) === String(playIdOrPlay))
+                // Las partidas manuales de un campeonato solo existen en champ.plays.
+                || (champOverride && (champOverride.plays || []).find(p => String(p.id) === String(playIdOrPlay)));
+        }
+        if (!play) return;
+        const champ = champOverride || this.findChampionshipForPlay(play);
+
+        // Resolutores de nombre y color: en campeonatos, participantes por identidad
+        // (v2 con claves congeladas, legacy según congelación); en partidas sueltas,
+        // contra la tabla global con playerColor.
+        const nameOf = (ps) => {
+            if (champ) return this.playerNameByRef(champ, ps.playerRefId) || '-';
+            return (this.data.players || []).find(p => p.id === ps.playerRefId)?.name || '-';
+        };
+        const colorOf = (personalName, ps) => {
+            if (champ) return this.participantColor(champ, String(this.championshipKeyResolver(champ)(ps.playerRefId)));
+            return this.playerColor(personalName);
+        };
+
+        // Clasificación por puntos, ganador por su flag (BGG); si nadie la lleva
+        // (todas a 0), gana el mayor puntaje.
+        const winnerPs = play.playerScores.find(ps => ps.winner)
+            || play.playerScores.slice().sort((a, b) => (b.scoreNum || 0) - (a.scoreNum || 0))[0];
+        const sorted = play.playerScores
+            .map((ps, i) => ({ ps, name: nameOf(ps), color: colorOf(nameOf(ps), ps), order: i }))
+            .sort((a, b) => (b.ps.scoreNum || 0) - (a.ps.scoreNum || 0) || a.order - b.order);
+
+        // Título: «Carrera · <circuito>» + fecha.
+        document.getElementById('race-modal-title').textContent = `Carrera · ${play.board || '-'}`;
+        const locationName = (this.data.locations || []).find(l => l.id === play.locationRefId)?.name;
+        const when = this.formatRaceDate(play.playDate);
+        document.getElementById('race-modal-date').textContent =
+            [when, locationName, `${play.playerScores.length} pilotos`].filter(Boolean).join(' · ');
+
+        // Hero del ganador con su color.
+        const winnerName = winnerPs ? nameOf(winnerPs) : null;
+        const winnerEl = document.getElementById('race-modal-winner');
+        if (winnerPs && winnerName && winnerName !== '-') {
+            const wColor = colorOf(winnerName, winnerPs) || 'var(--accent)';
+            winnerEl.classList.remove('hidden');
+            winnerEl.style.setProperty('--pc', wColor);
+            winnerEl.innerHTML = `
+                <span class="race-winner-puck" aria-hidden="true"></span>
+                <div>
+                    <p class="race-winner-label">Victoria</p>
+                    <p class="race-winner-name">${this.escapeHtml(winnerName)}</p>
+                </div>
+                <div class="race-winner-score"><b>${this.escapeHtml(String(winnerPs.scoreNum ?? winnerPs.score ?? 0))}</b><span>puntos</span></div>
+            `;
+        } else {
+            winnerEl.classList.add('hidden');
+            winnerEl.style.removeProperty('--pc');
+        }
+
+        // Tabla Pos / Piloto / Puntos con la fila del ganador en acento.
+        // Puntos en color del piloto (color de jugador o participante), como en
+        // los dots de Historical y campeonatos.
+        document.getElementById('race-modal-standings').innerHTML = `
+            <table class="standings-table race-standings">
+                <thead><tr><th class="pos">Pos</th><th>Piloto</th><th>Puntos</th></tr></thead>
+                <tbody>
+                    ${sorted.map((entry, i) => {
+                        const isWinner = winnerPs && entry.ps === winnerPs;
+                        const medal = ['🥇', '🥈', '🥉'][i] || '';
+                        const dot = entry.color
+                            ? `<span class="name-dot" style="background:${entry.color};"></span> `
+                            : '';
+                        return `
+                            <tr class="${isWinner ? 'winner-row' : ''}">
+                                <td class="pos">${medal || i + 1}</td>
+                                <td><span class="standings-name">${dot}${this.escapeHtml(entry.name)}</span>${isWinner ? ' <span class="medal" aria-hidden="true">🏁</span>' : ''}</td>
+                                <td class="pts">${entry.ps.scoreNum ?? entry.ps.score ?? 0}</td>
+                            </tr>
+                        `;
+                    }).join('')}
+                </tbody>
+            </table>
+        `;
+
+        // Pódio en escalones: alturas a la escala de puntos (como el artboard 02
+        // y .podium-place de Resumen); 1º con resplandor; solo los 3 primeros.
+        const podiumEl = document.getElementById('race-modal-podium');
+        if (sorted.length > 0) {
+            const maxPts = sorted[0].ps.scoreNum || 0;
+            const medals = ['🏆', '🥈', '🥉'];
+            podiumEl.innerHTML = sorted.slice(0, 3).map((entry, i) => {
+                const pts = entry.ps.scoreNum || 0;
+                const share = maxPts > 0 ? pts / maxPts : (i === 0 ? 0.8 : 0.4);
+                const h = Math.round(60 + 80 * share);
+                return `
+                    <div class="race-step${i === 0 ? ' first' : ''}" style="--pc:${entry.color || 'var(--accent)'};--h:${h}px">
+                        <span class="race-step-medal">${medals[i]}</span>
+                        <span class="race-step-name">${this.escapeHtml(entry.name)}</span>
+                        <span class="race-step-n">${pts} pts</span>
+                    </div>
+                `;
+            }).join('');
+        } else {
+            podiumEl.innerHTML = '<div class="campeonato-empty">Sin resultados.</div>';
+        }
+
+        // Ficha de detalles: tablero, fecha, localización, pilotos y, si hay,
+        // campeonato (ficha del modelo ya existente).
+        const facts = [
+            { label: 'Tablero', value: this.getTrackFlag(play.board) + ' ' + (play.board || '-') },
+            { label: 'Fecha', value: when },
+            { label: 'Localización', value: locationName || '-' },
+            { label: 'Pilotos', value: play.playerScores.length }
+        ];
+        if (champ) facts.push({ label: 'Campeonato', value: champ.name, gold: true });
+        document.getElementById('race-modal-facts').innerHTML = facts.map(f => `
+            <div class="race-fact${f.gold ? ' gold' : ''}">
+                <span>${this.escapeHtml(f.label)}</span>
+                <b>${this.escapeHtml(String(f.value))}</b>
+            </div>
+        `).join('');
+
+        // Footer con «Ver campeonato» cuando la partida pertenece a uno.
+        const champBtn = document.getElementById('btn-race-view-champ');
+        this.raceModalChampId = champ ? champ.id : null;
+        champBtn.classList.toggle('hidden', !champ);
+
+        document.getElementById('race-modal').classList.remove('hidden');
+    },
+
+    closeRaceModal() {
+        document.getElementById('race-modal').classList.add('hidden');
+    },
+
+    // Cable de la modal: botones de cierre y navegación al campeonato.
+    setupRaceModal() {
+        document.getElementById('btn-race-close').addEventListener('click', () => this.closeRaceModal());
+        document.getElementById('btn-close-race').addEventListener('click', () => this.closeRaceModal());
+        // HDH-UI06: las últimas visitas del circuito (panel de detalle) abren la
+        // modal de carrera; el contenedor es estático y el contenido re-renderiza.
+        document.getElementById('track-recents').addEventListener('click', (e) => {
+            const recent = e.target.closest('.track-recent');
+            if (recent && recent.dataset.playId) this.openRaceModal(recent.dataset.playId);
+        });
+        document.getElementById('btn-race-view-champ').addEventListener('click', () => {
+            const champId = this.raceModalChampId;
+            this.closeRaceModal();
+            if (!champId) return;
+            // Al campeonato: activa su pestaña y navega al detalle.
+            document.querySelector('.tab-btn[data-tab="campeonatos"]')?.click();
+            this.selectChampionship(champId);
         });
     },
 
@@ -1723,7 +1910,7 @@ PLAYER_PALETTE: ['#d62828', '#2563eb', '#eab308', '#ec4899', '#06b6d4', '#1a9e50
             const winnerName = winnerPs ? this.playerNameByRef(champ, winnerPs.playerRefId) : '-';
             const flag = this.getTrackFlag(p.board);
             return `
-                        <div class="campeonato-play-item">
+                        <div class="campeonato-play-item" data-open-race="${p.id}">
                             <span class="play-main"><b>${this.escapeHtml(p.board)}</b> · ${flag} · ${p.playDate || ''}</span>
                             <span class="play-winner">🏆 ${this.escapeHtml(winnerName)}</span>
                             ${isOwner || !champ.owner ? `<button class="remove-play btn-secondary" data-play-id="${p.id}" title="Eliminar esta partida del campeonato">✕</button>` : ''}
@@ -1859,6 +2046,14 @@ PLAYER_PALETTE: ['#d62828', '#2563eb', '#eab308', '#ec4899', '#06b6d4', '#1a9e50
                 if (confirm('¿Eliminar esta partida del campeonato?')) {
                     this.removePlayFromChampionship(champ.id, btn.dataset.playId);
                 }
+            });
+        });
+        // HDH-UI06: clic en una partida del campeonato abre la modal de carrera;
+        // el botón de borrar (remove-play) no abre nada.
+        content.querySelectorAll('.campeonato-play-item').forEach(item => {
+            item.addEventListener('click', (e) => {
+                if (e.target.closest('.remove-play')) return;
+                this.openRaceModal(item.dataset.openRace, champ);
             });
         });
     },

@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "comments": [
+    {
+      "id": "f2besys1",
+      "file": "02-dos-columnas.html",
+      "selector": "body > div:nth-of-type(3) > div:nth-of-type(2) > section > table > thead > tr > th:nth-of-type(5)",
+      "excerpt": "Dif.",
+      "comment": "muestrame este panel sin la columna Diff y sin columna jugador.\n¿Puede identificar si una carrera pertenece a un campeonato?",
+      "createdAt": "2026-11-26T12:23:26.808Z",
+      "status": "resolved",
+      "sentAt": "2026-11-26T12:23:26.858Z",
+      "resolvedAt": "2026-11-26T12:23:56.812Z",
+      "resolution": "Quitadas las columnas «Jugador» y «Dif.» de la tabla; queda Pos / Piloto / Puntos, con reglas CSS asociadas eliminadas."
+    },
+    {
+      "id": "5r6ycv0d",
+      "file": "02-dos-columnas.html",
+      "selector": "body > div:nth-of-type(3) > div:nth-of-type(2) > div > section:nth-of-type(1)",
+      "excerpt": "PÓDIO 1º Zoro 11 pts 2º Carte 7 pts 3º Canales 5 pts",
+      "comment": "me gusta el podio pero hazlo más visual",
+      "createdAt": "2026-11-26T12:25:40.353Z",
+      "status": "resolved",
+      "sentAt": "2026-11-26T12:25:40.910Z",
+      "resolvedAt": "2026-11-26T12:26:18.968Z",
+      "resolution": "Pódio rediseñado: tres escalones con alturas a escala (140/108/88px), medallas, color de cada jugador en borde y degradé, resplandor en el ganador y base unificada."
+    }
+  ]
+}

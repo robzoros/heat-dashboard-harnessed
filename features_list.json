@@ -1188,6 +1188,29 @@
         ],
         "evidence": "node proxy/test-generate-bgg-data.js + node proxy/test-classify.js OK; e2e/tests/FIX-HDH-11.spec.js 3/3; suite completa 164/164 (Node 22, CI=true); screenshots evidence/screenshots/FIX-HDH-11-*.png; datos reales regenerados localmente (secrets.json local; evidencia oficial en artifacts de Actions)"
       }
+    },
+    {
+      "id": "HDH-UI06",
+      "priority": 1,
+      "name": "Modal de carrera (Circuito + fecha) desde Circuitos/Historial/Campeonatos",
+      "description": [
+        "Modal «Carrera» que se abre al pulsar una partida concreta: desde las últimas visitas de la pestaña Circuitos, desde la pestaña Historial y desde las partidas de un campeonato.",
+        "Título de la ventana: «Carrera · <circuito>» junto a la fecha de la partida.",
+        "Contenido según el artboard 02 (design/carrera-modal/02-dos-columnas.html): hero del ganador con su color, tabla Pos/Piloto/Puntos, pódio en escalones y ficha de detalles (tablero, fecha, localización, pilotos, campeonato y jornada).",
+        "Si la partida pertenece a un campeonato, enlaza «Ver campeonato» y navega al detalle del campeonato."
+      ],
+      "status": "completed",
+      "notes": "Diseño: design/carrera-modal/02-dos-columnas.html; defecto de mem_judge_many documentado en obs 319",
+      "verification": {
+        "checks": [
+          "Spec e2e HDH-UI06: 4/4 (visitas Circuitos, Historial, Campeonatos + fecha ISO sin desfase)",
+          "Spec HDH-07 actualizado al nuevo comportamiento (click abre la modal de carrera)",
+          "Suite completa Playwright: 168/168 (Node 22, CI=true, Chromium local)",
+          "capture:evidence OK; screenshots HDH-UI06-desde-circuitos/desde-historial/ver-campeonato (oficial en artifacts)"
+        ],
+        "suite": "playwright",
+        "suiteResult": "168/168"
+      }
     }
   ]
 }

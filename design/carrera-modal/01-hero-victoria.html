@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Carrera · Hero de victoria</title>
+<style>
+  /* Tokens del sistema: Asfalto y brasa (design/system.md) */
+  :root {
+    --font-display: 'Bahnschrift', 'Arial Narrow', 'Roboto Condensed', sans-serif;
+    --font-body: 'Segoe UI', system-ui, sans-serif;
+    --radius: 12px; --radius-sm: 8px;
+    --bg: #14110f; --surface: #1d1916; --surface-2: #28221f; --surface-3: #342d29;
+    --line: #39322d; --text: #f2ece5; --text-muted: #a99f95;
+    --accent: #ff7a2f; --accent-ink: #1d0d03; --accent-soft: rgba(255,122,47,0.14);
+    --edge: linear-gradient(90deg, #ffb52e, #ff6a2b 45%, #e5392f);
+    --good: #46c98b; --dot-off: #473f39;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: var(--font-body);
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    font-variant-numeric: tabular-nums;
+  }
+  /* Fondo atenuado: la página queda detrás de la modal */
+  .backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.7); }
+  .bg-hint { position: fixed; top: 0; left: 0; right: 0; padding: 18px 28px; opacity: 0.35; pointer-events: none; }
+  .bg-hint h1 { font-family: var(--font-display); font-size: 2rem; font-weight: 800; letter-spacing: 0.01em; }
+  .bg-hint p { color: var(--text-muted); font-size: 0.9rem; margin-top: 4px; }
+
+  /* ── La modal ─────────────────────────────────────────────── */
+  .dialog {
+    position: relative;
+    width: min(680px, calc(100vw - 48px));
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.6);
+  }
+  /* Hero de victoria: filete de brasa + color del ganador */
+  .hero {
+    padding: 22px 28px 18px;
+    background: linear-gradient(180deg, rgba(214,40,40,0.16), var(--surface) 82%);
+    border-bottom: 3px solid;
+    border-image: var(--edge) 1;
+  }
+  .hero-top { display: flex; align-items: flex-start; gap: 14px; }
+  .hero-title-kicker {
+    font-size: 0.8rem; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--text-muted); font-weight: 600;
+  }
+  h1 { font-family: var(--font-display); font-size: 2.1rem; font-weight: 800; line-height: 1.05; margin-top: 2px; }
+  .hero-date { color: var(--text-muted); font-size: 0.95rem; margin-top: 4px; }
+  .close {
+    margin-left: auto; flex-shrink: 0;
+    width: 34px; height: 34px; border-radius: 50%;
+    background: var(--surface-2); border: 1px solid var(--line);
+    color: var(--text-muted); font-size: 1.1rem; cursor: pointer;
+  }
+  .close:hover { border-color: var(--accent); color: var(--text); }
+
+  .winner-banner {
+    margin-top: 16px;
+    display: flex; align-items: center; gap: 14px;
+    padding: 12px 16px;
+    background: var(--surface-2);
+    border: 1px solid var(--pc, var(--accent));
+    border-radius: var(--radius-sm);
+  }
+  .winner-banner .puck {
+    width: 14px; height: 14px; border-radius: 50%; flex: none;
+    background: var(--pc, var(--accent));
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--pc, var(--accent)) 25%, transparent);
+  }
+  .winner-label { color: var(--text-muted); font-size: 0.82rem; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 600; }
+  .winner-name { font-family: var(--font-display); font-size: 1.7rem; font-weight: 800; color: var(--pc, var(--accent)); line-height: 1.05; }
+  .winner-score { margin-left: auto; text-align: right; }
+  .winner-score b { font-family: var(--font-display); font-size: 2rem; font-weight: 800; color: var(--text); display: block; line-height: 1; }
+  .winner-score span { color: var(--text-muted); font-size: 0.8rem; }
+
+  /* Cuerpo: clasificación */
+  .body { padding: 20px 28px 24px; }
+  .body h2 { font-family: var(--font-body); font-size: 0.82rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 10px; }
+  table { width: 100%; border-collapse: collapse; }
+  th, td { padding: 9px 12px; text-align: left; border-bottom: 1px solid var(--surface-2); font-size: 0.92rem; }
+  th { background: var(--surface-2); color: var(--text-muted); font-weight: 600; font-size: 0.78rem; letter-spacing: 0.04em; }
+  td.pos { width: 44px; text-align: center; color: var(--accent); font-family: var(--font-display); font-weight: 800; font-size: 1.05rem; }
+  td.pts { text-align: right; font-weight: 700; }
+  tr.winner-row { background: linear-gradient(90deg, var(--accent-soft), transparent 70%); }
+  .driver { display: inline-flex; align-items: center; gap: 8px; }
+  .driver .dot { width: 10px; height: 10px; border-radius: 50%; flex: none; }
+  .driver .bot { color: var(--text-muted); font-size: 0.75rem; border: 1px solid var(--line); border-radius: 4px; padding: 1px 5px; }
+  .medal { font-size: 0.95rem; }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+  .chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 4px 12px; border-radius: 999px;
+    background: var(--surface-2); border: 1px solid var(--line);
+    font-size: 0.78rem; color: var(--text-muted); white-space: nowrap;
+  }
+  .chip b { color: var(--text); font-weight: 600; }
+  .chip.gold { color: var(--accent); border-color: var(--accent); }
+  .chip.gold b { color: var(--accent); }
+
+  /* Footer */
+  .foot { display: flex; justify-content: flex-end; gap: 10px; padding: 14px 28px 20px; border-top: 1px solid var(--surface-2); }
+  .btn {
+    padding: 9px 20px; border-radius: var(--radius-sm); cursor: pointer;
+    font-family: var(--font-display); font-weight: 700; font-size: 1.05rem; letter-spacing: 0.02em;
+    border: 1px solid transparent;
+  }
+  .btn.ghost { background: transparent; border-color: var(--line); color: var(--text); }
+  .btn.ghost:hover { border-color: var(--accent); }
+  :is(button, [tabindex]):focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  @media (max-width: 720px) {
+    .dialog { width: calc(100vw - 32px); }
+    h1 { font-size: 1.6rem; }
+    .hero, .body, .foot { padding-left: 18px; padding-right: 18px; }
+  }
+</style>
+</head>
+<body>
+  <div class="bg-hint" aria-hidden="true">
+    <h1>Heat · Pedal to the Metal</h1>
+    <p>Circuitos › Italia — resumen del circuito</p>
+  </div>
+  <div class="backdrop" aria-hidden="true"></div>
+
+  <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="race-title">
+    <div class="hero" style="--pc:#f3f4f6;">
+      <div class="hero-top">
+        <div>
+          <p class="hero-title-kicker">Carrera</p>
+          <h1 id="race-title">Carrera · Italia</h1>
+          <p class="hero-date">23 de noviembre de 2026 · Casa Zoro · 6 pilotos · 8 jugadas de temporada</p>
+        </div>
+        <button class="close" aria-label="Cerrar">✕</button>
+      </div>
+      <div class="winner-banner">
+        <span class="puck" aria-hidden="true"></span>
+        <div>
+          <p class="winner-label">Victoria 🏆</p>
+          <p class="winner-name">Zoro</p>
+        </div>
+        <div class="winner-score"><b>11</b><span>puntos</span></div>
+      </div>
+    </div>
+
+    <div class="body">
+      <h2>Clasificación de la carrera</h2>
+      <table>
+        <thead>
+          <tr><th scope="col">Pos</th><th scope="col">Piloto</th><th scope="col">Jugador</th><th scope="col">Puntos</th></tr>
+        </thead>
+        <tbody>
+          <tr class="winner-row"><td class="pos">1</td><td><span class="driver"><span class="dot" style="background:#f3f4f6"></span><b>Zoro</b><span class="medal">🏆</span></span></td><td>Zoroastro</td><td class="pts">11</td></tr>
+          <tr><td class="pos">2</td><td><span class="driver"><span class="dot" style="background:#d62828"></span><b>Carte</b></span></td><td>cartesius</td><td class="pts">7</td></tr>
+          <tr><td class="pos">3</td><td><span class="driver"><span class="dot" style="background:#eab308"></span><b>Canales</b></span></td><td>Canales</td><td class="pts">5</td></tr>
+          <tr><td class="pos">4</td><td><span class="driver"><span class="dot" style="background:#2563eb"></span><b>Alfonso</b></span></td><td>alfongmr</td><td class="pts">4</td></tr>
+          <tr><td class="pos">5</td><td><span class="driver"><span class="dot" style="background:#1a9e50"></span><b>Automa Verde</b><span class="bot">Bot</span></span></td><td>—</td><td class="pts">2</td></tr>
+          <tr><td class="pos">6</td><td><span class="driver"><span class="dot" style="background:#473f39"></span><b>Korta</b></span></td><td>Korta</td><td class="pts">0</td></tr>
+        </tbody>
+      </table>
+
+      <div class="chips">
+        <span class="chip gold"> 🏁 <b>Campeonato:</b> Otoño 2026 · Jornada 7</span>
+        <span class="chip">📍 <b>Localización:</b> Casa Zoro</span>
+        <span class="chip">🚗 <b>Participantes:</b> 6</span>
+        <span class="chip">📊 <b>Media:</b> 4.8 pts</span>
+      </div>
+    </div>
+
+    <div class="foot">
+      <button class="btn ghost">Cerrar</button>
+    </div>
+  </div>
+</body>
+</html>

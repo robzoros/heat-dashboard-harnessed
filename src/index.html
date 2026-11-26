@@ -60,6 +60,40 @@
                 <button id="btn-cancel-import-plays" class="btn-secondary">Cancelar</button>
             </div>
         </div>
+        <div id="race-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="race-modal-title">
+            <div class="modal-content modal-wide race-modal-content">
+                <div class="race-modal-head">
+                    <div>
+                        <p class="race-kicker">Carrera</p>
+                        <h2 id="race-modal-title"></h2>
+                        <p class="race-date" id="race-modal-date"></p>
+                    </div>
+                    <button id="btn-close-race" class="race-close" aria-label="Cerrar">✕</button>
+                </div>
+                <div id="race-modal-winner" class="race-winner-banner hidden"></div>
+                <div class="race-modal-grid">
+                    <section class="race-section" aria-labelledby="race-modal-cls-h">
+                        <h3 id="race-modal-cls-h">Clasificación</h3>
+                        <div id="race-modal-standings" class="standings-wrap"></div>
+                    </section>
+                    <div class="race-side">
+                        <section class="race-section" aria-labelledby="race-modal-pod-h">
+                            <h3 id="race-modal-pod-h">Pódio</h3>
+                            <div id="race-modal-podium" class="race-podium"></div>
+                            <div class="race-podium-base" aria-hidden="true"></div>
+                        </section>
+                        <section class="race-section" aria-labelledby="race-modal-facts-h">
+                            <h3 id="race-modal-facts-h">Detalles</h3>
+                            <div id="race-modal-facts" class="race-facts"></div>
+                        </section>
+                    </div>
+                </div>
+                <div class="race-modal-foot">
+                    <button id="btn-race-view-champ" class="btn-primary btn-narrow hidden">Ver campeonato</button>
+                    <button id="btn-race-close" class="btn-secondary btn-narrow">Cerrar</button>
+                </div>
+            </div>
+        </div>
         <div id="player-manager-modal" class="modal hidden">
             <div class="modal-content modal-wide">
                 <h2>Gestionar Jugadores</h2>

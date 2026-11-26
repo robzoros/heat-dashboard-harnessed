@@ -23,7 +23,7 @@ test.describe('HDH-07 - Pestaña Historial', () => {
     await page.screenshot({ path: '../evidence/screenshots/HDH-07-historial-mock.png', fullPage: true });
   });
 
-  test('debe mostrar detalles al pulsar entrada', async ({ page }) => {
+  test('debe abrir la modal de carrera al pulsar entrada (HDH-UI06)', async ({ page }) => {
     const customData = {
       players: [
         { id: 1, name: 'Alice', isBot: false, isMain: true, isOther: false },
@@ -55,24 +55,22 @@ test.describe('HDH-07 - Pestaña Historial', () => {
 
     await page.locator('.tab-btn[data-tab="historial"]').click();
 
-    const entry = page.locator('.play-entry').first();
-    const details = page.locator('.play-details').first();
+    const modal = page.locator('#race-modal');
+    await expect(modal).toHaveClass(/hidden/);
 
-    // Details should be hidden initially
-    await expect(details).not.toHaveClass(/expanded/);
+    // El click en la entrada abre la modal de carrera con el detalle completo
+    await page.locator('.play-entry').first().click();
+    await expect(modal).not.toHaveClass(/hidden/);
+    await expect(page.locator('#race-modal-title')).toHaveText('Carrera · USA');
 
-    // Click to expand
-    await entry.click();
-    await expect(details).toHaveClass(/expanded/);
+    // El ganador protagoniza el hero
+    await expect(page.locator('#race-modal-winner')).toContainText('Alice');
 
-    // Winner should have green border
-    await expect(details.locator('.player-winner')).toBeVisible();
+    await page.screenshot({ path: '../evidence/screenshots/HDH-07-historial-modal-carrera.png', fullPage: true });
 
-    await page.screenshot({ path: '../evidence/screenshots/HDH-07-historial-detalles.png', fullPage: true });
-
-    // Click again to collapse
-    await entry.click();
-    await expect(details).not.toHaveClass(/expanded/);
+    // Cerrar la modal
+    await page.locator('#btn-race-close').click();
+    await expect(modal).toHaveClass(/hidden/);
   });
 
   test('debe mostrar wins evolution chart con mock data', async ({ page }) => {
