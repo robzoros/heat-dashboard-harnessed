@@ -50,9 +50,9 @@ test.describe('FIX-HDH-08 - Identidad estable de participantes', () => {
     // Identidades: los jugadores del mock no tienen userid de BGG → clave sintética
     // estable basada en el nombre.
     expect(result.schemaVersion).toBe(2);
-    expect(result.participants.sort()).toEqual(['nonbgg:player1', 'nonbgg:player2']);
-    expect(result.participantRefs['nonbgg:player1'].name).toBe('Player1');
-    expect(result.participantRefs['nonbgg:player1'].color).toBeTruthy();
+    expect(result.participants.sort()).toEqual(['local-player1', 'local-player2']);
+    expect(result.participantRefs['local-player1'].name).toBe('Player1');
+    expect(result.participantRefs['local-player1'].color).toBeTruthy();
 
     // La clasificación del detalle muestra los nombres del snapshot con su color
     // congelado (aunque la paleta actual cambiara, el color punto sale del snapshot).
@@ -172,12 +172,12 @@ test.describe('FIX-HDH-08 - Identidad estable de participantes', () => {
         createdAt: '2024-06-01T00:00:00.000Z',
         owner: 'local',
         schemaVersion: 2,
-        participants: ['nonbgg:player1'],
+        participants: ['local-player1'],
         participantRefs: {
-          'nonbgg:player1': { name: 'Player1', isMain: true, isBot: false, isOther: false, color: '#123456', verified: true }
+          'local-player1': { name: 'Player1', isMain: true, isBot: false, isOther: false, color: '#123456', verified: true }
         },
         playIds: [10],
-        plays: [race(10, '2024-06-15', 'Circuit A', [['nonbgg:player1', 25, true]])]
+        plays: [race(10, '2024-06-15', 'Circuit A', [['local-player1', 25, true]])]
       }]));
     });
     await page.evaluate(async () => { await App.loadChampionships(); });
@@ -221,9 +221,9 @@ test.describe('FIX-HDH-08 - Identidad estable de participantes', () => {
       JSON.parse(localStorage.getItem('hdh-championships')).find(c => c.participants && c.participants.length === 2 && c.schemaVersion === 2)
     );
     expect(stored.id).toBe(champId);
-    expect(stored.participants.sort()).toEqual(['nonbgg:bot1', 'nonbgg:player1']);
-    expect(stored.participantRefs['nonbgg:player1'].color).toBeTruthy();
-    expect(stored.participantRefs['nonbgg:bot1'].isBot).toBe(true);
+    expect(stored.participants.sort()).toEqual(['local-bot1', 'local-player1']);
+    expect(stored.participantRefs['local-player1'].color).toBeTruthy();
+    expect(stored.participantRefs['local-bot1'].isBot).toBe(true);
 
     await page.screenshot({ path: '../evidence/screenshots/FIX-HDH-08-persistencia.png', fullPage: true });
   });

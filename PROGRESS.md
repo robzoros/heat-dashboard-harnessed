@@ -1,5 +1,33 @@
 # PROGRESS.md
 
+## Sesion 2026-11-26 (FIX-HDH-09)
+
+### Feature trabajada: FIX-HDH-09 - Migración guiada de participantes legacy por matching de partidas
+
+**Estado**: Completada
+
+#### Mecanismo (validado antes de implementarse)
+- Propuesta del usuario: casar las partidas del campeonato contra el histórico global por (circuito, fecha) porque no cree que haya dos al mismo circuito el mismo día.
+- **Chequeo previo con datos reales** (Firestore + heat-data.json): 8/8 partidas de los 3 campeonatos casan; alineamiento posicional exacto en todas (los puntajes posición a posición coinciden); 27/27 participantes resueltos sin conflictos. El mapa obtenido es coherente con la pista: 1961/1962 comparten participantes (ids 1–9 → Alfonso Daganzo, Automa Rojo/Verde, Automa, Automa2, Automa3, Calvo, Tabo, Zoro) distintos a los de Boadilla Cup (Automa Azul, Automa, Automa2, Automa4, Automa5, Canales, Carte, Korta, Zoro).
+- Hay 3 pares duplicados (circuito, fecha) en el histórico global que NO afectan a las 8 partidas; el motor los desambigua comparando puntajes paralelos y, si empatan, devuelve inválido para revisión manual.
+
+#### Qué se hizo
+- **src/app.js**: `resolveLegacyChampionship()` (matching + verificación posicional + informe) y `applyLegacyResolution()` (convierte a v2: participantes por identidad, snapshot congelado, carreras canonicalizadas; persiste en Firestore o local). Botón 🧭 «Identificar participantes» en el detalle legacy: informe de resolución (id → jugador, userid BGG, tipo, partidas que testifican) y confirm() antes de reescribir nada; sin match o ambigüedad → alerta y nada se aplica. Participantes declarados sin partidas casadas pasan verificados con marca "sin partidas".
+- **Identidad unificada con el exportador** (T1): `identityKey()` en cliente = `bgg:<userid>` o `local-<slug>` (el mismo formato que `syntheticUserid()` del generador); las keys de campeonatos v2 creados en FIX-HDH-08 (nonbgg:) quedan obsoletas en specs y aceptadas como claves opacas en los datos existentes.
+- **e2e**: nuevo spec FIX-HDH-09 (3 tests); ajustes en HDH-09 y FIX-HDH-08 (keys local-). 
+
+#### Verificación
+- `node --check src/app.js`: OK. Suite proxy offline: OK.
+- **Spec FIX-HDH-09: 3/3** (resolución con informe y conversión v2, rechazo no aplica, sin-match inválido y no aplica).
+- **Suite completa Playwright: 161/161** (Node 22, CI=true, Chromium local).
+- Screenshots: evidence/screenshots/FIX-HDH-09-*.png (oficial en artifacts).
+
+#### Notas / Riesgos
+- Risk: item 3 — identityKey es código compartido (colores y ranking); cubierto por suite completa en verde.
+- La emparejamiento posicional asume que las copias en el campeonato conservan el orden del XML original; las 8 partidas reales lo cumplen; si una copia guardada fuese reordenada, el motor devuelve inválido y no destruye nada.
+
+---
+
 ## Sesion 2026-11-25 (FIX-HDH-08)
 
 ### Feature trabajada: FIX-HDH-08 - Identidad estable de participantes en Campeonatos

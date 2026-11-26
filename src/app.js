@@ -1738,6 +1738,7 @@ PLAYER_PALETTE: ['#d62828', '#2563eb', '#eab308', '#ec4899', '#06b6d4', '#1a9e50
                     ${warnings.map(w => `<span class="warn-inline">⚠ ${w}</span>`).join(' ')}
                     ${canEdit ? `
                     <div class="campeonato-actions">
+                        ${this.isLegacyChampionship(champ) ? '<button id="btn-migrate-legacy" class="btn-primary btn-narrow">🧭 Identificar participantes</button>' : ''}
                         <button id="btn-import-plays-campeonato" class="btn-primary btn-narrow">+ Importar Partidas</button>
                         <button id="btn-add-manual-play" class="btn-secondary btn-narrow">+ Añadir Partida Manual</button>
                         <button id="btn-delete-campeonato" class="btn-danger btn-narrow">✕ Borrar Campeonato</button>
@@ -1819,6 +1820,32 @@ PLAYER_PALETTE: ['#d62828', '#2563eb', '#eab308', '#ec4899', '#06b6d4', '#1a9e50
                 this.openAddManualPlayModal();
             });
         }
+        const migrateBtn = document.getElementById('btn-migrate-legacy');
+        if (migrateBtn) {
+            migrateBtn.addEventListener('click', async () => {
+                // FIX-HDH-09: calcula la resolución, muestra el informe y pide confirmación
+                // antes de convertir el campeonato a v2.
+                const resolution = this.resolveLegacyChampionship(champ);
+                if (!resolution.ok) {
+                    alert(`No se pudo resolver automáticamente:\n\n${resolution.reason}`);
+                    return;
+                }
+                const lines = resolution.entries.map(e =>
+                    `#${e.legacyId} → ${e.name}${e.userid ? ` (BGG ${e.userid})` : ''} [${e.type}]${e.unverified ? ' ⚠ sin partidas: por confirmar' : ''}`
+                ).join('\n');
+                const okToApply = confirm(
+                    `Resolución automática (${resolution.playsMatched}/${resolution.playsTotal} partidas casadas por circuito y fecha con puntajes coincidentes):\n\n${lines}\n\n¿Convertir el campeonato a identidades estables? Esta operación reescribe el campeonato.`
+                );
+                if (!okToApply) return;
+                const applied = await this.applyLegacyResolution(champ, resolution);
+                if (applied) {
+                    await this.loadChampionships();
+                    await this.selectChampionship(champ.id);
+                } else {
+                    alert('No se pudo aplicar la resolución.');
+                }
+            });
+        }
         const deleteBtn = document.getElementById('btn-delete-campeonato');
         if (deleteBtn) {
             deleteBtn.addEventListener('click', () => {
@@ -1840,11 +1867,15 @@ PLAYER_PALETTE: ['#d62828', '#2563eb', '#eab308', '#ec4899', '#06b6d4', '#1a9e50
     // por su userid (viaja en el XML de cada partida y no rota entre exportaciones);
     // bots y jugadores sin cuenta BGG usan una clave sintética persistente basada en
     // su nombre (el exportador mantiene el registro entre sesiones).
+    // FIX-HDH-09: misma identidad que serializa el exportador — bgg:<userid> para
+    // cuentas BGG y local-<slug> para bots y jugadores sin cuenta (syntheticUserid),
+    // de modo que un id de campeonato legacy resuelto contra la tabla de una
+    // exportación coincide con la identidad que graban los campeonatos v2.
     identityKey(player) {
         if (!player) return null;
         const uid = String(player.userid || '').trim();
         if (uid && uid !== '0') return `bgg:${uid}`;
-        return `nonbgg:${this.playerKey(player.name)}`;
+        return `local-${String(player.name || '').trim().toLocaleLowerCase('es-ES').replace(/[^a-z0-9]+/g, '-')}`;
     },
 
     playerKey(name) {
@@ -1923,6 +1954,140 @@ PLAYER_PALETTE: ['#d62828', '#2563eb', '#eab308', '#ec4899', '#06b6d4', '#1a9e50
 
     isLegacyChampionship(champ) {
         return !!champ && !champ.schemaVersion && Object.keys(this.participantRefsOf(champ)).length === 0;
+    },
+
+    // FIX-HDH-09: motor de resolución legacy. Casa cada partida guardada del
+    // campeonato contra el histórico global por (circuito, fecha) y verifica el
+    // alineamiento posicional de puntajes (el orden de jugadores de una partida no
+    // cambia). Duplicados (circuito, fecha): se desambiguan comparando puntajes
+    // paralelos; si siguen empatados, la resolución queda inválida para revisión.
+    resolveLegacyChampionship(champ) {
+        const invalid = { ok: false, reason: '', entries: [], playsMatched: 0, playsTotal: 0 };
+        if (!this.isLegacyChampionship(champ)) {
+            invalid.reason = 'El campeonato no es legacy (ya tiene identidades).';
+            return invalid;
+        }
+        const byKey = {};
+        for (const play of this.data.plays || []) {
+            (byKey[`${play.board}|${play.playDate}`] = byKey[`${play.board}|${play.playDate}`] || []).push(play);
+        }
+        const mapping = {}; // id legacy -> identidad estable
+        const entries = [];
+        let matched = 0;
+        const plays = (champ.plays || []);
+        for (const stored of plays) {
+            const cands = byKey[`${stored.board}|${stored.playDate}`] || [];
+            let global = null;
+            if (cands.length === 1) global = cands[0];
+            else if (cands.length > 1) {
+                global = cands.find(gp => gp.playerScores.length === stored.playerScores.length
+                    && gp.playerScores.every((ps, i) => ps.scoreNum === stored.playerScores[i].scoreNum && ps.winner === stored.playerScores[i].winner)) || null;
+            }
+            if (!global) {
+                invalid.reason = `La partida ${stored.board} del ${stored.playDate || 'sin fecha'} no casó o es ambigua en el histórico global. Reporta qué jugador era cada uno y aplicamos la resolución manual.`;
+                invalid.playsMatched = matched;
+                invalid.playsTotal = plays.length;
+                return invalid;
+            }
+            if (global.playerScores.length !== stored.playerScores.length
+                || !global.playerScores.every((ps, i) => ps.scoreNum === stored.playerScores[i].scoreNum && ps.winner === stored.playerScores[i].winner)) {
+                invalid.reason = `La partida ${stored.board} del ${stored.playDate || 'sin fecha'} no coincide posición a posición con el histórico (¿jugadores distintos en la copia guardada?).`;
+                invalid.playsMatched = matched;
+                invalid.playsTotal = plays.length;
+                return invalid;
+            }
+            matched++;
+            global.playerScores.forEach((ps, i) => {
+                const legacyRef = String(stored.playerScores[i].playerRefId);
+                const player = this.data.players.find(p => String(p.id) === String(ps.playerRefId));
+                if (!player) {
+                    mapping[legacyRef] = mapping[legacyRef] || {
+                        name: `Jugador ${ps.playerRefId}`, isMain: false, isBot: false, isOther: false, color: null, verified: false
+                    };
+                    return;
+                }
+                const key = this.identityKey(player);
+                if (mapping[legacyRef] && mapping[legacyRef].name && mapping[legacyRef].name !== player.name) {
+                    // El mismo id legacy resolvió a dos jugadores distintos: inválido.
+                    invalid.reason = `El id ${legacyRef} resuelve a ${player.name} y a ${mapping[legacyRef].name}: revisión manual.`;
+                    invalid.entries = entries.slice();
+                    invalid.playsMatched = matched;
+                    invalid.playsTotal = plays.length;
+                    global = null;
+                }
+                if (!global) return;
+                if (!mapping[legacyRef]) {
+                    mapping[legacyRef] = this.participantMeta(player);
+                    entries.push({
+                        legacyId: legacyRef,
+                        identity: key,
+                        name: player.name,
+                        userid: String(player.userid || '').trim(),
+                        type: player.isBot ? 'Bot' : player.isMain ? 'Principal' : 'Otro',
+                        color: mapping[legacyRef].color,
+                        plays: [`${stored.board} ${stored.playDate || ''}`.trim()]
+                    });
+                } else if (mapping[legacyRef].verified) {
+                    const entry = entries.find(e => e.legacyId === legacyRef);
+                    entry.plays.push(`${stored.board} ${stored.playDate || ''}`.trim());
+                }
+            });
+            if (invalid.reason) break;
+        }
+        if (invalid.reason) return { ...invalid, ok: false };
+        // Participantes declarados que no aparecen en partidas casadas: informe con marca.
+        const resolvedIds = new Set(Object.keys(mapping));
+        for (const pid of (champ.participants || []).map(id => String(id))) {
+            if (!resolvedIds.has(pid)) {
+                const resolved = this.playerNameByKey(champ, pid);
+                entries.push({ legacyId: pid, identity: this.identityKey(this.data.players.find(p => String(p.id) === pid) || {}), name: resolved, userid: String((this.data.players.find(p => String(p.id) === pid) || {}).userid || ''), type: 'sin partidas', color: null, plays: [], unverified: true });
+                mapping[pid] = { name: resolved, isMain: false, isBot: false, isOther: false, color: null, verified: false };
+            }
+        }
+        return { ok: true, entries, mapping, playsMatched: matched, playsTotal: plays.length };
+    },
+
+    // Aplica una resolución previamente calculada (y confirmada por el usuario)
+    // convirtiendo el campeonato a v2: participantes por identidad, snapshot y
+    // carreras canonicalizadas. Persiste en Firestore (admin) o local.
+    async applyLegacyResolution(champ, resolution) {
+        if (!this.isLegacyChampionship(champ) || !resolution || !resolution.ok) return false;
+        const refs = {};
+        for (const [legacyId, meta] of Object.entries(resolution.mapping)) {
+            const key = meta.name && meta.verified !== false && meta.color ? this.identityKey(this.data.players.find(p => p.name === meta.name) || {}) : null;
+            if (!key) continue;
+            refs[legacyId] = meta;
+            // Y el formato final: participants = identidades; participantRefs por identidad.
+        }
+        const participants = [];
+        const refsByIdentity = {};
+        for (const [legacyId, meta] of Object.entries(resolution.mapping)) {
+            const player = this.data.players.find(p => p.name === meta.name);
+            const key = player ? this.identityKey(player) : legacyId;
+            if (!refsByIdentity[key]) {
+                refsByIdentity[key] = player ? this.participantMeta(player)
+                    : { name: meta.name, isMain: false, isBot: false, isOther: false, color: null, verified: false, legacyId };
+                participants.push(key);
+            }
+        }
+        const converted = {
+            ...champ,
+            schemaVersion: 2,
+            participants,
+            participantRefs: refsByIdentity,
+            playIds: (champ.plays || []).map(play => play.id),
+            plays: (champ.plays || []).map(play => ({
+                ...play,
+                playerScores: (play.playerScores || []).map(ps => ({
+                    ...ps,
+                    playerRefId: resolution.mapping[String(ps.playerRefId)] && this.data.players.find(p => p.name === resolution.mapping[String(ps.playerRefId)].name)
+                        ? this.identityKey(this.data.players.find(p => p.name === resolution.mapping[String(ps.playerRefId)].name))
+                        : String(ps.playerRefId)
+                }))
+            }))
+        };
+        await this.saveChampionshipToServer(converted);
+        return true;
     },
 
     // Color del participante: congelado en el snapshot del campeonato (S4); si no

@@ -45,8 +45,8 @@ test.describe('HDH-09 - Pestaña Campeonatos', () => {
     await page.locator('#new-campeonato-name').fill('Liga Test');
     await page.locator('#new-campeonato-description').fill('Liga de prueba');
     // FIX-HDH-08: los checkboxes de participantes van por identidad (sintética en el mock).
-    await page.locator('#new-campeonato-players input[value="nonbgg:player1"]').check();
-    await page.locator('#new-campeonato-players input[value="nonbgg:player2"]').check();
+    await page.locator('#new-campeonato-players input[value="local-player1"]').check();
+    await page.locator('#new-campeonato-players input[value="local-player2"]').check();
     await page.locator('#btn-save-campeonato').click();
     await expect(page.locator('#create-campeonato-modal')).not.toBeVisible();
     await page.waitForTimeout(2000);
