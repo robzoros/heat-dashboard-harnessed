@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-26T07:15:49.851Z",
+  "generatedAt": "2026-11-26T07:49:25.270Z",
   "source": "GitHub Actions weekly export",
   "players": [
     {
@@ -7,8 +7,8 @@
       "name": "Automa",
       "username": "",
       "userid": "local-automa",
-      "isBot": false,
-      "isMain": true,
+      "isBot": true,
+      "isMain": false,
       "isOther": false
     },
     {
@@ -16,8 +16,8 @@
       "name": "Automa2",
       "username": "",
       "userid": "local-automa2",
-      "isBot": false,
-      "isMain": true,
+      "isBot": true,
+      "isMain": false,
       "isOther": false
     },
     {
@@ -25,8 +25,8 @@
       "name": "Automa3",
       "username": "",
       "userid": "local-automa3",
-      "isBot": false,
-      "isMain": true,
+      "isBot": true,
+      "isMain": false,
       "isOther": false
     },
     {
@@ -34,8 +34,8 @@
       "name": "Automa4",
       "username": "",
       "userid": "local-automa4",
-      "isBot": false,
-      "isMain": true,
+      "isBot": true,
+      "isMain": false,
       "isOther": false
     },
     {
@@ -43,8 +43,8 @@
       "name": "Automa5",
       "username": "",
       "userid": "local-automa5",
-      "isBot": false,
-      "isMain": true,
+      "isBot": true,
+      "isMain": false,
       "isOther": false
     },
     {
@@ -97,8 +97,8 @@
       "name": "Automa Rojo",
       "username": "",
       "userid": "local-automa-rojo",
-      "isBot": false,
-      "isMain": true,
+      "isBot": true,
+      "isMain": false,
       "isOther": false
     },
     {
@@ -106,8 +106,8 @@
       "name": "Automa Verde",
       "username": "",
       "userid": "local-automa-verde",
-      "isBot": false,
-      "isMain": true,
+      "isBot": true,
+      "isMain": false,
       "isOther": false
     },
     {
@@ -133,17 +133,17 @@
       "name": "Automa Azul",
       "username": "",
       "userid": "local-automa-azul",
-      "isBot": false,
+      "isBot": true,
       "isMain": false,
-      "isOther": true
+      "isOther": false
     },
     {
       "id": 16,
       "name": "BGA Player",
       "username": "",
       "userid": "local-bga-player",
-      "isBot": false,
-      "isMain": true,
+      "isBot": true,
+      "isMain": false,
       "isOther": false
     },
     {
@@ -151,8 +151,8 @@
       "name": "Jugador anónimo",
       "username": "",
       "userid": "local-jugador-an-nimo",
-      "isBot": false,
-      "isMain": true,
+      "isBot": true,
+      "isMain": false,
       "isOther": false
     },
     {
@@ -160,8 +160,8 @@
       "name": "Fast1",
       "username": "",
       "userid": "local-fast1",
-      "isBot": false,
-      "isMain": true,
+      "isBot": true,
+      "isMain": false,
       "isOther": false
     },
     {
@@ -169,8 +169,8 @@
       "name": "Fast2",
       "username": "",
       "userid": "local-fast2",
-      "isBot": false,
-      "isMain": true,
+      "isBot": true,
+      "isMain": false,
       "isOther": false
     },
     {
