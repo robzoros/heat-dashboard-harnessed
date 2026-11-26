@@ -26,6 +26,14 @@ function testBots() {
     assert.strictEqual(bot2.isOther, false, 'Bot2 should not be other');
 
     assert.strictEqual(alice.isBot, false, 'Alice should not be a bot');
+
+    // FIX-HDH-10: userid sintético persistente también es bot.
+    const synth = { id: 4, name: 'Automa Rojo', userid: 'local-automa-rojo' };
+    const synthetic = classifyPlayers([synth], [{ id: 1, playerScores: [{ playerRefId: 4 }] }]);
+    const synthResult = synthetic.find(p => p.id === 4);
+    assert.strictEqual(synthResult.isBot, true, 'Synthetic-local userid should be a bot');
+    assert.strictEqual(synthResult.isMain, false, 'Synthetic-local userid should not be main');
+
     console.log('✔ testBots passed');
 }
 
