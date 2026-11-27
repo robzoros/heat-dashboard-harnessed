@@ -1526,10 +1526,18 @@ PLAYER_PALETTE: ['#d62828', '#2563eb', '#eab308', '#ec4899', '#06b6d4', '#1a9e50
             return (!player || !player.isMain) ? acc + wins : acc;
         }, 0);
 
+        // Campeón recalculado aquí: trackStats no guarda championName (solo el
+        // trackList del rail lo tiene), así que el badge caía siempre en
+        // «sin campeón». Mismo criterio que computeTrackStats.
+        const champ = Object.entries(stats.winsByPlayer)
+            .map(([pid, wins]) => ({ player: this.data.players.find(p => p.id === parseInt(pid)), wins }))
+            .filter(e => e.player && e.player.isMain)
+            .sort((a, b) => b.wins - a.wins || a.player.name.localeCompare(b.player.name))[0] || null;
+
         headEl.innerHTML = `
             <h2>${this.getTrackFlag(selected)} ${this.escapeHtml(selected)}</h2>
             <div class="detail-badges">
-                <span class="badge-gold">🏆 ${stats.championName ? `${this.escapeHtml(stats.championName)} · ${stats.championWins} W` : 'sin campeón'}</span>
+                <span class="badge-gold">🏆 ${champ ? `${this.escapeHtml(champ.player.name)} · ${champ.wins} W` : 'sin campeón'}</span>
                 <span class="detail-badge">🏁 ${stats.plays} partidas · ${share}% del total</span>
                 <span class="detail-badge">🤖 ${botWinsCount} W de bots</span>
                 <span class="detail-badge">📅 última: ${lastVisitText}</span>
